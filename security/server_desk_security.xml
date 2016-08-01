@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>                                                                                                                                 
+<openerp>
+<data noupdate="1">
+    <record model="res.groups" id="base.group_user">
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+    <record id="hr_employee_rule" model="ir.rule">
+        <field name="name">employee访问控制</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_partner_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="hr_employee_rule_manager" model="ir.rule">
+        <field name="name">employee访问控制-经理</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="groups" eval="[(4,ref('base.group_hr_user')),(4,ref('base.group_hr_manager'))]"/>
+    </record>
+
+    <record id="project_project_rule" model="ir.rule">
+        <field name="name">project访问控制</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[('employee_ids','like',user.employee_ids.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_partner_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <!--
+    <record id="project_project_rule_leader" model="ir.rule">
+        <field name="name">project访问控制-项目经理</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[('user_id.id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_partner_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    -->
+    <record id="project_project_rule_manager" model="ir.rule">
+        <field name="name">project访问控制-经理</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+    </record>
+    </data>
+</openerp>

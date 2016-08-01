@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="server_desk.system" model="server_desk.system">        
+        <field name="name">system</field>
+    </record>
+    <record id="case_cds" model="mail.message.subtype">
+            <field name="name">case Created</field>
+            <field name="res_model">server_desk.case</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">case created</field>
+     </record>
+     <record id="case_state" model="mail.message.subtype">
+            <field name="name">state Changed</field>
+            <field name="res_model">server.case</field>
+            <field name="default" eval="False"/>
+            <field name="description">state changed</field>
+        </record>
+</data>
+</openerp>

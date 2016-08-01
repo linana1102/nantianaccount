@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="nantian_erp_certificate_category" model="ir.actions.act_window">
+            <field name="name">certificate_category</field>
+            <field name="res_model">nantian_erp.certificate_category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+        <record id="nantian_erp_certificate_level" model="ir.actions.act_window">
+            <field name="name">certificate_level</field>
+            <field name="res_model">nantian_erp.certificate_level</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+        <record id="nantian_erp_certificate_institutions" model="ir.actions.act_window">
+            <field name="name">certificate_institutions</field>
+            <field name="res_model">nantian_erp.certificate_institutions</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+        <record id="nantian_erp_certificate_direction" model="ir.actions.act_window">
+            <field name="name">certificate_direction</field>
+            <field name="res_model">nantian_erp.certificate_direction</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+        <menuitem id="certificate" parent="hr.menu_hr_root"  name="certificate" groups="base.group_hr_user"/>
+        <menuitem id="certificate_category" parent="certificate" action="nantian_erp_certificate_category" name="certificate_category"/>
+        <menuitem id="certificate_institutions" parent="certificate" action="nantian_erp_certificate_institutions" name="certificate_institutions"/>
+        <menuitem id="certificate_direction" parent="certificate" action="nantian_erp_certificate_direction" name="certificate_direction"/>
+        <menuitem id="certificate_level" parent="certificate" action="nantian_erp_certificate_level" name="certificate_level"/>
+    </data>
+</openerp>

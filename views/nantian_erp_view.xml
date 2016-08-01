@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="nantian_erp_employee_form_view">
+            <field name="name">employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user'),ref('base.group_hr_manager')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='HR Settings']" position="replace">
+                  <page string="HR Settings" >
+                    <group>
+                        <group string="Active" name="active_group">
+                            <field name="active" string="在职" />
+                        </group>
+                    </group>
+                  </page>
+                </xpath>
+                <xpath expr="//page[@string='Personal Information']" position="replace">
+                    <page string="Public Information"  >
+                                <group>
+                                    <group string="Position">
+                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="job_id" string="职位" />
+                                        <field name="parent_id" string="上一级" />
+                                        <field name="coach_id"/>
+                                        <field name="level" string="级别"/>
+                                        <field name="entry_time" string="入职时间" />
+                                        <field name="contract_starttime" string="合同开始时间" />
+                                        <field name="contract_len" string="合同期限" />
+                                        <field name="contract_endtime" string="合同终止时间" />
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="work_location"/>
+                                    </group>
+                                </group>
+                                <group string="项目信息">
+                                    <field name="project_id" string="所在项目"/>
+                                    <field name="analytic_line_id" string="服务类别" attrs="{'invisible':[('category','!=',u'在合同中')]}"/>
+                                    <field name="category" string="人员归属"/>
+                                </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User" context="{'default_groups_ref': ['base.group_user']}"/>
+                                    </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                </xpath>
+
+                <xpath expr="//page[@string='Public Information']" position="replace">
+                    <page string="Personal Information" >
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                        <field name="bank_account_id"/>
+                                        <field name="otherid" groups="base.group_hr_user"/>
+                                    </group>
+                                    <group string="个人信息">
+                                        <field name="mobile_phone"/>
+                                        <field name="birthday"/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                    </group>
+
+                                </group>
+                                <group string="简历信息">
+                                        <field name="work_time" string="工作时间" />
+                                        <field name="graduation" />
+                                        <field name="major" />
+                                        <field name="education" string="学历"/>
+                                        <field name="certificate_ids"  string = "证书"  >
+                                            <tree string="Registered feedback" editable="bottom">
+                                                <field name="certificate_category_id" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_institutions_id" domain="[('category_id','=',certificate_category_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_direction_id" domain="[('institutions_id','=',certificate_institutions_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_level_id" domain="[('direction_id','=',certificate_direction_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="time"/>
+                                            </tree>
+                                        </field>
+                                        <field name="specialty" string="特长" />
+                                </group>
+                            </page>
+                </xpath>
+                <xpath expr="//page[@string='HR Settings']" position="replace">
+                    <page string="HR Settings" groups="base.group_hr_user,base.group_hr_manager">
+                        <group>
+                            <group string="Active" name="active_group">
+                                <field name="active"/>
+                                <field name="dimission_why" string="离职原因" attrs="{'invisible': [('active', '!=', False)]}"/>
+                                <field name="dimission_goto" string="离职去向" attrs="{'invisible': [('active', '!=', False)]}"/>
+                                <field name="dimission_why_add" string="其他原因" attrs="{'invisible': ['|',('active', '!=', False),('dimission_why','!=','其他')]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_employee_form_view_user">
+            <field name="name">employee.form_user</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='HR Settings']" position="replace">
+                  <page string="HR Settings" >
+                    <group>
+                        <group string="Active" name="active_group">
+                            <field name="active" string="在职" />
+                        </group>
+                    </group>
+                  </page>
+                </xpath>
+                <xpath expr="//page[@string='Personal Information']" position="replace">
+                    <page string="Public Information"  >
+                                <group>
+                                    <group string="Position">
+                                        <field name="department_id" on_change="onchange_department_id(department_id)" readonly="True"/>
+                                        <field name="job_id" string="职位"  readonly="True"/>
+                                        <field name="parent_id" string="上一级"  readonly="True"/>
+                                        <field name="coach_id" readonly="True"/>
+                                        <field name="level" string="级别" readonly="True"/>
+                                        <field name="entry_time" string="入职时间"  readonly="True"/>
+                                        <field name="contract_starttime" string="合同开始时间"  readonly="True"/>
+                                        <field name="contract_len" string="合同期限"  readonly="True"/>
+                                        <field name="contract_endtime" string="合同终止时间"  readonly="True"/>
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="work_location" readonly="True"/>
+                                    </group>
+                                </group>
+                                <group string="项目信息">
+                                    <field name="project_id" string="所在项目" readonly="True"/>
+                                    <field name="analytic_line_id" string="服务类别"  readonly="True" attrs="{'invisible':[('category','!=',u'在合同中')]}"/>
+                                    <field name="category" string="人员归属" readonly="True"/>
+                                </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)" readonly="True"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User" context="{'default_groups_ref': ['base.group_user']}" readonly="True"/>
+                                    </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4" readonly="True"/>
+                            </page>
+                </xpath>
+                <xpath expr="//page[@string='Public Information']" position="replace">
+                    <page string="Personal Information" >
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                        <field name="identification_id" />
+                                        <field name="passport_id" />
+                                        <field name="bank_account_id"/>
+                                        <field name="otherid"/>
+                                    </group>
+                                    <group string="个人信息">
+                                        <field name="mobile_phone"/>
+                                        <field name="birthday"/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                    </group>
+
+                                </group>
+                                <group string="简历信息">
+                                        <field name="work_time" string="工作时间" />
+                                        <field name="graduation" />
+                                        <field name="major" />
+                                        <field name="education" string="学历"/>
+                                        <field name="certificate_ids"  string = "证书"  >
+                                            <tree string="Registered feedback" editable="bottom">
+                                                <field name="certificate_category_id" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_institutions_id" domain="[('category_id','=',certificate_category_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_direction_id" domain="[('institutions_id','=',certificate_institutions_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_level_id" domain="[('direction_id','=',certificate_direction_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="time"/>
+                                            </tree>
+                                        </field>
+                                        <field name="specialty" string="特长" />
+                                </group>
+                            </page>
+                </xpath>
+                <xpath expr="//page[@string='HR Settings']" position="replace">
+                    <page string="HR Settings" groups="base.group_hr_user,base.group_hr_manager">
+                        <group>
+                            <group string="Active" name="active_group">
+                                <field name="active"/> 
+                                <field name="dimission_why" string="离职原因" attrs="{'invisible': [('active', '!=', False)]}"/>
+                                <field name="dimission_goto" string="离职去向" attrs="{'invisible': [('active', '!=', False)]}"/>
+                                <field name="dimission_why_add" string="其他原因" attrs="{'invisible': ['|',('active', '!=', False),('dimission_why','!=','其他')]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_project_form_view">
+            <field name="name">porject.form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+		<xpath expr="//page[@name='team']" position="replace">
+                    <page string="Team" name="team">
+                            <field colspan="2" name="employee_ids" widget="many2many_kanban" >
+                                <kanban quick_create="false" create="true" delete="true">
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 1px; diplay: inline-block">X</a>
+                                                <div class="oe_module_vignette">
+                                                    <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/></a>
+                                                    <div class="oe_module_desc">
+                                                        <field name="name"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <newline/>
+                    <field name="need_employee_count" string="所需人数"/>
+                    <newline/>
+                    <field name="employee_count" string="现有人数"/>
+                </xpath>
+		<xpath expr="//group[@name='group_alias']" position="replace">
+                   <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_erp_manager">
+                            <label for="alias_name" string="Email Alias"/>
+                            <div name="alias_def">
+                                <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
+                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;">
+                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </div>
+                            </div>
+                            <label for="alias_model" string="Incoming Emails create"/>
+                            <field name="alias_model" class="oe_inline" nolabel="1"/>
+                            <field name="alias_contact" class="oe_inline" string="Accept Emails From"/>
+                   </group>
+                </xpath>
+            </field>
+        </record>
+        
+        
+        <record model="ir.ui.view" id="nantian_erp_account_analytic_line_tree">
+            <field name="name">account_analytic_line.tree</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="replace">
+                    <field name="product_id"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='unit_amount']" position="after">
+                    <field name="employee_count" string="现有人数" readonly="True"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_project_search_view">
+            <field name="name">employee.search</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@string='Company']" position="after">
+                    <filter string="项目" icon="terp-personal+" domain="[]" context="{'group_by':'project_id'}"/>
+                    <filter string="合同" icon="terp-personal+" domain="[]" context="{'group_by':'project_parent_id'}"/>
+                    <filter string="人员所属" icon="terp-personal+" domain="[]" context="{'group_by':'category'}"/>
+                </xpath>
+                <xpath expr="//filter[@string='Job']" position="replace">
+                <filter string="职位" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_project_kanban_view">
+            <field name="name">porject.kanban</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_kanban_project_avatars']" position="replace">
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

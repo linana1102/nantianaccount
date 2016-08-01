@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+hr_employee_all,hr_employee all,model_hr_employee,base.group_user,1,1,0,0
+nantian_erp_certificate_all,nantian_erp_certificate all,model_nantian_erp_certificate,,1,1,1,1
+nantian_erp_certificate_category_all,nantian_erp_certificate_category all,model_nantian_erp_certificate_category,,1,1,1,1
+nantian_erp_certificate_institutions_all,nantian_erp_certificate_institutions all,model_nantian_erp_certificate_institutions,,1,1,1,1
+nantian_erp_certificate_direction_all,nantian_erp_certificate_direction all,model_nantian_erp_certificate_direction,,1,1,1,1
+nantian_erp_certificate_all_level,nantian_erp_certificate_level all,model_nantian_erp_certificate_level,,1,1,1,1
