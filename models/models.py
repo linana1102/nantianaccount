@@ -74,6 +74,7 @@ class hr_employee(models.Model):
     dimission_goto = fields.Text(string="离职去向")
     dimission_why_add = fields.Text(string="其他原因")
 
+
     @api.depends('project_id')
     def _compute_parent_project(self):
         for record in self:
@@ -152,8 +153,10 @@ class certificate(models.Model):
     certificate_category_id = fields.Many2one('nantian_erp.certificate_category', string='认证类型')
     certificate_institutions_id = fields.Many2one('nantian_erp.certificate_institutions', string='颁发机构或行业')
     certificate_level_id = fields.Many2one('nantian_erp.certificate_level', string='级别')
-    time = fields.Date(required=True,placeholder="截止日期",string="有效期")
+    time = fields.Date(placeholder="截止日期",string="有效期",default=datetime(9999,12,31))
+    is_forever_validate = fields.Boolean(string="是否长期有效",default = False)
     employee_ids = fields.Many2one('hr.employee',ondelete='set null')
+
 
 class certificate_category(models.Model):
     _name = 'nantian_erp.certificate_category'
@@ -177,4 +180,67 @@ class certificate_level(models.Model):
     _rec_name = 'name'
     name = fields.Char(string='级别')
     direction_id = fields.Many2one('nantian_erp.certificate_direction', ondelete='set null', select=True)
+
+class hr_attendance(models.Model):
+    _inherit = 'hr.attendance'
+
+    state = fields.Selection([
+         ('draft', "新建"),
+         ('confirmed', "待确认"),
+         ('done', "已确认"),
+    ], default=lambda self: self._get_state())
+    examine_user = fields.Many2one('res.users',string='审批人',default=lambda self: self._get_examine_user())
+
+    @api.multi
+    def _get_state(self):
+        pro_manager=[]
+        dep_manager=[]
+        for project in self.env['project.project'].search([]):
+            pro_manager.append(project.user_id)
+        for department in self.env['hr.department'].search([]):
+            if department.manager_id:
+
+                em=department.manager_id
+
+                user = self.env['res.users'].search([('employee_ids','ilike',em.id)])
+
+            dep_manager.append(user)
+        if self.env.user not in pro_manager and self.env.user not in dep_manager:
+
+            return 'confirmed'
+        else:
+            return 'done'
+
+
+    @api.multi
+    def _get_examine_user(self):
+        pro_manager = []
+        dep_manager = []
+        for project in self.env['project.project'].search([]):
+            pro_manager.append(project.user_id)
+        for department in self.env['hr.department'].search([]):
+            if department.manager_id:
+                em = department.manager_id
+                user = self.env['res.users'].search([('employee_ids', 'ilike', em.id)])
+            dep_manager.append(user)
+        if self.env.user not in pro_manager and self.env.user not in dep_manager:
+
+            return self.env.user.employee_ids.parent_id.user_id
+        else:
+            return None
+
+    @api.one
+    def action_draft(self):
+        self.state = 'draft'
+        self.examine_user = self.employee_id.user_id
+
+    @api.one
+    def action_confirm(self):
+        self.state = 'confirmed'
+        self.examine_user = self.employee_id.user_id.employee_ids[0].parent_id.user_id
+    @api.one
+    def action_done(self):
+        self.state = 'done'
+
+
 
