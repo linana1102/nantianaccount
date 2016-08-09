@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 from openerp import tools
-from openerp import models, fields, api
+from openerp import models, fields, api,exceptions
 from email.utils import formataddr
 import email,math
 from email.header import Header
@@ -60,19 +60,6 @@ class hr_employee(models.Model):
     certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='证书认证类型')
     certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='证书颁发机构或行业')
     certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='证书级别')
-    dimission_why=fields.Selection(
-        [
-            (u'薪资待遇不满意', u"薪资待遇不满意"),
-            (u'工作环境不满意', u"工作环境不满意"),
-            (u'工作发展方向不满意', u"工作发展方向不满意"),
-            (u'有更好的公司选择', u"有更好的公司选择"),
-            (u'家庭原因', u"家庭原因"),
-            (u'身体原因',u'身体原因'),
-            (u'其他',u'其他'),
-        ],
-        string="离职原因")
-    dimission_goto = fields.Text(string="离职去向")
-    dimission_why_add = fields.Text(string="其他原因")
 
 
     @api.depends('project_id')
@@ -180,6 +167,66 @@ class certificate_level(models.Model):
     _rec_name = 'name'
     name = fields.Char(string='级别')
     direction_id = fields.Many2one('nantian_erp.certificate_direction', ondelete='set null', select=True)
+class hr_dimission(models.Model):
+    _name = 'nantian_erp.hr_dimission'
+
+    employee_ids = fields.Many2one('hr.employee', ondelete='set null',default=lambda self: self.env.user.employee_ids[0])
+    dimission_why = fields.Selection(
+        [
+            (u'薪资待遇不满意', u"薪资待遇不满意"),
+            (u'工作环境不满意', u"工作环境不满意"),
+            (u'工作发展方向不满意', u"工作发展方向不满意"),
+            (u'有更好的公司选择', u"有更好的公司选择"),
+            (u'家庭原因', u"家庭原因"),
+            (u'身体原因', u'身体原因'),
+            (u'其他', u'其他'),
+        ],
+        string="离职原因")
+    dimission_goto = fields.Text(string="离职去向")
+    dimission_why_add = fields.Text(string="其他原因")
+    state = fields.Selection(
+        [
+            ('application', u'离职申请'),
+            ('check', u'审批'),
+            ('again_check', u'总经理审批'),
+            ('done', u'完成'),
+        ],
+        default='application', string="离职申请状态")
+    dealer = fields.Many2one('res.users',string="处理人")
+    hr_officer = fields.Many2one('hr.employee',string="审批人")
+    hr_officer_user = fields.Many2one(related='hr_officer.user_id',string="审批人用户")
+    hr_manager = fields.Many2one('hr.employee',string="最终审批人")
+    hr_manager_user = fields.Many2one(related='hr_manager.user_id',string="最终审批人用户")
+    def dimission_apply(self):
+        if  self.employee_ids.department_id.manager_id and self.employee_ids.department_id.parent_id:
+            if self.employee_ids.department_id.manager_id == self.employee_ids:
+                self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
+                self.state = 'application'
+            else:
+                self.hr_officer = self.employee_ids.department_id.manager_id
+                if self.employee_ids.department_id.parent_id.manager_id:
+                    self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
+                    self.state = 'application'
+                else:
+                    raise exceptions.ValidationError('您需要一个总经理去处理您的离职申请')
+        else:
+            raise exceptions.ValidationError('您没有经理去处理您的离职申请')
+    def dimission_check(self):
+        if self.hr_manager:
+            if self.hr_officer:
+                self.state = 'check'
+                self.dealer = self.hr_officer_user
+            else:
+                self.state = 'again_check'
+                self.dealer = self.hr_manager_user
+
+    def dimission_again_check(self):
+        self.state = 'again_check'
+        self.dealer = self.hr_manager_user
+    def dimission_done(self):
+        self.state = 'done'
+        self.employee_ids.active = 0
+
 
 class hr_attendance(models.Model):
     _inherit = 'hr.attendance'

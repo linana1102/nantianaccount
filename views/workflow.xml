@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record model="workflow" id="wkf_hr_dimission">
+            <field name="name">dimission</field>
+            <field name="osv">nantian_erp.hr_dimission</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record model="workflow.activity" id="hr_dimission">
+            <field name="name">new</field>
+            <field name="wkf_id" ref="wkf_hr_dimission" />
+            <field name="flow_start" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">dimission_apply()</field>
+        </record>
+        <record model="workflow.activity" id="hr_dimission_check">
+            <field name="name">check</field>
+            <field name="wkf_id" ref="wkf_hr_dimission" />
+            <field name="kind">function</field>
+            <field name="action">dimission_check()</field>
+        </record>
+        <record model="workflow.activity" id="hr_dimission_again_check">
+            <field name="name">again_check</field>
+            <field name="wkf_id" ref="wkf_hr_dimission" />
+            <field name="kind">function</field>
+            <field name="action">dimission_again_check()</field>
+        </record>
+        <record model="workflow.activity" id="hr_dimission_done">
+            <field name="name">done</field>
+            <field name="wkf_id" ref="wkf_hr_dimission" />
+            <field name="flow_stop" eval="True"/>
+            <field name="kind">function</field>
+            <field name="action">dimission_done()</field>
+        </record>
+
+
+        <record model="workflow.transition" id="hr_dimission_to_hr_dimission_check">
+            <field name="act_from" ref="hr_dimission" />
+            <field name="act_to" ref="hr_dimission_check"/>
+            <field name="signal">set_to_check</field>
+        </record>
+        <record model="workflow.transition" id="hr_dimission_check_to_hr_dimission_again_check">
+            <field name="act_from" ref="hr_dimission_check" />
+            <field name="act_to" ref="hr_dimission_again_check"/>
+            <field name="group_id" ref="base.group_hr_user" />
+            <field name="signal">set_to_again_check</field>
+        </record>
+        <record model="workflow.transition" id="hr_dimission_again_check_to_hr_dimission_done">
+            <field name="act_from" ref="hr_dimission_again_check" />
+            <field name="act_to" ref="hr_dimission_done"/>
+            <field name="group_id" ref="base.group_hr_manager" />
+            <field name="signal">set_to_done</field>
+        </record>
+</data>
+</openerp>

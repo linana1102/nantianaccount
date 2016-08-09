@@ -29,6 +29,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
+
         <record id="nantian_erp_to_examine_attendance" model="ir.actions.act_window">
             <field name="name">to_examine_attendance</field>
             <field name="res_model">hr.attendance</field>
@@ -85,6 +86,61 @@
             <field name="sequence" eval="12" />
             <field name="view_id" ref="nantian_erp_done_attendance_form" />
             <field name="act_window_id" ref="nantian_erp_my_attendance" />
+
+        <record id="nantian_erp_dimission_create" model="ir.actions.act_window">
+            <field name="name">dimission_create</field>
+            <field name="res_model">nantian_erp.hr_dimission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="nantian_erp_hr_dimission_create_tree"/>
+            <field name="domain">[('employee_ids.user_id','=',uid),('state','=','application')]</field>
+        </record>
+        <record id="nantian_erp_dimission_create_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="nantian_erp_hr_dimission_create_tree" />
+            <field name="act_window_id" ref="nantian_erp_dimission_create" />
+        </record>
+        <record id="nantian_erp_dimission_create_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="nantian_erp_hr_dimission_create" />
+            <field name="act_window_id" ref="nantian_erp_dimission_create" />
+        </record>
+        <record id="nantian_erp_dimission_applicing" model="ir.actions.act_window">
+            <field name="name">dimission_applicing</field>
+            <field name="res_model">nantian_erp.hr_dimission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="nantian_erp_hr_dimission_applicing_tree"/>
+            <field name="domain">['|',('state','=','check'),('state','=','again_check'),('dealer','=',uid)]</field>
+        </record>
+        <record id="nantian_erp_dimission_applicing_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="nantian_erp_hr_dimission_applicing_tree" />
+            <field name="act_window_id" ref="nantian_erp_dimission_applicing" />
+        </record>
+        <record id="nantian_erp_dimission_applicing_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="nantian_erp_hr_dimission_applicing" />
+            <field name="act_window_id" ref="nantian_erp_dimission_applicing" />
+        </record>
+        <record id="nantian_erp_dimission_done" model="ir.actions.act_window">
+            <field name="name">dimission_done</field>
+            <field name="res_model">nantian_erp.hr_dimission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="nantian_erp_hr_dimission_done_tree"/>
+             <field name="domain">['|','|',('employee_ids.user_id','=',uid),('hr_officer_user','=',uid),('hr_manager_user','=',uid)]</field>
+        </record>
+        <record id="nantian_erp_dimission_done_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="nantian_erp_hr_dimission_done_tree" />
+            <field name="act_window_id" ref="nantian_erp_dimission_done" />
+        </record>
+        <record id="nantian_erp_dimission_done_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="nantian_erp_hr_dimission_done" />
+            <field name="act_window_id" ref="nantian_erp_dimission_done" />
+
         </record>
         <menuitem id="certificate" parent="hr.menu_hr_root"  name="certificate" groups="base.group_hr_user"/>
         <menuitem id="certificate_category" parent="certificate" action="nantian_erp_certificate_category" name="certificate_category"/>
@@ -94,6 +150,10 @@
         <menuitem id="menu_to_examine_attendance" parent="hr_attendance.menu_hr_attendance"  name="to_examine_attendance" action="nantian_erp_to_examine_attendance"/>
         <menuitem id="menu_examined_attendance" parent="hr_attendance.menu_hr_attendance"  name="examined_attendance" action="nantian_erp_examined_attendance"/>
         <menuitem id="menu_my_attendance" parent="hr_attendance.menu_hr_attendance"  name="my_attendance" action="nantian_erp_my_attendance"/>
+        <menuitem id="dimission" parent="hr.menu_hr_root"  name="dimission"/>
+        <menuitem id="dimission_create" parent="dimission" action="nantian_erp_dimission_create" name="dimission_create" />
+        <menuitem id="dimission_applicing" parent="dimission" action="nantian_erp_dimission_applicing" name="dimission_applicing" groups="base.group_hr_user"/>
+        <menuitem id="dimission_done" parent="dimission" action="nantian_erp_dimission_done" name="dimission_done" />
 
     </data>
 </openerp>
