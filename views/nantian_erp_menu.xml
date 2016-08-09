@@ -29,10 +29,71 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
+        <record id="nantian_erp_to_examine_attendance" model="ir.actions.act_window">
+            <field name="name">to_examine_attendance</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('examine_user','=',uid),('state','=','confirmed')]</field>
+        </record>
+        <record id="nantian_erp_to_examine_attendance_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_attendance_who" />
+            <field name="act_window_id" ref="nantian_erp_to_examine_attendance" />
+        </record>
+        <record id="nantian_erp_to_examine_attendance_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="12" />
+            <field name="view_id" ref="nantian_erp_confirmed_attendance_form" />
+            <field name="act_window_id" ref="nantian_erp_to_examine_attendance" />
+        </record>
+        <record id="nantian_erp_examined_attendance" model="ir.actions.act_window">
+            <field name="name">to_examine_attendance</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('examine_user','=',uid),('state','=','done')]</field>
+        </record>
+        <record id="nantian_erp_examined_attendance_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_attendance_who" />
+            <field name="act_window_id" ref="nantian_erp_examined_attendance" />
+        </record>
+        <record id="nantian_erp_examined_attendance_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="12" />
+            <field name="view_id" ref="nantian_erp_done_attendance_form" />
+            <field name="act_window_id" ref="nantian_erp_examined_attendance" />
+        </record>
+        <record id="nantian_erp_my_attendance" model="ir.actions.act_window">
+            <field name="name">to_examine_attendance</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('employee_id.user_id','=',uid)]</field>
+        </record>
+        <record id="nantian_erp_my_attendance_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_attendance_who" />
+            <field name="act_window_id" ref="nantian_erp_my_attendance" />
+        </record>
+        <record id="nantian_erp_my_attendance_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="12" />
+            <field name="view_id" ref="nantian_erp_done_attendance_form" />
+            <field name="act_window_id" ref="nantian_erp_my_attendance" />
+        </record>
         <menuitem id="certificate" parent="hr.menu_hr_root"  name="certificate" groups="base.group_hr_user"/>
         <menuitem id="certificate_category" parent="certificate" action="nantian_erp_certificate_category" name="certificate_category"/>
         <menuitem id="certificate_institutions" parent="certificate" action="nantian_erp_certificate_institutions" name="certificate_institutions"/>
         <menuitem id="certificate_direction" parent="certificate" action="nantian_erp_certificate_direction" name="certificate_direction"/>
         <menuitem id="certificate_level" parent="certificate" action="nantian_erp_certificate_level" name="certificate_level"/>
+        <menuitem id="menu_to_examine_attendance" parent="hr_attendance.menu_hr_attendance"  name="to_examine_attendance" action="nantian_erp_to_examine_attendance"/>
+        <menuitem id="menu_examined_attendance" parent="hr_attendance.menu_hr_attendance"  name="examined_attendance" action="nantian_erp_examined_attendance"/>
+        <menuitem id="menu_my_attendance" parent="hr_attendance.menu_hr_attendance"  name="my_attendance" action="nantian_erp_my_attendance"/>
+
     </data>
 </openerp>
