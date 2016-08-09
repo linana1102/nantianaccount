@@ -30,6 +30,8 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+
+
     <!--
     <record id="project_project_rule_leader" model="ir.rule">
         <field name="name">project访问控制-项目经理</field>

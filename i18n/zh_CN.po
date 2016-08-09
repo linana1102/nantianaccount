@@ -43,3 +43,23 @@ msgstr "方向"
 #: model:ir.ui.menu,name:nantian_erp.certificate_level
 msgid "certificate_level"
 msgstr "级别"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.dimission
+msgid "dimission"
+msgstr "离职申请"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.dimission_create
+msgid "dimission_create"
+msgstr "申请创建"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.dimission_applicing
+msgid "dimission_applicing"
+msgstr "需处理的申请"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.dimission_done
+msgid "dimission_done"
+msgstr "查看申请"
