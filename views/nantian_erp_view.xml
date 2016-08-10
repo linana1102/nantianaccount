@@ -51,11 +51,11 @@
                     <page string="Personal Information" >
                                 <group>
                                     <group string="Citizenship &amp; Other Info">
-                                        <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                        <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" groups="base.group_system"/>
                                         <field name="identification_id" groups="base.group_hr_user"/>
-                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_system"/>
                                         <field name="bank_account_id"/>
-                                        <field name="otherid" groups="base.group_hr_user"/>
+                                        <field name="otherid" groups="base.group_system"/>
                                     </group>
                                     <group string="个人信息">
                                         <field name="mobile_phone"/>
@@ -90,7 +90,7 @@
                     <page string="HR Settings" groups="base.group_hr_user,base.group_hr_manager">
                         <group>
                             <group string="Active" name="active_group">
-                                <field name="active"/>
+                                <field name="active" string="在职"/>
                                 </group>
                         </group>
                     </page>
