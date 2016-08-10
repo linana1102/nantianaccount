@@ -311,7 +311,7 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-		<xpath expr="//page[@name='team']" position="replace">
+		    <xpath expr="//page[@name='team']" position="replace">
                     <page string="Team" name="team">
                             <field colspan="2" name="employee_ids" widget="many2many_kanban" >
                                 <kanban quick_create="false" create="true" delete="true">
@@ -340,7 +340,7 @@
                     <newline/>
                     <field name="employee_count" string="现有人数"/>
                 </xpath>
-		<xpath expr="//group[@name='group_alias']" position="replace">
+		        <xpath expr="//group[@name='group_alias']" position="replace">
                    <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_erp_manager">
                             <label for="alias_name" string="Email Alias"/>
                             <div name="alias_def">
