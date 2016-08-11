@@ -60,6 +60,20 @@ class hr_employee(models.Model):
     certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='证书认证类型')
     certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='证书颁发机构或行业')
     certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='证书级别')
+    work_age = fields.Integer(compute='_compute_work_age',store=True)
+
+    @api.depends('work_time')
+    def _compute_work_age(self):
+        for record in self:
+            now=fields.datetime.now()
+            work_time = fields.Datetime.from_string(record.work_time)
+            months = int(str(now.month))-int(str(work_time.month))
+            days =int(str(now.day)) - int(str(work_time.day))
+            if months<0 or (months == 0 and days<0):
+                record.work_age=int(str(now.year))-int(str(work_time.year))-1
+            else:
+                record.work_age = int(str(now.year)) - int(str(work_time.year))
+
 
 
     @api.depends('project_id')
