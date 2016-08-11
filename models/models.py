@@ -5,6 +5,7 @@ from email.utils import formataddr
 import email,math
 from email.header import Header
 from datetime import datetime,timedelta
+import datetime
 
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
@@ -60,7 +61,6 @@ class hr_employee(models.Model):
     certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='证书认证类型')
     certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='证书颁发机构或行业')
     certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='证书级别')
-
 
     @api.depends('project_id')
     def _compute_parent_project(self):
@@ -140,10 +140,8 @@ class certificate(models.Model):
     certificate_category_id = fields.Many2one('nantian_erp.certificate_category', string='认证类型')
     certificate_institutions_id = fields.Many2one('nantian_erp.certificate_institutions', string='颁发机构或行业')
     certificate_level_id = fields.Many2one('nantian_erp.certificate_level', string='级别')
-    time = fields.Date(placeholder="截止日期",string="有效期",default=datetime(9999,12,31))
-    is_forever_validate = fields.Boolean(string="是否长期有效",default = False)
+    time = fields.Date(required=True,placeholder="截止日期",string="有效期",default="9999-12-31")
     employee_ids = fields.Many2one('hr.employee',ondelete='set null')
-
 
 class certificate_category(models.Model):
     _name = 'nantian_erp.certificate_category'
@@ -190,6 +188,7 @@ class hr_dimission(models.Model):
             ('check', u'审批'),
             ('again_check', u'总经理审批'),
             ('done', u'完成'),
+            ('no',u'拒绝'),
         ],
         default='application', string="离职申请状态")
     dealer = fields.Many2one('res.users',string="处理人")
@@ -197,12 +196,21 @@ class hr_dimission(models.Model):
     hr_officer_user = fields.Many2one(related='hr_officer.user_id',string="审批人用户")
     hr_manager = fields.Many2one('hr.employee',string="最终审批人")
     hr_manager_user = fields.Many2one(related='hr_manager.user_id',string="最终审批人用户")
+
+    @api.multi
     def dimission_apply(self):
-        if  self.employee_ids.department_id.manager_id and self.employee_ids.department_id.parent_id:
-            if self.employee_ids.department_id.manager_id == self.employee_ids:
+
+
+        if  self.employee_ids.department_id.manager_id:
+            if self.env['res.users'].search([('employee_ids', 'ilike', self.employee_ids.department_id.manager_id.id)],
+                                            limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
+                self.hr_manager = self.employee_ids.department_id.manager_id
+                self.state = 'application'
+            elif self.employee_ids.department_id.manager_id == self.employee_ids:
                 self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
                 self.state = 'application'
             else:
+
                 self.hr_officer = self.employee_ids.department_id.manager_id
                 if self.employee_ids.department_id.parent_id.manager_id:
                     self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
@@ -226,7 +234,8 @@ class hr_dimission(models.Model):
     def dimission_done(self):
         self.state = 'done'
         self.employee_ids.active = 0
-
+    def dimission_no(self):
+        self.state = 'no'
 
 class hr_attendance(models.Model):
     _inherit = 'hr.attendance'
@@ -240,24 +249,22 @@ class hr_attendance(models.Model):
 
     @api.multi
     def _get_state(self):
-        pro_manager=[]
-        dep_manager=[]
+        pro_manager = []
+        dep_manager = []
         for project in self.env['project.project'].search([]):
             pro_manager.append(project.user_id)
         for department in self.env['hr.department'].search([]):
             if department.manager_id:
+                em = department.manager_id
 
-                em=department.manager_id
+                user = self.env['res.users'].search([('employee_ids', 'ilike', em.id)])
 
-                user = self.env['res.users'].search([('employee_ids','ilike',em.id)])
-
-            dep_manager.append(user)
+                dep_manager.append(user)
         if self.env.user not in pro_manager and self.env.user not in dep_manager:
 
             return 'confirmed'
         else:
             return 'done'
-
 
     @api.multi
     def _get_examine_user(self):
@@ -269,13 +276,14 @@ class hr_attendance(models.Model):
             if department.manager_id:
                 em = department.manager_id
                 user = self.env['res.users'].search([('employee_ids', 'ilike', em.id)])
-            dep_manager.append(user)
+                dep_manager.append(user)
         if self.env.user not in pro_manager and self.env.user not in dep_manager:
-
-            return self.env.user.employee_ids.parent_id.user_id
+            if self.env.user.employee_ids.parent_id:
+                return self.env.user.employee_ids.parent_id.user_id
+            else:
+                return None
         else:
             return None
-
     @api.one
     def action_draft(self):
         self.state = 'draft'
@@ -285,9 +293,126 @@ class hr_attendance(models.Model):
     def action_confirm(self):
         self.state = 'confirmed'
         self.examine_user = self.employee_id.user_id.employee_ids[0].parent_id.user_id
+
     @api.one
     def action_done(self):
         self.state = 'done'
+class hr_leave(models.Model):
+    _name = 'nantian_erp.hr_leave'
+    name = fields.Char(string='请假单',)
+    state = fields.Selection(
+        [
+            ('application', u'请假申请'),
+            ('check', u'审批'),
+            ('again_check', u'总经理审批'),
+            ('done', u'完成'),
+            ('no', u'拒绝'),
+        ],
+        default='application', string="离职申请状态")
+    dealer = fields.Many2one('res.users', string="处理人")
+    hr_officer = fields.Many2one('hr.employee', string="审批人")
+    hr_officer_user = fields.Many2one(related='hr_officer.user_id', string="审批人用户")
+    hr_manager = fields.Many2one('hr.employee', string="最终审批人")
+    hr_manager_user = fields.Many2one(related='hr_manager.user_id', string="最终审批人用户")
+    employee_ids = fields.Many2one('hr.employee', string="申请人",ondelete='set null',default=lambda self: self.env.user.employee_ids[0])
+    leave_type = fields.Many2one('nantian_erp.hr_leave_type', string="请假类型")
+    date_from = fields.Datetime(string="开始日期")
+    date_to = fields.Datetime(string="结束日期")
+    reason = fields.Text(string="请假原因")
 
+    @api.multi
+    def leave_apply(self):
 
+        if self.env.user in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
+            self.state = 'done'
+        elif self.employee_ids.child_ids or self.env.user in self.env['project.project'].user_id or self.employee_ids==self.employee_ids.department_id.manager_id:
+            if self.leave_type.name == "调休":
+                self.state = 'done'
+            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users:
 
+                self.hr_manager = self.employee_ids.department_id.manager_id
+                self.state = 'application'
+            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.parent_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users:
+                self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
+                self.state = 'application'
+            else:
+                raise exceptions.ValidationError('您需要一个总经理去处理您的请假申请')
+        elif self.employee_ids.parent_id:
+            if self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.parent_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users or self.leave_type.name == "调休":
+                self.hr_manager = self.employee_ids.parent_id
+            else:
+                if self.leave_type.name == "调休":
+                    self.hr_officer = self.employee_ids.department_id.manager_id
+                else:
+                    self.hr_officer = self.employee_ids.department_id.manager_id
+                    self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
+            self.state = 'application'
+        else:
+            raise exceptions.ValidationError('您没有经理去处理您的请假申请')
+
+    def leave_check(self):
+        if self.hr_manager:
+            if self.hr_officer:
+                self.state = 'check'
+                self.dealer = self.hr_officer_user
+            else:
+                self.state = 'again_check'
+                self.dealer = self.hr_manager_user
+
+    def leave_again_check(self):
+        self.state = 'again_check'
+        self.dealer = self.hr_manager_user
+
+    def leave_done(self):
+        self.state = 'done'
+
+    def leave_no(self):
+        self.state = 'no'
+
+    @api.multi
+    def onchange_date_from(self, date_to, date_from):
+
+        if (date_from and date_to) and (date_from > date_to):
+            raise exceptions.ValidationError("结束日期必须大于开始日期")
+
+        result = {'value': {}}
+
+        # No date_to set so far: automatically compute one 8 hours later
+        if date_from and not date_to:
+            date_to_with_delta = datetime.datetime.strptime(date_from,
+                                                            tools.DEFAULT_SERVER_DATETIME_FORMAT) + datetime.timedelta(
+                hours=8)
+            result['value']['date_to'] = str(date_to_with_delta)
+
+        # Compute and update the number of days
+        # if (date_to and date_from) and (date_from <= date_to):
+        #     diff_day = self._get_number_of_days(date_from, date_to)
+        #     result['value']['number_of_days'] = round(math.floor(diff_day)) + 1
+        # else:
+        #     result['value']['number_of_days'] = 0
+
+        return result
+
+    @api.multi
+    def onchange_date_to(self, date_to, date_from):
+        """
+        Update the number_of_days.
+        """
+
+        # date_to has to be greater than date_from
+        if (date_from and date_to) and (date_from > date_to):
+            raise exceptions.ValidationError("结束日期必须大于开始日期")
+
+        result = {'value': {}}
+
+        # Compute and update the number of days
+        # if (date_to and date_from) and (date_from <= date_to):
+        #     diff_day = self._get_number_of_days(date_from, date_to)
+        #     result['value']['number_of_days'] = round(math.floor(diff_day)) + 1
+        # else:
+        #     result['value']['number_of_days'] = 0
+
+        return result
+class hr_leave_type(models.Model):
+    _name = 'nantian_erp.hr_leave_type'
+    name = fields.Char(string='请假类型')

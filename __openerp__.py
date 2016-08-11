@@ -28,7 +28,8 @@
         'security/server_desk_security.xml',
         'views/nantian_erp_view.xml',
         'views/nantian_erp_menu.xml',
-        'views/workflow.xml'
+        'views/dimission_workflow.xml',
+        'views/leave_workflow.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
