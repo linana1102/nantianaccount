@@ -161,6 +161,7 @@
         <record id="nantian_erp_leave_create" model="ir.actions.act_window">
             <field name="name">leave_create</field>
             <field name="res_model">nantian_erp.hr_leave</field>
+
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="nantian_erp_hr_leave_create_tree"/>

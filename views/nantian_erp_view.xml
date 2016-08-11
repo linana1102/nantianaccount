@@ -473,11 +473,12 @@
                         <field name="project_id" string="项目组"/>
                         <field name="level" string="级别"/>
                         <field name="parent_id" string="上级领导"/>
-                        <field name="work_time" string="工作时间"/>
+                        <field name="work_age" string="工作年限"/>
                     </tree>
                 </xpath>
             </field>
         </record>
+
 
 
         <record model="ir.ui.view" id="nantian_erp_hr_leave_create">
@@ -614,7 +615,51 @@
                 <tree string="leave_type tree">
                     <field name="name" string="请假类型"/>
                 </tree>
+
+         <record id="nantian_account_analytic_account_form_form" model="ir.ui.view">
+            <field name="name">nantian.account.analytic.account.invoice.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="priority">160</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='use_timesheets']" position="replace">
+                </xpath>
+                <xpath expr="//label[@for='use_timesheets']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='use_tasks']" position="replace">
+                </xpath>
+                <xpath expr="//label[@for='use_tasks']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='use_issues']" position="replace">
+                </xpath>
+                <xpath expr="//label[@for='use_issues']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='template_id']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='code']" position="replace">
+                </xpath>
+                 <xpath expr="//field[@name='parent_id']" position="replace">
+                </xpath>
+                <!--<xpath expr="//field[@name='quantity_max']" position="replace">-->
+                <!--</xpath>-->
+                <!--<xpath expr="//field[@name='recurring_invoices']" position="replace">-->
+                <!--</xpath>-->
             </field>
         </record>
+         <record id="nantian_view_account_analytic_account_list" model="ir.ui.view">
+            <field name="name">nantian.account.analytic.account.list</field>
+            <field name="model">account.analytic.account</field>
+            <field name="priority">160</field>
+            <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="replace">
+               </xpath>
+               <xpath expr="//field[@name='parent_id']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='template_id']" position="replace">
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>
