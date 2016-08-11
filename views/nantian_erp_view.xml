@@ -378,11 +378,11 @@
             <field name="inherit_id" ref="hr.view_employee_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='department_id']" position="after">
-                    <field name="project_id" />
-                    <field name="project_parent_id" />
-                    <field name="certificate_institutions_id" />
-                    <field name="certificate_direction_id" />
-                    <field name="certificate_level_id" />
+                    <field name="project_id" string="所在项目"/>
+                    <field name="project_parent_id" string="所属合同"/>
+                    <field name="certificate_institutions_id" string="证书颁发机构"/>
+                    <field name="certificate_direction_id" string="证书方向"/>
+                    <field name="certificate_level_id" string="证书等级"/>
                 </xpath>
                 <xpath expr="//filter[@string='Company']" position="after">
                     <filter string="项目" icon="terp-personal+" domain="[]" context="{'group_by':'project_id'}"/>
