@@ -500,6 +500,20 @@
                 <!--</xpath>-->
             </field>
         </record>
+         <record id="nantian_view_account_analytic_account_list" model="ir.ui.view">
+            <field name="name">nantian.account.analytic.account.list</field>
+            <field name="model">account.analytic.account</field>
+            <field name="priority">160</field>
+            <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="replace">
+               </xpath>
+               <xpath expr="//field[@name='parent_id']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='template_id']" position="replace">
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>
