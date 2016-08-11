@@ -145,6 +145,117 @@ class certificate(models.Model):
     employee_ids = fields.Many2one('hr.employee',ondelete='set null')
 
 
+    def expiration_reminder(self, cr, uid, erp_server_addr, context=None):
+        '''
+        证书过期提醒。
+        每天执行一次，检测当天到期的证书，给证书主人及其上级发送一封到期提醒邮件。
+        重复执行的设置钩子，在【设置】-【技术】-【自动化】-【安排的动作】里增加一条每天执行一次的动作。
+        设置需要一个参数，表示邮件里用于用户点击的链接。
+        另外，需要设置出去的邮件服务器.
+        '''
+        exp_cers_ids = self.search(cr, uid, [("time", "=", time.strftime(
+            "%Y-%m-%d"))], context=context)
+        exp_cers = self.browse(cr, uid, exp_cers_ids, context=context)
+
+        dai_fa_song = {}  # format:
+        # {hr_employee.id: {obj: hr_employee
+        #                   users: {hr_employee.id: {obj: hr_employee
+        #                                            cers: [nantian_erp.certificate]
+        #                                           }
+        #                          }
+        #                   }
+        # }
+
+        for cer in exp_cers:
+            if not cer.employee_ids:
+                continue
+            user = cer.employee_ids
+            mgr = None
+            mgr_id = None
+            if user.parent_id:
+                mgr = user.parent_id
+                mgr_id = mgr.id
+            if not dai_fa_song.has_key(mgr_id):
+                dai_fa_song[mgr_id] = {
+                    "obj": mgr,
+                    "users": {}
+                }
+            if not dai_fa_song[mgr_id]["users"].has_key(user.id):
+                dai_fa_song[mgr_id]["users"][user.id] = {
+                    "obj": user,
+                    "cers": []
+                }
+            dai_fa_song[mgr_id]["users"][user.id]['cers'].append(cer)
+
+        failed_users = []
+
+        for mid, mgr in dai_fa_song.items():
+            users = mgr['users']
+            mgr = mgr['obj']
+            if mgr != None:
+                if not mgr.work_email:
+                    failed_users.append(mgr)
+                    continue
+                to_list = [formataddr((Header(mgr.name_related,
+                                              'utf-8').encode(),
+                                       mgr.work_email))]
+                mail_content = u'''
+    <div>%s 您好:
+    <p>您的下属中有如下成员证书已经到期，特此提醒。</p>
+    <ol>%s</ol>
+    <p>详情请登录南天ERP查询：<a href='%s'>%s</a></p>
+    <p>南天电子</p></div>
+    ''' % (mgr.name_related,
+           "".join([u"<li>%s 证书【%s】到期时间 %s 。</li>" \
+                    % (user['obj'].name_related, c.name, c.time)
+                    for user_id, user in users.items() for c in user["cers"]]),
+           erp_server_addr, erp_server_addr
+           )
+                mail_mail = self.pool.get('mail.mail')
+                mail_id = mail_mail.create(cr, uid, {
+                    'body_html': mail_content,
+                    'subject': Header(u'证书过期提醒', 'utf-8').encode(),
+                    'email_to': to_list,
+                    'auto_delete': True,
+                }, context=context)
+                mail_mail.send(cr, uid, [mail_id], context=context)
+
+            for user_id, user in users.items():
+                cers = user['cers']
+                user = user['obj']
+                if not user.work_email:
+                    failed_users.append(user)
+                    continue
+                to_list = [formataddr((Header(user.name_related,
+                                              'utf-8').encode(),
+                                       user.work_email))]
+                mail_content = u'''
+    <div>%s 您好：
+    <p>您有如下证书已经到期：</p>
+    <ol>%s</ol>
+    <p>详情请登录南天ERP查询：<a href='%s'>%s</a></p>
+    <p>南天电子</p></div>
+    ''' % (user.name_related,
+           "".join([u"<li>%s 到期时间 %s</li>" % (c.name, c.time) for c in cers]),
+           erp_server_addr,
+           erp_server_addr)
+
+                mail_mail = self.pool.get('mail.mail')
+                mail_id = mail_mail.create(cr, uid, {
+                    'body_html': mail_content,
+                    'subject': Header(u'证书过期提醒', 'utf-8').encode(),
+                    'email_to': to_list,
+                    'auto_delete': True,
+                }, context=context)
+                mail_mail.send(cr, uid, [mail_id], context=context)
+
+                # print("="*80)
+                # print(dai_fa_song)
+                # print(failed_users)
+                # print("-"*80)
+
+
+
 class certificate_category(models.Model):
     _name = 'nantian_erp.certificate_category'
     _rec_name = 'name'
