@@ -63,3 +63,28 @@ msgstr "需处理的申请"
 #: model:ir.ui.menu,name:nantian_erp.dimission_done
 msgid "dimission_done"
 msgstr "查看申请"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.leave
+msgid "leave"
+msgstr "请假申请"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.leave_create
+msgid "leave_create"
+msgstr "申请创建"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.leave_applicing
+msgid "leave_applicing"
+msgstr "需处理的申请"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.leave_done
+msgid "leave_done"
+msgstr "查看申请"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.leave_type
+msgid "leave_type"
+msgstr "请假类型"
