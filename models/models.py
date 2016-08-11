@@ -154,7 +154,8 @@ class certificate(models.Model):
     certificate_category_id = fields.Many2one('nantian_erp.certificate_category', string='认证类型')
     certificate_institutions_id = fields.Many2one('nantian_erp.certificate_institutions', string='颁发机构或行业')
     certificate_level_id = fields.Many2one('nantian_erp.certificate_level', string='级别')
-    time = fields.Date(required=True,placeholder="截止日期",string="有效期",default="9999-12-31")
+    time = fields.Date(placeholder="截止日期",string="有效期",default=datetime(9999,12,31))
+    is_forever_validate = fields.Boolean(string="是否长期有效",default = False)
     employee_ids = fields.Many2one('hr.employee',ondelete='set null')
 
 
