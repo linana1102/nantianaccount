@@ -87,6 +87,7 @@
             <field name="view_id" ref="nantian_erp_done_attendance_form" />
             <field name="act_window_id" ref="nantian_erp_my_attendance" />
         </record>
+
         <record id="nantian_erp_dimission_create" model="ir.actions.act_window">
             <field name="name">dimission_create</field>
             <field name="res_model">nantian_erp.hr_dimission</field>
