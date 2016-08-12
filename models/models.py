@@ -64,18 +64,33 @@ class hr_employee(models.Model):
     work_age = fields.Integer(compute='_compute_work_age',store=True)
     api_res = fields.Char(default="sys")
 
+    @api.one
     @api.depends('work_time')
     def _compute_work_age(self):
         for record in self:
-            now=fields.datetime.now()
-            work_time = fields.Datetime.from_string(record.work_time)
-            months = int(str(now.month))-int(str(work_time.month))
-            days =int(str(now.day)) - int(str(work_time.day))
-            if months<0 or (months == 0 and days<0):
-                record.work_age=int(str(now.year))-int(str(work_time.year))-1
-            else:
-                record.work_age = int(str(now.year)) - int(str(work_time.year))
+            if record.work_time:
+                now=fields.datetime.now()
+                work_time = fields.Datetime.from_string(record.work_time)
+                months = int(str(now.month))-int(str(work_time.month))
+                days =int(str(now.day)) - int(str(work_time.day))
+                if months<0 or (months == 0 and days<0):
+                    record.work_age=int(str(now.year))-int(str(work_time.year))-1
+                else:
+                    record.work_age = int(str(now.year)) - int(str(work_time.year))
 
+    @api.multi
+    def action_to_compute_work_age(self):
+        recs = self.env['hr.employee'].search([])
+        for record in recs:
+            if record.work_time:
+                now = fields.datetime.now()
+                work_time = fields.Datetime.from_string(record.work_time)
+                months = int(str(now.month)) - int(str(work_time.month))
+                days = int(str(now.day)) - int(str(work_time.day))
+                if months < 0 or (months == 0 and days < 0):
+                    record.work_age = int(str(now.year)) - int(str(work_time.year)) - 1
+                else:
+                    record.work_age = int(str(now.year)) - int(str(work_time.year))
 
     @api.depends('project_id')
     def _compute_parent_project(self):
@@ -136,13 +151,21 @@ class account_analytic_account(models.Model):
     _inherit = 'account.analytic.account'
 
     need_employee_count = fields.Integer(compute='_need_count_employees',store=True)
+    employee_count=fields.Integer(compute='_count_employees',store=True)
 
-    @api.depends('line_ids')
+    @api.depends('line_ids.unit_amount')
     def _need_count_employees(self):
         for record in self:
-            record.enee_mployee_count = 0
+            record.need_mployee_count = 0
             for line in self.line_ids:
-                record.need_employee_count += line.employee_count
+                record.need_employee_count += line.unit_amount
+
+    @api.depends('line_ids.employee_count')
+    def _count_employees(self):
+        for record in self:
+            #record.employee_count=0
+            for line in self.line_ids:
+                record.employee_count +=line.employee_count
 
     @api.multi
     @api.depends('name', 'employee_count')
