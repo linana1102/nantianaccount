@@ -61,6 +61,7 @@ class hr_employee(models.Model):
     certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='证书颁发机构或行业')
     certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='证书级别')
     work_age = fields.Integer(compute='_compute_work_age',store=True)
+    api_res = fields.Char(default="sys")
 
     @api.depends('work_time')
     def _compute_work_age(self):
