@@ -6,3 +6,5 @@ nantian_erp_certificate_institutions_all,nantian_erp_certificate_institutions al
 nantian_erp_certificate_direction_all,nantian_erp_certificate_direction all,model_nantian_erp_certificate_direction,,1,1,1,1
 nantian_erp_certificate_all_level,nantian_erp_certificate_level all,model_nantian_erp_certificate_level,,1,1,1,1
 nantian_erp_dimission_all,nantian_erp_dimission all,model_nantian_erp_hr_dimission,,1,1,1,0
+nantian_erp_leave_all,nantian_erp_leave all,model_nantian_erp_hr_leave,,1,1,1,0
+nantian_erp_leave_type_all,nantian_erp_leave_type all,model_nantian_erp_hr_leave_type,base.group_user,1,1,1,0
