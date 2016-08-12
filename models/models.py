@@ -66,14 +66,15 @@ class hr_employee(models.Model):
     @api.depends('work_time')
     def _compute_work_age(self):
         for record in self:
-            now=fields.datetime.now()
-            work_time = fields.Datetime.from_string(record.work_time)
-            months = int(str(now.month))-int(str(work_time.month))
-            days =int(str(now.day)) - int(str(work_time.day))
-            if months<0 or (months == 0 and days<0):
-                record.work_age=int(str(now.year))-int(str(work_time.year))-1
-            else:
-                record.work_age = int(str(now.year)) - int(str(work_time.year))
+            if record.work_time:
+                now=fields.datetime.now()
+                work_time = fields.Datetime.from_string(record.work_time)
+                months = int(str(now.month))-int(str(work_time.month))
+                days =int(str(now.day)) - int(str(work_time.day))
+                if months<0 or (months == 0 and days<0):
+                    record.work_age=int(str(now.year))-int(str(work_time.year))-1
+                else:
+                    record.work_age = int(str(now.year)) - int(str(work_time.year))
 
 
     @api.depends('project_id')
@@ -93,7 +94,15 @@ class hr_employee(models.Model):
             return
         start=fields.Datetime.from_string(self.contract_starttime)
         self.contract_endtime =datetime(start.year+self.contract_len,start.month,start.day)
-    
+
+    @api.multi
+    def hr_to_user(self):
+        recs = self.env['hr.employee'].search([('api_res', '=', 'web_api'), ('user_id', '=', None)])
+        for rec in recs:
+            user = self.env['res.users'].create(
+                {'login': rec.work_email, 'password': '123456', 'name': rec.name})
+            rec.user_id = user
+
 class project_project(models.Model):
     _inherit = 'project.project'
 
