@@ -219,7 +219,7 @@
         <menuitem id="leave_done" parent="leave" action="nantian_erp_leave_done" name="leave_done" />
 
         <record id="nantian_erp_leave_type" model="ir.actions.act_window">
-            <field name="name">leave_done</field>
+            <field name="name">leave_type</field>
             <field name="res_model">nantian_erp.hr_leave_type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

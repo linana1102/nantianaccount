@@ -454,7 +454,7 @@ class hr_leave(models.Model):
         if self.env.user in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
             self.state = 'done'
         elif self.employee_ids.child_ids or self.env.user in self.env['project.project'].user_id or self.employee_ids==self.employee_ids.department_id.manager_id:
-            if self.leave_type.name == "调休":
+            if self.leave_type.name == "轮休假":
                 self.state = 'done'
             elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users:
 
@@ -466,10 +466,10 @@ class hr_leave(models.Model):
             else:
                 raise exceptions.ValidationError('您需要一个总经理去处理您的请假申请')
         elif self.employee_ids.parent_id:
-            if self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.parent_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users or self.leave_type.name == "调休":
+            if self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.parent_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users or self.leave_type.name == "轮休假":
                 self.hr_manager = self.employee_ids.parent_id
             else:
-                if self.leave_type.name == "调休":
+                if self.leave_type.name == "轮休假":
                     self.hr_officer = self.employee_ids.department_id.manager_id
                 else:
                     self.hr_officer = self.employee_ids.department_id.manager_id
@@ -507,8 +507,8 @@ class hr_leave(models.Model):
 
         # No date_to set so far: automatically compute one 8 hours later
         if date_from and not date_to:
-            date_to_with_delta = datetime.datetime.strptime(date_from,
-                                                            tools.DEFAULT_SERVER_DATETIME_FORMAT) + datetime.timedelta(
+            date_to_with_delta = datetime.strptime(date_from,
+                                                            tools.DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(
                 hours=8)
             result['value']['date_to'] = str(date_to_with_delta)
 
