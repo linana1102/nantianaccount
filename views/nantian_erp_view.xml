@@ -639,11 +639,14 @@
                 <tree string="leave_type tree">
                     <field name="name" string="请假类型"/>
                 </tree>
+            </field>
+        </record>
 
+        
          <record id="nantian_account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">nantian.account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
-            <field name="priority">160</field>
+            <field name="priority">180</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='use_timesheets']" position="replace">
@@ -664,12 +667,9 @@
                 </xpath>
                  <xpath expr="//field[@name='parent_id']" position="replace">
                 </xpath>
-                <!--<xpath expr="//field[@name='quantity_max']" position="replace">-->
-                <!--</xpath>-->
-                <!--<xpath expr="//field[@name='recurring_invoices']" position="replace">-->
-                <!--</xpath>-->
             </field>
         </record>
+        
          <record id="nantian_view_account_analytic_account_list" model="ir.ui.view">
             <field name="name">nantian.account.analytic.account.list</field>
             <field name="model">account.analytic.account</field>

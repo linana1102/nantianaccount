@@ -5,7 +5,6 @@ from email.utils import formataddr
 import email,math
 from email.header import Header
 from datetime import datetime,timedelta
-import datetime
 
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
@@ -124,10 +123,12 @@ class account_analytic_line(models.Model):
         for record in self:
             record.employee_count = len(record.employee_ids) 
 
+    """
     @api.multi
     @api.depends('name','product_id')
     def name_get(self):
        return [(r.id,(r.name+'('+(r.product_id.name)+')')) for r in self]
+    """
 
 class account_analytic_account(models.Model):
     _inherit = 'account.analytic.account'
