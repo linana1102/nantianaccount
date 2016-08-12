@@ -664,8 +664,10 @@
                 <xpath expr="//field[@name='template_id']" position="replace">
                 </xpath>
                 <xpath expr="//field[@name='code']" position="replace">
+                      <field name="employee_count" string="现有人数"></field>
                 </xpath>
                  <xpath expr="//field[@name='parent_id']" position="replace">
+                     <field name="need_employee_count" string="需要人数"></field>
                 </xpath>
             </field>
         </record>
@@ -682,6 +684,11 @@
                 </xpath>
                 <xpath expr="//field[@name='template_id']" position="replace">
                 </xpath>
+                <xpath expr="//field[@name='date_start']" position="replace">
+                    <field name="employee_count" string="现有人数"></field>
+                    <field name="need_employee_count" string="需要人数"></field>
+                </xpath>
+
             </field>
         </record>
 
