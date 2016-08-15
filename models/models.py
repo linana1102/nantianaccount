@@ -261,7 +261,7 @@ class certificate(models.Model):
                         'email_to': to_list,
                         'auto_delete': True,
                     }, context=context)
-                    print("%s sending to %s(%s)..." %(log_line_head, mgr.name_related, mgr.work_email))
+                    # print("%s sending to %s(%s)..." %(log_line_head, mgr.name_related, mgr.work_email))
                     mail_mail.send(cr, uid, [mail_id], context=context)
 
             for user_id, user in users.items():
@@ -287,12 +287,12 @@ class certificate(models.Model):
                     'email_to': to_list,
                     'auto_delete': True,
                 }, context=context)
-                print("%s sending to %s(%s)..." %(log_line_head, user.name_related, user.work_email))
+                # print("%s sending to %s(%s)..." %(log_line_head, user.name_related, user.work_email))
                 mail_mail.send(cr, uid, [mail_id], context=context)
 
-        if failed_users:
-            print("%s send failed users(email is empty): %s items. [%s]" %(log_line_head, len(failed_users),
-                ", ".join(["%s(%s)" %(user.name_related, user.id) for user in failed_users])))
+        # if failed_users:
+        #     print("%s send failed users(email is empty): %s items. [%s]" %(log_line_head, len(failed_users),
+        #         ", ".join(["%s(%s)" %(user.name_related, user.id) for user in failed_users])))
         # print(dai_fa_song)
 
 
