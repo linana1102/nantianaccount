@@ -11,7 +11,7 @@ class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
     project_id = fields.Many2one('project.project',ondelete='set null',)
-    analytic_line_id = fields.Many2one('account.analytic.line',ondelete='set null',)
+    analytic_line_id = fields.Many2one('account.analytic.line',ondelete='set null',domain = ["journal_id","=","销售分类账"])
     project_parent_id = fields.Many2one('account.analytic.account',compute='_compute_parent_project',store=True)
     certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书")
     graduation = fields.Char(string="毕业学校")    
@@ -48,14 +48,16 @@ class hr_employee(models.Model):
     )
     category = fields.Selection(
         [
-            (u'在公司', u"在公司"),
-            (u'在合同中', u"在合同中"),
-            (u'赠送', u"赠送"),
-            (u'开发', u"开发"),
-            (u'其他', u"其他"),
+            (u'公司储备', u"公司储备"),
+            (u'合同在岗', u"合同在岗"),
+            (u'合同备岗', u"合同备岗"),
+            (u'合同赠送', u"合同赠送"),
+            (u'公司项目', u"公司项目"),
         ],
-    default = u'在公司', string = "人员所属"
+    default = u'公司储备', string = "人员状态"
     )
+    account_id = fields .Many2one('account.analytic.account', ondelete='set null', )
+    res_partner_id = fields.Many2one('res.partner', ondelete='set null', )
     specialty = fields.Text(string="特长")
     certificate_direction_id = fields.Many2one(related='certificate_ids.certificate_direction_id', string='证书方向')
     certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='证书认证类型')

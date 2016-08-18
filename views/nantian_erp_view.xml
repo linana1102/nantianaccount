@@ -36,8 +36,10 @@
                                 </group>
                                 <group string="项目信息">
                                     <field name="project_id" string="所在项目"/>
-                                    <field name="analytic_line_id" string="服务类别" attrs="{'invisible':[('category','!=',u'在合同中')]}"/>
                                     <field name="category" string="人员归属"/>
+                                    <field name="res_partner_id" string="客户" />
+                                    <field name="account_id" string="合同" domain="[('partner_id','=',res_partner_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                                    <field name="analytic_line_id" string="岗位" domain="[('account_id','=',account_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
                                 </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
@@ -132,8 +134,10 @@
                                 </group>
                                 <group string="项目信息">
                                     <field name="project_id" string="所在项目" readonly="True"/>
-                                    <field name="analytic_line_id" string="服务类别"  readonly="True" attrs="{'invisible':[('category','!=',u'在合同中')]}"/>
-                                    <field name="category" string="人员归属" readonly="True"/>
+                                    <field name="category" string="人员归属" />
+                                    <field name="res_partner_id" string="客户" attrs="{'invisible':[('category','!=',u'合同在岗')]}"/>
+                                    <field name="account_id" string="合同" domain="[('partner_id','=',res_partner_id)]" attrs="{'invisible':[('category','!=',u'合同在岗')]}"/>
+                                    <field name="analytic_line_id" string="岗位" domain="[('account_id','=',account_id)]" attrs="{'invisible':[('category','!=',u'合同在岗')]}"/>
                                 </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)" readonly="True"/>
@@ -344,17 +348,8 @@
                     <field name="employee_count" string="现有人数"/>
                 </xpath>
 		<xpath expr="//group[@name='group_alias']" position="replace">
-                   <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_erp_manager">
-                            <label for="alias_name" string="Email Alias"/>
-                            <div name="alias_def">
-                                <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
-                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;">
-                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                                </div>
-                            </div>
-                            <label for="alias_model" string="Incoming Emails create"/>
-                            <field name="alias_model" class="oe_inline" nolabel="1"/>
-                            <field name="alias_contact" class="oe_inline" string="Accept Emails From"/>
+                   <group name="group_alias"  groups="base.group_erp_manager">
+                            
                    </group>
                 </xpath>
             </field>
@@ -394,6 +389,10 @@
                 </xpath>
                 <xpath expr="//filter[@string='Job']" position="replace">
                 <filter string="职位" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                </xpath>
+                <xpath expr="//filter[@string='Manager']" position="replace">
+                </xpath>
+                <xpath expr="//filter[@string='Coach']" position="replace">
                 </xpath>
             </field>
         </record>
