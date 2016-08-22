@@ -661,8 +661,8 @@ class collection(models.Model):
 class contract(models.Model):
     _name = 'nantian_erp.contract'
     name = fields.Char(string='合同名称',required=True)
-    header_id = fields.Many2one('res.users', string="合同负责人")
-    customer_id = fields.Many2one('res.partner', string="客户")
+    header_id = fields.Many2one('res.users', string="合同负责人",default=lambda self: self.env.user)
+    customer_id = fields.Many2one('res.partner', string="客户",domain="[('category','=',u'服务客户')]")
     date_start = fields.Date(string="开始日期")
     date_end = fields.Date(string="结束日期")
     need_employee_count = fields.Integer(compute='_need_count_employees', string="合同约定人数",store=True)
@@ -743,3 +743,21 @@ class contract(models.Model):
 
 
 
+class res_partner(models.Model):
+    _inherit = 'res.partner'
+
+    category =fields.Selection(
+        [
+            (u'服务客户', u'服务客户'),
+            (u'case客户', u'case客户'),
+
+        ],
+
+    )
+    customer_manager = fields.Many2one('res.users', ondelete='set null',default=lambda self: self.env.user)
+
+    @api.onchange('name')
+    def _onchange_to_service_customer(self):
+
+        self.category = u'服务客户'
+        self.is_company = 'True'

@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="nantian_erp_employee_form_view">
+            <field name="name">employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user'),ref('base.group_hr_manager')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='HR Settings']" position="replace">
+                  <page string="HR Settings" >
+                    <group>
+                        <group string="Active" name="active_group">
+                            <field name="active" string="在职" />
+                        </group>
+                    </group>
+
+                  </page>
+                </xpath>
+                <xpath expr="//page[@string='Personal Information']" position="replace">
+                    <page string="Public Information"  >
+                                <group>
+                                    <group string="Position">
+                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="job_id" string="职位" />
+                                        <field name="parent_id" string="上一级" />
+                                        <field name="coach_id"/>
+                                        <field name="level" string="级别"/>
+                                        <field name="entry_time" string="入职时间" />
+                                        <field name="contract_starttime" string="合同开始时间" />
+                                        <field name="contract_len" string="合同期限" />
+                                        <field name="contract_endtime" string="合同终止时间" />
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="work_location"/>
+                                    </group>
+                                </group>
+                                <group string="项目信息">
+                                    <field name="project_id" string="所在项目"/>
+                                    <field name="category" string="人员状态"/>
+                                    <field name="account_id" string="合同" domain="[('partner_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                                    <field name="analytic_line_id" string="岗位" domain="[('account_id','=',account_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                                </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User" context="{'default_groups_ref': ['base.group_user']}"/>
+                                    </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                </xpath>
+
+                <xpath expr="//page[@string='Public Information']" position="replace">
+                    <page string="Personal Information" >
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
+                                        <field name="bank_account_id"/>
+                                        <field name="otherid" groups="base.group_hr_user"/>
+                                    </group>
+                                    <group string="个人信息">
+                                        <field name="mobile_phone"/>
+                                        <field name="birthday"/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                    </group>
+
+                                </group>
+                                <group string="简历信息">
+                                        <field name="work_time" string="工作时间" />
+                                        <field name="graduation" />
+                                        <field name="major" />
+                                        <field name="education" string="学历"/>
+                                        <field name="certificate_ids"  string = "证书"  >
+                                            <tree string="Registered feedback" editable="bottom">
+                                                <field name="certificate_category_id" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_institutions_id" domain="[('category_id','=',certificate_category_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_direction_id" domain="[('institutions_id','=',certificate_institutions_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_level_id" domain="[('direction_id','=',certificate_direction_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="is_forever_validate" string="是否长期有效"></field>
+                                                <field name="time" attrs="{'readonly': [('is_forever_validate', '!=', False)]}"/>
+                                            </tree>
+                                        </field>
+                                        <field name="specialty" string="特长" />
+                                </group>
+                            </page>
+                </xpath>
+                <xpath expr="//page[@string='HR Settings']" position="replace">
+                    <page string="HR Settings" groups="base.group_hr_user,base.group_hr_manager">
+                        <group>
+                            <group string="Active" name="active_group">
+                                <field name="active"/>
+                                </group>
+                        </group>
+                        <group string="项目信息">
+                                    <field name="customer_id" string="客户" />
+                                    <field name="nantian_erp_contract_id" string="合同" domain="[('customer_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                                    <field name="contract_jobs_id" string="岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                      </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_employee_form_view_user">
+            <field name="name">employee.form_user</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='HR Settings']" position="replace">
+                  <page string="HR Settings" >
+                    <group>
+                        <group string="Active" name="active_group">
+                            <field name="active" string="在职" />
+                        </group>
+                    </group>
+                  </page>
+                </xpath>
+                <xpath expr="//page[@string='Personal Information']" position="replace">
+                    <page string="Public Information"  >
+                                <group>
+                                    <group string="Position">
+                                        <field name="department_id" on_change="onchange_department_id(department_id)" readonly="True"/>
+                                        <field name="job_id" string="职位"  readonly="True"/>
+                                        <field name="parent_id" string="上一级"  readonly="True"/>
+                                        <field name="coach_id" readonly="True"/>
+                                        <field name="level" string="级别" readonly="True"/>
+                                        <field name="entry_time" string="入职时间"  readonly="True"/>
+                                        <field name="contract_starttime" string="合同开始时间"  readonly="True"/>
+                                        <field name="contract_len" string="合同期限"  readonly="True"/>
+                                        <field name="contract_endtime" string="合同终止时间"  readonly="True"/>
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="work_location" readonly="True"/>
+                                    </group>
+                                </group>
+                                <group string="项目信息">
+                                    <field name="project_id" string="所在项目" readonly="True"/>
+                                    <field name="category" string="人员状态" />
+                                    <field name="account_id" string="合同" domain="[('partner_id','=',customer_id)]" attrs="{'invisible':[('category','!=',u'合同在岗')]}"/>
+                                    <field name="analytic_line_id" string="岗位" domain="[('account_id','=',account_id)]" attrs="{'invisible':[('category','!=',u'合同在岗')]}"/>
+                                </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)" readonly="True"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User" context="{'default_groups_ref': ['base.group_user']}" readonly="True"/>
+                                    </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4" readonly="True"/>
+                            </page>
+                </xpath>
+                <xpath expr="//page[@string='Public Information']" position="replace">
+                    <page string="Personal Information" >
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                                        <field name="identification_id" />
+                                        <field name="passport_id" />
+                                        <field name="bank_account_id"/>
+                                        <field name="otherid"/>
+                                    </group>
+                                    <group string="个人信息">
+                                        <field name="mobile_phone"/>
+                                        <field name="birthday"/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                    </group>
+
+                                </group>
+                                <group string="简历信息">
+                                        <field name="work_time" string="工作时间" />
+                                        <field name="graduation" />
+                                        <field name="major" />
+                                        <field name="education" string="学历"/>
+                                        <field name="certificate_ids"  string = "证书"  >
+                                            <tree string="Registered feedback" editable="bottom">
+                                                <field name="certificate_category_id" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_institutions_id" domain="[('category_id','=',certificate_category_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_direction_id" domain="[('institutions_id','=',certificate_institutions_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="certificate_level_id" domain="[('direction_id','=',certificate_direction_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                                <field name="is_forever_validate" string="是否长期有效"></field>
+                                                <field name="time" attrs="{'readonly': [('is_forever_validate', '!=', False)]}"/>
+
+                                            </tree>
+                                        </field>
+                                        <field name="specialty" string="特长" />
+                                </group>
+                            </page>
+                </xpath>
+                <xpath expr="//page[@string='HR Settings']" position="replace">
+                    <page string="HR Settings" groups="base.group_hr_user,base.group_hr_manager">
+                        <group>
+                            <group string="Active" name="active_group">
+                                <field name="active" />
+                             </group>
+                        </group>
+                        <group string="项目信息">
+                                    <field name="customer_id" string="客户" />
+                                    <field name="nantian_erp_contract_id" string="合同" domain="[('customer_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                    <field name="contract_jobs_id" string="岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"  options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                      </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="nantian_erp_hr_dimission_create">
+            <field name="name">hr.dimission_create</field>
+            <field name="model">nantian_erp.hr_dimission</field>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+            <field name="arch" type="xml">
+                <form string="dimission_create Form" >
+                    <sheet>
+                <header>
+                    <button name="set_to_check" type="workflow" string="提交" states="application" class="oe_highlight"/>
+                     <field name="state" widget="statusbar"/>
+                </header>
+                <group string="离职">
+                    <field name="dimission_why" string="离职原因" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_goto" string="离职去向" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_why_add" string="其他原因" attrs="{'invisible': [('dimission_why','!=','其他')],'readonly':[('state', '!=', 'application')]}"/>
+                </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_hr_dimission_create_tree">
+            <field name="name">hr.dimission_create_tree</field>
+            <field name="model">nantian_erp.hr_dimission</field>
+            <field name="arch" type="xml">
+                <tree string="dimission_applicing tree">
+                    <field name="dimission_why" string="离职原因" />
+                    <field name="dimission_goto" string="离职去向" />
+                    <field name="dimission_why_add" string="其他原因" />
+                    <field name="state" string ="离职申请状态"/>
+                </tree>
+            </field>
+        </record>
+         <record model="ir.ui.view" id="nantian_erp_hr_dimission_applicing">
+            <field name="name">hr.dimission_applicing</field>
+            <field name="model">nantian_erp.hr_dimission</field>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user')])]"/>
+            <field name="arch" type="xml">
+                <form string="dimission_applicing Form" create="false" >
+                    <sheet>
+                <header>
+                     <button name="set_to_again_check" type="workflow" string="同意" states="check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                     <button name="set_to_done" type="workflow" string="同意" states="again_check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                    <button name="set_to_no" type="workflow" string="拒绝" states="check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                    <button name="set_to_no1" type="workflow" string="拒绝" states="again_check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                     <field name="state" widget="statusbar"/>
+                </header>
+                <group string="离职">
+                    <field name="employee_ids" string="申请人" readonly="True"/>
+                    <field name="dimission_why" string="离职原因" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_goto" string="离职去向" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_why_add" string="其他原因" attrs="{'invisible': [('dimission_why','!=','其他')],'readonly':[('state', '!=', 'application')]}"/>
+                    <field name="dealer" string="当前处理人" invisible="True"/>
+                    <field name="hr_officer_user" string="经理审批人" invisible="True" />
+                    <field name="hr_manager_user" string="总经理审批人" invisible="True" />
+                </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+       <record model="ir.ui.view" id="nantian_erp_hr_dimission_applicing_tree">
+            <field name="name">hr.dimission_applicing_tree</field>
+            <field name="model">nantian_erp.hr_dimission</field>
+            <field name="arch" type="xml">
+                <tree string="dimission_applicing tree" create="false">
+                    <field name="employee_ids" string="申请人"/>
+
+                    <field name="dimission_why" string="离职原因" />
+                    <field name="dimission_goto" string="离职去向" />
+                    <field name="dimission_why_add" string="其他原因" />
+                    <field name="state" string ="离职申请状态"/>
+                    <field name="dealer" string="处理人"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_hr_dimission_done">
+            <field name="name">hr.dimission_done</field>
+            <field name="model">nantian_erp.hr_dimission</field>
+            <field name="arch" type="xml">
+                <form string="dimission Form" create="false" edit="false">
+                    <sheet>
+                <header>
+                     <field name="state" widget="statusbar"/>
+                </header>
+                <group string="离职">
+                    <field name="employee_ids" string="申请人" readonly="True"/>
+                    <field name="dimission_why" string="离职原因" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_goto" string="离职去向" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_why_add" string="其他原因" attrs="{'invisible': [('dimission_why','!=','其他')],'readonly':[('state', '!=', 'application')]}"/>
+                    <field name="state" string ="离职申请状态" readonly="True"/>
+                    <field name="dealer" string="当前处理人" readonly="True"/>
+                    <field name="hr_officer" string="经理审批人" readonly="True"/>
+                    <field name="hr_manager" string="总经理审批人" readonly="True"/>
+                </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_hr_dimission_done_tree">
+            <field name="name">hr.dimission_done_tree</field>
+            <field name="model">nantian_erp.hr_dimission</field>
+            <field name="arch" type="xml">
+                <tree string="dimission_done tree" create="false" edit="false">
+                    <field name="employee_ids" string="申请人"/>
+                    <field name="dimission_why" string="离职原因" />
+                    <field name="dimission_goto" string="离职去向" />
+                    <field name="dimission_why_add" string="其他原因" />
+                    <field name="state" string ="离职申请状态"/>
+                    <field name="dealer" string="当前处理人"/>
+                    <field name="hr_officer" string="经理审批人"/>
+                    <field name="hr_manager" string="总经理审批人"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="nantian_erp_project_search_view">
+            <field name="name">employee.search</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='department_id']" position="after">
+                    <field name="project_id" string="所在项目"/>
+                    <field name="project_parent_id" string="所属合同"/>
+                    <field name="certificate_institutions_id" string="证书颁发机构"/>
+                    <field name="certificate_direction_id" string="证书方向"/>
+                    <field name="certificate_level_id" string="证书等级"/>
+                </xpath>
+                <xpath expr="//filter[@string='Company']" position="after">
+                    <filter string="项目" icon="terp-personal+" domain="[]" context="{'group_by':'project_id'}"/>
+                    <filter string="合同" icon="terp-personal+" domain="[]" context="{'group_by':'project_parent_id'}"/>
+                    <filter string="人员所属" icon="terp-personal+" domain="[]" context="{'group_by':'category'}"/>
+                </xpath>
+                <xpath expr="//filter[@string='Job']" position="replace">
+                <filter string="职位" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                </xpath>
+                <xpath expr="//filter[@string='Manager']" position="replace">
+                </xpath>
+                <xpath expr="//filter[@string='Coach']" position="replace">
+                </xpath>
+            </field>
+        </record>
+
+        <record id="nantian_erp_done_attendance_form" model="ir.ui.view">
+            <field name="name">hr.attendance.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <form string="Employee attendances" create="false" edit="false">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="name"/>
+                            <field name="action"/>
+                            <field name="action_desc"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="nantian_erp_confirmed_attendance_form" model="ir.ui.view">
+            <field name="name">hr.attendance.form1</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <form string="Employee attendances" create="false" edit="false">
+                    <header>
+                        <button name="action_draft" type="object"
+                                string="退回"
+                                states="confirmed"/>
+                        <button name="action_confirm" type="object"
+                                string="提交" states="draft"
+                                class="oe_highlight"/>
+                        <button name="action_done" type="object"
+                                string="确认" states="confirmed"
+                                class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+                   </header>
+                    <sheet>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="name"/>
+                            <field name="action"/>
+                            <field name="action_desc"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="nantian_view_attendance_who" model="ir.ui.view">
+            <field name="name">hr.nantian_attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='action']" position="after">
+                    <field name="examine_user" string="审批人"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="nantian_view_employee_tree" model="ir.ui.view">
+            <field name="name">hr.nantian.employee.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree[@string='Employees']" position="replace">
+                     <tree string="Employees">
+                        <field name="name"/>
+                        <field name="department_id"/>
+                        <field name="project_id" string="项目组"/>
+                        <field name="level" string="级别"/>
+                        <field name="parent_id" string="上级领导"/>
+                        <field name="work_age" string="工作年限"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="nantian_erp_hr_leave_create">
+            <field name="name">hr.leave_create</field>
+            <field name="model">nantian_erp.hr_leave</field>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+            <field name="arch" type="xml">
+                <form string="leave_create Form" >
+                    <sheet>
+                <header>
+                    <button name="set_to_check" type="workflow" string="提交" states="application" class="oe_highlight"/>
+                     <field name="state" widget="statusbar"/>
+                </header>
+                <group string="请假单创建">
+                    <field name="leave_type" string="请假类型" attrs="{'readonly':[('state', '!=', 'application')]}" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                    <label for="date" string="请假时间"/>
+                    <div>
+                    <field name="date_from"  nolabel="1" on_change="onchange_date_from(date_to, date_from)" attrs="{'readonly': [('state', '!=', 'application')]}"/><label string="-" class="oe_inline"/>
+                    <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    </div>
+                    <field name="reason" string="请假原因" attrs="{'readonly':[('state', '!=', 'application')]}"/>
+                </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_hr_leave_create_tree">
+            <field name="name">hr.leave_create_tree</field>
+            <field name="model">nantian_erp.hr_leave</field>
+            <field name="arch" type="xml">
+                <tree string="leave_applicing tree">
+                    <field name="leave_type" string="请假类型" />
+                    <field name="date_from" string="开始日期" />
+                    <field name="date_to" string ="结束日期"/>
+                    <field name="state" string ="请假申请状态"/>
+                </tree>
+            </field>
+        </record>
+         <record model="ir.ui.view" id="nantian_erp_hr_leave_applicing">
+            <field name="name">hr.leave_applicing</field>
+            <field name="model">nantian_erp.hr_leave</field>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user')])]"/>
+            <field name="arch" type="xml">
+                <form string="请假单审批" create="false" >
+                    <sheet>
+                <header>
+                     <button name="set_to_again_check" type="workflow" string="同意" states="check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                     <button name="set_to_done" type="workflow" string="同意" states="again_check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                    <button name="set_to_no" type="workflow" string="拒绝" states="check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                    <button name="set_to_no1" type="workflow" string="拒绝" states="again_check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                     <field name="state" widget="statusbar"/>
+                </header>
+                <group >
+                    <field name="employee_ids" string="申请人" readonly="True"/>
+                    <field name="leave_type" string="请假类型" attrs="{'readonly':[('state', '!=', 'application')]}"/>
+                    <label for="date" string="请假时间"/>
+                    <div>
+                    <field name="date_from"  nolabel="1" on_change="onchange_date_from(date_to, date_from)" attrs="{'readonly': [('state', '!=', 'application')]}"/><label string="-" class="oe_inline"/>
+                    <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    </div>
+                    <field name="reason" string="请假原因" attrs="{'readonly':[('state', '!=', 'application')]}"/>
+                    <group>
+                    <field name="dealer" string="当前处理人" invisible="True"/>
+                    <field name="hr_officer_user" string="经理审批人" invisible="True" />
+                    <field name="hr_manager_user" string="总经理审批人" invisible="True" />
+                    </group>
+                </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+       <record model="ir.ui.view" id="nantian_erp_hr_leave_applicing_tree">
+            <field name="name">hr.leave_applicing_tree</field>
+            <field name="model">nantian_erp.hr_leave</field>
+            <field name="arch" type="xml">
+                <tree string="leave_applicing tree" create="false">
+                    <field name="employee_ids" string="申请人"/>
+                    <field name="leave_type" string="请假类型" />
+                    <field name="date_from" string="开始日期" />
+                    <field name="date_to" string ="结束日期"/>
+                    <field name="state" string ="请假申请状态"/>
+                    <field name="dealer" string="处理人"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_hr_leave_done">
+            <field name="name">hr.leave_done</field>
+            <field name="model">nantian_erp.hr_leave</field>
+            <field name="arch" type="xml">
+                <form string="请假单" create="false" edit="false">
+                    <sheet>
+                <header>
+                     <field name="state" widget="statusbar"/>
+                </header>
+                <group >
+                    <field name="employee_ids" string="申请人" readonly="True"/>
+                    <field name="leave_type" string="请假类型" attrs="{'readonly':[('state', '!=', 'application')]}"/>
+                    <label for="date" string="请假时间"/>
+                    <div>
+                    <field name="date_from"  nolabel="1" on_change="onchange_date_from(date_to, date_from)" attrs="{'readonly': [('state', '!=', 'application')]}"/><label string="-" class="oe_inline"/>
+                    <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    </div>
+                    <field name="reason" string="请假原因" attrs="{'readonly':[('state', '!=', 'application')]}"/>
+                    <field name="state" string ="请假申请状态" readonly="True"/>
+                    <field name="dealer" string="当前处理人" readonly="True"/>
+                    <field name="hr_officer" string="经理审批人" readonly="True"/>
+                    <field name="hr_manager" string="总经理审批人" readonly="True"/>
+                </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_hr_leave_done_tree">
+            <field name="name">hr.leave_done_tree</field>
+            <field name="model">nantian_erp.hr_leave</field>
+            <field name="arch" type="xml">
+                <tree string="leave_done tree" create="false" edit="false">
+                    <field name="employee_ids" string="申请人"/>
+                    <field name="leave_type" string="请假类型" />
+                    <field name="date_from" string="开始日期" />
+                    <field name="date_to" string ="结束日期"/>
+                    <field name="state" string ="请假申请状态"/>
+                    <field name="dealer" string="当前处理人"/>
+                    <field name="hr_officer" string="经理审批人"/>
+                    <field name="hr_manager" string="总经理审批人"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="nantian_erp_hr_leave_type_tree">
+            <field name="name">hr.leave_type_tree</field>
+            <field name="model">nantian_erp.hr_leave_type</field>
+            <field name="arch" type="xml">
+                <tree string="leave_type tree">
+                    <field name="name" string="请假类型"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>
