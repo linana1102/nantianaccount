@@ -245,7 +245,7 @@
             <field name="act_window_id" ref="nantian_service_partner_action" />
         </record>
         <menuitem id="leave_type" parent="leave" action="nantian_erp_leave_type" name="leave_type" groups="base.group_hr_user" />
-        <menuitem id="nantian_erp_partner" parent="base.menu_main_pm"  name="partner" />
-        <menuitem id="nantian_service_partner" parent="nantian_erp_partner" action="nantian_service_partner_action" name="partner" />
+        <!--<menuitem id="nantian_erp_partner" parent="base.menu_main_pm"  name="partner" />-->
+        <menuitem id="nantian_service_partner" parent="project.menu_project_management" action="nantian_service_partner_action" name="partner" />
     </data>
 </openerp>
