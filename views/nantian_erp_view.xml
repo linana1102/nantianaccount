@@ -274,7 +274,7 @@
                             <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline"/> <label for="is_company" string="Is a Company?"/>)
                         </div>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" />
+                            <field name="name" default_focus="1" on_change="_onchange_to_service_customer(name)" placeholder="Name"/>
                             <field name = "customer_manager" placeholder="行业负责人" default_focus="1"/>
                         </h1>
                         <field name="parent_id"
