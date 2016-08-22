@@ -586,8 +586,16 @@ class res_partner(models.Model):
     )
     customer_manager = fields.Many2one('res.users', ondelete='set null',default=lambda self: self.env.user)
 
-    @api.onchange('name')
-    def _onchange_to_service_customer(self):
+    @api.multi
+    def _onchange_to_service_customer(self,name):
+        value = {}
+        value['category'] = u'服务客户'
+        value['is_company'] = 'True'
+        return {'value':value}
 
-        self.category = u'服务客户'
-        self.is_company = 'True'
+    @api.multi
+    def _onchange_to_case_customer(self,name):
+        value={}
+        value['category'] = u'case客户'
+        value['is_company'] = 'True'
+        return {'value':value}
