@@ -6,12 +6,17 @@ import email,math
 from email.header import Header
 from datetime import datetime,timedelta
 import time
+import string
+
 
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
     project_id = fields.Many2one('project.project',ondelete='set null',)
     analytic_line_id = fields.Many2one('account.analytic.line',ondelete='set null',domain = ["journal_id","=","销售分类账"])
+    contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null')
+    contract_collection_id = fields.Many2one('nantian_erp.collection', ondelete='set null')
+    nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null')
     project_parent_id = fields.Many2one('account.analytic.account',compute='_compute_parent_project',store=True)
     certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书")
     graduation = fields.Char(string="毕业学校")    
@@ -65,6 +70,13 @@ class hr_employee(models.Model):
     certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='证书级别')
     work_age = fields.Integer(compute='_compute_work_age',store=True)
     api_res = fields.Char(default="sys")
+    customer_id = fields.Many2one('res.partner', compute='_get_customer',string="客户")
+
+    @api.depends('project_id')
+    def _get_customer(self):
+        for record in self:
+            if record.project_id:
+                record.customer_id=record.project_id.partner_id
 
     @api.one
     @api.depends('work_time')
@@ -166,7 +178,7 @@ class account_analytic_account(models.Model):
     @api.depends('line_ids.unit_amount')
     def _need_count_employees(self):
         for record in self:
-            record.need_mployee_count = 0
+            record.need_employee_count = 0
             for line in self.line_ids:
                 record.need_employee_count += line.unit_amount
 
@@ -572,3 +584,162 @@ class hr_leave(models.Model):
 class hr_leave_type(models.Model):
     _name = 'nantian_erp.hr_leave_type'
     name = fields.Char(string='请假类型')
+
+class jobs(models.Model):
+    _name = 'nantian_erp.jobs'
+    name = fields.Char(string='岗位名称')
+    contract_id = fields.Many2one('nantian_erp.contract', string="合同")
+    instruction = fields.Text(string='岗位说明')
+    price = fields.Float(string = '单价')
+    unit = fields.Selection(
+        [
+            ('year', u'年'),
+            ('days', u'天'),
+        ],
+        string="计量单位", default='year'
+    )
+    amount = fields.Integer(string='数量', default=1)
+    rate = fields.Selection(
+        [
+            ('0.00',u'0%'),
+            ('0.11', u'11%'),
+            ('0.17', u'17%'),
+            ('0.06',u'6%')
+        ],
+        string="税率", default='0.00'
+    )
+    rated_moneys=fields.Float(compute='_count_rated_moneys', store=True, string ="税金")
+    employee_ids = fields.One2many('hr.employee', 'contract_jobs_id', "Employees")
+    subtotal = fields.Float(compute='_count_subtotal', store=True,string="小计")
+    employee_count = fields.Integer(compute='_count_employees', store=True)
+
+    @api.depends('employee_ids')
+    def _count_employees(self):
+        for record in self:
+            record.employee_count = len(record.employee_ids)
+    @api.depends('price','amount')
+    def _count_subtotal(self):
+        for record in self:
+            record.subtotal = record.price*record.amount
+
+    @api.depends('price','amount','rate')
+    def _count_rated_moneys(self):
+        for record in self:
+            if record.rate:
+                record.rated_moneys = record.price * record.amount*string.atof(record.rate)
+class collection(models.Model):
+    _name = 'nantian_erp.collection'
+    name = fields.Char(string='名称')
+    contract_id = fields.Many2one('nantian_erp.contract', string="合同")
+    date = fields.Date(string='合同收款时间')
+    evaluate_money = fields.Float(string='预期收款金额')
+    employee_ids = fields.One2many('hr.employee', 'contract_collection_id', "Employees")
+    money = fields.Float(string='实际收款金额')
+    state = fields.Selection(
+        [
+            (u'创建中', u'创建中'),
+            (u'未收款', u'未收款'),
+            (u'已收款', u'已收款'),
+        ],
+        string="收款状态", compute='_change_state',default=u'创建中',store=True
+    )
+    user_id = fields.Many2one('res.users', string="操作人")
+    time = fields.Datetime( string='确认时间'  )
+
+    @api.multi
+    @api.depends('evaluate_money','money')
+    def _change_state(self):
+        for record in self:
+            if record.evaluate_money and not record.money:
+                record.state = u'未收款'
+            if record.money:
+                record.state = u'已收款'
+                record.user_id = self.env.user
+                record.time = fields.datetime.now()
+
+
+class contract(models.Model):
+    _name = 'nantian_erp.contract'
+    name = fields.Char(string='合同名称',required=True)
+    header_id = fields.Many2one('res.users', string="合同负责人")
+    customer_id = fields.Many2one('res.partner', string="客户")
+    date_start = fields.Date(string="开始日期")
+    date_end = fields.Date(string="结束日期")
+    need_employee_count = fields.Integer(compute='_need_count_employees', string="合同约定人数",store=True)
+    employee_count = fields.Integer(compute='_count_employees', string='现场人数',store=True)
+    jobs_ids = fields.One2many('nantian_erp.jobs', 'contract_id',string="合同岗位")
+    money = fields.Float(string="合同金额" ,compute='_count_money',store=True)
+    money_tax = fields.Float(string="税金" ,compute='_count_money_tax',store=True)
+    money_total = fields.Float(string="总计金额" ,compute='_count_money_total',store=True)
+    collection_ids = fields.One2many('nantian_erp.collection', 'contract_id',string="收款")
+    hr_requirements = fields.Text(string="人员要求")
+    resource_requirements = fields.Text(string="资源要求")
+    other = fields.Text(string="其他")
+    next_collection_date = fields.Date(compute='_count_next_date',string="下次收款日期",store=True)
+    state = fields.Selection(
+        [
+            ('going',u'进行中'),
+            ('off',u'关闭'),
+        ],
+        string="合同状态",default='going'
+    )
+
+    @api.depends('jobs_ids.amount')
+    def _need_count_employees(self):
+        for record in self:
+            record.need_employee_count = 0
+            for job in record.jobs_ids:
+                record.need_employee_count += job.amount
+
+
+    @api.depends('jobs_ids.employee_count')
+    def _count_employees(self):
+        for record in self:
+            # record.employee_count=0
+            for job in record.jobs_ids:
+                record.employee_count += job.employee_count
+
+    @api.depends('jobs_ids.subtotal')
+    def _count_money(self):
+        for record in self:
+            for job in record.jobs_ids:
+                record.money += job.subtotal
+
+    @api.depends('jobs_ids.rated_moneys')
+    def _count_money_tax(self):
+        for record in self:
+            for job in record.jobs_ids:
+                record.money_tax += job.rated_moneys
+
+    @api.depends('money','money_tax')
+    def _count_money_total(self):
+        for record in self:
+            record.money_total = record.money - record.money_tax
+
+    @api.depends('collection_ids.date')
+    def _count_next_date(self):
+        for record in self:
+            dates=[]
+            if record.collection_ids:
+                for collection in record.collection_ids:
+                    if collection.date==u'未收款':
+                        dates.append(collection.date)
+            if dates:
+                record.next_collection_date=min(dates)
+            else:
+                record.next_collection_date=None
+
+
+
+    @api.multi
+    @api.depends('name', 'employee_count')
+    def name_get(self):
+        return [(r.id, (r.name + '-' + u'所需人数' + (str(r.need_employee_count)) + u'人')) for r in self]
+
+
+
+
+
+
+
+

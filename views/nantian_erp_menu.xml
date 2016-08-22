@@ -226,5 +226,14 @@
             <field name="view_id" ref="nantian_erp_hr_leave_type_tree"/>
         </record>
         <menuitem id="leave_type" parent="leave" action="nantian_erp_leave_type" name="leave_type" groups="base.group_hr_user" />
+
+        <record id="nantian_erp_contract_view" model="ir.actions.act_window">
+            <field name="name">nantian_erp_contract</field>
+            <field name="res_model">nantian_erp.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem name="nantian_contract" id="nantian_contract_base" parent="base.menu_main_pm" groups="project.group_project_manager,project.group_project_user" />
+        <menuitem name="nantian_contract" id="nantian_contract" parent="project.menu_project_management"  action="nantian_erp_contract_view" groups="project.group_project_manager"/>
     </data>
 </openerp>

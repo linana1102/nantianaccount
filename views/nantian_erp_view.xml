@@ -13,7 +13,15 @@
                         <group string="Active" name="active_group">
                             <field name="active" string="在职" />
                         </group>
+                        <group string="项目信息">
+                                    <field name="project_id" string="所在项目"/>
+                                    <field name="category" string="人员状态"/>
+                                    <field name="customer_id" string="客户" />
+                                    <field name="nantian_erp_contract_id" string="合同" domain="[('customer_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                                    <field name="contract_jobs_id" string="岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                      </group>
                     </group>
+
                   </page>
                 </xpath>
                 <xpath expr="//page[@string='Personal Information']" position="replace">
@@ -36,7 +44,7 @@
                                 </group>
                                 <group string="项目信息">
                                     <field name="project_id" string="所在项目"/>
-                                    <field name="category" string="人员归属"/>
+                                    <field name="category" string="人员状态"/>
                                     <field name="res_partner_id" string="客户" />
                                     <field name="account_id" string="合同" domain="[('partner_id','=',res_partner_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
                                     <field name="analytic_line_id" string="岗位" domain="[('account_id','=',account_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
@@ -95,6 +103,13 @@
                                 <field name="active"/>
                                 </group>
                         </group>
+                        <group string="项目信息">
+                                    <field name="project_id" string="所在项目"/>
+                                    <field name="category" string="人员状态"/>
+                                    <field name="customer_id" string="客户" />
+                                    <field name="nantian_erp_contract_id" string="合同" domain="[('customer_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                                    <field name="contract_jobs_id" string="岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                      </group>
                     </page>
                 </xpath>
             </field>
@@ -112,6 +127,13 @@
                             <field name="active" string="在职" />
                         </group>
                     </group>
+                      <group string="项目信息">
+                                    <field name="project_id" string="所在项目"/>
+                                    <field name="category" string="人员状态"/>
+                                    <field name="customer_id" string="客户" />
+                                    <field name="nantian_erp_contract_id" string="合同" domain="[('customer_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                                    <field name="contract_jobs_id" string="岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                      </group>
                   </page>
                 </xpath>
                 <xpath expr="//page[@string='Personal Information']" position="replace">
@@ -134,7 +156,7 @@
                                 </group>
                                 <group string="项目信息">
                                     <field name="project_id" string="所在项目" readonly="True"/>
-                                    <field name="category" string="人员归属" />
+                                    <field name="category" string="人员状态" />
                                     <field name="res_partner_id" string="客户" attrs="{'invisible':[('category','!=',u'合同在岗')]}"/>
                                     <field name="account_id" string="合同" domain="[('partner_id','=',res_partner_id)]" attrs="{'invisible':[('category','!=',u'合同在岗')]}"/>
                                     <field name="analytic_line_id" string="岗位" domain="[('account_id','=',account_id)]" attrs="{'invisible':[('category','!=',u'合同在岗')]}"/>
@@ -193,6 +215,13 @@
                                 <field name="active" />
                              </group>
                         </group>
+                        <group string="项目信息">
+                                    <field name="project_id" string="所在项目"/>
+                                    <field name="category" string="人员状态"/>
+                                    <field name="customer_id" string="客户" />
+                                    <field name="nantian_erp_contract_id" string="合同" domain="[('customer_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                                    <field name="contract_jobs_id" string="岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
+                      </group>
                     </page>
                 </xpath>
             </field>
@@ -690,6 +719,9 @@
 
             </field>
         </record>
+
+
+
 
     </data>
 </openerp>
