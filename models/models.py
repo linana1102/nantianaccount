@@ -572,3 +572,22 @@ class hr_leave(models.Model):
 class hr_leave_type(models.Model):
     _name = 'nantian_erp.hr_leave_type'
     name = fields.Char(string='请假类型')
+
+class res_partner(models.Model):
+    _inherit = 'res.partner'
+
+    category =fields.Selection(
+        [
+            (u'服务客户', u'服务客户'),
+            (u'case客户', u'case客户'),
+
+        ],
+
+    )
+    customer_manager = fields.Many2one('res.users', ondelete='set null',default=lambda self: self.env.user)
+
+    @api.onchange('name')
+    def _onchange_to_service_customer(self):
+
+        self.category = u'服务客户'
+        self.is_company = 'True'
