@@ -14,9 +14,8 @@ class hr_employee(models.Model):
 
     project_id = fields.Many2one('project.project',ondelete='set null',)
     analytic_line_id = fields.Many2one('account.analytic.line',ondelete='set null',domain = ["journal_id","=","销售分类账"])
-    contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null')
-    contract_collection_id = fields.Many2one('nantian_erp.collection', ondelete='set null')
-    nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null')
+    contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null',string='合同岗位')
+    nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同')
     project_parent_id = fields.Many2one('account.analytic.account',compute='_compute_parent_project',store=True)
     certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书")
     graduation = fields.Char(string="毕业学校")    
@@ -633,7 +632,6 @@ class collection(models.Model):
     contract_id = fields.Many2one('nantian_erp.contract', string="合同")
     date = fields.Date(string='合同收款时间')
     evaluate_money = fields.Float(string='预期收款金额')
-    employee_ids = fields.One2many('hr.employee', 'contract_collection_id', "Employees")
     money = fields.Float(string='实际收款金额')
     state = fields.Selection(
         [
