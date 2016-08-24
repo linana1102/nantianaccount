@@ -113,3 +113,19 @@ msgstr "项目管理"
 #: model:ir.ui.menu,name:nantian_erp.nantian_works
 msgid "works"
 msgstr "工作组管理"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Personal Information"
+msgstr "个人简历"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Public Information"
+msgstr "团队信息"
+
+#. module: hr
+#: view:hr.employee:hr.view_employee_form
+msgid "Citizenship & Other Info"
+msgstr "身份信息"
+

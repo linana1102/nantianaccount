@@ -146,6 +146,21 @@ class project_project(models.Model):
     employee_ids = fields.One2many('hr.employee','project_id','Employee')
     need_employee_count = fields.Integer()
     employee_count = fields.Integer(compute='_count_employees', store=True)
+    category = fields.Selection(
+        [
+            (u'工作组', u'工作组'),
+            (u'项目', u'项目'),
+
+        ],string='类别',default=u'项目'
+    )
+
+    @api.multi
+    def _onchange_category(self, name):
+        value = {}
+        value['category'] = u'工作组'
+        return {'value': value}
+
+
 
     @api.depends('employee_ids')
     def _count_employees(self):
@@ -602,13 +617,14 @@ class jobs(models.Model):
     unit = fields.Selection(
         [
             ('year', u'年'),
+            ('month',u'月'),
             ('days', u'天'),
             ('days', u'小时'),
         ],
         string="时间单位", default='year'
     )
     amount = fields.Integer(string='人员数量', default=1)
-    unit_amount = fields.Integer(string='时间单位数量', default=1)
+    unit_amount = fields.Float(string='时间单位数量', digits=(12,3))
     rate = fields.Selection(
         [
             ('0.00',u'0%'),

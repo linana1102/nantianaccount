@@ -233,6 +233,7 @@
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('category','=','工作组')]</field>
         </record>
         <record id="nantian_work_tree_user" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -281,6 +282,7 @@
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('category','=','工作组')]</field>
         </record>
         <record id="nantian_project_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
