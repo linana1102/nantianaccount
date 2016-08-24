@@ -69,7 +69,16 @@ class hr_employee(models.Model):
     certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='证书级别')
     work_age = fields.Integer(compute='_compute_work_age',store=True)
     api_res = fields.Char(default="sys")
-    customer_id = fields.Many2one('res.partner', compute='_get_customer',string="客户")
+    customer_id = fields.Many2one('res.partner', compute='_get_customer',string="客户",store=True)
+
+    @api.multi
+    def onchange_category(self,category,nantian_erp_contract_id,contract_jobs_id):
+        result = {'value': {}}
+        if category==u"公司储备" or category==u"公司项目":
+
+            result['value']['nantian_erp_contract_id'] = ''
+            result['value']['contract_jobs_id'] = ''
+        return result
 
     @api.depends('project_id')
     def _get_customer(self):
@@ -594,10 +603,12 @@ class jobs(models.Model):
         [
             ('year', u'年'),
             ('days', u'天'),
+            ('days', u'小时'),
         ],
-        string="计量单位", default='year'
+        string="时间单位", default='year'
     )
-    amount = fields.Integer(string='数量', default=1)
+    amount = fields.Integer(string='人员数量', default=1)
+    unit_amount = fields.Integer(string='时间单位数量', default=1)
     rate = fields.Selection(
         [
             ('0.00',u'0%'),
@@ -616,16 +627,35 @@ class jobs(models.Model):
     def _count_employees(self):
         for record in self:
             record.employee_count = len(record.employee_ids)
-    @api.depends('price','amount')
+    @api.depends('price','amount','unit_amount')
     def _count_subtotal(self):
         for record in self:
-            record.subtotal = record.price*record.amount
+            if record.amount and record.unit_amount:
+                record.subtotal = record.price*record.amount*record.unit_amount
+            else:
+                raise exceptions.ValidationError("人员数量和时间单位数量不能小于1")
 
-    @api.depends('price','amount','rate')
+    @api.depends('price','amount','rate','unit_amount')
     def _count_rated_moneys(self):
         for record in self:
+            if record.amount and record.unit_amount:
+                pass
+            else:
+                raise exceptions.ValidationError("人员数量和时间单位数量不能小于1")
             if record.rate:
-                record.rated_moneys = record.price * record.amount*string.atof(record.rate)
+                record.rated_moneys = record.price * record.amount * record.unit_amount * string.atof(record.rate)
+
+    @api.multi
+    @api.depends('name', 'product_id')
+    def name_get(self):
+        datas=[]
+        for r in self:
+            if r.instruction:
+                datas.append((r.id, (r.name + '(' + (r.instruction) + ')')))
+            else:
+                datas.append((r.id, (r.name)))
+        return datas
+
 class collection(models.Model):
     _name = 'nantian_erp.collection'
     name = fields.Char(string='名称')
@@ -660,7 +690,7 @@ class contract(models.Model):
     _name = 'nantian_erp.contract'
     name = fields.Char(string='合同名称',required=True)
     header_id = fields.Many2one('res.users', string="合同负责人",default=lambda self: self.env.user)
-    customer_id = fields.Many2one('res.partner', string="客户",domain="[('category','=',u'服务客户')]")
+    customer_id = fields.Many2one('res.partner', string="客户",domain="[('category','=',u'服务客户')]",required=True)
     date_start = fields.Date(string="开始日期")
     date_end = fields.Date(string="结束日期")
     need_employee_count = fields.Integer(compute='_need_count_employees', string="合同约定人数",store=True)
@@ -668,7 +698,7 @@ class contract(models.Model):
     jobs_ids = fields.One2many('nantian_erp.jobs', 'contract_id',string="合同岗位")
     money = fields.Float(string="合同金额" ,compute='_count_money',store=True)
     money_tax = fields.Float(string="税金" ,compute='_count_money_tax',store=True)
-    money_total = fields.Float(string="总计金额" ,compute='_count_money_total',store=True)
+    money_total = fields.Float(string="税后总计金额" ,compute='_count_money_total',store=True)
     collection_ids = fields.One2many('nantian_erp.collection', 'contract_id',string="收款")
     hr_requirements = fields.Text(string="人员要求")
     resource_requirements = fields.Text(string="资源要求")

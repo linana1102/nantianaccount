@@ -128,6 +128,9 @@
                         <page string="Other Info">
                             <group string="Administration">
                                 <field name="privacy_visibility" widget="radio"/>
+                                <field name="planned_hours" widget="float_time" groups="project.group_time_work_estimation_tasks" invisible="True"/>
+                                <field name="effective_hours" widget="float_time" groups="project.group_time_work_estimation_tasks" invisible="True"/>
+                                <field name="resource_calendar_id" groups="project.group_time_work_estimation_tasks" invisible="True"/>
                             </group>
                         </page>
                         <page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">
@@ -170,12 +173,6 @@
                 </xpath>
                 <xpath expr="//field[@name='planned_hours']" position="replace">
                     <field name="need_employee_count" string="所需人数"/>
-                </xpath>
-                <xpath expr="//field[@name='total_hours']" position="replace">
-                    <field name="employee_count" string="现有人数"/>
-                </xpath>
-                <xpath expr="//field[@name='effective_hours']" position="replace">
-                    <field name="date" string="结束日期"/>
                 </xpath>
             </field>
         </record>

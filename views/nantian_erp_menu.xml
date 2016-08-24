@@ -97,7 +97,7 @@
 
 
         <record id="nantian_erp_to_examine_attendance" model="ir.actions.act_window">
-            <field name="name">to_examine_attendance</field>
+            <field name="name">待审批的出勤</field>
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -116,7 +116,7 @@
             <field name="act_window_id" ref="nantian_erp_to_examine_attendance" />
         </record>
         <record id="nantian_erp_examined_attendance" model="ir.actions.act_window">
-            <field name="name">to_examine_attendance</field>
+            <field name="name">已审批的出勤</field>
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -135,7 +135,7 @@
             <field name="act_window_id" ref="nantian_erp_examined_attendance" />
         </record>
         <record id="nantian_erp_my_attendance" model="ir.actions.act_window">
-            <field name="name">to_examine_attendance</field>
+            <field name="name">我的出勤</field>
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

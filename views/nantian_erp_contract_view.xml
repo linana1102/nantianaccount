@@ -37,8 +37,9 @@
                                     <field name="name" />
                                     <field name="instruction" />
                                     <field name="price"/>
-                                    <field name="unit" />
                                     <field name="amount" />
+                                    <field name="unit" />
+                                    <field name="unit_amount" />
                                     <field name="rate"/>
                                     <field name="subtotal"/>
                                     <field name="rated_moneys"/>
@@ -69,6 +70,7 @@
                 <tree string="nantian_erp_contract_user_tree" >
                     <field name="name" />
                     <field name="header_id" />
+                    <field name="customer_id"/>
                     <field name="date_start"  />
                     <field name="date_end" />
                     <field name="need_employee_count" />
