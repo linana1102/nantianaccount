@@ -613,18 +613,18 @@ class jobs(models.Model):
     name = fields.Char(string='岗位名称')
     contract_id = fields.Many2one('nantian_erp.contract', string="合同")
     instruction = fields.Text(string='岗位说明')
-    price = fields.Float(string = '单价')
+    price = fields.Float(string = '单价(人/时间)')
     unit = fields.Selection(
         [
-            ('year', u'年'),
-            ('month',u'月'),
-            ('days', u'天'),
-            ('days', u'小时'),
+            ('year', u'人/年'),
+            ('month',u'人/月'),
+            ('days', u'人/天'),
+            ('days', u'人/小时'),
         ],
-        string="时间单位", default='year'
+        string="计量单位", default='year'
     )
     amount = fields.Integer(string='人员数量', default=1)
-    unit_amount = fields.Float(string='时间单位数量', digits=(12,3))
+    unit_amount = fields.Float(string='时间数量', digits=(20,3))
     rate = fields.Selection(
         [
             ('0.00',u'0%'),
@@ -706,7 +706,7 @@ class contract(models.Model):
     _name = 'nantian_erp.contract'
     name = fields.Char(string='合同名称',required=True)
     header_id = fields.Many2one('res.users', string="合同负责人",default=lambda self: self.env.user)
-    customer_id = fields.Many2one('res.partner', string="客户",domain="[('category','=',u'服务客户')]",required=True)
+    customer_id = fields.Many2one('res.partner', string="客户",domain="[('category','=',u'服务客户')]")
     date_start = fields.Date(string="开始日期")
     date_end = fields.Date(string="结束日期")
     need_employee_count = fields.Integer(compute='_need_count_employees', string="合同约定人数",store=True)
@@ -778,7 +778,7 @@ class contract(models.Model):
     @api.multi
     @api.depends('name', 'employee_count')
     def name_get(self):
-        return [(r.id, (r.name + '-' + u'所需人数' + (str(r.need_employee_count)) + u'人')) for r in self]
+        return [(r.id, (r.name + '-' + u'合同约束人数' + (str(r.need_employee_count)) + u'人')) for r in self]
 
 
 
