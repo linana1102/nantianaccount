@@ -17,8 +17,8 @@
                         </div>
                      <group>
                         <group>
-                            <field name="header_id" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
-                            <field name="customer_id" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                            <field name="header_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                            <field name="customer_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
                             <field name="date_start"  />
                             <field name="date_end" />
                             <field name="need_employee_count"  />
@@ -37,8 +37,8 @@
                                     <field name="name" />
                                     <field name="instruction" />
                                     <field name="price"/>
-                                    <field name="amount" />
                                     <field name="unit" />
+                                    <field name="amount" />
                                     <field name="unit_amount" />
                                     <field name="rate"/>
                                     <field name="subtotal"/>
@@ -77,6 +77,22 @@
                     <field name="employee_count" />
                     <field name="next_collection_date" />
                 </tree>
+            </field>
+        </record>
+        <record id="nantian_erp_contract_filter" model="ir.ui.view">
+            <field name="name">nantian_erp_contract_search</field>
+            <field name="model">nantian_erp.contract</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="name" />
+                    <!--<filter string="" name="done" domain="[('', '=','done')]"/>-->
+                    <separator/>
+                    <group expand="0" string="分组">
+                        <filter string="合同客户" name="customer" context="{'group_by':'customer_id'}"/>
+                        <filter string="负责人" name="applicant_id" context="{'group_by':'header_id'}"/>
+                        <filter string="合同状态" name="state" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
             </field>
         </record>
         

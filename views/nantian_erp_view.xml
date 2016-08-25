@@ -99,7 +99,7 @@
                                     attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
                                     context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
                             <newline/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer" domain="[(('category','=',u'服务客户'))]" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                             <newline/>
                             <field name="need_employee_count" string="所需人数"/>
                             <newline/>
