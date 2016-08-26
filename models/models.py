@@ -624,7 +624,7 @@ class jobs(models.Model):
         string="计量单位", default='year'
     )
     amount = fields.Integer(string='人员数量', default=1)
-    unit_amount = fields.Float(string='时间数量', digits=(20,3))
+    unit_amount = fields.Float(string='时间数量', digits=(20,3),default=1.000)
     rate = fields.Selection(
         [
             ('0.00',u'0%'),
@@ -649,7 +649,7 @@ class jobs(models.Model):
             if record.amount and record.unit_amount:
                 record.subtotal = record.price*record.amount*record.unit_amount
             else:
-                raise exceptions.ValidationError("人员数量和时间单位数量不能小于1")
+                raise exceptions.ValidationError("人员数量不能小于1")
 
     @api.depends('price','amount','rate','unit_amount')
     def _count_rated_moneys(self):
