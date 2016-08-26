@@ -628,9 +628,9 @@ class jobs(models.Model):
     rate = fields.Selection(
         [
             ('0.00',u'0%'),
+            ('0.06',u'6%'),
             ('0.11', u'11%'),
-            ('0.17', u'17%'),
-            ('0.06',u'6%')
+            ('0.17', u'17%')
         ],
         string="税率", default='0.00'
     )
@@ -649,7 +649,7 @@ class jobs(models.Model):
             if record.amount and record.unit_amount:
                 record.subtotal = record.price*record.amount*record.unit_amount
             else:
-                raise exceptions.ValidationError("人员数量不能小于1")
+                raise exceptions.ValidationError("人员数量不能小于1,时间数量不能为0")
 
     @api.depends('price','amount','rate','unit_amount')
     def _count_rated_moneys(self):
@@ -657,7 +657,7 @@ class jobs(models.Model):
             if record.amount and record.unit_amount:
                 pass
             else:
-                raise exceptions.ValidationError("人员数量和时间单位数量不能小于1")
+                raise exceptions.ValidationError("人员数量不能小于1,时间数量不能为0")
             if record.rate:
                 record.rated_moneys = record.price * record.amount * record.unit_amount * string.atof(record.rate)
 
@@ -679,6 +679,17 @@ class collection(models.Model):
     date = fields.Date(string='合同收款时间')
     evaluate_money = fields.Float(string='预期收款金额')
     money = fields.Float(string='实际收款金额')
+    rate = fields.Selection(
+        [
+            ('0.00', u'0%'),
+            ('0.06', u'6%'),
+            ('0.11', u'11%'),
+            ('0.17', u'17%')
+        ],
+        string="税率", default='0.00'
+    )
+    rated_moneys = fields.Float(compute='_count_rated_moneys', store=True, string="税金")
+    money_total = fields.Float(compute='_count_money_total', store=True, string="税后收款金额")
     state = fields.Selection(
         [
             (u'创建中', u'创建中'),
@@ -689,6 +700,18 @@ class collection(models.Model):
     )
     user_id = fields.Many2one('res.users', string="操作人")
     time = fields.Datetime( string='确认时间'  )
+
+    @api.depends('money', 'rate')
+    def _count_rated_moneys(self):
+        for record in self:
+            if record.rate:
+                record.rated_moneys = record.money * string.atof(record.rate)
+
+    @api.depends('money', 'rated_moneys')
+    def _count_money_total(self):
+        for record in self:
+            record.money_total = record.money - record.rated_moneys
+
 
     @api.multi
     @api.depends('evaluate_money','money')
@@ -715,6 +738,9 @@ class contract(models.Model):
     money = fields.Float(string="合同金额" ,compute='_count_money',store=True)
     money_tax = fields.Float(string="税金" ,compute='_count_money_tax',store=True)
     money_total = fields.Float(string="税后总计金额" ,compute='_count_money_total',store=True)
+    collection_money = fields.Float(string="收款金额", compute='_count_collection_money', store=True)
+    collection_money_tax = fields.Float(string="收款税金", compute='_count_collection_money_tax', store=True)
+    collection_money_total = fields.Float(string="税后总计收款金额", compute='_count_collection_money_total', store=True)
     collection_ids = fields.One2many('nantian_erp.collection', 'contract_id',string="收款")
     hr_requirements = fields.Text(string="人员要求")
     resource_requirements = fields.Text(string="资源要求")
@@ -773,7 +799,22 @@ class contract(models.Model):
             else:
                 record.next_collection_date=None
 
+    @api.depends('collection_ids.money_total')
+    def _count_collection_money(self):
+        for record in self:
+            for collection in record.collection_ids:
+                record.collection_money += collection.money_total
 
+    @api.depends('collection_ids.rated_moneys')
+    def _count_collection_money_tax(self):
+        for record in self:
+            for collection in record.collection_ids:
+                record.money_tax += collection.rated_moneys
+
+    @api.depends('collection_money', 'collection_money_tax')
+    def _count_collection_money_total(self):
+        for record in self:
+            record.collection_money_total = record.collection_money - record.collection_money_tax
 
     @api.multi
     @api.depends('name', 'employee_count')
