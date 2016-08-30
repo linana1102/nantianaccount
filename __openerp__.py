@@ -24,8 +24,8 @@
 
     # always loaded
     'data': [
-        'security/ir.model.access.csv',
         'security/nantian_erp_security.xml',
+        'security/ir.model.access.csv',
         'views/nantian_erp_hr_view.xml',
         'views/nantian_erp_contract_view.xml',
         'views/nantian_erp_view.xml',
