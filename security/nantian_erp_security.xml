@@ -1,53 +1,227 @@
-<?xml version="1.0" encoding="utf-8"?>                                                                                                                                 
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
+<data noupdate="0">
     <record model="res.groups" id="base.group_user">
+
         <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
     </record>
+
+    <record model="res.groups" id="nantian_erp.group_hr_bm_manager">
+        <field name="name">人力-部门经理</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+
+    <record model="res.groups" id="nantian_erp.group_hr_assistant">
+        <field name="name">人力-助理</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+
+    <record model="res.groups" id="nantian_erp.group_hr_manager_assistant">
+        <field name="name">人力-总经理助理</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!--下面是新建组-->
+    <!--<record id="nantian_erp.group_nantian_manager" model="res.groups">-->
+        <!--<field name="name">项目经理test</field>-->
+        <!--<field name="category_id" ref="base.module_category_nantianerp"/>-->
+        <!--<field name="implied_ids" eval="[(4, ref('project.group_project_user'))]"/>-->
+    <!--</record>-->
+    <record model="res.groups" id="nantian_erp.group_hr_user">
+        <field name="name">人力-员工</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <!--<field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>-->
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+
+    <record id="nantian_erp.group_nantian_manager" model="res.groups">
+        <field name="name">项目经理</field>
+        <field name="category_id" ref="base.module_category_nantianerp"/>
+        <field name="implied_ids" eval="[(4, ref('project.group_project_user'))]"/>
+    </record>
+     <record id="nantian_erp.group_nantian_header" model="res.groups">
+        <field name="name">行业负责人</field>
+        <field name="implied_ids" eval="[(4, ref('project.group_project_user'))]"/>
+        <field name="category_id" ref="base.module_category_nantianerp"/>
+    </record>
+    <record id="nantian_erp.group_nantian_assistant_manager" model="res.groups">
+        <field name="name">项目助理</field>
+         <field name="implied_ids" eval="[(4, ref('project.group_project_user'))]"/>
+        <field name="category_id" ref="base.module_category_nantianerp"/>
+
+    </record>
+    <record id="nantian_erp.group_nantian_assistant" model="res.groups">
+        <field name="name">项目总经理助理</field>
+        <field name="category_id" ref="base.module_category_nantianerp"/>
+        <field name="implied_ids" eval="[(4, ref('project.group_project_user'))]"/>
+    </record>
+    <!--<record id="nantian_erp.group_project_user" model="res.groups">-->
+        <!--<field name="name">项目用户</field>-->
+        <!--<field name="category_id" ref="base.module_category_nantianerp"/>-->
+        <!--&lt;!&ndash;<field name="implied_ids" eval="[(4, ref('project.group_project_user'))]"/>&ndash;&gt;-->
+    <!--</record>-->
+     <!--下面是新的权限-->
+    <record id="hr_employee_header_rule" model="ir.rule">
+        <field name="name">employee人力行业负责人访问控制</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('customer_id.customer_manager','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="hr_employee_bm_manager_rule" model="ir.rule">
+        <field name="name">employee人力部门经理访问控制_读</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('customer_id','in',[x.customer_id.id for x in user.employee_ids])]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_bm_manager'))]"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="hr_employee_bm_manager_write_rule" model="ir.rule">
+        <field name="name">employee人力部门经理访问控制—写</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('department_id.manager_id','in',[x.id for x in user.employee_ids])]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_bm_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <record id="hr_employee_rule" model="ir.rule">
-        <field name="name">employee访问控制</field>
+        <field name="name">employee人力助理_读写</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('customer_id','in',[x.customer_id.id for x in user.employee_ids])]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_assistant'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+<!--('department_id','in',[y.id for y in x.department_id.child_ids for x in user.employee_ids])-->
+    <record id="hr_employee_user_read_rule" model="ir.rule">
+        <field name="name">employee人力员工_读</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('department_id','in',[x.department_id.id for x in user.employee_ids])]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_user'))]"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="hr_employee_user_write_rule" model="ir.rule">
+        <field name="name">employee人力员工_读写</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
         <field name="domain_force">[('user_id','=',user.id)]</field>
-        <field name="groups" eval="[(4,ref('base.group_partner_manager'))]"/>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_user'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="project_header_rule" model="ir.rule">
+        <field name="name">project行业负责人访问控制</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[('partner_id.customer_manager','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record id="hr_employee_rule_manager" model="ir.rule">
-        <field name="name">employee访问控制-经理</field>
-        <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="groups" eval="[(4,ref('base.group_hr_user')),(4,ref('base.group_hr_manager'))]"/>
+    <record id="project_header_read_rule" model="ir.rule">
+        <field name="name">project行业负责人-读</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="project_manager_rule" model="ir.rule">
+        <field name="name">project 项目经理访问控制—读</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[('partner_id','in',[x.customer_id.id for x in user.employee_ids])]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_manager'))]"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
     </record>
 
-    <record id="project_project_rule" model="ir.rule">
-        <field name="name">project访问控制</field>
+    <record id="project_manager_write_rule" model="ir.rule">
+        <field name="name">project 项目经理访问控制—读写</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[('user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="project_assistant_manager_rule" model="ir.rule">
+        <field name="name">project 项目助理访问控制—读写</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[('partner_id','in',[x.customer_id.id for x in user.employee_ids])]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_assistant_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="project_user_read_rule" model="ir.rule">
+        <field name="name">project项目员工访问控制</field>
         <field name="model_id" ref="project.model_project_project"/>
         <field name="domain_force">[('employee_ids','like',user.employee_ids.id)]</field>
-        <field name="groups" eval="[(4,ref('base.group_partner_manager'))]"/>
+        <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <!--base.group_partner_manager是人力总经理组-->
+    <!--project.group_project_manager是任务和项目总经理组-->
+    <record id="project_assiistant_rule" model="ir.rule">
+            <field name="name">project项目总助访问控制</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_assistant'))]"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="project_big_manager_rule" model="ir.rule">
+            <field name="name">project项目总经理访问控制</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="contract_header_rule" model="ir.rule">
+        <field name="name">contract访问控制1</field>
+        <field name="model_id" ref="nantian_erp.model_nantian_erp_contract"/>
+        <field name="domain_force">[('header_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
 
-
-    <!--
-    <record id="project_project_rule_leader" model="ir.rule">
-        <field name="name">project访问控制-项目经理</field>
-        <field name="model_id" ref="project.model_project_project"/>
-        <field name="domain_force">[('user_id.id','=',user.id)]</field>
-        <field name="groups" eval="[(4,ref('base.group_partner_manager'))]"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-    -->
-    <record id="project_project_rule_manager" model="ir.rule">
-        <field name="name">project访问控制-经理</field>
-        <field name="model_id" ref="project.model_project_project"/>
-        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
-    </record>
     </data>
 </openerp>
