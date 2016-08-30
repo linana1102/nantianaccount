@@ -5,7 +5,7 @@
             <field name="name">employee.form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user'),ref('base.group_hr_manager')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user'),ref('base.group_hr_manager'),ref('nantian_erp.group_nantian_assistant_manager'),ref('nantian_erp.group_hr_bm_manager'),ref('nantian_erp.group_hr_assistant'),ref('nantian_erp.group_hr_manager_assistant')])]"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@string='HR Settings']" position="replace">
                   <page string="HR Settings" >
@@ -126,8 +126,8 @@
                                         <field name="level" string="级别" readonly="True"/>
                                         <field name="entry_time" string="入职时间"  readonly="True"/>
                                         <field name="contract_starttime" string="合同开始时间"  readonly="True"/>
-                                        <field name="is_forever" string="是否无期限" />
-                                       <field name="contract_len" string="合同期限" attrs="{'invisible':[('is_forever','=',True)]}" />
+                                        <field name="is_forever" string="是否无期限" readonly="True"/>
+                                       <field name="contract_len" string="合同期限" readonly="True" attrs="{'invisible':[('is_forever','=',True)]}" />
                                         <field name="contract_endtime" string="合同终止时间"  readonly="True"/>
                                     </group>
                                     <group string="Contact Information">

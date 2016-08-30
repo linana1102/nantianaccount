@@ -20,12 +20,12 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','mail','hr','project','account'],
+    'depends': ['base','mail','hr','project','account','resource'],
 
     # always loaded
     'data': [
-        'security/ir.model.access.csv',
         'security/nantian_erp_security.xml',
+        'security/ir.model.access.csv',
         'views/nantian_erp_hr_view.xml',
         'views/nantian_erp_contract_view.xml',
         'views/nantian_erp_view.xml',
