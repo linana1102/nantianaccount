@@ -23,11 +23,12 @@
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
                                         <field name="job_id" string="职位" />
                                         <field name="parent_id" string="上一级" />
-                                        <field name="coach_id"/>
+                                        <field name="coach_id" invisible="True"/>
                                         <field name="level" string="级别"/>
                                         <field name="entry_time" string="入职时间" />
                                         <field name="contract_starttime" string="合同开始时间" />
-                                        <field name="contract_len" string="合同期限" />
+                                        <field name="is_forever" string="是否无期限" />
+                                        <field name="contract_len" string="合同期限" attrs="{'invisible':[('is_forever','=',True)]}" />
                                         <field name="contract_endtime" string="合同终止时间" />
                                     </group>
                                     <group string="Contact Information">
@@ -37,7 +38,7 @@
                                 <group string="项目信息">
                                     <field name="project_id" string="所在工作组" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                     <field name="customer_id" string="服务客户" />
-                                    <field name="category" string="人员状态" on_change="onchange_category(category,nantian_erp_contract_id,contract_jobs_id)"/>
+                                    <field name="category" string="人员状态" on_change="onchange_category(category)"/>
                                     <field name="nantian_erp_contract_id" string="服务合同" domain="[('customer_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                     <field name="contract_jobs_id" string="合同岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
 
@@ -95,12 +96,6 @@
                                 <field name="active"/>
                                 </group>
                         </group>
-                        <group string="项目信息">
-
-                                    <field name="account_id" string="合同" domain="[('partner_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
-                                    <field name="analytic_line_id" string="岗位" domain="[('account_id','=',account_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
-
-                      </group>
                     </page>
                 </xpath>
             </field>
@@ -127,11 +122,12 @@
                                         <field name="department_id" on_change="onchange_department_id(department_id)" readonly="True"/>
                                         <field name="job_id" string="职位"  readonly="True"/>
                                         <field name="parent_id" string="上一级"  readonly="True"/>
-                                        <field name="coach_id" readonly="True"/>
+                                        <field name="coach_id" readonly="True" invisible="True"/>
                                         <field name="level" string="级别" readonly="True"/>
                                         <field name="entry_time" string="入职时间"  readonly="True"/>
                                         <field name="contract_starttime" string="合同开始时间"  readonly="True"/>
-                                        <field name="contract_len" string="合同期限"  readonly="True"/>
+                                        <field name="is_forever" string="是否无期限" />
+                                       <field name="contract_len" string="合同期限" attrs="{'invisible':[('is_forever','=',True)]}" />
                                         <field name="contract_endtime" string="合同终止时间"  readonly="True"/>
                                     </group>
                                     <group string="Contact Information">
@@ -141,7 +137,7 @@
                                 <group string="项目信息">
                                     <field name="project_id" string="所在工作组" readonly="True" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                     <field name="customer_id" string="服务客户" />
-                                    <field name="category" string="人员状态" readonly="True" on_change="onchange_category(category,nantian_erp_contract_id,contract_jobs_id)" />
+                                    <field name="category" string="人员状态" readonly="True" on_change="onchange_category(category)" />
                                     <field name="nantian_erp_contract_id" string="服务合同" readonly="True" domain="[('customer_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                     <field name="contract_jobs_id" string="合同岗位" readonly="True" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}' />
                                 </group>
@@ -198,10 +194,6 @@
                                 <field name="active" />
                              </group>
                         </group>
-                        <group string="项目信息">
-                            <field name="account_id" string="合同" domain="[('partner_id','=',customer_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
-                            <field name="analytic_line_id" string="岗位" domain="[('account_id','=',account_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}"/>
-                      </group>
                     </page>
                 </xpath>
             </field>

@@ -25,6 +25,7 @@ class hr_employee(models.Model):
     contract_starttime = fields.Date()
     contract_endtime = fields.Date(store=True,compute='_get_end_date')
     contract_len = fields.Integer()
+    is_forever = fields.Boolean(string='无期限？')
     education = fields.Selection(
         [
             (u'专科', u"专科"),
@@ -71,8 +72,9 @@ class hr_employee(models.Model):
     api_res = fields.Char(default="sys")
     customer_id = fields.Many2one('res.partner', compute='_get_customer',string="客户",store=True)
 
+
     @api.multi
-    def onchange_category(self,category,nantian_erp_contract_id,contract_jobs_id):
+    def onchange_category(self,category):
         result = {'value': {}}
         if category==u"公司储备" or category==u"公司项目":
 
@@ -124,13 +126,17 @@ class hr_employee(models.Model):
         #self.analytic_line_id.name_get(self.project_id.analytic_account_id)
        
     @api.one
-    @api.depends('contract_starttime', 'contract_len')
+    @api.depends('contract_starttime', 'contract_len','is_forever')
     def _get_end_date(self):
-        if not (self.contract_starttime and self.contract_len):
-            self.contract_endtime = self.contract_starttime
-            return
-        start=fields.Datetime.from_string(self.contract_starttime)
-        self.contract_endtime =datetime(start.year+self.contract_len,start.month,start.day)
+        if not self.is_forever:
+            if not (self.contract_starttime and self.contract_len):
+                self.contract_endtime = self.contract_starttime
+                return
+            start=fields.Datetime.from_string(self.contract_starttime)
+            self.contract_endtime =datetime(start.year+self.contract_len,start.month,start.day)
+        else:
+            self.contract_endtime='9999-12-31'
+
 
     @api.multi
     def hr_to_user(self):
@@ -139,6 +145,14 @@ class hr_employee(models.Model):
             user = self.env['res.users'].create(
                 {'login': rec.work_email, 'password': '123456', 'name': rec.name})
             rec.user_id = user
+
+    # @api.multi
+    # def onchange_contract_endtime(self, is_forever ):
+    #     result = {'value': {}}
+    #     if is_forever:
+    #         result['value']['contract_endtime'] = '9999-12-31'
+    #
+    #     return result
 
 class project_project(models.Model):
     _inherit = 'project.project'
