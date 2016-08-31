@@ -806,7 +806,7 @@ class contract(models.Model):
             dates=[]
             if record.collection_ids:
                 for collection in record.collection_ids:
-                    if collection.date==u'未收款':
+                    if collection.state==u'未收款':
                         dates.append(collection.date)
             if dates:
                 record.next_collection_date=min(dates)

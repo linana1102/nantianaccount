@@ -296,8 +296,8 @@
             <field name="view_id" ref="nantian_erp_project_form_view_manager" />
             <field name="act_window_id" ref="nantian_project_action" />
         </record>
-        <menuitem name="nantian_config" id="nantian_config" parent="base.menu_main_pm" groups="project.group_project_manager" />
-        <menuitem id="nantian_works"  sequence="1" parent="nantian_config" action="nantian_project_action" name="works" />
+        <menuitem name="nantian_config" id="nantian_config" parent="base.menu_main_pm" groups="nantian_erp.group_nantian_assistant" />
+        <menuitem id="nantian_works"  sequence="1" parent="nantian_config" action="nantian_project_action" name="works" groups="nantian_erp.group_nantian_assistant"/>
 
     </data>
 </openerp>
