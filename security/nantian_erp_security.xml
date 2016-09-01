@@ -23,6 +23,7 @@
         <field name="name">人力-总经理助理</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
     <!--下面是新建组-->

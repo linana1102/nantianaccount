@@ -527,23 +527,23 @@ class hr_leave(models.Model):
 
     @api.multi
     def leave_apply(self):
-
+        print self.env['res.groups'].search([('name', '=', "Manager")])
         if self.env.user in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
             self.state = 'done'
         elif self.employee_ids.child_ids or self.env.user in self.env['project.project'].user_id or self.employee_ids==self.employee_ids.department_id.manager_id:
             if self.leave_type.name == "轮休假":
                 self.state = 'done'
-            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users:
+            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
 
                 self.hr_manager = self.employee_ids.department_id.manager_id
                 self.state = 'application'
-            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.parent_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users:
+            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.parent_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
                 self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
                 self.state = 'application'
             else:
                 raise exceptions.ValidationError('您需要一个总经理去处理您的请假申请')
         elif self.employee_ids.parent_id:
-            if self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.parent_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users or self.leave_type.name == "轮休假":
+            if self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.parent_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users or self.leave_type.name == "轮休假":
                 self.hr_manager = self.employee_ids.parent_id
             else:
                 if self.leave_type.name == "轮休假":
@@ -767,7 +767,13 @@ class contract(models.Model):
         ],
         string="合同状态",default='going'
     )
-
+    state = fields.Selection(
+        [
+            (u'服务合同', u'服务合同'),
+            (u'MA合同', u'MA合同'),
+        ],
+        string="合同状态", default=u'服务合同', store=True
+    )
     @api.depends('jobs_ids.amount')
     def _need_count_employees(self):
         for record in self:
