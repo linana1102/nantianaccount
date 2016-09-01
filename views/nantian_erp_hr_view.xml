@@ -5,7 +5,7 @@
             <field name="name">employee.form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user'),ref('base.group_hr_manager'),ref('nantian_erp.group_nantian_assistant_manager'),ref('nantian_erp.group_hr_bm_manager'),ref('nantian_erp.group_hr_assistant'),ref('nantian_erp.group_hr_manager_assistant'),ref('nantian_erp.group_nantian_header')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager'),ref('nantian_erp.group_nantian_assistant_manager'),ref('nantian_erp.group_hr_bm_manager'),ref('nantian_erp.group_hr_assistant'),ref('nantian_erp.group_hr_manager_assistant'),ref('nantian_erp.group_nantian_header')])]"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@string='HR Settings']" position="replace">
                   <page string="HR Settings" >
@@ -56,7 +56,7 @@
                                 <group>
                                     <group string="Citizenship &amp; Other Info">
 <!--                                         <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
- -->                                        <field name="identification_id" groups="base.group_hr_user"/>
+ -->                                        <field name="identification_id" />
                                        <!--  <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="bank_account_id"/>
                                         <field name="otherid" groups="base.group_hr_user"/> -->
@@ -90,7 +90,7 @@
                             </page>
                 </xpath>
                 <xpath expr="//page[@string='HR Settings']" position="replace">
-                    <page string="HR Settings" groups="base.group_hr_user,base.group_hr_manager">
+                    <page string="HR Settings" groups="nantian_erp.group_hr_manager_assistant">
                         <group>
                             <group string="Active" name="active_group">
                                 <field name="active"/>
@@ -188,7 +188,7 @@
                             </page>
                 </xpath>
                 <xpath expr="//page[@string='HR Settings']" position="replace">
-                    <page string="HR Settings" groups="base.group_hr_user,base.group_hr_manager">
+                    <page string="HR Settings" groups="nantian_erp.group_hr_manager_assistant">
                         <group>
                             <group string="Active" name="active_group">
                                 <field name="active" />

@@ -97,7 +97,7 @@ msgstr "工作组"
 #. module: nantian_erp
 #: model:ir.ui.menu,name:nantian_erp.nantian_contract
 msgid "nantian_contract"
-msgstr "服务合同"
+msgstr "合同"
 
 #. module: nantian_erp
 #: model:ir.ui.menu,name:nantian_erp.nantian_service_partner
@@ -113,6 +113,21 @@ msgstr "项目管理"
 #: model:ir.ui.menu,name:nantian_erp.nantian_works
 msgid "works"
 msgstr "工作组管理"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_jobs
+msgid "nantian_jobs"
+msgstr "合同岗位管理"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_collection
+msgid "nantian_collection"
+msgstr "合同收款管理"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_detail
+msgid "nantian_detail"
+msgstr "维保明细管理"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form

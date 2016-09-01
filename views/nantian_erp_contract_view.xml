@@ -21,18 +21,21 @@
                             <field name="customer_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
                             <field name="date_start"  />
                             <field name="date_end" />
-                            <field name="need_employee_count"  />
-                            <field name="employee_count" />
+                            <field name="category" />
+                            <field name="need_employee_count"  attrs="{'invisible': [('category','=','维保合同')]}"/>
+                            <field name="employee_count" attrs="{'invisible': [('category','=','维保合同')]}"/>
                         </group>
                         <group >
-                            <field name="hr_requirements" />
-                            <field name="resource_requirements"/>
+                            <field name="hr_requirements" attrs="{'invisible': [('category','=','维保合同')]}"/>
+                            <field name="resource_requirements" attrs="{'invisible': [('category','=','维保合同')]}"/>
+                            <field name="service_content" attrs="{'invisible': [('category','=','服务合同')]}"/>
+
                         </group>
 
                     </group>
                     <group>
                             <field name="other"/>
-                            <field name="jobs_ids"  >
+                            <field name="jobs_ids"  attrs="{'invisible': [('category','=','维保合同')]}">
                                 <tree  editable="bottom">
                                     <field name="name" />
                                     <field name="instruction" />
@@ -40,6 +43,18 @@
                                     <field name="unit" />
                                     <field name="amount" />
                                     <field name="unit_amount" />
+                                    <field name="rate"/>
+                                    <field name="subtotal"/>
+                                    <field name="rated_moneys"/>
+                                </tree>
+                            </field>
+                            <field name="detail_ids"  attrs="{'invisible': [('category','=','服务合同')]}">
+                                <tree  editable="bottom">
+                                    <field name="name" />
+                                    <field name="instruction" />
+                                    <field name="price"/>
+                                    <field name="unit" />
+                                    <field name="amount" />
                                     <field name="rate"/>
                                     <field name="subtotal"/>
                                     <field name="rated_moneys"/>
@@ -54,6 +69,7 @@
                                 <tree  editable="bottom">
                                     <field name="name" />
                                     <field name="evaluate_money" />
+                                    <field name="conditions" />
                                     <field name="date" />
                                     <field name="money"/>
                                     <field name="rate"/>
@@ -79,7 +95,7 @@
                     <field name="name" />
                     <field name="header_id" />
                     <field name="customer_id"/>
-                    <field name="date_start"  />
+                    <field name="category"/>
                     <field name="date_end" />
                     <field name="need_employee_count" />
                     <field name="employee_count" />
@@ -99,6 +115,7 @@
                         <filter string="合同客户" name="customer" context="{'group_by':'customer_id'}"/>
                         <filter string="负责人" name="applicant_id" context="{'group_by':'header_id'}"/>
                         <filter string="合同状态" name="state" context="{'group_by':'state'}"/>
+                        <filter string="合同类别" name="category" context="{'group_by':'category'}"/>
                     </group>
                 </search>
             </field>

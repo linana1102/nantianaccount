@@ -198,7 +198,6 @@ class account_analytic_line(models.Model):
     def _count_employees(self):
         for record in self:
             record.employee_count = len(record.employee_ids) 
-
     """
     @api.multi
     @api.depends('name','product_id')
@@ -527,31 +526,33 @@ class hr_leave(models.Model):
 
     @api.multi
     def leave_apply(self):
-
+        print self.env['res.groups'].search([('name', '=', "Manager")])
         if self.env.user in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
             self.state = 'done'
-        elif self.employee_ids.child_ids or self.env.user in self.env['project.project'].user_id or self.employee_ids==self.employee_ids.department_id.manager_id:
-            if self.leave_type.name == "轮休假":
-                self.state = 'done'
-            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users:
-
-                self.hr_manager = self.employee_ids.department_id.manager_id
-                self.state = 'application'
-            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.parent_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users:
-                self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
-                self.state = 'application'
-            else:
-                raise exceptions.ValidationError('您需要一个总经理去处理您的请假申请')
         elif self.employee_ids.parent_id:
-            if self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.parent_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager")]).users or self.leave_type.name == "轮休假":
+            if self.env['res.users'].search([('employee_ids', 'ilike', self.employee_ids.parent_id.id)], limit=1) in \
+                    self.env['res.groups'].search([('name', '=', "Manager"), (
+                    'category_id.name', '=', 'Human Resources')]).users or self.leave_type.name == "调休":
                 self.hr_manager = self.employee_ids.parent_id
             else:
-                if self.leave_type.name == "轮休假":
+                if self.leave_type.name == "调休":
                     self.hr_officer = self.employee_ids.department_id.manager_id
                 else:
                     self.hr_officer = self.employee_ids.department_id.manager_id
                     self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
             self.state = 'application'
+        elif self.employee_ids.child_ids or self.env.user in self.env['project.project'].user_id or self.employee_ids==self.employee_ids.department_id.manager_id:
+            if self.leave_type.name == "调休":
+                self.state = 'done'
+            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
+
+                self.hr_manager = self.employee_ids.department_id.manager_id
+                self.state = 'application'
+            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.parent_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
+                self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
+                self.state = 'application'
+            else:
+                raise exceptions.ValidationError('您需要一个总经理去处理您的请假申请')
         else:
             raise exceptions.ValidationError('您没有经理去处理您的请假申请')
 
@@ -676,7 +677,7 @@ class jobs(models.Model):
                 record.rated_moneys = record.price * record.amount * record.unit_amount * string.atof(record.rate)
 
     @api.multi
-    @api.depends('name', 'product_id')
+    @api.depends('name', 'instruction')
     def name_get(self):
         datas=[]
         for r in self:
@@ -686,12 +687,67 @@ class jobs(models.Model):
                 datas.append((r.id, (r.name)))
         return datas
 
+class detail(models.Model):
+    _name = 'nantian_erp.detail'
+    name = fields.Char(string='名称')
+    contract_id = fields.Many2one('nantian_erp.contract', string="合同")
+    instruction = fields.Text(string='说明')
+    price = fields.Float(string = '单价')
+    unit = fields.Selection(
+        [
+            ('other', u'其他'),
+        ],
+        string="单位", default='other'
+    )
+    amount = fields.Integer(string='数量', default=1)
+    rate = fields.Selection(
+        [
+            ('0.00',u'0%'),
+            ('0.06',u'6%'),
+            ('0.11', u'11%'),
+            ('0.17', u'17%')
+        ],
+        string="税率", default='0.00'
+    )
+    rated_moneys=fields.Float(compute='_count_rated_moneys', store=True, string ="税金")
+    subtotal = fields.Float(compute='_count_subtotal', store=True,string="小计")
+    @api.depends('price')
+    def _count_subtotal(self):
+        for record in self:
+            if record.amount:
+                record.subtotal = record.price*record.amount
+            else:
+                raise exceptions.ValidationError("数量不能小于1")
+
+    @api.depends('price','amount','rate')
+    def _count_rated_moneys(self):
+        for record in self:
+            if record.amount:
+                pass
+            else:
+                raise exceptions.ValidationError("数量不能小于1")
+            if record.rate:
+                record.rated_moneys = record.price * record.amount*string.atof(record.rate)
+
+    @api.multi
+    @api.depends('name', 'instruction')
+    def name_get(self):
+        datas=[]
+        for r in self:
+            if r.instruction:
+                datas.append((r.id, (r.name + '(' + (r.instruction) + ')')))
+            else:
+                datas.append((r.id, (r.name)))
+        return datas
+
+
 class collection(models.Model):
     _name = 'nantian_erp.collection'
     name = fields.Char(string='名称')
     contract_id = fields.Many2one('nantian_erp.contract', string="合同")
     date = fields.Date(string='合同收款时间')
     evaluate_money = fields.Float(string='预期收款金额')
+    conditions = fields.Text(string='收款前提条件')
     money = fields.Float(string='实际收款金额')
     rate = fields.Selection(
         [
@@ -726,9 +782,8 @@ class collection(models.Model):
         for record in self:
             record.money_total = record.money - record.rated_moneys
 
-
     @api.multi
-    @api.depends('evaluate_money','money')
+    @api.depends('evaluate_money', 'money')
     def _change_state(self):
         for record in self:
             if record.evaluate_money and not record.money:
@@ -737,6 +792,7 @@ class collection(models.Model):
                 record.state = u'已收款'
                 record.user_id = self.env.user
                 record.time = fields.datetime.now()
+
 
 
 class contract(models.Model):
@@ -756,9 +812,11 @@ class contract(models.Model):
     collection_money_tax = fields.Float(string="收款税金", compute='_count_collection_money_tax', store=True)
     collection_money_total = fields.Float(string="税后总计收款金额", compute='_count_collection_money_total', store=True)
     collection_ids = fields.One2many('nantian_erp.collection', 'contract_id',string="收款")
+    detail_ids = fields.One2many('nantian_erp.detail', 'contract_id', string="维保明细")
     hr_requirements = fields.Text(string="人员要求")
     resource_requirements = fields.Text(string="资源要求")
     other = fields.Text(string="其他")
+    service_content = fields.Text(string="服务内容")
     next_collection_date = fields.Date(compute='_count_next_date',string="下次收款日期",store=True)
     state = fields.Selection(
         [
@@ -767,7 +825,14 @@ class contract(models.Model):
         ],
         string="合同状态",default='going'
     )
-
+    category = fields.Selection(
+        [
+            (u'服务合同', u'服务合同'),
+            (u'维保合同', u'维保合同'),
+            (u'混合合同',u'混合合同')
+        ],
+        string="合同类别", default=u'服务合同'
+    )
     @api.depends('jobs_ids.amount')
     def _need_count_employees(self):
         for record in self:
@@ -783,17 +848,35 @@ class contract(models.Model):
             for job in record.jobs_ids:
                 record.employee_count += job.employee_count
 
-    @api.depends('jobs_ids.subtotal')
+    @api.depends('jobs_ids.subtotal','detail_ids.subtotal','category')
     def _count_money(self):
         for record in self:
-            for job in record.jobs_ids:
-                record.money += job.subtotal
+            if record.category == u'服务合同':
+                for job in record.jobs_ids:
+                    record.money += job.subtotal
+            elif record.category == u'维保合同':
+                for detail in record.detail_ids:
+                    record.money += detail.subtotal
+            elif record.category == u'混合合同':
+                for job in record.jobs_ids:
+                    record.money += job.subtotal
+                for detail in record.detail_ids:
+                    record.money += detail.subtotal
 
-    @api.depends('jobs_ids.rated_moneys')
+    @api.depends('jobs_ids.rated_moneys','detail_ids.rated_moneys','category')
     def _count_money_tax(self):
         for record in self:
-            for job in record.jobs_ids:
-                record.money_tax += job.rated_moneys
+            if record.category == u'服务合同':
+                for job in record.jobs_ids:
+                    record.money_tax += job.rated_moneys
+            elif record.category == u'维保合同':
+                for detail in record.detail_ids:
+                    record.money_tax += detail.rated_moneys
+            elif record.category == u'混合合同':
+                for job in record.jobs_ids:
+                    record.money_tax += job.rated_moneys
+                for detail in record.detail_ids:
+                    record.money_tax += detail.rated_moneys
 
     @api.depends('money','money_tax')
     def _count_money_total(self):
@@ -823,7 +906,7 @@ class contract(models.Model):
     def _count_collection_money_tax(self):
         for record in self:
             for collection in record.collection_ids:
-                record.money_tax += collection.rated_moneys
+                record.collection_money_tax += collection.rated_moneys
 
     @api.depends('collection_money', 'collection_money_tax')
     def _count_collection_money_total(self):
@@ -834,13 +917,6 @@ class contract(models.Model):
     @api.depends('name', 'employee_count')
     def name_get(self):
         return [(r.id, (r.name + '-' + u'合同约束人数' + (str(r.need_employee_count)) + u'人')) for r in self]
-
-
-
-
-
-
-
 
 class res_partner(models.Model):
     _inherit = 'res.partner'
