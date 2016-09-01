@@ -711,7 +711,7 @@ class detail(models.Model):
     )
     rated_moneys=fields.Float(compute='_count_rated_moneys', store=True, string ="税金")
     subtotal = fields.Float(compute='_count_subtotal', store=True,string="小计")
-    @api.depends('price')
+    @api.depends('price','amount')
     def _count_subtotal(self):
         for record in self:
             if record.amount:
