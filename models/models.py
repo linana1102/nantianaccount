@@ -906,7 +906,7 @@ class contract(models.Model):
     def _count_collection_money_tax(self):
         for record in self:
             for collection in record.collection_ids:
-                record.money_tax += collection.rated_moneys
+                record.collection_money_tax += collection.rated_moneys
 
     @api.depends('collection_money', 'collection_money_tax')
     def _count_collection_money_total(self):
