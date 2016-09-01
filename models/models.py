@@ -530,8 +530,20 @@ class hr_leave(models.Model):
         print self.env['res.groups'].search([('name', '=', "Manager")])
         if self.env.user in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
             self.state = 'done'
+        elif self.employee_ids.parent_id:
+            if self.env['res.users'].search([('employee_ids', 'ilike', self.employee_ids.parent_id.id)], limit=1) in \
+                    self.env['res.groups'].search([('name', '=', "Manager"), (
+                    'category_id.name', '=', 'Human Resources')]).users or self.leave_type.name == "调休":
+                self.hr_manager = self.employee_ids.parent_id
+            else:
+                if self.leave_type.name == "调休":
+                    self.hr_officer = self.employee_ids.department_id.manager_id
+                else:
+                    self.hr_officer = self.employee_ids.department_id.manager_id
+                    self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
+            self.state = 'application'
         elif self.employee_ids.child_ids or self.env.user in self.env['project.project'].user_id or self.employee_ids==self.employee_ids.department_id.manager_id:
-            if self.leave_type.name == "轮休假":
+            if self.leave_type.name == "调休":
                 self.state = 'done'
             elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
 
@@ -542,16 +554,6 @@ class hr_leave(models.Model):
                 self.state = 'application'
             else:
                 raise exceptions.ValidationError('您需要一个总经理去处理您的请假申请')
-        elif self.employee_ids.parent_id:
-            if self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.parent_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users or self.leave_type.name == "轮休假":
-                self.hr_manager = self.employee_ids.parent_id
-            else:
-                if self.leave_type.name == "轮休假":
-                    self.hr_officer = self.employee_ids.department_id.manager_id
-                else:
-                    self.hr_officer = self.employee_ids.department_id.manager_id
-                    self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
-            self.state = 'application'
         else:
             raise exceptions.ValidationError('您没有经理去处理您的请假申请')
 
