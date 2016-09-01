@@ -115,6 +115,7 @@
                         <filter string="合同客户" name="customer" context="{'group_by':'customer_id'}"/>
                         <filter string="负责人" name="applicant_id" context="{'group_by':'header_id'}"/>
                         <filter string="合同状态" name="state" context="{'group_by':'state'}"/>
+                        <filter string="合同类别" name="category" context="{'group_by':'category'}"/>
                     </group>
                 </search>
             </field>
