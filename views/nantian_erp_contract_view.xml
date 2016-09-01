@@ -95,7 +95,7 @@
                     <field name="name" />
                     <field name="header_id" />
                     <field name="customer_id"/>
-                    <field name="date_start"  />
+                    <field name="category"/>
                     <field name="date_end" />
                     <field name="need_employee_count" />
                     <field name="employee_count" />
