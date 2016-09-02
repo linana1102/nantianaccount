@@ -888,7 +888,6 @@ class contract(models.Model):
     @api.multi
     def onchange_category(self,name):
         result = {'value':{}}
-        print "你好"
         result['value']['category'] = u'维保合同'
         return result
 
