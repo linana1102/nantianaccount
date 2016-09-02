@@ -884,6 +884,14 @@ class contract(models.Model):
         ],
         string="合同类别", default=u'服务合同'
     )
+
+    @api.multi
+    def onchange_category(self,name):
+        result = {'value':{}}
+        print "你好"
+        result['value']['category'] = u'维保合同'
+        return result
+
     @api.depends('jobs_ids.amount')
     def _need_count_employees(self):
         for record in self:

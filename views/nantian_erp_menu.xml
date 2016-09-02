@@ -255,7 +255,24 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem name="nantian_contract" id="nantian_contract" sequence="20"  parent="project.menu_project_management"  action="nantian_erp_contract_view" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,project.group_project_manager"/>
-        
+
+        <record id="nantian_MA_contract_view" model="ir.actions.act_window">
+            <field name="name">维保合同</field>
+            <field name="res_model">nantian_erp.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('category','=','维保合同')]</field>
+        </record>
+        <record id="nantian_MA_contract_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="nantian_erp.nantian_erp_MA_contract_tree" />
+            <field name="act_window_id" ref="nantian_MA_contract_view" />
+        </record>
+        <record id="nantian_MA_contract_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="nantian_erp.nantian_erp_MA_contract" />
+            <field name="act_window_id" ref="nantian_MA_contract_view" />
+        </record>
 
 
         <record id="nantian_service_partner_action" model="ir.actions.act_window">
