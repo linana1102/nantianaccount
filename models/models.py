@@ -238,11 +238,16 @@ class certificate(models.Model):
     certificate_category_id = fields.Many2one('nantian_erp.certificate_category', string='认证类型')
     certificate_institutions_id = fields.Many2one('nantian_erp.certificate_institutions', string='颁发机构或行业')
     certificate_level_id = fields.Many2one('nantian_erp.certificate_level', string='级别')
-    time = fields.Date(placeholder="截止日期",string="有效期",default=datetime(9999,12,31))
+    time = fields.Date(placeholder="截止日期",string="有效期")
     is_forever_validate = fields.Boolean(string="是否长期有效",default = False)
     employee_ids = fields.Many2one('hr.employee',ondelete='set null')
 
-
+    @api.multi
+    def onchange_time(self,is_forever_validate):
+        result = {'value': {}}
+        if is_forever_validate:
+            result['value']['time'] = datetime(9999,12,31)
+        return result
     def expiration_reminder(self, cr, uid, erp_server_addr, context=None):
         '''
         证书过期提醒。
@@ -526,35 +531,73 @@ class hr_leave(models.Model):
 
     @api.multi
     def leave_apply(self):
-        print self.env['res.groups'].search([('name', '=', "Manager")])
-        if self.env.user in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
+        if self.env.user in self.env['res.groups'].search(
+                [('name', '=', "Manager"), ('category_id.name', '=', 'Human Resources')]).users:
             self.state = 'done'
-        elif self.employee_ids.parent_id:
-            if self.env['res.users'].search([('employee_ids', 'ilike', self.employee_ids.parent_id.id)], limit=1) in \
-                    self.env['res.groups'].search([('name', '=', "Manager"), (
-                    'category_id.name', '=', 'Human Resources')]).users or self.leave_type.name == "调休":
-                self.hr_manager = self.employee_ids.parent_id
-            else:
-                if self.leave_type.name == "调休":
-                    self.hr_officer = self.employee_ids.department_id.manager_id
-                else:
-                    self.hr_officer = self.employee_ids.department_id.manager_id
-                    self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
-            self.state = 'application'
-        elif self.employee_ids.child_ids or self.env.user in self.env['project.project'].user_id or self.employee_ids==self.employee_ids.department_id.manager_id:
-            if self.leave_type.name == "调休":
+        elif self.employee_ids.child_ids or self.env.user in self.env[
+            'project.project'].user_id or self.employee_ids == self.employee_ids.department_id.manager_id:
+            if self.leave_type.name == u"调休":
+                print """yes"""
                 self.state = 'done'
-            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
+            elif self.env['res.users'].search(
+                    [('employee_ids', 'ilike', self.employee_ids.department_id.manager_id.id)], limit=1) in self.env[
+                'res.groups'].search([('name', '=', "Manager"), ('category_id.name', '=', 'Human Resources')]).users:
 
                 self.hr_manager = self.employee_ids.department_id.manager_id
                 self.state = 'application'
-            elif self.env['res.users'].search([('employee_ids', 'ilike',self.employee_ids.department_id.parent_id.manager_id.id)],limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
+            elif self.env['res.users'].search(
+                    [('employee_ids', 'ilike', self.employee_ids.department_id.parent_id.manager_id.id)], limit=1) in \
+                    self.env['res.groups'].search(
+                            [('name', '=', "Manager"), ('category_id.name', '=', 'Human Resources')]).users:
                 self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
                 self.state = 'application'
             else:
                 raise exceptions.ValidationError('您需要一个总经理去处理您的请假申请')
+        elif self.employee_ids.parent_id:
+            print "haolai"
+            if self.env['res.users'].search([('employee_ids', 'ilike', self.employee_ids.parent_id.id)], limit=1) in \
+                    self.env['res.groups'].search([('name', '=', "Manager"), (
+                            'category_id.name', '=', 'Human Resources')]).users:
+                if self.leave_type.name == u"调休":
+                    self.state = 'done'
+                else:
+                    self.hr_manager = self.employee_ids.parent_id
+            else:
+                if self.leave_type.name == u"调休":
+                    self.hr_officer = self.employee_ids.parent_id
+                else:
+                    self.hr_officer = self.employee_ids.parent_id
+                    self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
+            self.state = 'application'
+        elif not self.employee_ids.parent_id and self.employee_ids.department_id.manager_id:
+            if self.leave_type.name == u"调休":
+                self.hr_officer = self.employee_ids.department_id.manager_id
+            elif self.env['res.users'].search(
+                    [('employee_ids', 'ilike', self.employee_ids.department_id.manager_id.id)], limit=1) in self.env[
+                'res.groups'].search([('name', '=', "Manager"), ('category_id.name', '=', 'Human Resources')]).users:
+
+                self.hr_manager = self.employee_ids.department_id.manager_id
+            elif self.env['res.users'].search(
+                    [('employee_ids', 'ilike', self.employee_ids.department_id.parent_id.manager_id.id)], limit=1) in \
+                    self.env['res.groups'].search(
+                            [('name', '=', "Manager"), ('category_id.name', '=', 'Human Resources')]).users:
+                self.hr_officer = self.employee_ids.department_id.manager_id
+                self.hr_manager = self.employee_ids.department_id.parent_id.manager_id
+            self.state = 'application'
         else:
-            raise exceptions.ValidationError('您没有经理去处理您的请假申请')
+            raise exceptions.ValidationError('您没有经理或者上级去处理您的请假申请')
+
+    @api.multi
+    def judge_check(self):
+        if self.hr_officer:
+            return True
+        return False
+
+    @api.multi
+    def judge_again(self):
+        if self.hr_manager and not self.hr_officer:
+            return True
+        return False
 
     def leave_check(self):
         if self.hr_manager:
@@ -564,10 +607,18 @@ class hr_leave(models.Model):
             else:
                 self.state = 'again_check'
                 self.dealer = self.hr_manager_user
+        else:
+            if self.hr_officer:
+                self.state = 'check'
+                self.dealer = self.hr_officer_user
 
     def leave_again_check(self):
-        self.state = 'again_check'
-        self.dealer = self.hr_manager_user
+        if self.hr_manager:
+            self.state = 'again_check'
+            self.dealer = self.hr_manager_user
+        else:
+            if self.hr_officer:
+                self.state = 'done'
 
     def leave_done(self):
         self.state = 'done'

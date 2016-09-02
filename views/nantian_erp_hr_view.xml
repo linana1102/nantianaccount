@@ -81,7 +81,7 @@
                                                 <field name="certificate_institutions_id" domain="[('category_id','=',certificate_category_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                                 <field name="certificate_direction_id" domain="[('institutions_id','=',certificate_institutions_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                                 <field name="certificate_level_id" domain="[('direction_id','=',certificate_direction_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
-                                                <field name="is_forever_validate" string="是否长期有效"></field>
+                                                <field name="is_forever_validate" string="是否长期有效" on_change="onchange_time(is_forever_validate)"></field>
                                                 <field name="time" attrs="{'readonly': [('is_forever_validate', '!=', False)]}"/>
                                             </tree>
                                         </field>
@@ -179,7 +179,7 @@
                                                 <field name="certificate_institutions_id" domain="[('category_id','=',certificate_category_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                                 <field name="certificate_direction_id" domain="[('institutions_id','=',certificate_institutions_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                                 <field name="certificate_level_id" domain="[('direction_id','=',certificate_direction_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
-                                                <field name="is_forever_validate" string="是否长期有效"></field>
+                                                <field name="is_forever_validate" string="是否长期有效" on_change="onchange_time(is_forever_validate)"></field>
                                                 <field name="time" attrs="{'readonly': [('is_forever_validate', '!=', False)]}"/>
                                             </tree>
                                         </field>
