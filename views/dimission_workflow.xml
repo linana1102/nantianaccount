@@ -50,25 +50,21 @@
         <record model="workflow.transition" id="hr_dimission_check_to_hr_dimission_again_check">
             <field name="act_from" ref="hr_dimission_check" />
             <field name="act_to" ref="hr_dimission_again_check"/>
-            <field name="group_id" ref="base.group_hr_user" />
             <field name="signal">set_to_again_check</field>
         </record>
         <record model="workflow.transition" id="hr_dimission_again_check_to_hr_dimission_done">
             <field name="act_from" ref="hr_dimission_again_check" />
             <field name="act_to" ref="hr_dimission_done"/>
-            <field name="group_id" ref="base.group_hr_manager" />
             <field name="signal">set_to_done</field>
         </record>
         <record model="workflow.transition" id="hr_dimission_check_to_hr_dimission_no">
             <field name="act_from" ref="hr_dimission_check" />
             <field name="act_to" ref="hr_dimission_no"/>
-            <field name="group_id" ref="base.group_hr_user" />
             <field name="signal">set_to_no</field>
         </record>
         <record model="workflow.transition" id="hr_dimission_again_check_to_hr_dimission_no">
             <field name="act_from" ref="hr_dimission_again_check" />
             <field name="act_to" ref="hr_dimission_no"/>
-            <field name="group_id" ref="base.group_hr_manager" />
             <field name="signal">set_to_no1</field>
         </record>
 </data>
