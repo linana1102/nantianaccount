@@ -258,6 +258,8 @@
                      <field name="state" widget="statusbar"/>
                 </header>
                 <group string="离职">
+                    <field name="employee_ids" string="申请人" readonly="True"/>
+                    <field name="dimission_date" attrs="{'readonly': [('state', '!=', 'application')]}"/>
                     <field name="dimission_why" string="离职原因" attrs="{'readonly': [('state', '!=', 'application')]}"/>
                     <field name="dimission_goto" string="离职去向" attrs="{'readonly': [('state', '!=', 'application')]}"/>
                     <field name="dimission_why_add" string="其他原因" attrs="{'invisible': [('dimission_why','!=','其他')],'readonly':[('state', '!=', 'application')]}"/>
@@ -271,6 +273,8 @@
             <field name="model">nantian_erp.hr_dimission</field>
             <field name="arch" type="xml">
                 <tree string="dimission_applicing tree">
+                    <field name="employee_ids" string="申请人"/>
+                    <field name="dimission_date" />
                     <field name="dimission_why" string="离职原因" />
                     <field name="dimission_goto" string="离职去向" />
                     <field name="dimission_why_add" string="其他原因" />
@@ -293,6 +297,7 @@
                 </header>
                 <group string="离职">
                     <field name="employee_ids" string="申请人" readonly="True"/>
+                    <field name="dimission_date" attrs="{'readonly': [('state', '!=', 'application')]}"/>
                     <field name="dimission_why" string="离职原因" attrs="{'readonly': [('state', '!=', 'application')]}"/>
                     <field name="dimission_goto" string="离职去向" attrs="{'readonly': [('state', '!=', 'application')]}"/>
                     <field name="dimission_why_add" string="其他原因" attrs="{'invisible': [('dimission_why','!=','其他')],'readonly':[('state', '!=', 'application')]}"/>
@@ -310,7 +315,7 @@
             <field name="arch" type="xml">
                 <tree string="dimission_applicing tree" create="false">
                     <field name="employee_ids" string="申请人"/>
-
+                    <field name="dimission_date" />
                     <field name="dimission_why" string="离职原因" />
                     <field name="dimission_goto" string="离职去向" />
                     <field name="dimission_why_add" string="其他原因" />
@@ -330,6 +335,7 @@
                 </header>
                 <group string="离职">
                     <field name="employee_ids" string="申请人" readonly="True"/>
+                    <field name="dimission_date" readonly="True"/>
                     <field name="dimission_why" string="离职原因" attrs="{'readonly': [('state', '!=', 'application')]}"/>
                     <field name="dimission_goto" string="离职去向" attrs="{'readonly': [('state', '!=', 'application')]}"/>
                     <field name="dimission_why_add" string="其他原因" attrs="{'invisible': [('dimission_why','!=','其他')],'readonly':[('state', '!=', 'application')]}"/>
@@ -348,6 +354,7 @@
             <field name="arch" type="xml">
                 <tree string="dimission_done tree" create="false" edit="false">
                     <field name="employee_ids" string="申请人"/>
+                    <field name="dimission_date" />
                     <field name="dimission_why" string="离职原因" />
                     <field name="dimission_goto" string="离职去向" />
                     <field name="dimission_why_add" string="其他原因" />
@@ -358,7 +365,43 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="nantian_erp_hr_dimission_special">
+            <field name="name">hr.dimission_special</field>
+            <field name="model">nantian_erp.hr_dimission</field>
+            <field name="arch" type="xml">
+                <form string="dimission_special Form" >
+                    <sheet>
+                <header>
+                     <button name="dimission_done" type="object" string="完成" states="application" class="oe_highlight"/>
 
+                     <field name="state" widget="statusbar" statusbar_visible="application,done,no"/>
+                </header>
+                <group string="离职">
+                    <field name="employee_ids" string="申请人" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_date" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_why" string="离职原因" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_goto" string="离职去向" attrs="{'readonly': [('state', '!=', 'application')]}"/>
+                    <field name="dimission_why_add" string="其他原因" attrs="{'invisible': [('dimission_why','!=','其他')],'readonly':[('state', '!=', 'application')]}"/>
+                </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_hr_dimission_special_tree">
+            <field name="name">hr.dimission_special_tree</field>
+            <field name="model">nantian_erp.hr_dimission</field>
+            <field name="arch" type="xml">
+                <tree string="dimission_special tree">
+                    <field name="employee_ids" string="申请人"/>
+                    <field name="dimission_date" />
+                    <field name="dimission_why" string="离职原因" />
+                    <field name="dimission_goto" string="离职去向" />
+                    <field name="dimission_why_add" string="其他原因" />
+                    <field name="state" string ="离职申请状态"/>
+                    <field name="dealer" string="处理人"/>
+                </tree>
+            </field>
+        </record>
 
         <record id="nantian_erp_done_attendance_form" model="ir.ui.view">
             <field name="name">hr.attendance.form</field>

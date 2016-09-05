@@ -57,6 +57,7 @@ class hr_employee(models.Model):
             (u'合同在岗', u"合同在岗"),
             (u'合同备岗', u"合同备岗"),
             (u'合同赠送', u"合同赠送"),
+            (u'现场储备', u'现场储备'),
             (u'公司项目', u"公司项目"),
         ],
     default = u'公司储备', string = "人员状态"
@@ -361,19 +362,19 @@ class certificate_institutions(models.Model):
     _name = 'nantian_erp.certificate_institutions'
     _rec_name = 'name'
     name = fields.Char(string='机构')
-    category_id = fields.Many2one('nantian_erp.certificate_category', ondelete='set null', select=True)
+    category_id = fields.Many2one('nantian_erp.certificate_category', string='认证类型',ondelete='set null', select=True)
 
 class certificate_direction(models.Model):
     _name = 'nantian_erp.certificate_direction'
     _rec_name = 'name'
     name = fields.Char(string='方向')
-    institutions_id = fields.Many2one('nantian_erp.certificate_institutions', ondelete='set null', select=True)
+    institutions_id = fields.Many2one('nantian_erp.certificate_institutions', string='机构',ondelete='set null', select=True)
 
 class certificate_level(models.Model):
     _name = 'nantian_erp.certificate_level'
     _rec_name = 'name'
     name = fields.Char(string='级别')
-    direction_id = fields.Many2one('nantian_erp.certificate_direction', ondelete='set null', select=True)
+    direction_id = fields.Many2one('nantian_erp.certificate_direction',string='方向', ondelete='set null', select=True)
 class hr_dimission(models.Model):
     _name = 'nantian_erp.hr_dimission'
 
@@ -390,6 +391,7 @@ class hr_dimission(models.Model):
         ],
         string="离职原因")
     dimission_goto = fields.Text(string="离职去向")
+    dimission_date = fields.Date(string = "离职时间")
     dimission_why_add = fields.Text(string="其他原因")
     state = fields.Selection(
         [
@@ -408,8 +410,6 @@ class hr_dimission(models.Model):
 
     @api.multi
     def dimission_apply(self):
-
-
         if  self.employee_ids.department_id.manager_id:
             if self.env['res.users'].search([('employee_ids', 'ilike', self.employee_ids.department_id.manager_id.id)],
                                             limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
@@ -440,9 +440,13 @@ class hr_dimission(models.Model):
     def dimission_again_check(self):
         self.state = 'again_check'
         self.dealer = self.hr_manager_user
+
+    @api.multi
     def dimission_done(self):
         self.state = 'done'
+        self.dealer = self.env.user
         self.employee_ids.active = 0
+        self.employee_ids.user_id.active = 0
     def dimission_no(self):
         self.state = 'no'
 
