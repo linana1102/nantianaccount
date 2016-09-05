@@ -281,7 +281,6 @@
          <record model="ir.ui.view" id="nantian_erp_hr_dimission_applicing">
             <field name="name">hr.dimission_applicing</field>
             <field name="model">nantian_erp.hr_dimission</field>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user')])]"/>
             <field name="arch" type="xml">
                 <form string="dimission_applicing Form" create="false" >
                     <sheet>
@@ -459,7 +458,6 @@
          <record model="ir.ui.view" id="nantian_erp_hr_leave_applicing">
             <field name="name">hr.leave_applicing</field>
             <field name="model">nantian_erp.hr_leave</field>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_user')])]"/>
             <field name="arch" type="xml">
                 <form string="请假单审批" create="false" >
                     <sheet>
