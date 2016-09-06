@@ -162,104 +162,104 @@
             </field>
         </record>
         
-        <record model="ir.ui.view" id="nantian_erp_project_form_view_manager">
-            <field name="name">nantian.project.form_manager</field>
-            <field name="model">project.project</field>
-            <field name="arch" type="xml">
-                <form string="works_manager">
-                	<header>
-                     <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>
-                	</header>
-                	<sheet string="Project">
-                    	<field name="analytic_account_id" invisible="1" required="0"/>
-                    	<div class="oe_title">
-                        	<label for="name" class="oe_edit_only" string="Project Name"/>
-                        	<h1><field name="name" string="Project Name" on_change="_onchange_category(name)"/></h1>
-                        	<div name="options_active">
-                            	<field name="use_tasks" class="oe_inline"/>
-                            	<label for="use_tasks" string="Use Tasks"/>
-                        	</div>
-                    	</div>
-                    	<div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
-                         	<button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"
-                            name="%(project.act_project_project_2_project_task_all)d" icon="fa-tasks">
-                            <field string="Tasks" name="task_count" widget="statinfo"/>
-                        	</button>
-                        <button  class="oe_inline oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
-                            <field string="Documents" name="doc_count" widget="statinfo"/>
-                        </button>
-                    </div>
-                    <group>
-                        <group col="4">
-                            <field name="user_id" string="Project Manager"
-                                    attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
-                                    context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
-                            <newline/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer" domain="[(('category','=',u'服务客户'))]" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
-                            <newline/>
-                            <field name="need_employee_count" string="所需人数"/>
-                            <newline/>
-                            <field name="employee_count" string="现有人数"/>
-                            <field name="category" string="类型" readonly="True"/>
-                        </group>
-                    </group>
-                    <notebook>
-                       <page string="Team" name="team">
-                            <field colspan="2" name="employee_ids" widget="many2many_kanban" >
-                                <kanban quick_create="false" create="true" delete="true">
-                                    <field name="name"/>
-                                    <templates>
-                                        <t t-name="kanban-box">
-                                            <div style="position: relative">
-                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 1px; diplay: inline-block">X</a>
-                                                <div class="oe_module_vignette">
-                                                    <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/></a>
-                                                    <div class="oe_module_desc">
-                                                        <field name="name"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </t>
-                                    </templates>
-                                </kanban>
-                            </field>
-                        </page>
-                        <page string="Other Info">
-                            <group string="Administration">
-                                <field name="privacy_visibility" widget="radio"/>
-                                <field name="planned_hours" widget="float_time" groups="project.group_time_work_estimation_tasks" invisible="True"/>
-                                <field name="effective_hours" widget="float_time" groups="project.group_time_work_estimation_tasks" invisible="True"/>
-                                <field name="resource_calendar_id" groups="project.group_time_work_estimation_tasks" invisible="True"/>
-                            </group>
-                        </page>
-                        <page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">
-                             <field name="type_ids"/>
-                        </page>
-                    </notebook>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
-                    <field name="message_ids" widget="mail_thread"/>
-                </div>
-                </form>
-            </field>
-        </record>
-   		<record model="ir.ui.view" id="nantian_project_tree_view_manager">
-            <field name="name">nantian.project.tree_manager</field>
-            <field name="model">project.project</field>
-            <field name="arch" type="xml">
-                <tree string="works_manager" >
-                    <field name="name" string="工作组名称"/>
-                    <field name="user_id" string="负责人"/>
-                    <field name="partner_id" string="客户" />
-                    <field name="category" string="类别" />
-                    <field name="need_employee_count" string="所需人数"/>
-                    <field name="employee_count" string="现有人数"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-    	</record>
-      
+        <!--<record model="ir.ui.view" id="nantian_erp_project_form_view_manager">-->
+            <!--<field name="name">nantian.project.form_manager</field>-->
+            <!--<field name="model">project.project</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<form string="works_manager">-->
+                	<!--<header>-->
+                     <!--<field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>-->
+                	<!--</header>-->
+                	<!--<sheet string="Project">-->
+                    	<!--<field name="analytic_account_id" invisible="1" required="0"/>-->
+                    	<!--<div class="oe_title">-->
+                        	<!--<label for="name" class="oe_edit_only" string="Project Name"/>-->
+                        	<!--<h1><field name="name" string="Project Name" on_change="_onchange_category(name)"/></h1>-->
+                        	<!--<div name="options_active">-->
+                            	<!--<field name="use_tasks" class="oe_inline"/>-->
+                            	<!--<label for="use_tasks" string="Use Tasks"/>-->
+                        	<!--</div>-->
+                    	<!--</div>-->
+                    	<!--<div class="oe_right oe_button_box" name="buttons" groups="base.group_user">-->
+                         	<!--<button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"-->
+                            <!--name="%(project.act_project_project_2_project_task_all)d" icon="fa-tasks">-->
+                            <!--<field string="Tasks" name="task_count" widget="statinfo"/>-->
+                        	<!--</button>-->
+                        <!--<button  class="oe_inline oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">-->
+                            <!--<field string="Documents" name="doc_count" widget="statinfo"/>-->
+                        <!--</button>-->
+                    <!--</div>-->
+                    <!--<group>-->
+                        <!--<group col="4">-->
+                            <!--<field name="user_id" string="Project Manager"-->
+                                    <!--attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"-->
+                                    <!--context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>-->
+                            <!--<newline/>-->
+                            <!--<field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer" domain="[(('category','=',u'服务客户'))]" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>-->
+                            <!--<newline/>-->
+                            <!--<field name="need_employee_count" string="所需人数"/>-->
+                            <!--<newline/>-->
+                            <!--<field name="employee_count" string="现有人数"/>-->
+                            <!--<field name="category" string="类型" readonly="True"/>-->
+                        <!--</group>-->
+                    <!--</group>-->
+                    <!--<notebook>-->
+                       <!--<page string="Team" name="team">-->
+                            <!--<field colspan="2" name="employee_ids" widget="many2many_kanban" >-->
+                                <!--<kanban quick_create="false" create="true" delete="true">-->
+                                    <!--<field name="name"/>-->
+                                    <!--<templates>-->
+                                        <!--<t t-name="kanban-box">-->
+                                            <!--<div style="position: relative">-->
+                                                <!--<a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 1px; diplay: inline-block">X</a>-->
+                                                <!--<div class="oe_module_vignette">-->
+                                                    <!--<a type="open"><img t-att-src="kanban_image('hr.employee', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/></a>-->
+                                                    <!--<div class="oe_module_desc">-->
+                                                        <!--<field name="name"/>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</t>-->
+                                    <!--</templates>-->
+                                <!--</kanban>-->
+                            <!--</field>-->
+                        <!--</page>-->
+                        <!--<page string="Other Info">-->
+                            <!--<group string="Administration">-->
+                                <!--<field name="privacy_visibility" widget="radio"/>-->
+                                <!--<field name="planned_hours" widget="float_time" groups="project.group_time_work_estimation_tasks" invisible="True"/>-->
+                                <!--<field name="effective_hours" widget="float_time" groups="project.group_time_work_estimation_tasks" invisible="True"/>-->
+                                <!--<field name="resource_calendar_id" groups="project.group_time_work_estimation_tasks" invisible="True"/>-->
+                            <!--</group>-->
+                        <!--</page>-->
+                        <!--<page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">-->
+                             <!--<field name="type_ids"/>-->
+                        <!--</page>-->
+                    <!--</notebook>-->
+                <!--</sheet>-->
+                <!--<div class="oe_chatter">-->
+                    <!--<field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>-->
+                    <!--<field name="message_ids" widget="mail_thread"/>-->
+                <!--</div>-->
+                <!--</form>-->
+            <!--</field>-->
+        <!--</record>-->
+   		<!--<record model="ir.ui.view" id="nantian_project_tree_view_manager">-->
+            <!--<field name="name">nantian.project.tree_manager</field>-->
+            <!--<field name="model">project.project</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<tree string="works_manager" >-->
+                    <!--<field name="name" string="工作组名称"/>-->
+                    <!--<field name="user_id" string="负责人"/>-->
+                    <!--<field name="partner_id" string="客户" />-->
+                    <!--<field name="category" string="类别" />-->
+                    <!--<field name="need_employee_count" string="所需人数"/>-->
+                    <!--<field name="employee_count" string="现有人数"/>-->
+                    <!--<field name="state"/>-->
+                <!--</tree>-->
+            <!--</field>-->
+    	<!--</record>-->
+      <!---->
     	<record model="ir.ui.view" id="nantian_erp_project_kanban_view">
             <field name="name">porject.kanban</field>
             <field name="model">project.project</field>
