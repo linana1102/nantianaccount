@@ -29,7 +29,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
-		<menuitem id="certificate" parent="hr.menu_hr_root"  name="certificate" groups="nantian_erp.group_hr_manager_assistant"/>
+		<menuitem id="certificate" parent="hr.menu_hr_root"  name="certificate" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header,nantian_erp.group_hr_bm_manager" />
         <menuitem id="certificate_category" parent="certificate" action="nantian_erp_certificate_category" name="certificate_category"/>
         <menuitem id="certificate_institutions" parent="certificate" action="nantian_erp_certificate_institutions" name="certificate_institutions"/>
         <menuitem id="certificate_direction" parent="certificate" action="nantian_erp_certificate_direction" name="certificate_direction"/>
@@ -46,11 +46,13 @@
         </record>
         <record id="nantian_erp_dimission_create_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
             <field name="view_id" ref="nantian_erp_hr_dimission_create_tree" />
             <field name="act_window_id" ref="nantian_erp_dimission_create" />
         </record>
         <record id="nantian_erp_dimission_create_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence" eval="5" />
             <field name="view_id" ref="nantian_erp_hr_dimission_create" />
             <field name="act_window_id" ref="nantian_erp_dimission_create" />
         </record>
@@ -64,11 +66,13 @@
         </record>
         <record id="nantian_erp_dimission_applicing_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
             <field name="view_id" ref="nantian_erp_hr_dimission_applicing_tree" />
             <field name="act_window_id" ref="nantian_erp_dimission_applicing" />
         </record>
         <record id="nantian_erp_dimission_applicing_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence" eval="5" />
             <field name="view_id" ref="nantian_erp_hr_dimission_applicing" />
             <field name="act_window_id" ref="nantian_erp_dimission_applicing" />
         </record>
@@ -82,18 +86,39 @@
         </record>
         <record id="nantian_erp_dimission_done_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
             <field name="view_id" ref="nantian_erp_hr_dimission_done_tree" />
             <field name="act_window_id" ref="nantian_erp_dimission_done" />
         </record>
         <record id="nantian_erp_dimission_done_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence" eval="5" />
             <field name="view_id" ref="nantian_erp_hr_dimission_done" />
             <field name="act_window_id" ref="nantian_erp_dimission_done" />
+        </record>
+        <record id="nantian_erp_dimission_special" model="ir.actions.act_window">
+            <field name="name">特殊的离职</field>
+            <field name="res_model">nantian_erp.hr_dimission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="nantian_erp_dimission_special_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_erp_hr_dimission_special_tree" />
+            <field name="act_window_id" ref="nantian_erp_dimission_special" />
+        </record>
+        <record id="nantian_erp_dimission_special_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="5" />
+            <field name="view_id" ref="nantian_erp_hr_dimission_special" />
+            <field name="act_window_id" ref="nantian_erp_dimission_special" />
         </record>
 		<menuitem id="dimission" parent="hr.menu_hr_root"  name="dimission"/>
         <menuitem id="dimission_create" parent="dimission" action="nantian_erp_dimission_create" name="dimission_create" />
         <menuitem id="dimission_applicing" parent="dimission" action="nantian_erp_dimission_applicing" name="dimission_applicing" />
         <menuitem id="dimission_done" parent="dimission" action="nantian_erp_dimission_done" name="dimission_done" />
+        <menuitem id="dimission_special" parent="dimission" action="nantian_erp_dimission_special" name="dimission_special" groups="nantian_erp.group_hr_manager_assistant"/>
 
 
         <record id="nantian_erp_to_examine_attendance" model="ir.actions.act_window">
@@ -169,11 +194,13 @@
         </record>
         <record id="nantian_erp_leave_create_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
             <field name="view_id" ref="nantian_erp_hr_leave_create_tree" />
             <field name="act_window_id" ref="nantian_erp_leave_create" />
         </record>
         <record id="nantian_erp_leave_create_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence" eval="10" />
             <field name="view_id" ref="nantian_erp_hr_leave_create" />
             <field name="act_window_id" ref="nantian_erp_leave_create" />
         </record>
@@ -187,6 +214,7 @@
         </record>
         <record id="nantian_erp_leave_applicing_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+
             <field name="view_id" ref="nantian_erp_hr_leave_applicing_tree" />
             <field name="act_window_id" ref="nantian_erp_leave_applicing" />
         </record>
@@ -205,11 +233,13 @@
         </record>
         <record id="nantian_erp_leave_done_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
             <field name="view_id" ref="nantian_erp_hr_leave_done_tree" />
             <field name="act_window_id" ref="nantian_erp_leave_done" />
         </record>
         <record id="nantian_erp_leave_done_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence" eval="10" />
             <field name="view_id" ref="nantian_erp_hr_leave_done" />
             <field name="act_window_id" ref="nantian_erp_leave_done" />
         </record>
@@ -237,11 +267,13 @@
         </record>
         <record id="nantian_work_tree_user" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
             <field name="view_id" ref="nantian_project_tree_view_user" />
             <field name="act_window_id" ref="nantian_work_view_user" />
         </record>
         <record id="nantian_work_form_user" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence" eval="10" />
             <field name="view_id" ref="nantian_erp_project_form_view_user" />
             <field name="act_window_id" ref="nantian_work_view_user" />
         </record>
@@ -265,11 +297,13 @@
         </record>
         <record id="nantian_MA_contract_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
             <field name="view_id" ref="nantian_erp.nantian_erp_MA_contract_tree" />
             <field name="act_window_id" ref="nantian_MA_contract_view" />
         </record>
         <record id="nantian_MA_contract_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence" eval="10" />
             <field name="view_id" ref="nantian_erp.nantian_erp_MA_contract" />
             <field name="act_window_id" ref="nantian_MA_contract_view" />
         </record>

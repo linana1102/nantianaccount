@@ -122,7 +122,7 @@
     <record id="hr_employee_user_read_rule" model="ir.rule">
         <field name="name">employee人力员工_读</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">['|',('department_id','in',[x.department_id.id for x in user.employee_ids])]</field>
+        <field name="domain_force">[('department_id','in',[x.department_id.id for x in user.employee_ids])]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_hr_user'))]"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_read" eval="1"/>

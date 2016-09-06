@@ -65,6 +65,11 @@ msgid "dimission_done"
 msgstr "查看申请"
 
 #. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.dimission_special
+msgid "dimission_special"
+msgstr "特殊的离职"
+
+#. module: nantian_erp
 #: model:ir.ui.menu,name:nantian_erp.leave
 msgid "leave"
 msgstr "请假申请"
