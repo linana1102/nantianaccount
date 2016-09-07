@@ -6,65 +6,12 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-				<xpath expr="//page[@name='team']" position="replace">
-                    <page string="Team" name="team">
-                           <field colspan="2" name="employee_ids" widget="many2many_kanban" >
-                                <kanban quick_create="false" create="true" delete="true">
-                                    <field name="name"/>
-                                    <templates>
-                                        <t t-name="kanban-box">
-                                            <div style="position: relative">
-                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 1px; diplay: inline-block">X</a>
-                                                <div class="oe_module_vignette">
-                                                    <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/></a>
-                                                    <div class="oe_module_desc">
-                                                        <field name="name"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </t>
-                                    </templates>
-                                </kanban>
-                            </field>
-                     </page>
-                </xpath>
-
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <newline/>
-                    <field name="need_employee_count" string="所需人数"/>
-                    <newline/>
-                    <field name="employee_count" string="现有人数"/>
-                    <newline/>
                     <field name="category" string="类别"/>
-                </xpath>
-				<xpath expr="//group[@name='group_alias']" position="replace">
-                   <group name="group_alias"  groups="base.group_erp_manager">
-                   </group>
                 </xpath>
             </field>
         </record>        
-    	<record model="ir.ui.view" id="nantian_project_tree_view">
-            <field name="name">nantian.project.tree</field>
-            <field name="model">project.project</field>
-            <field name="inherit_id" ref="project.view_project"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="replace">
-                    <field name="name" string="工作组名称"/>
-                </xpath>
-                <xpath expr="//field[@name='partner_id']" position="replace">
-                    <field name="partner_id" string="客户" />
-                </xpath>
-                <xpath expr="//field[@name='planned_hours']" position="replace">
-                    <field name="need_employee_count" string="所需人数"/>
-                </xpath>
-                <xpath expr="//field[@name='total_hours']" position="replace">
-                    <field name="employee_count" string="现有人数"/>
-                </xpath>
-                <xpath expr="//field[@name='effective_hours']" position="replace">
-                    <field name="date" string="结束日期"/>
-                </xpath>
-            </field>
-    	</record>
+
         
         <record model="ir.ui.view" id="nantian_erp_project_form_view_user">
             <field name="name">porject.form</field>
@@ -119,6 +66,7 @@
                                                     <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_small', record.id.value)" class="oe_avatar oe_kanban_avatar_smallbox"/></a>
                                                     <div class="oe_module_desc">
                                                         <field name="name"/>
+                                                        <field name="category"/>
                                                     </div>
                                                 </div>
                                             </div>

@@ -7,31 +7,34 @@
             <field name="arch" type="xml">
                 <form string="nantian_erp_contract_user" >
                     <header>
+                        <button name="copy_all"  string="续签" type="object" states="going,renew" class="oe_highlight" />
                         <button name="going"  string="进行中" states="going" class="oe_highlight" invisible="True"/>
-                        <button name="off" string="关闭" states="off" class="oe_highlight" invisible="True"/>
+                        <button name="renew"  string="待续签" states="renew" class="oe_highlight" invisible="True"/>
+                        <button name="set_off" string="关闭" states="renew" type='object' class="oe_highlight" invisible="True"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                         <div class="oe_title">
                         	<label for="name" class="oe_edit_only" string="合同名称"/>
-                        	<h1><field name="name" /></h1>
+                        	<h1><field name="name" colspan="4" /></h1>
                         </div>
                      <group>
                         <group>
                             <field name="header_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                             <field name="customer_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
-                            <field name="date_start"  />
+                            <field name="date_start" />
                             <field name="date_end" />
                             <field name="category" />
                             <field name="need_employee_count"  attrs="{'invisible': [('category','=','维保合同')]}"/>
-                            <field name="employee_count" attrs="{'invisible': [('category','=','维保合同')]}"/>
+                            <field name="employee_count" attrs="{'invisible': [('category','=','维保合同')]}" />
+                             <!--<button name="look_employee"  string="查看" type="object"  class="oe_inline"/>-->
+                            <newline/>
+                            <field name="employee_jobs_count" attrs="{'invisible': [('category','=','维保合同')]}"/>
                         </group>
                         <group >
                             <field name="hr_requirements" attrs="{'invisible': [('category','=','维保合同')]}"/>
                             <field name="resource_requirements" attrs="{'invisible': [('category','=','维保合同')]}"/>
                             <field name="service_content" attrs="{'invisible': [('category','=','服务合同')]}"/>
-
                         </group>
-
                     </group>
                     <group>
                             <field name="other"/>
@@ -100,6 +103,7 @@
                     <field name="need_employee_count" />
                     <field name="employee_count" />
                     <field name="next_collection_date" />
+                    <field name="state" />
                 </tree>
             </field>
         </record>
@@ -109,7 +113,10 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="name" />
-                    <!--<filter string="" name="done" domain="[('', '=','done')]"/>-->
+                        <filter string="自己的合同" name="my" domain="[('header_id', '=',uid)]"/>
+                        <filter string="进行中" name="going" domain="[('state', '=','going')]"/>
+                        <filter string="待续签" name="renew" domain="[('state', '=','renew')]"/>
+                        <filter string="已关闭" name="off" domain="[('state', '=','off')]"/>
                     <separator/>
                     <group expand="0" string="分组">
                         <filter string="合同客户" name="customer" context="{'group_by':'customer_id'}"/>
@@ -203,6 +210,7 @@
                     <field name="date_start" />
                     <field name="date_end" />
                     <field name="next_collection_date" />
+                    <field name="state" />
                 </tree>
             </field>
         </record>
