@@ -843,8 +843,9 @@ class contract(models.Model):
     @api.multi
     def change_contract_state(self):
         for ids in self.search([('state','=','going')]):
-            if fields.Date.from_string(ids.date_end) <= fields.date.today():
-                ids.state = 'renew'
+            if ids.date_end:
+                if fields.Date.from_string(ids.date_end) <= fields.date.today():
+                    ids.state = 'renew'
     @api.multi
     def copy_all(self):
         name = self.name+u'('+u'新续签请修改'+u')'
