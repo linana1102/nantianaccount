@@ -99,7 +99,7 @@
             <field name="name">nantian.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree string="works" create="false">
+                <tree string="works" create="false" >
                     <field name="name" string="工作组名称"/>
                     <field name="user_id" string="负责人"/>
                     <field name="partner_id" string="客户" />
@@ -208,7 +208,7 @@
             </field>
     	</record>
 
-        
+
         <record id="nantian_service_partner_form" model="ir.ui.view">
             <field name="name">nantian.partner.form</field>
             <field name="model">res.partner</field>

@@ -5,6 +5,7 @@ from email.utils import formataddr
 import email,math
 from email.header import Header
 from datetime import datetime,timedelta
+import datetime as datetime_boss
 import time
 import string
 
@@ -840,6 +841,11 @@ class contract(models.Model):
     employee_ids = fields.One2many('hr.employee', 'nantian_erp_contract_id', "Employees")
 
     @api.multi
+    def change_contract_state(self):
+        for ids in self.search([('state','=','going')]):
+            if fields.Date.from_string(ids.date_end) <= fields.date.today():
+                ids.state = 'renew'
+    @api.multi
     def copy_all(self):
         name = self.name+u'('+u'新续签请修改'+u')'
         new_contract=self.env['nantian_erp.contract'].create({'name': name,'header_id': self.header_id.id,'customer_id':self.customer_id.id,'date_start':self.date_start,
@@ -881,6 +887,7 @@ class contract(models.Model):
         }
         return value
 
+    @api.multi
     def set_off(self):
         self.state = 'off'
 
