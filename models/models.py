@@ -841,6 +841,58 @@ class contract(models.Model):
     employee_ids = fields.One2many('hr.employee', 'nantian_erp_contract_id', "Employees")
 
     @api.multi
+    def email_contract_next_collection_date(self):
+        subject = '您有合同即将收款，请及时处理！'
+        date = fields.Date.to_string(fields.date.today()+datetime_boss.timedelta(days=30))
+        user_ids = []
+        for contracts in self.env['nantian_erp.contract'].search([('next_collection_date', '<=', date)]):
+            if contracts.header_id not in user_ids:
+                user_ids.append(contracts.header_id)
+        for user_id in user_ids:
+            datas = ''
+            user_contracts = self.env['nantian_erp.contract'].search([('next_collection_date', '<=', date),('header_id', '=', user_id.id)])
+            for user_contract in user_contracts:
+                text = u'合同名:'+user_contract.name + u'-----收款时间 '+ user_contract.next_collection_date
+                datas += u'<p>' + text + u'</p>'
+                for collection in user_contract.collection_ids:
+                    if collection.date == user_contract.next_collection_date:
+                        collection_data = u'&nbsp;&nbsp;&nbsp;&nbsp;收款事项：'+collection.name+u'&nbsp;&nbsp;前提条件：'+collection.name+u'&nbsp;&nbsp;预期金额：'+ unicode(collection.evaluate_money)
+                        datas += u'<p>' + collection_data + u'</p>'
+            body = u'<div>' + u'<p>您好:</p>' + u'<p>&nbsp;&nbsp;&nbsp;&nbsp;以下合同即将或已经进入收款期限，请您及时处理,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p>' + datas + u'</div>'
+            self.send_email(user_id,body,subject)
+
+    @api.multi
+    def email_contract_date_end(self):
+        subject = '您有合同即将过期，请及时处理！'
+        date = fields.Date.to_string(fields.date.today()+datetime_boss.timedelta(days=30))
+        user_ids=[]
+        for contracts in self.env['nantian_erp.contract'].search([('date_end','<=',date),('state','=','renew')]):
+            if contracts.header_id not in user_ids:
+                user_ids.append(contracts.header_id)
+        for user_id in user_ids:
+            datas=''
+            user_contracts = self.env['nantian_erp.contract'].search([('date_end', '<=', date), ('state', '=', 'renew'),('header_id','=',user_id.id)])
+            for user_contract in user_contracts:
+                text=u'合同名:'+user_contract.name+u'-----过期时间 '+user_contract.date_end
+                datas+=u'<p>'+text+u'</p>'
+            body= u'<div>'+u'<p>您好:</p>'+u'<p>&nbsp;&nbsp;&nbsp;&nbsp;以下合同即将过期或已经过期，请您及时续签或关闭,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p>' + datas + u'</div>'
+            self.send_email(user_id,body,subject)
+
+    def send_email(self, cr, uid, users, body='',subject='',context=None):
+        to_list = []
+        for user in users:
+            to_list.append(formataddr((Header(user.name, 'utf-8').encode(), user.email)))
+        mail_mail = self.pool.get('mail.mail')
+        mail_id = mail_mail.create(cr, uid, {
+            'body_html': body,
+            'subject': subject,
+            'email_to': to_list,
+            'auto_delete': True,
+        }, context=context)
+        mail_mail.browse(cr,uid,[mail_id],context=context).email_from = '南天ERP系统<nantian_erp@nantian>'
+        mail_mail.send(cr, uid, [mail_id], context=context)
+
+    @api.multi
     def change_contract_state(self):
         for ids in self.search([('state','=','going')]):
             if ids.date_end:
