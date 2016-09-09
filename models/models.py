@@ -5,6 +5,7 @@ from email.utils import formataddr
 import email,math
 from email.header import Header
 from datetime import datetime,timedelta
+import datetime as datetime_boss
 import time
 import string
 
@@ -13,10 +14,8 @@ class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
     project_id = fields.Many2one('project.project',ondelete='set null',)
-    analytic_line_id = fields.Many2one('account.analytic.line',ondelete='set null',domain = ["journal_id","=","销售分类账"])
     contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null',string='合同岗位')
     nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同')
-    project_parent_id = fields.Many2one('account.analytic.account',compute='_compute_parent_project',store=True)
     certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书")
     graduation = fields.Char(string="毕业学校")    
     major = fields.Char(string='专业')
@@ -62,8 +61,6 @@ class hr_employee(models.Model):
         ],
     default = u'公司储备', string = "人员状态"
     )
-    account_id = fields .Many2one('account.analytic.account', ondelete='set null', )
-    res_partner_id = fields.Many2one('res.partner', ondelete='set null', )
     specialty = fields.Text(string="特长")
     certificate_direction_id = fields.Many2one(related='certificate_ids.certificate_direction_id', string='证书方向')
     certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='证书认证类型')
@@ -83,7 +80,7 @@ class hr_employee(models.Model):
             result['value']['contract_jobs_id'] = ''
         return result
 
-    @api.depends('project_id')
+    @api.depends('project_id.partner_id')
     def _get_customer(self):
         for record in self:
             if record.project_id:
@@ -117,14 +114,7 @@ class hr_employee(models.Model):
                 else:
                     record.work_age = int(str(now.year)) - int(str(work_time.year))
 
-    @api.depends('project_id')
-    def _compute_parent_project(self):
-        for record in self:
-            record.project_parent_id = record.project_id.parent_id
-    #@api.multi
-    #@api.onchange('project_id')
-    #def _onchange_analytic_line_id(self):
-        #self.analytic_line_id.name_get(self.project_id.analytic_account_id)
+
        
     @api.one
     @api.depends('contract_starttime', 'contract_len','is_forever')
@@ -188,48 +178,6 @@ class project_project(models.Model):
     @api.depends('name', 'need_employee_count')
     def name_get(self):
         return [(r.id, (r.name + '-' + u'所需人数' + (str(r.need_employee_count)) + u'人')) for r in self]
-
-class account_analytic_line(models.Model):
-    _inherit = 'account.analytic.line'
-
-    employee_ids = fields.One2many('hr.employee','analytic_line_id',"Employees")
-    employee_count = fields.Integer(compute='_count_employees',store=True)
-
-    @api.depends('employee_ids')
-    def _count_employees(self):
-        for record in self:
-            record.employee_count = len(record.employee_ids) 
-    """
-    @api.multi
-    @api.depends('name','product_id')
-    def name_get(self):
-       return [(r.id,(r.name+'('+(r.product_id.name)+')')) for r in self]
-    """
-
-class account_analytic_account(models.Model):
-    _inherit = 'account.analytic.account'
-
-    need_employee_count = fields.Integer(compute='_need_count_employees',store=True)
-    employee_count=fields.Integer(compute='_count_employees',store=True)
-
-    @api.depends('line_ids.unit_amount')
-    def _need_count_employees(self):
-        for record in self:
-            record.need_employee_count = 0
-            for line in self.line_ids:
-                record.need_employee_count += line.unit_amount
-
-    @api.depends('line_ids.employee_count')
-    def _count_employees(self):
-        for record in self:
-            #record.employee_count=0
-            for line in self.line_ids:
-                record.employee_count +=line.employee_count
-
-    @api.multi
-    @api.depends('name', 'employee_count')
-    def name_get(self):
-        return [(r.id, (r.name + '-'+u'所需人数'+  (str(r.need_employee_count)) +u'人')) for r in self]
 
 class certificate(models.Model):
     _name = 'nantian_erp.certificate'
@@ -859,6 +807,7 @@ class contract(models.Model):
     date_end = fields.Date(string="结束日期")
     need_employee_count = fields.Integer(compute='_need_count_employees', string="合同约定人数",store=True)
     employee_count = fields.Integer(compute='_count_employees', string='现场人数',store=True)
+    employee_jobs_count = fields.Integer(compute='_count_employees_jobs', string='现场合同岗位人数', store=True)
     jobs_ids = fields.One2many('nantian_erp.jobs', 'contract_id',string="合同岗位")
     money = fields.Float(string="合同金额" ,compute='_count_money',store=True)
     money_tax = fields.Float(string="税金" ,compute='_count_money_tax',store=True)
@@ -875,8 +824,9 @@ class contract(models.Model):
     next_collection_date = fields.Date(compute='_count_next_date',string="下次收款日期",store=True)
     state = fields.Selection(
         [
-            ('going',u'进行中'),
-            ('off',u'关闭'),
+            ('going', u'进行中'),
+            ('renew', u'待续签'),
+            ('off', u'关闭'),
         ],
         string="合同状态",default='going'
     )
@@ -888,6 +838,59 @@ class contract(models.Model):
         ],
         string="合同类别", default=u'服务合同'
     )
+    employee_ids = fields.One2many('hr.employee', 'nantian_erp_contract_id', "Employees")
+
+    @api.multi
+    def change_contract_state(self):
+        for ids in self.search([('state','=','going')]):
+            if ids.date_end:
+                if fields.Date.from_string(ids.date_end) <= fields.date.today():
+                    ids.state = 'renew'
+    @api.multi
+    def copy_all(self):
+        name = self.name+u'('+u'新续签请修改'+u')'
+        new_contract=self.env['nantian_erp.contract'].create({'name': name,'header_id': self.header_id.id,'customer_id':self.customer_id.id,'date_start':self.date_start,
+                                                 'date_end':self.date_end,'hr_requirements': self.hr_requirements,'resource_requirements': self.resource_requirements,
+                                                 'other':self.other,'service_content':self.service_content,'state':'going','category':self.category,
+                                                 })
+        if self.employee_ids:
+            for employee_id in self.employee_ids:
+                employee_id.nantian_erp_contract_id = new_contract
+        if self.collection_ids:
+            for collection_id in self.collection_ids:
+                new_collection = collection_id.copy()
+                new_collection.contract_id = new_contract
+        if self.detail_ids:
+            for detail_id in self.detail_ids:
+                new_detail = detail_id.copy()
+                new_detail.contract_id = new_contract
+        if self.jobs_ids:
+            for jobs_id in  self.jobs_ids:
+                new_jobs = jobs_id.copy()
+                if jobs_id.employee_ids:
+                    for job_hr in jobs_id.employee_ids:
+                        job_hr.contract_jobs_id = new_jobs
+                new_jobs.contract_id = new_contract
+        self.state = 'off'
+        return self.pop_window(new_contract.id)
+
+    @api.multi
+    def pop_window(self,id):
+        form_id = self.env['ir.model.data'].search([('name','=','nantian_erp_contract_user'),('module','=','nantian_erp')]).res_id
+        tree_id = self.env['ir.model.data'].search([('name','=','nantian_erp_contract_user_tree'),('module','=','nantian_erp')]).res_id
+        value = {
+            'name': ('您的合同已续签成功，请修改！'),
+            'res_model': 'nantian_erp.contract',
+            'views': [[tree_id,'tree'],[form_id, 'form']],
+            'view_mode':'tree,form',
+            'type': 'ir.actions.act_window',
+            'domain': [('id','=',id)],
+        }
+        return value
+
+    @api.multi
+    def set_off(self):
+        self.state = 'off'
 
     @api.multi
     def onchange_category(self,name):
@@ -902,13 +905,16 @@ class contract(models.Model):
             for job in record.jobs_ids:
                 record.need_employee_count += job.amount
 
-
-    @api.depends('jobs_ids.employee_count')
+    @api.depends('employee_ids')
     def _count_employees(self):
         for record in self:
-            # record.employee_count=0
+            record.employee_count = len(record.employee_ids)
+
+    @api.depends('jobs_ids.employee_count')
+    def _count_employees_jobs(self):
+        for record in self:
             for job in record.jobs_ids:
-                record.employee_count += job.employee_count
+                record.employee_jobs_count += job.employee_count
 
     @api.depends('jobs_ids.subtotal','detail_ids.subtotal','category')
     def _count_money(self):

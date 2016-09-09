@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+    <data>
+        <record model="ir.cron" id="nantian_erp_contract_state_cron">
+            <field name="name">根据时间修改南天合同状态</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'nantian_erp.contract'"/>
+            <field name="function" eval="'change_contract_state'"/>
+            <field name="args" eval="'(False,)'" />
+        </record>
+
+
+    </data>
+</openerp>
