@@ -377,11 +377,11 @@
                      <field name="state" widget="statusbar" statusbar_visible="application,done,no"/>
                 </header>
                 <group string="离职">
-                    <field name="employee_ids" string="申请人" attrs="{'readonly': [('state', '!=', 'application')]}"/>
-                    <field name="dimission_date" attrs="{'readonly': [('state', '!=', 'application')]}"/>
-                    <field name="dimission_why" string="离职原因" attrs="{'readonly': [('state', '!=', 'application')]}"/>
-                    <field name="dimission_goto" string="离职去向" attrs="{'readonly': [('state', '!=', 'application')]}"/>
-                    <field name="dimission_why_add" string="其他原因" attrs="{'invisible': [('dimission_why','!=','其他')],'readonly':[('state', '!=', 'application')]}"/>
+                    <field name="employee_ids" string="申请人" />
+                    <field name="dimission_date" />
+                    <field name="dimission_why" string="离职原因" />
+                    <field name="dimission_goto" string="离职去向" />
+                    <field name="dimission_why_add" string="其他原因" attrs="{'invisible': [('dimission_why','!=','其他')]}"/>
                 </group>
                     </sheet>
                 </form>
