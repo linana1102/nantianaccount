@@ -796,8 +796,8 @@ class collection(models.Model):
         ],
         string="收款状态", compute='_change_state',default=u'创建中',store=True
     )
-    user_id = fields.Many2one('res.users', string="操作人")
-    time = fields.Datetime( string='确认时间'  )
+    user_id = fields.Many2one('res.users',compute='_change_state', string="操作人")
+    time = fields.Datetime(compute='_change_state',string='确认时间'  )
 
     @api.depends('money', 'rate')
     def _count_rated_moneys(self):
