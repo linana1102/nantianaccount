@@ -710,9 +710,9 @@ class jobs(models.Model):
         datas=[]
         for r in self:
             if r.instruction:
-                datas.append((r.id, (r.name + '(' + (r.instruction) + ')'+'--' + u'岗位要求人数' + unicode(r.employee_count) + u'人')))
+                datas.append((r.id, (r.name + '(' + (r.instruction) + ')'+'--' + u'岗位要求人数' + unicode(r.amount) + u'人')))
             else:
-                datas.append((r.id, (r.name+'--' + u'岗位要求人数' + unicode(r.employee_count) + u'人')))
+                datas.append((r.id, (r.name+'--' + u'岗位要求人数' + unicode(r.amount) + u'人')))
         return datas
 
 class detail(models.Model):
