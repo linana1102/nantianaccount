@@ -12,28 +12,28 @@
             <field name="function" eval="'change_contract_state'"/>
             <field name="args" eval="'(False,)'" />
         </record>
-        <!--<record model="ir.cron" id="nantian_erp_contract_next_date_cron">-->
-            <!--<field name="name">根据合同下次收款时间发送邮件</field>-->
-            <!--<field name="interval_number">1</field>-->
-            <!--<field name="interval_type">weeks</field>-->
-            <!--<field name="numbercall">-1</field>-->
-            <!--<field name="doall" eval="True"/>-->
-            <!--<field name="active" eval="True"/>-->
-            <!--<field name="model" eval="'nantian_erp.contract'"/>-->
-            <!--<field name="function" eval="'email_contract_next_collection_date'"/>-->
-            <!--<field name="args" eval="'(False,)'" />-->
-        <!--</record>-->
-        <!--<record model="ir.cron" id="nantian_erp_contract_date_end_cron">-->
-            <!--<field name="name">根据合同结束时间发送邮件</field>-->
-            <!--<field name="interval_number">1</field>-->
-            <!--<field name="interval_type">weeks</field>-->
-            <!--<field name="numbercall">-1</field>-->
-            <!--<field name="doall" eval="True"/>-->
-            <!--<field name="active" eval="True"/>-->
-            <!--<field name="model" eval="'nantian_erp.contract'"/>-->
-            <!--<field name="function" eval="'email_contract_date_end'"/>-->
-            <!--<field name="args" eval="'(False,)'" />-->
-        <!--</record>-->
+        <record model="ir.cron" id="nantian_erp_contract_next_date_cron">
+            <field name="name">根据合同下次收款时间发送邮件</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'nantian_erp.contract'"/>
+            <field name="function" eval="'email_contract_next_collection_date'"/>
+            <field name="args" eval="'(False,)'" />
+        </record>
+        <record model="ir.cron" id="nantian_erp_contract_date_end_cron">
+            <field name="name">根据合同结束时间发送邮件</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'nantian_erp.contract'"/>
+            <field name="function" eval="'email_contract_date_end'"/>
+            <field name="args" eval="'(False,)'" />
+        </record>
 
 
     </data>
