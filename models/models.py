@@ -481,6 +481,20 @@ class hr_leave(models.Model):
     date_to = fields.Datetime(string="结束日期")
     reason = fields.Text(string="请假原因")
 
+    def send_email(self, cr, uid, users, body='', subject='', context=None):
+        to_list = []
+        for user in users:
+            to_list.append(formataddr((Header(user.name, 'utf-8').encode(), user.email)))
+        mail_mail = self.pool.get('mail.mail')
+        mail_id = mail_mail.create(cr, uid, {
+            'body_html': body,
+            'subject': subject,
+            'email_to': to_list,
+            'auto_delete': True,
+        }, context=context)
+        mail_mail.browse(cr, uid, [mail_id], context=context).email_from = '南天ERP系统<nantian_erp@nantian>'
+        mail_mail.send(cr, uid, [mail_id], context=context)
+
     @api.multi
     def leave_apply(self):
         if self.env.user in self.env['res.groups'].search(
@@ -563,6 +577,9 @@ class hr_leave(models.Model):
             if self.hr_officer:
                 self.state = 'check'
                 self.dealer = self.hr_officer_user
+        body = '<div><p>您好:</p><p>你有一份请假申请需要审批,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p></div>'
+        subject ='请假申请'
+        self.send_email(self.dealer, body, subject)
 
     def leave_again_check(self):
         if self.hr_manager:
@@ -571,13 +588,21 @@ class hr_leave(models.Model):
         else:
             if self.hr_officer:
                 self.state = 'done'
+        body = '<div><p>您好:</p><p>你有一份请假申请需要审批,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p></div>'
+        subject = '请假申请'
+        self.send_email(self.dealer, body, subject)
 
     def leave_done(self):
         self.state = 'done'
+        body = '<div><p>您好:</p><p>你的请假申请已经通过，您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p></div>'
+        subject = '请假申请通过'
+        self.send_email(self.employee_ids.user_id , body, subject)
 
     def leave_no(self):
         self.state = 'no'
-
+        body = '<div><p>您好:</p><p>你的请假申请被拒绝,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p></div>'
+        subject = '请假申请被拒绝'
+        self.send_email(self.employee_ids.user_id, body, subject)
     @api.multi
     def onchange_date_from(self, date_to, date_from):
 
