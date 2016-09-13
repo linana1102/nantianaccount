@@ -392,5 +392,16 @@
                 </form>
             </field>
         </record>
+         <record model="ir.ui.view" id="nantian_erp_project_project_graph">
+            <field name="name">project.employee_graph</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <graph string="project graph">
+                    <field name="name" string="姓名"/>
+                    <field name="partner_id" string="行业"/>
+
+                </graph>
+            </field>
+        </record>
     </data>
 </openerp>

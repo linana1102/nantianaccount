@@ -599,5 +599,18 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="nantian_erp_hr_employee_graph">
+            <field name="name">hr.employee_graph</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <graph string="employee graph">
+                    <!--<field name="name" string="姓名"/>-->
+                    <!--<field name="department_id" string="部门"/>-->
+                    <!--<field name="project_id" string="工作组"/>-->
+                    <field name="customer_id" string="行业"/>
+                </graph>
+            </field>
+        </record>
+
     </data>
 </openerp>
