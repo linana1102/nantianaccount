@@ -374,5 +374,10 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem name="nantian_detail" id="nantian_detail" sequence="20"  parent="nantian_config"  action="nantian_erp_detail_view" groups="nantian_erp.group_nantian_assistant,project.group_project_manager"/>
+
+
+        <menuitem name="nantian_dashboard" id="nantian_dashboard" sequence="9"  parent="mail.mail_feeds_main" />
+        <menuitem name="nantian_my_dashboard" id="nantian_my_dashboard" sequence="9"  parent="nantian_dashboard" action="board.open_board_my_dash_action"/>
+
     </data>
 </openerp>

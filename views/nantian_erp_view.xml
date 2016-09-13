@@ -148,7 +148,7 @@
                             <field name="need_employee_count" string="所需人数"/>
                             <newline/>
                             <field name="employee_count" string="现有人数"/>
-                            <field name="category" string="类型" readonly="True"/>
+                            <field name="category" string="类型"/>
                         </group>
                     </group>
                     <notebook>

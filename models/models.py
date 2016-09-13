@@ -710,9 +710,9 @@ class jobs(models.Model):
         datas=[]
         for r in self:
             if r.instruction:
-                datas.append((r.id, (r.name + '(' + (r.instruction) + ')')))
+                datas.append((r.id, (r.name + '(' + (r.instruction) + ')'+'--' + u'岗位要求人数' + unicode(r.amount) + u'人')))
             else:
-                datas.append((r.id, (r.name)))
+                datas.append((r.id, (r.name+'--' + u'岗位要求人数' + unicode(r.amount) + u'人')))
         return datas
 
 class detail(models.Model):
@@ -769,6 +769,7 @@ class detail(models.Model):
         return datas
 
 
+
 class collection(models.Model):
     _name = 'nantian_erp.collection'
     name = fields.Char(string='名称')
@@ -796,8 +797,8 @@ class collection(models.Model):
         ],
         string="收款状态", compute='_change_state',default=u'创建中',store=True
     )
-    user_id = fields.Many2one('res.users', string="操作人")
-    time = fields.Datetime( string='确认时间'  )
+    user_id = fields.Many2one('res.users',compute='_change_state', string="操作人")
+    time = fields.Datetime(compute='_change_state',string='确认时间'  )
 
     @api.depends('money', 'rate')
     def _count_rated_moneys(self):
@@ -832,6 +833,7 @@ class contract(models.Model):
     date_end = fields.Date(string="结束日期")
     need_employee_count = fields.Integer(compute='_need_count_employees', string="合同约定人数",store=True)
     employee_count = fields.Integer(compute='_count_employees', string='现场人数',store=True)
+    is_need = fields.Boolean(compute='_count_is_need',string='缺员',store=True)
     employee_jobs_count = fields.Integer(compute='_count_employees_jobs', string='现场合同岗位人数', store=True)
     jobs_ids = fields.One2many('nantian_erp.jobs', 'contract_id',string="合同岗位")
     money = fields.Float(string="合同金额" ,compute='_count_money',store=True)
@@ -981,6 +983,14 @@ class contract(models.Model):
             record.need_employee_count = 0
             for job in record.jobs_ids:
                 record.need_employee_count += job.amount
+
+    @api.depends('need_employee_count','employee_count')
+    def _count_is_need(self):
+        for record in self:
+            if record.need_employee_count > record.employee_count:
+                record.is_need = True
+            else:
+                record.is_need = False
 
     @api.depends('employee_ids')
     def _count_employees(self):
