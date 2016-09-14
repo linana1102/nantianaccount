@@ -26,6 +26,7 @@
                                         <field name="coach_id" invisible="True"/>
                                         <field name="level" string="级别"/>
                                         <field name="entry_time" string="入职时间" />
+                                        <field name="entry_len" string="在司年限" />
                                         <field name="contract_starttime" string="合同开始时间" />
                                         <field name="is_forever" string="是否无期限" />
                                         <field name="contract_len" string="合同期限" attrs="{'invisible':[('is_forever','=',True)]}" />
@@ -231,9 +232,11 @@
                     <filter string="工作组" icon="terp-personal+" domain="[]" context="{'group_by':'project_id'}"/>
                     <filter string="人员状态" icon="terp-personal+" domain="[]" context="{'group_by':'category'}"/>
                     <filter string="服务客户" icon="terp-personal+" domain="[]" context="{'group_by':'customer_id'}"/>
-                    <filter string="服务合同" icon="terp-personal+" domain="[]" context="{'group_by':'nantian_erp_contract_id'}"/>
+                    <filter string="服务合同" icon="terp-personal+" domain="[]" context="{'group_by':'nantianrp_contract_id'}"/>
                     <filter string="合同岗位" icon="terp-personal+" domain="[]" context="{'group_by':'contract_jobs_id'}"/>
-
+                    <filter string="在司年限分布" icon="terp-personal+" domain="[]" context="{'group_by':'entry_age_distribute'}"/>
+                    <filter string="离职时间" icon="terp-personal+" domain="[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]" context="{'group_by':'leave_time'}"/>
+                    <filter string="入职时间" icon="terp-personal+" domain="[('entry_time','&gt;=',((context_today()-relativedelta(months=3))).strftime('%%Y/%%m/%%d'))]" context="{'group_by':'entry_time'}"/>
                 </xpath>
                 <xpath expr="//filter[@string='Job']" position="replace">
                 <filter string="职位" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
@@ -603,11 +606,14 @@
             <field name="name">hr.employee_graph</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <graph string="employee graph">
+                <!--<field name="interval">month</field>-->
+                <graph string="employee graph" type="pie" interval="month">
                     <!--<field name="name" string="姓名"/>-->
                     <!--<field name="department_id" string="部门"/>-->
                     <!--<field name="project_id" string="工作组"/>-->
+                    <!--<field name="interval">month</field>-->
                     <field name="customer_id" string="行业"/>
+
                 </graph>
             </field>
         </record>

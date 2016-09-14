@@ -34,7 +34,17 @@
             <field name="function" eval="'email_contract_date_end'"/>
             <field name="args" eval="'(False,)'" />
         </record>
-
+        <record model="ir.cron" id="nantian_erp_compute_entry_age">
+            <field name="name">计算进公司的年限</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'hr.employee'"/>
+            <field name="function" eval="'action_to_compute_entry_age'"/>
+            <field name="args" eval="'(False,)'" />
+        </record>
 
     </data>
 </openerp>
