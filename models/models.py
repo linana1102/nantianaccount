@@ -129,11 +129,10 @@ class hr_employee(models.Model):
     #计算在司年限
     @api.multi
     def action_to_compute_entry_age(self):
-        print '*' * 80
+
         recs = self.env['hr.employee'].search([])
         for record in recs:
             if record.entry_time:
-                print '*'*80
                 now = fields.datetime.now()
                 entry_len = fields.Datetime.from_string(record.entry_time)
                 months = int(str(now.month)) - int(str(entry_len.month))
@@ -151,7 +150,7 @@ class hr_employee(models.Model):
 
                 else:
                     record.entry_age_distribute = u'在司10年以上'
-                    print '-' * 80
+
     #计算合同截止日期
     @api.one
     @api.depends('contract_starttime', 'contract_len','is_forever')
