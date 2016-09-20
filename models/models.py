@@ -59,6 +59,7 @@ class hr_employee(models.Model):
             (u'现场储备', u'现场储备'),
             (u'公司项目', u"公司项目"),
             (u'外借人员', u"外借人员"),
+            (u'现场备岗',u"现场备岗"),
         ],
     default = u'公司储备', string = "人员状态"
     )
