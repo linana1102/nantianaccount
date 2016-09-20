@@ -58,6 +58,7 @@ class hr_employee(models.Model):
             (u'合同赠送', u"合同赠送"),
             (u'现场储备', u'现场储备'),
             (u'公司项目', u"公司项目"),
+            (u'外借人员', u"外借人员"),
         ],
     default = u'公司储备', string = "人员状态"
     )
@@ -69,8 +70,18 @@ class hr_employee(models.Model):
     work_age = fields.Integer(compute='_compute_work_age',store=True)
     api_res = fields.Char(default="sys")
     customer_id = fields.Many2one('res.partner', compute='_get_customer',string="客户",store=True)
+    leave_time = fields.Date(string="离职时间")
+    entry_age_distribute = fields.Selection(
+        [
+            (u'在司1年以下', u"在司1年以下"),
+            (u'在司1-5年', u"在司1-5年"),
+            (u'在司5-10年', u"在司5-10年"),
+            (u'在司10年以上', u"在司10年以上"),
 
-
+        ],
+        default=u'在司1年以下', string="在司年限分布"
+    )
+    entry_len = fields.Integer(string='在司年限')
     @api.multi
     def onchange_category(self,category):
         result = {'value': {}}
@@ -86,6 +97,7 @@ class hr_employee(models.Model):
             if record.project_id:
                 record.customer_id=record.project_id.partner_id
 
+    # 计算工作年限
     @api.one
     @api.depends('work_time')
     def _compute_work_age(self):
@@ -99,7 +111,7 @@ class hr_employee(models.Model):
                     record.work_age=int(str(now.year))-int(str(work_time.year))-1
                 else:
                     record.work_age = int(str(now.year)) - int(str(work_time.year))
-
+    #计算工作年限
     @api.multi
     def action_to_compute_work_age(self):
         recs = self.env['hr.employee'].search([])
@@ -114,8 +126,32 @@ class hr_employee(models.Model):
                 else:
                     record.work_age = int(str(now.year)) - int(str(work_time.year))
 
+    #计算在司年限
+    @api.multi
+    def action_to_compute_entry_age(self):
 
-       
+        recs = self.env['hr.employee'].search([])
+        for record in recs:
+            if record.entry_time:
+                now = fields.datetime.now()
+                entry_len = fields.Datetime.from_string(record.entry_time)
+                months = int(str(now.month)) - int(str(entry_len.month))
+                days = int(str(now.day)) - int(str(entry_len.day))
+                if months < 0 or (months == 0 and days < 0):
+                    record.entry_len = int(str(now.year)) - int(str(entry_len.year)) - 1
+                else:
+                    record.entry_len = int(str(now.year)) - int(str(entry_len.year))
+                if record.entry_len < 1:
+                    record.entry_age_distribute = u'在司1年以下'
+                elif record.entry_len >= 1 and record.entry_len < 5:
+                    record.entry_age_distribute = u'在司1-5年'
+                elif record.entry_len >= 5 and record.entry_len < 10:
+                    record.entry_age_distribute = u'在司5-10年'
+
+                else:
+                    record.entry_age_distribute = u'在司10年以上'
+
+    #计算合同截止日期
     @api.one
     @api.depends('contract_starttime', 'contract_len','is_forever')
     def _get_end_date(self):
@@ -395,6 +431,7 @@ class hr_dimission(models.Model):
         self.dealer = self.env.user
         self.employee_ids.active = 0
         self.employee_ids.user_id.active = 0
+        self.employee_id.leave_time = self.dimission_date
     def dimission_no(self):
         self.state = 'no'
 
