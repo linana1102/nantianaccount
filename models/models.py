@@ -64,10 +64,10 @@ class hr_employee(models.Model):
     default = u'公司储备', string = "人员状态"
     )
     specialty = fields.Text(string="特长")
-    certificate_direction_id = fields.Many2one(related='certificate_ids.certificate_direction_id', string='证书方向')
-    certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='证书认证类型')
-    certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='证书颁发机构或行业')
-    certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='证书级别')
+    certificate_direction_id = fields.Many2one(related='certificate_ids.certificate_direction_id', string='certificate_direction')
+    certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='certificate_category')
+    certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='certificate_institutions')
+    certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='certificate_level')
     work_age = fields.Integer(compute='_compute_work_age',store=True)
     api_res = fields.Char(default="sys")
     customer_id = fields.Many2one('res.partner', compute='_get_customer',string="客户",store=True)
@@ -83,6 +83,155 @@ class hr_employee(models.Model):
         default=u'在司1年以下', string="在司年限分布"
     )
     entry_len = fields.Integer(string='在司年限')
+    phone_money = fields.Integer()
+    states=fields.Selection([
+            (u'正常在岗', u"正常在岗"),
+            (u'长期病假', u"长期病假"),
+            (u'长期事假', u"长期事假"),
+            (u'离职办理中', u"离职办离中"),
+            (u'离职', u"离职"),
+
+        ],
+        default=u'正常在岗', string="正常在岗")
+    @api.onchange('phone_money','level','job_id')
+    def _check_phone_money(self):
+        print 'aaaaaaaaaaaaa'
+        if self.phone_money:
+            if self.level == '1':
+                if self.job_id.name == u'助理工程师':
+                    print '*'*80
+                    if self.phone_money != 50:
+
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配",
+                            }}
+                if self.job_id.name == u'初级工程师':
+                    if self.phone_money != 60:
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配",
+                            }}
+                if self.job_id.name == u'项目助理':
+                    if (self.phone_money <= 60)|(self.phone_money >= 100)|(self.phone_money % 10 != 0):
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
+                            }}
+            if self.level == '2':
+                if self.job_id.name == u'项目助理':
+                    if (self.phone_money <= 60) | (self.phone_money >= 100) | (self.phone_money % 10 != 0):
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
+                            }}
+
+                if self.job_id.name ==u'工程师':
+                    if self.phone_money != 80:
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配",
+                            }}
+
+            if self.level == '3':
+                if self.job_id.name == u'高级工程师':
+                    if self.phone_money != 100:
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配",
+                            }}
+
+
+            if self.level == '4':
+                if self.job_id.name == u'技术经理':
+                    if (self.phone_money <= 120) | (self.phone_money >= 160) | (self.phone_money % 10 != 0):
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
+                            }}
+
+                if self.job_id.name ==u'项目经理':
+                    if (self.phone_money <= 120) | (self.phone_money >= 200) | (self.phone_money % 10 != 0):
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
+                            }}
+
+                if self.job_id.name == u'部门副经理':
+                    if (self.phone_money <= 120) | (self.phone_money >= 160) | (self.phone_money % 10 != 0):
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
+                            }}
+
+            if self.level == '5':
+                if self.job_id.name == u'高级技术经理':
+                    if self.phone_money != 160:
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配",
+                            }}
+
+                if self.job_id.name == u'部门经理':
+                    if (self.phone_money <= 160) | (self.phone_money >= 250) | (self.phone_money % 10 != 0):
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
+                            }}
+            if self.level == '6':
+                if self.job_id.name == u'技术总监':
+                    if self.phone_money != 200:
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配",
+                            }}
+
+                if self.job_id.name == u'总助':
+                    if (self.phone_money <= 200) | (self.phone_money >= 300) | (self.phone_money % 10 != 0):
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
+                            }}
+
+            if self.level == '7':
+                if self.job_id.name == u'架构师':
+                    if self.phone_money != 250:
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配",
+                            }}
+
+                if self.job_id.name == u'副总经理':
+                    if (self.phone_money <= 250) | (self.phone_money >= 300) | (self.phone_money % 10 != 0):
+                        return {
+                            'warning': {
+                                'title': "话费额度问题",
+                                'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
+                            }}
+            if self.level == '8':
+                if self.job_id.name == u'总经理':
+                    if (self.phone_money <= 300) | (self.phone_money >=400) | (self.phone_money % 10 != 0):
+                        return {
+                            'warning': {
+                                           'title': "话费额度问题",
+                                           'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
+                                       }}
+
+
     @api.multi
     def onchange_category(self,category):
         result = {'value': {}}
@@ -396,6 +545,7 @@ class hr_dimission(models.Model):
     @api.multi
     def dimission_apply(self):
         if  self.employee_ids.department_id.manager_id:
+            self.employee_ids.states = u'离职办理中'
             if self.env['res.users'].search([('employee_ids', 'ilike', self.employee_ids.department_id.manager_id.id)],
                                             limit=1) in self.env['res.groups'].search([('name', '=', "Manager"),('category_id.name','=','Human Resources')]).users:
                 self.hr_manager = self.employee_ids.department_id.manager_id
@@ -433,8 +583,10 @@ class hr_dimission(models.Model):
         self.employee_ids.active = 0
         self.employee_ids.user_id.active = 0
         self.employee_id.leave_time = self.dimission_date
+        self.employee_ids.states = u'离职'
     def dimission_no(self):
         self.state = 'no'
+        self.employee_ids.states = u'正常在岗'
 
 class hr_attendance(models.Model):
     _inherit = 'hr.attendance'
