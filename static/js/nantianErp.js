@@ -8,8 +8,8 @@ openerp.nantian_erp=function(instance){
         _lt=instance.web._lt,
         QWeb=instance.web.qweb;
 
-    instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
-        template: 'FieldChar',
+    /*instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+        template: 'test',
         widget_class: 'oe_form_field_char',
         events: {
             'change input': 'store_dom_value',
@@ -76,5 +76,5 @@ openerp.nantian_erp=function(instance){
                 width: width
             });
         }
-    });
+    });*/
 }
