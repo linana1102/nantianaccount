@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <template id="assets_backend" name="nantian_erp assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <!-- 引入自定义js脚本到资产脚本中-->
+                <script type="text/javascript" src="/nantian_erp/static/js/nantianErp.js"></script>
+            </xpath>
+        </template>
+    </data>
+</openerp>
