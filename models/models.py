@@ -99,7 +99,6 @@ class hr_employee(models.Model):
         if self.phone_money:
             if self.level == '1':
                 if self.job_id.name == u'助理工程师':
-                    print '*'*80
                     if self.phone_money != 50:
 
                         return {
@@ -767,7 +766,7 @@ class hr_leave(models.Model):
             if self.hr_officer:
                 self.state = 'check'
                 self.dealer = self.hr_officer_user
-        body = '<div><p>您好:</p><p>你有一份请假申请需要审批,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p></div>'
+        body = u'<div><p>您好:</p><p>你有一份请假申请需要审批,您可登录：<a href="http://123.56.147.94:8000/web?#page=0&limit=80&view_type=list&model=nantian_erp.hr_leave&menu_id=734&action=1077">http://123.56.147.94:8000</a>查看详细信息</p>'+u'<p>申请人：'+self.employee_ids.name+u'</p>'+u'</div>'
         subject ='请假申请'
         self.send_email(self.dealer, body, subject)
 
@@ -778,7 +777,7 @@ class hr_leave(models.Model):
         else:
             if self.hr_officer:
                 self.state = 'done'
-        body = '<div><p>您好:</p><p>你有一份请假申请需要审批,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p></div>'
+        body = u'<div><p>您好:</p><p>你有一份请假申请需要审批,您可登录：<a href="http://123.56.147.94:8000/web?#page=0&limit=80&view_type=list&model=nantian_erp.hr_leave&menu_id=734&action=1077">http://123.56.147.94:8000</a>查看详细信息</p>'+u'<p>申请人：'+self.employee_ids.name+u'</p>'+u'</div>'
         subject = '请假申请'
         self.send_email(self.dealer, body, subject)
 
