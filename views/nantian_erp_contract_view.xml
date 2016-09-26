@@ -26,7 +26,10 @@
                             <field name="category" />
                             <field name="need_employee_count"  attrs="{'invisible': [('category','=','维保合同')]}"/>
                             <field name="employee_count" attrs="{'invisible': [('category','=','维保合同')]}" />
-                            <button name="look_employee"  string="查看" type="object"  class="oe_inline wanghaipeng"/>
+                            <button name="%(nantian_erp_employee_link_view)d" type="action" string="相关人员"  attrs="{'invisible':[('category','==','维保合同')]}" class="look_employee"/>
+
+                             <!--<button name="look_employee"  string="查看" type="object"  class="oe_inline"/>-->
+
                             <newline/>
                             <field name="employee_jobs_count" attrs="{'invisible': [('category','=','维保合同')]}"/>
                         </group>
