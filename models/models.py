@@ -1275,6 +1275,8 @@ class res_partner(models.Model):
 
     )
     customer_manager = fields.Many2one('res.users', ondelete='set null',default=lambda self: self.env.user)
+    full_name =fields.Char(string = '全称')
+
 
     @api.multi
     def _onchange_to_service_customer(self,name):
