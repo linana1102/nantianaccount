@@ -592,7 +592,7 @@ class hr_dimission(models.Model):
         self.dealer = self.env.user
         self.employee_ids.active = 0
         self.employee_ids.user_id.active = 0
-        self.employee_id.leave_time = self.dimission_date
+        self.employee_ids.leave_time = self.dimission_date
         self.employee_ids.states = u'离职'
     #工作流--拒绝函数
     def dimission_no(self):
