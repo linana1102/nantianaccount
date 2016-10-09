@@ -83,7 +83,7 @@ class hr_employee(models.Model):
         default=u'在司1年以下', string="在司年限分布"
     )
     entry_len = fields.Integer(string='在司年限')
-    phone_money = fields.Integer()
+    phone_money = fields.Integer(string='话费额度')
     states=fields.Selection([
             (u'正常在岗', u"正常在岗"),
             (u'长期病假', u"长期病假"),
@@ -313,7 +313,7 @@ class hr_employee(models.Model):
         else:
             self.contract_endtime='9999-12-31'
 
-
+    #与招聘系统对接函数,通过员工创建用户,并关联
     @api.multi
     def hr_to_user(self):
         recs = self.env['hr.employee'].search([('api_res', '=', 'web_api'), ('user_id', '=', None)])
@@ -329,7 +329,7 @@ class hr_employee(models.Model):
     #         result['value']['contract_endtime'] = '9999-12-31'
     #
     #     return result
-
+#拓展项目---工作组
 class project_project(models.Model):
     _inherit = 'project.project'
 
@@ -343,7 +343,7 @@ class project_project(models.Model):
 
         ],string='类别',default=u'项目'
     )
-
+    #在管理界面创建时默认选中类别为工作组
     @api.multi
     def _onchange_category(self, name):
         value = {}
@@ -351,19 +351,19 @@ class project_project(models.Model):
         return {'value': value}
 
 
-
+    #自动计算工作组现有人数
     @api.depends('employee_ids')
     def _count_employees(self):
         for employee in self.employee_ids:
             self.message_subscribe([employee.user_id.partner_id.id])
         for record in self:
             record.employee_count = len(record.employee_ids)
-
+    #修改作为外键时的显示形式
     @api.multi
     @api.depends('name', 'need_employee_count')
     def name_get(self):
         return [(r.id, (r.name + '-' + u'所需人数' + (str(r.need_employee_count)) + u'人')) for r in self]
-
+#证书
 class certificate(models.Model):
     _name = 'nantian_erp.certificate'
     _rec_name = 'name'
@@ -376,12 +376,14 @@ class certificate(models.Model):
     is_forever_validate = fields.Boolean(string="是否长期有效",default = False)
     employee_ids = fields.Many2one('hr.employee',ondelete='set null')
 
+    #当选中永久时修改证书时限
     @api.multi
     def onchange_time(self,is_forever_validate):
         result = {'value': {}}
         if is_forever_validate:
             result['value']['time'] = datetime(9999,12,31)
         return result
+    #证书过期提醒
     def expiration_reminder(self, cr, uid, erp_server_addr, context=None):
         '''
         证书过期提醒。
@@ -485,29 +487,30 @@ class certificate(models.Model):
         # print(dai_fa_song)
 
 
-
+#证书--认证类型
 class certificate_category(models.Model):
     _name = 'nantian_erp.certificate_category'
     _rec_name = 'name'
     name = fields.Char(required=True, string='认证类型')
-
+#证书--机构
 class certificate_institutions(models.Model):
     _name = 'nantian_erp.certificate_institutions'
     _rec_name = 'name'
     name = fields.Char(string='机构')
     category_id = fields.Many2one('nantian_erp.certificate_category', string='认证类型',ondelete='set null', select=True)
-
+#证书--方向
 class certificate_direction(models.Model):
     _name = 'nantian_erp.certificate_direction'
     _rec_name = 'name'
     name = fields.Char(string='方向')
     institutions_id = fields.Many2one('nantian_erp.certificate_institutions', string='机构',ondelete='set null', select=True)
-
+#证书--级别
 class certificate_level(models.Model):
     _name = 'nantian_erp.certificate_level'
     _rec_name = 'name'
     name = fields.Char(string='级别')
     direction_id = fields.Many2one('nantian_erp.certificate_direction',string='方向', ondelete='set null', select=True)
+#员工离职
 class hr_dimission(models.Model):
     _name = 'nantian_erp.hr_dimission'
 
@@ -541,8 +544,14 @@ class hr_dimission(models.Model):
     hr_manager = fields.Many2one('hr.employee',string="最终审批人")
     hr_manager_user = fields.Many2one(related='hr_manager.user_id',string="最终审批人用户")
 
+    #工作流创建时执行的函数
     @api.multi
     def dimission_apply(self):
+        '''
+        判断该员工是否满足离职申请条件----有无相应领导审批
+        如果有--修改申请状态并添加审批人
+        如果没有--警告创建不予成功
+        '''
         if  self.employee_ids.department_id.manager_id:
             self.employee_ids.states = u'离职办理中'
             if self.env['res.users'].search([('employee_ids', 'ilike', self.employee_ids.department_id.manager_id.id)],
@@ -562,6 +571,7 @@ class hr_dimission(models.Model):
                     raise exceptions.ValidationError('您需要一个总经理去处理您的离职申请')
         else:
             raise exceptions.ValidationError('您没有经理去处理您的离职申请')
+    #工作流中转总经理审批函数
     def dimission_check(self):
         if self.hr_manager:
             if self.hr_officer:
@@ -571,10 +581,11 @@ class hr_dimission(models.Model):
                 self.state = 'again_check'
                 self.dealer = self.hr_manager_user
 
+    # 工作流中转经理审批函数
     def dimission_again_check(self):
         self.state = 'again_check'
         self.dealer = self.hr_manager_user
-
+    #工作流--完成函数
     @api.multi
     def dimission_done(self):
         self.state = 'done'
@@ -583,6 +594,7 @@ class hr_dimission(models.Model):
         self.employee_ids.user_id.active = 0
         self.employee_id.leave_time = self.dimission_date
         self.employee_ids.states = u'离职'
+    #工作流--拒绝函数
     def dimission_no(self):
         self.state = 'no'
         self.employee_ids.states = u'正常在岗'
@@ -647,6 +659,7 @@ class hr_attendance(models.Model):
     @api.one
     def action_done(self):
         self.state = 'done'
+#员工请假
 class hr_leave(models.Model):
     _name = 'nantian_erp.hr_leave'
     name = fields.Char(string='请假单',)
@@ -670,6 +683,7 @@ class hr_leave(models.Model):
     date_to = fields.Datetime(string="结束日期")
     reason = fields.Text(string="请假原因")
 
+    #审批邮件发送函数
     def send_email(self, cr, uid, users, body='', subject='', context=None):
         to_list = []
         for user in users:
@@ -684,8 +698,14 @@ class hr_leave(models.Model):
         mail_mail.browse(cr, uid, [mail_id], context=context).email_from = '南天ERP系统<nantian_erp@nantian>'
         mail_mail.send(cr, uid, [mail_id], context=context)
 
+    #工作流创建函数
     @api.multi
     def leave_apply(self):
+        '''
+        根据条件判断是否可以创建申请---有无领导审批
+        有--判断人员身份及请假类型进行不同状态改变及审批流程
+        没有--警告  创建失败
+        '''
         if self.env.user in self.env['res.groups'].search(
                 [('name', '=', "Manager"), ('category_id.name', '=', 'Human Resources')]).users:
             self.state = 'done'
@@ -741,19 +761,20 @@ class hr_leave(models.Model):
             self.state = 'application'
         else:
             raise exceptions.ValidationError('您没有经理或者上级去处理您的请假申请')
-
+    #工作流判断是否执行函数
     @api.multi
     def judge_check(self):
         if self.hr_officer:
             return True
         return False
 
+    # 工作流判断是否执行函数
     @api.multi
     def judge_again(self):
         if self.hr_manager and not self.hr_officer:
             return True
         return False
-
+    #工作流审批中转函数
     def leave_check(self):
         if self.hr_manager:
             if self.hr_officer:
@@ -770,6 +791,7 @@ class hr_leave(models.Model):
         subject ='请假申请'
         self.send_email(self.dealer, body, subject)
 
+    #工作流审批总经理中转函数
     def leave_again_check(self):
         if self.hr_manager:
             self.state = 'again_check'
@@ -780,18 +802,19 @@ class hr_leave(models.Model):
         body = u'<div><p>您好:</p><p>你有一份请假申请需要审批,您可登录：<a href="http://123.56.147.94:8000/web?#page=0&limit=80&view_type=list&model=nantian_erp.hr_leave&menu_id=734&action=1077">http://123.56.147.94:8000</a>查看详细信息</p>'+u'<p>申请人：'+self.employee_ids.name+u'</p>'+u'</div>'
         subject = '请假申请'
         self.send_email(self.dealer, body, subject)
-
+    #工作流--请假批准函数
     def leave_done(self):
         self.state = 'done'
         body = '<div><p>您好:</p><p>你的请假申请已经通过，您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p></div>'
         subject = '请假申请通过'
         self.send_email(self.employee_ids.user_id , body, subject)
-
+    #工作流--请假拒绝函数
     def leave_no(self):
         self.state = 'no'
         body = '<div><p>您好:</p><p>你的请假申请被拒绝,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p></div>'
         subject = '请假申请被拒绝'
         self.send_email(self.employee_ids.user_id, body, subject)
+    #请假日期自动从开始日期加8小时作为结束日期---执行一次
     @api.multi
     def onchange_date_from(self, date_to, date_from):
 
@@ -815,7 +838,7 @@ class hr_leave(models.Model):
         #     result['value']['number_of_days'] = 0
 
         return result
-
+    #请假日期自动从开始日期加8小时作为结束日期---执行一次
     @api.multi
     def onchange_date_to(self, date_to, date_from):
         """
@@ -836,10 +859,11 @@ class hr_leave(models.Model):
         #     result['value']['number_of_days'] = 0
 
         return result
+#员工请假类型
 class hr_leave_type(models.Model):
     _name = 'nantian_erp.hr_leave_type'
     name = fields.Char(string='请假类型')
-
+#南天合同--岗位
 class jobs(models.Model):
     _name = 'nantian_erp.jobs'
     name = fields.Char(string='岗位名称')
@@ -870,11 +894,12 @@ class jobs(models.Model):
     employee_ids = fields.One2many('hr.employee', 'contract_jobs_id', "Employees")
     subtotal = fields.Float(compute='_count_subtotal', store=True,string="小计")
     employee_count = fields.Integer(compute='_count_employees', store=True)
-
+    #自动计算关联人数
     @api.depends('employee_ids')
     def _count_employees(self):
         for record in self:
             record.employee_count = len(record.employee_ids)
+    #小计自动计算
     @api.depends('price','amount','unit_amount')
     def _count_subtotal(self):
         for record in self:
@@ -882,7 +907,7 @@ class jobs(models.Model):
                 record.subtotal = record.price*record.amount*record.unit_amount
             else:
                 raise exceptions.ValidationError("人员数量不能小于1,时间数量不能为0")
-
+    #税金自动计算
     @api.depends('price','amount','rate','unit_amount')
     def _count_rated_moneys(self):
         for record in self:
@@ -892,7 +917,7 @@ class jobs(models.Model):
                 raise exceptions.ValidationError("人员数量不能小于1,时间数量不能为0")
             if record.rate:
                 record.rated_moneys = record.price * record.amount * record.unit_amount * string.atof(record.rate)
-
+    #修改作为外键时的显示
     @api.multi
     @api.depends('name', 'instruction')
     def name_get(self):
@@ -903,7 +928,7 @@ class jobs(models.Model):
             else:
                 datas.append((r.id, (r.name+'--' + u'岗位要求人数' + unicode(r.amount) + u'人')))
         return datas
-
+#南天维保合同--明细
 class detail(models.Model):
     _name = 'nantian_erp.detail'
     name = fields.Char(string='名称')
@@ -928,6 +953,7 @@ class detail(models.Model):
     )
     rated_moneys=fields.Float(compute='_count_rated_moneys', store=True, string ="税金")
     subtotal = fields.Float(compute='_count_subtotal', store=True,string="小计")
+    #小计自动计算
     @api.depends('price','amount')
     def _count_subtotal(self):
         for record in self:
@@ -935,7 +961,7 @@ class detail(models.Model):
                 record.subtotal = record.price*record.amount
             else:
                 raise exceptions.ValidationError("数量不能小于1")
-
+    #税金自动计算
     @api.depends('price','amount','rate')
     def _count_rated_moneys(self):
         for record in self:
@@ -945,7 +971,7 @@ class detail(models.Model):
                 raise exceptions.ValidationError("数量不能小于1")
             if record.rate:
                 record.rated_moneys = record.price * record.amount*string.atof(record.rate)
-
+    #修改作为外键时的显示
     @api.multi
     @api.depends('name', 'instruction')
     def name_get(self):
@@ -958,7 +984,7 @@ class detail(models.Model):
         return datas
 
 
-
+#南天合同--收款
 class collection(models.Model):
     _name = 'nantian_erp.collection'
     name = fields.Char(string='名称')
@@ -988,18 +1014,18 @@ class collection(models.Model):
     )
     user_id = fields.Many2one('res.users',compute='_change_state', string="操作人")
     time = fields.Datetime(compute='_change_state',string='确认时间'  )
-
+    #自动计算税金
     @api.depends('money', 'rate')
     def _count_rated_moneys(self):
         for record in self:
             if record.rate:
                 record.rated_moneys = record.money * string.atof(record.rate)
-
+    #自动计算税后金额
     @api.depends('money', 'rated_moneys')
     def _count_money_total(self):
         for record in self:
             record.money_total = record.money - record.rated_moneys
-
+    #根据收款金额自动修改状态并记录操作时间
     @api.multi
     @api.depends('evaluate_money', 'money')
     def _change_state(self):
@@ -1012,7 +1038,7 @@ class collection(models.Model):
                 record.time = fields.datetime.now()
 
 
-
+#南天合同
 class contract(models.Model):
     _name = 'nantian_erp.contract'
     name = fields.Char(string='合同名称',required=True)
@@ -1055,7 +1081,7 @@ class contract(models.Model):
         string="合同类别", default=u'服务合同'
     )
     employee_ids = fields.One2many('hr.employee', 'nantian_erp_contract_id', "Employees")
-
+    #自动计算下次收款提醒邮件--距离收款时间一个月内 频率--每周
     @api.multi
     def email_contract_next_collection_date(self):
         subject = '您有合同即将收款，请及时处理！'
@@ -1077,6 +1103,7 @@ class contract(models.Model):
             body = u'<div>' + u'<p>您好:</p>' + u'<p>&nbsp;&nbsp;&nbsp;&nbsp;以下合同即将或已经进入收款期限，请您及时处理,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p>' + datas + u'</div>'
             self.send_email(user_id,body,subject)
 
+    # 自动根据合同结束时间提醒邮件--距离合同结束一个月内 频率--每周
     @api.multi
     def email_contract_date_end(self):
         subject = '您有合同即将过期，请及时处理！'
@@ -1093,7 +1120,7 @@ class contract(models.Model):
                 datas+=u'<p>'+text+u'</p>'
             body= u'<div>'+u'<p>您好:</p>'+u'<p>&nbsp;&nbsp;&nbsp;&nbsp;以下合同即将过期或已经过期，请您及时续签或关闭,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p>' + datas + u'</div>'
             self.send_email(user_id,body,subject)
-
+    #邮件发送函数
     def send_email(self, cr, uid, users, body='',subject='',context=None):
         to_list = []
         for user in users:
@@ -1107,13 +1134,14 @@ class contract(models.Model):
         }, context=context)
         mail_mail.browse(cr,uid,[mail_id],context=context).email_from = '南天ERP系统<nantian_erp@nantian>'
         mail_mail.send(cr, uid, [mail_id], context=context)
-
+    #自动检测合同结束时间>现在 --- 修改状态为待续签
     @api.multi
     def change_contract_state(self):
         for ids in self.search([('state','=','going')]):
             if ids.date_end:
                 if fields.Date.from_string(ids.date_end) <= fields.date.today():
                     ids.state = 'renew'
+    #合同续签功能函数
     @api.multi
     def copy_all(self):
         name = self.name+u'('+u'新续签请修改'+u')'
@@ -1141,7 +1169,7 @@ class contract(models.Model):
                 new_jobs.contract_id = new_contract
         self.state = 'off'
         return self.pop_window(new_contract.id)
-
+    #续签函数页面跳转
     @api.multi
     def pop_window(self,id):
         form_id = self.env['ir.model.data'].search([('name','=','nantian_erp_contract_user'),('module','=','nantian_erp')]).res_id
@@ -1155,24 +1183,24 @@ class contract(models.Model):
             'domain': [('id','=',id)],
         }
         return value
-
+    #合同关闭函数
     @api.multi
     def set_off(self):
         self.state = 'off'
-
+    #对特定页面只允许创建维保合同
     @api.multi
     def onchange_category(self,name):
         result = {'value':{}}
         result['value']['category'] = u'维保合同'
         return result
-
+    #自动计算合同需要人数
     @api.depends('jobs_ids.amount')
     def _need_count_employees(self):
         for record in self:
             record.need_employee_count = 0
             for job in record.jobs_ids:
                 record.need_employee_count += job.amount
-
+    #根据需要人数和现有人数判断是否缺员
     @api.depends('need_employee_count','employee_count')
     def _count_is_need(self):
         for record in self:
@@ -1180,18 +1208,18 @@ class contract(models.Model):
                 record.is_need = True
             else:
                 record.is_need = False
-
+    #计算合同现有人数
     @api.depends('employee_ids')
     def _count_employees(self):
         for record in self:
             record.employee_count = len(record.employee_ids)
-
+    #计算岗位现有人数
     @api.depends('jobs_ids.employee_count')
     def _count_employees_jobs(self):
         for record in self:
             for job in record.jobs_ids:
                 record.employee_jobs_count += job.employee_count
-
+    #自动计算总计金额
     @api.depends('jobs_ids.subtotal','detail_ids.subtotal','category')
     def _count_money(self):
         for record in self:
@@ -1206,7 +1234,7 @@ class contract(models.Model):
                     record.money += job.subtotal
                 for detail in record.detail_ids:
                     record.money += detail.subtotal
-
+    #自动计算税金
     @api.depends('jobs_ids.rated_moneys','detail_ids.rated_moneys','category')
     def _count_money_tax(self):
         for record in self:
@@ -1221,12 +1249,12 @@ class contract(models.Model):
                     record.money_tax += job.rated_moneys
                 for detail in record.detail_ids:
                     record.money_tax += detail.rated_moneys
-
+    #自动计算税后金额
     @api.depends('money','money_tax')
     def _count_money_total(self):
         for record in self:
             record.money_total = record.money - record.money_tax
-
+    #自动计算下次收款日期
     @api.depends('collection_ids.date')
     def _count_next_date(self):
         for record in self:
@@ -1239,24 +1267,24 @@ class contract(models.Model):
                 record.next_collection_date=min(dates)
             else:
                 record.next_collection_date=None
-
+    #自动计算收款金额
     @api.depends('collection_ids.money_total')
     def _count_collection_money(self):
         for record in self:
             for collection in record.collection_ids:
                 record.collection_money += collection.money_total
-
+    #自动计算收款税金
     @api.depends('collection_ids.rated_moneys')
     def _count_collection_money_tax(self):
         for record in self:
             for collection in record.collection_ids:
                 record.collection_money_tax += collection.rated_moneys
-
+    #自动计算税后金额
     @api.depends('collection_money', 'collection_money_tax')
     def _count_collection_money_total(self):
         for record in self:
             record.collection_money_total = record.collection_money - record.collection_money_tax
-
+    #修改作为外键时的显示
     @api.multi
     @api.depends('name', 'employee_count')
     def name_get(self):
