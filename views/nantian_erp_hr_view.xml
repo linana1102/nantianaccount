@@ -31,7 +31,7 @@
                                         <field name="is_forever" string="是否无期限" />
                                         <field name="contract_len" string="合同期限" attrs="{'invisible':[('is_forever','=',True)]}" />
                                         <field name="contract_endtime" string="合同终止时间" />
-                                        <field name="phone_money" string="花费额度" />
+                                        <field name="phone_money" string="话费额度" />
                                         <field name="states" string="状态" />
                                     </group>
                                     <group string="Contact Information">
@@ -132,7 +132,7 @@
                                         <field name="is_forever" string="是否无期限" readonly="True"/>
                                        <field name="contract_len" string="合同期限" readonly="True" attrs="{'invisible':[('is_forever','=',True)]}" />
                                         <field name="contract_endtime" string="合同终止时间"  readonly="True"/>
-                                        <field name="phone_money" string="花费额度" />
+                                        <field name="phone_money" string="话费额度" />
                                         <field name="states" string="状态" />
                                     </group>
                                     <group string="Contact Information">
@@ -251,6 +251,39 @@
                 </xpath>
                 <xpath expr="//filter[@string='Coach']" position="replace">
                 </xpath>
+            </field>
+        </record>
+
+        <record id="nantian_view_certificate_institutions_tree" model="ir.ui.view">
+            <field name="name">hr.nantian.certificate.institutions.tree</field>
+            <field name="model">nantian_erp.certificate_institutions</field>
+            <field name="arch" type="xml">
+                <tree string="institutions">
+                        <field name="name"/>
+                        <field name="category_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="nantian_view_certificate_direction_tree" model="ir.ui.view">
+            <field name="name">hr.nantian.certificate.direction.tree</field>
+            <field name="model">nantian_erp.certificate_direction</field>
+            <field name="arch" type="xml">
+                <tree string="direction">
+                        <field name="name"/>
+                        <field name="institutions_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="nantian_view_certificate_level_tree" model="ir.ui.view">
+            <field name="name">hr.nantian.certificate.level.tree</field>
+            <field name="model">nantian_erp.certificate_level</field>
+            <field name="arch" type="xml">
+                <tree string="level">
+                        <field name="name"/>
+                        <field name="direction_id"/>
+                </tree>
             </field>
         </record>
 
