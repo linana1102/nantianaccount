@@ -236,6 +236,7 @@
                 <xpath expr="//filter[@string='Company']" position="after">
                     <filter string="工作组" icon="terp-personal+" domain="[]" context="{'group_by':'project_id'}"/>
                     <filter string="人员状态" icon="terp-personal+" domain="[]" context="{'group_by':'category'}"/>
+                    <filter string="工作状态" icon="terp-personal+" domain="[]" context="{'group_by':'states'}"/>
                     <filter string="服务客户" icon="terp-personal+" domain="[]" context="{'group_by':'customer_id'}"/>
                     <filter string="服务合同" icon="terp-personal+" domain="[]" context="{'group_by':'nantian_erp_contract_id'}"/>
                     <filter string="合同岗位" icon="terp-personal+" domain="[]" context="{'group_by':'contract_jobs_id'}"/>

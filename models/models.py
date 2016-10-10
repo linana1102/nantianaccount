@@ -90,9 +90,10 @@ class hr_employee(models.Model):
             (u'长期事假', u"长期事假"),
             (u'离职办理中', u"离职办离中"),
             (u'离职', u"离职"),
+            (u'孕期', u"孕期"),
 
         ],
-        default=u'正常在岗', string="正常在岗")
+        default=u'正常在岗', string="工作状态")
     @api.onchange('phone_money','level','job_id')
     def _check_phone_money(self):
         print 'aaaaaaaaaaaaa'
