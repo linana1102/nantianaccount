@@ -14,6 +14,7 @@ class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
     project_id = fields.Many2one('project.project',ondelete='set null',)
+    working_team_id = fields.Many2one('nantian_erp.working_team', ondelete='set null', )
     contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null',string='合同岗位')
     nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同')
     certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书")
@@ -241,11 +242,16 @@ class hr_employee(models.Model):
             result['value']['contract_jobs_id'] = ''
         return result
 
-    @api.depends('project_id.partner_id')
+    # @api.depends('project_id.partner_id')
+    # def _get_customer(self):
+    #     for record in self:
+    #         if record.project_id:
+    #             record.customer_id=record.project_id.partner_id
+    @api.depends('working_team_id.partner_id')
     def _get_customer(self):
         for record in self:
-            if record.project_id:
-                record.customer_id=record.project_id.partner_id
+            if record.working_team_id:
+                record.customer_id=record.working_team_id.partner_id
 
     # 计算工作年限
     @api.one
@@ -318,10 +324,16 @@ class hr_employee(models.Model):
     @api.multi
     def hr_to_user(self):
         recs = self.env['hr.employee'].search([('api_res', '=', 'web_api'), ('user_id', '=', None)])
+        group_hr_id = self.env['ir.model.data'].search(
+            [('name', '=', 'group_hr_user'), ('module', '=', 'nantian_erp')]).res_id
+        hr_id = self.env['res.groups'].search([('id', '=', group_hr_id)])
         for rec in recs:
             user = self.env['res.users'].create(
                 {'login': rec.work_email, 'password': '123456', 'name': rec.name})
             rec.user_id = user
+            hr_id.users |= user
+
+
 
     # @api.multi
     # def onchange_contract_endtime(self, is_forever ):
@@ -1319,3 +1331,81 @@ class res_partner(models.Model):
         value['category'] = u'case客户'
         value['is_company'] = 'True'
         return {'value':value}
+#工作组
+class working_team(models.Model):
+    _name = 'nantian_erp.working_team'
+    # _inherit = ['mail.thread', 'ir.needaction_mixin']
+    # _mail_post_access = 'read'
+    name = fields.Char(string=u"名称")
+    user_id = fields.Many2one('res.users',string=u'负责人')
+    partner_id = fields.Many2one('res.partner', string=u'客户')
+    employee_ids = fields.One2many('hr.employee', 'working_team_id',string=u"工作组成员")
+    hr_user_ids = fields.Many2one(related='employee_ids.user_id', string=u'工作组成员用户')
+    need_employee_count = fields.Integer(string=u"所需人数")
+    employee_count = fields.Integer(compute='_count_employees', string=u'现有人数', store=True)
+    is_need = fields.Boolean(compute='_count_is_need', string=u'缺员', store=True)
+    category = fields.Selection(
+        [
+            (u'工作组', u'工作组'),
+
+        ], string=u'类别', default=u'工作组'
+    )
+    state = fields.Selection(
+        [
+            (u'进行中', u'进行中'),
+            (u'已关闭', u'已关闭'),
+        ], string=u'状态', default=u'进行中'
+    )
+
+    # 根据需要人数和现有人数判断是否缺员
+    @api.depends('need_employee_count', 'employee_count')
+    def _count_is_need(self):
+        for record in self:
+            if record.need_employee_count > record.employee_count:
+                record.is_need = True
+            else:
+                record.is_need = False
+    # 在管理界面创建时默认选中类别为工作组
+    # @api.multi
+    # def _onchange_category(self, name):
+    #     value = {}
+    #     value['category'] = u'工作组'
+    #     return {'value': value}
+
+    # 自动计算工作组现有人数
+    @api.depends('employee_ids')
+    def _count_employees(self):
+        for record in self:
+            record.employee_count = len(record.employee_ids)
+
+    # 将项目下工作组数据复制到本表---只执行一次
+    @api.multi
+    def project_export(self):
+         projects = self.env['project.project'].search([('category', '=', '工作组')])
+         for project in projects:
+             work=self.create({'name':project.name,'user_id':project.user_id.id,'partner_id':project.partner_id.id,'need_employee_count':project.need_employee_count,'employee_count':project.employee_count,'category':project.category,'state':u'进行中'})
+             work.employee_ids |= project.employee_ids
+
+    @api.multi
+    def auto_add_to_group(self):
+        works = self.env['nantian_erp.working_team'].search([])
+        work_team_user_id = self.env['ir.model.data'].search(
+            [('name', '=', 'group_work_team_user'), ('module', '=', 'nantian_erp')]).res_id
+        work_team_manager_id = self.env['ir.model.data'].search(
+            [('name', '=', 'group_nantian_manager'), ('module', '=', 'nantian_erp')]).res_id
+        group_user_id = self.env['res.groups'].search([('id', '=', work_team_user_id)])
+        group_manager_id = self.env['res.groups'].search([('id', '=', work_team_manager_id)])
+        for work in works:
+            print work
+            if work.user_id not in group_manager_id.users:
+                group_manager_id.users |= work.user_id
+            for hr in  work.employee_ids:
+                if hr.user_id not in group_user_id.users:
+                    group_user_id.users |= hr.user_id
+
+
+    # 修改作为外键时的显示形式
+    @api.multi
+    @api.depends('name', 'need_employee_count')
+    def name_get(self):
+        return [(r.id, (r.name + '-' + u'所需人数' + (str(r.need_employee_count)) + u'人')) for r in self]

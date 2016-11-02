@@ -258,35 +258,17 @@
         <menuitem id="leave_type" parent="leave" action="nantian_erp_leave_type" name="leave_type" groups="nantian_erp.group_hr_manager_assistant" />
 
 
-        <record id="nantian_work_view_user" model="ir.actions.act_window">
-            <field name="name">工作组</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('category','=','工作组')]</field>
-        </record>
-        <record id="nantian_work_tree_user" model="ir.actions.act_window.view">
-            <field name="view_mode">tree</field>
-            <field name="sequence" eval="1" />
-            <field name="view_id" ref="nantian_project_tree_view_user" />
-            <field name="act_window_id" ref="nantian_work_view_user" />
-        </record>
-        <record id="nantian_work_form_user" model="ir.actions.act_window.view">
-            <field name="view_mode">form</field>
-            <field name="sequence" eval="10" />
-            <field name="view_id" ref="nantian_erp_project_form_view_user" />
-            <field name="act_window_id" ref="nantian_work_view_user" />
-        </record>
-        <menuitem name="nantian_work_user" id="nantian_work_user" sequence="1"  parent="project.menu_project_management"  action="nantian_work_view_user" />
 
+        <menuitem name="nantian_working_team" id="nantian_working_team"  groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_boss" />
+        <menuitem name="nantian_working_teams" id="nantian_working_teams" sequence="5" parent="nantian_working_team" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss" />
 
-		<record id="nantian_erp_contract_view" model="ir.actions.act_window">
+        <record id="nantian_erp_contract_view" model="ir.actions.act_window">
             <field name="name">合同</field>
             <field name="res_model">nantian_erp.contract</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="nantian_contract" id="nantian_contract" sequence="20"  parent="project.menu_project_management"  action="nantian_erp_contract_view" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,project.group_project_manager"/>
+        <menuitem name="nantian_contract" id="nantian_contract" sequence="20"  parent="nantian_working_teams"  action="nantian_erp_contract_view" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
 
         <record id="nantian_MA_contract_view" model="ir.actions.act_window">
             <field name="name">维保合同</field>
@@ -326,12 +308,34 @@
             <field name="view_id" ref="nantian_service_partner_form" />
             <field name="act_window_id" ref="nantian_service_partner_action" />
         </record>
-        <menuitem id="nantian_service_partner" sequence="21" parent="project.menu_project_management" action="nantian_service_partner_action" name="partner" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,project.group_project_manager"/>
+        <menuitem id="nantian_service_partner" sequence="21" parent="nantian_working_teams" action="nantian_service_partner_action" name="partner" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
 
 
-        <record id="nantian_project_action" model="ir.actions.act_window">
+
+        <record id="nantian_works_team_view_user" model="ir.actions.act_window">
+            <field name="name">工作组</field>
+            <field name="res_model">nantian_erp.working_team</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('category','=','工作组')]</field>
+        </record>
+        <record id="nantian_works_team_tree_user" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_erp_work_team_tree_view_user" />
+            <field name="act_window_id" ref="nantian_works_team_view_user" />
+        </record>
+        <record id="nantian_works_team_form_user" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10" />
+            <field name="view_id" ref="nantian_erp_work_team_form_view_user" />
+            <field name="act_window_id" ref="nantian_works_team_view_user" />
+        </record>
+        <menuitem name="nantian_works_team_user" id="nantian_work_team_user" sequence="1"  parent="nantian_working_teams"  action="nantian_works_team_view_user" />
+
+        <record id="nantian_works_manager_action" model="ir.actions.act_window">
             <field name="name">工作组管理</field>
-            <field name="res_model">project.project</field>
+            <field name="res_model">nantian_erp.working_team</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('category','=','工作组')]</field>
@@ -339,17 +343,18 @@
         <record id="nantian_project_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
             <field name="sequence" eval="5" />
-            <field name="view_id" ref="nantian_project_tree_view_manager" />
-            <field name="act_window_id" ref="nantian_project_action" />
+            <field name="view_id" ref="nantian_erp_work_team_tree_view_manager" />
+            <field name="act_window_id" ref="nantian_works_manager_action" />
         </record>
         <record id="nantian_project_form_action" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
             <field name="sequence" eval="10" />
-            <field name="view_id" ref="nantian_erp_project_form_view_manager" />
-            <field name="act_window_id" ref="nantian_project_action" />
+            <field name="view_id" ref="nantian_work_team_form_view_manager" />
+            <field name="act_window_id" ref="nantian_works_manager_action" />
         </record>
-        <menuitem name="nantian_config" id="nantian_config" parent="base.menu_main_pm" groups="nantian_erp.group_nantian_assistant,project.group_project_manager" />
-        <menuitem id="nantian_works"  sequence="5" parent="nantian_config" action="nantian_project_action" name="works" groups="nantian_erp.group_nantian_assistant,project.group_project_manager"/>
+        <menuitem name="nantian_config" id="nantian_config" sequence="10" parent="nantian_working_team" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss" />
+        <menuitem id="nantian_works_manager"  sequence="5" parent="nantian_config" action="nantian_works_manager_action" name="works" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
+
 
         <record id="nantian_erp_jobs_view" model="ir.actions.act_window">
             <field name="name">合同岗位</field>
@@ -357,7 +362,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="nantian_jobs" id="nantian_jobs"   sequence="10" parent="nantian_config"  action="nantian_erp_jobs_view" groups="nantian_erp.group_nantian_assistant,project.group_project_manager"/>
+        <menuitem name="nantian_jobs" id="nantian_jobs"  sequence="10" parent="nantian_config"  action="nantian_erp_jobs_view" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
 
         <record id="nantian_erp_collection_view" model="ir.actions.act_window">
             <field name="name">合同收款</field>
@@ -365,7 +370,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="nantian_collection" id="nantian_collection" sequence="15"  parent="nantian_config"  action="nantian_erp_collection_view" groups="nantian_erp.group_nantian_assistant,project.group_project_manager"/>
+        <menuitem name="nantian_collection" id="nantian_collection" sequence="15"  parent="nantian_config"  action="nantian_erp_collection_view" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
 
         <record id="nantian_erp_detail_view" model="ir.actions.act_window">
             <field name="name">维保明细</field>
@@ -382,7 +387,7 @@
             <field name="domain">[('nantian_erp_contract_id','=',active_id)]</field>
             <field name="target">current</field>
         </record>
-        <menuitem name="nantian_detail" id="nantian_detail" sequence="20"  parent="nantian_config"  action="nantian_erp_detail_view" groups="nantian_erp.group_nantian_assistant,project.group_project_manager"/>
+        <menuitem name="nantian_detail" id="nantian_detail" sequence="20"  parent="nantian_config"  action="nantian_erp_detail_view" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
 
 
         <menuitem name="nantian_dashboard" id="nantian_dashboard" sequence="9"  parent="mail.mail_feeds_main" />
