@@ -95,8 +95,18 @@ msgid "leave_type"
 msgstr "请假类型"
 
 #. module: nantian_erp
-#: model:ir.ui.menu,name:nantian_erp.nantian_work_user
-msgid "nantian_work_user"
+#: model:ir.ui.menu,name:nantian_erp.nantian_working_team
+msgid "nantian_working_team"
+msgstr "工作组"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_working_teams
+msgid "nantian_working_teams"
+msgstr "工作组"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_work_team_user
+msgid "nantian_work_team_user"
 msgstr "工作组"
 
 #. module: nantian_erp
@@ -115,7 +125,7 @@ msgid "nantian_config"
 msgstr "项目管理"
 
 #. module: nantian_erp
-#: model:ir.ui.menu,name:nantian_erp.nantian_works
+#: model:ir.ui.menu,name:nantian_erp.nantian_works_manager
 msgid "works"
 msgstr "工作组管理"
 
@@ -159,3 +169,30 @@ msgstr "仪表板"
 #: model:ir.ui.menu,name:nantian_erp.nantian_my_dashboard
 msgid "nantian_erp_my_dashboard"
 msgstr "我的仪表板"
+
+
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_work_user1
+msgid "nantian_work_user1"
+msgstr "工作组"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_contract1
+msgid "nantian_contract1"
+msgstr "合同"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_service_partner1
+msgid "partner1"
+msgstr "服务客户"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_config1
+msgid "nantian_config1"
+msgstr "项目管理"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.nantian_works1
+msgid "works1"
+msgstr "工作组管理"
