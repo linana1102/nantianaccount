@@ -212,7 +212,7 @@
                      <tree string="Employees">
                         <field name="name"/>
                         <field name="department_id"/>
-                        <field name="project_id" string="工作组"/>
+                        <field name="working_team_id" string="工作组"/>
                         <field name="level" string="级别"/>
                         <field name="parent_id" string="上级领导"/>
                         <field name="work_age" string="工作年限"/>
@@ -227,14 +227,14 @@
             <field name="inherit_id" ref="hr.view_employee_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='department_id']" position="after">
-                    <field name="project_id" string="所在工作组"/>
+                    <field name="working_team_id" string="所在工作组"/>
                     <field name="nantian_erp_contract_id" string="服务合同"/>
                     <field name="certificate_institutions_id" string="证书颁发机构"/>
                     <field name="certificate_direction_id" string="证书方向"/>
                     <field name="certificate_level_id" string="证书等级"/>
                 </xpath>
                 <xpath expr="//filter[@string='Company']" position="after">
-                    <filter string="工作组" icon="terp-personal+" domain="[]" context="{'group_by':'project_id'}"/>
+                    <filter string="工作组" icon="terp-personal+" domain="[]" context="{'group_by':'working_team_id'}"/>
                     <filter string="人员状态" icon="terp-personal+" domain="[]" context="{'group_by':'category'}"/>
                     <filter string="工作状态" icon="terp-personal+" domain="[]" context="{'group_by':'states'}"/>
                     <filter string="服务客户" icon="terp-personal+" domain="[]" context="{'group_by':'customer_id'}"/>
@@ -649,7 +649,6 @@
                 <graph string="employee graph" type="pie" interval="month">
                     <!--<field name="name" string="姓名"/>-->
                     <!--<field name="department_id" string="部门"/>-->
-                    <!--<field name="project_id" string="工作组"/>-->
                     <!--<field name="interval">month</field>-->
                     <field name="customer_id" string="行业"/>
 

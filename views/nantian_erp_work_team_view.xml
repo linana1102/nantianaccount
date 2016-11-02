@@ -80,7 +80,6 @@
             <field name="arch" type="xml">
                 <form string="works_manager">
                 	<header>
-                        <button name="project_export"  string="数据" type="object" />
                      <field name="state" widget="statusbar" statusbar_visible="进行中,关闭"  readonly="1"/>
                 	</header>
                 	<sheet string="work">
