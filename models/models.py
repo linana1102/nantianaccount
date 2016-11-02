@@ -8,7 +8,7 @@ from datetime import datetime,timedelta
 import datetime as datetime_boss
 import time
 import string
-
+import logging
 
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
@@ -1388,6 +1388,7 @@ class working_team(models.Model):
 
     @api.multi
     def auto_add_to_group(self):
+        _logger = logging.getLogger(__name__)
         works = self.env['nantian_erp.working_team'].search([])
         work_team_user_id = self.env['ir.model.data'].search(
             [('name', '=', 'group_work_team_user'), ('module', '=', 'nantian_erp')]).res_id
@@ -1396,7 +1397,7 @@ class working_team(models.Model):
         group_user_id = self.env['res.groups'].search([('id', '=', work_team_user_id)])
         group_manager_id = self.env['res.groups'].search([('id', '=', work_team_manager_id)])
         for work in works:
-            print work
+            _logger.info(work)
             if work.user_id not in group_manager_id.users:
                 group_manager_id.users |= work.user_id
             for hr in  work.employee_ids:

@@ -122,7 +122,7 @@ msgstr "服务客户"
 #. module: nantian_erp
 #: model:ir.ui.menu,name:nantian_erp.nantian_config
 msgid "nantian_config"
-msgstr "项目管理"
+msgstr "工作组管理"
 
 #. module: nantian_erp
 #: model:ir.ui.menu,name:nantian_erp.nantian_works_manager
