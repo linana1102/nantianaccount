@@ -13,7 +13,6 @@ import logging
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
-    project_id = fields.Many2one('project.project',ondelete='set null',)
     working_team_id = fields.Many2one('nantian_erp.working_team', ondelete='set null', )
     contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null',string='合同岗位')
     nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同')
@@ -242,11 +241,7 @@ class hr_employee(models.Model):
             result['value']['contract_jobs_id'] = ''
         return result
 
-    # @api.depends('project_id.partner_id')
-    # def _get_customer(self):
-    #     for record in self:
-    #         if record.project_id:
-    #             record.customer_id=record.project_id.partner_id
+
     @api.depends('working_team_id.partner_id')
     def _get_customer(self):
         for record in self:
@@ -333,49 +328,6 @@ class hr_employee(models.Model):
             rec.user_id = user
             hr_id.users |= user
 
-
-
-    # @api.multi
-    # def onchange_contract_endtime(self, is_forever ):
-    #     result = {'value': {}}
-    #     if is_forever:
-    #         result['value']['contract_endtime'] = '9999-12-31'
-    #
-    #     return result
-#拓展项目---工作组
-class project_project(models.Model):
-    _inherit = 'project.project'
-
-    employee_ids = fields.One2many('hr.employee','project_id','Employee')
-    need_employee_count = fields.Integer()
-    employee_count = fields.Integer(compute='_count_employees', store=True)
-    category = fields.Selection(
-        [
-            (u'工作组', u'工作组'),
-            (u'项目', u'项目'),
-
-        ],string='类别',default=u'项目'
-    )
-    #在管理界面创建时默认选中类别为工作组
-    @api.multi
-    def _onchange_category(self, name):
-        value = {}
-        value['category'] = u'工作组'
-        return {'value': value}
-
-
-    #自动计算工作组现有人数
-    @api.depends('employee_ids')
-    def _count_employees(self):
-        for employee in self.employee_ids:
-            self.message_subscribe([employee.user_id.partner_id.id])
-        for record in self:
-            record.employee_count = len(record.employee_ids)
-    #修改作为外键时的显示形式
-    @api.multi
-    @api.depends('name', 'need_employee_count')
-    def name_get(self):
-        return [(r.id, (r.name + '-' + u'所需人数' + (str(r.need_employee_count)) + u'人')) for r in self]
 #证书
 class certificate(models.Model):
     _name = 'nantian_erp.certificate'
@@ -626,8 +578,8 @@ class hr_attendance(models.Model):
     def _get_state(self):
         pro_manager = []
         dep_manager = []
-        for project in self.env['project.project'].search([]):
-            pro_manager.append(project.user_id)
+        for work in self.env['nantian_erp.working_team'].search([]):
+            pro_manager.append(work.user_id)
         for department in self.env['hr.department'].search([]):
             if department.manager_id:
                 em = department.manager_id
@@ -645,8 +597,8 @@ class hr_attendance(models.Model):
     def _get_examine_user(self):
         pro_manager = []
         dep_manager = []
-        for project in self.env['project.project'].search([]):
-            pro_manager.append(project.user_id)
+        for work in self.env['nantian_erp.working_team'].search([]):
+            pro_manager.append(work.user_id)
         for department in self.env['hr.department'].search([]):
             if department.manager_id:
                 em = department.manager_id
@@ -723,7 +675,7 @@ class hr_leave(models.Model):
                 [('name', '=', "Manager"), ('category_id.name', '=', 'Human Resources')]).users:
             self.state = 'done'
         elif self.employee_ids.child_ids or self.env.user in self.env[
-            'project.project'].user_id or self.employee_ids == self.employee_ids.department_id.manager_id:
+            'nantian_erp.working_team'].user_id or self.employee_ids == self.employee_ids.department_id.manager_id:
             if self.leave_type.name == u"调休":
                 print """yes"""
                 self.state = 'done'
@@ -1310,7 +1262,6 @@ class res_partner(models.Model):
         [
             (u'服务客户', u'服务客户'),
             (u'case客户', u'case客户'),
-
         ],
 
     )
@@ -1379,13 +1330,14 @@ class working_team(models.Model):
             record.employee_count = len(record.employee_ids)
 
     # 将项目下工作组数据复制到本表---只执行一次
-    @api.multi
-    def project_export(self):
-         projects = self.env['project.project'].search([('category', '=', '工作组')])
-         for project in projects:
-             work=self.create({'name':project.name,'user_id':project.user_id.id,'partner_id':project.partner_id.id,'need_employee_count':project.need_employee_count,'employee_count':project.employee_count,'category':project.category,'state':u'进行中'})
-             work.employee_ids |= project.employee_ids
+    # @api.multi
+    # def project_export(self):
+    #      projects = self.env['project.project'].search([('category', '=', '工作组')])
+    #      for project in projects:
+    #          work=self.create({'name':project.name,'user_id':project.user_id.id,'partner_id':project.partner_id.id,'need_employee_count':project.need_employee_count,'employee_count':project.employee_count,'category':project.category,'state':u'进行中'})
+    #          work.employee_ids |= project.employee_ids
 
+    # 自动将工作组人员及经理加入相关组
     @api.multi
     def auto_add_to_group(self):
         _logger = logging.getLogger(__name__)

@@ -34,6 +34,7 @@
         'views/dimission_workflow.xml',
         'views/leave_workflow.xml',
         'views/nantian_erp_cron.xml',
+        'views/nantian_erp_auto_action.xml',
         'views/nantian_erp_link.xml',
     ],
     # only loaded in demonstration mode

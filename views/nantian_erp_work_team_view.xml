@@ -63,7 +63,7 @@
             <field name="name">nantian_erp.working_team.tree</field>
             <field name="model">nantian_erp.working_team</field>
             <field name="arch" type="xml">
-                <tree string="works" create="false" colors="red:need_employee_count&gt;employee_count;gray:state=='off';">
+                <tree string="works" create="false" colors="red:need_employee_count&gt;employee_count;gray:state=='off';blue:need_employee_count&lt;employee_count">
                     <field name="name" />
                     <field name="user_id" />
                     <field name="partner_id" />
@@ -137,7 +137,7 @@
             <field name="name">nantian_erp.working_team.tree_manager</field>
             <field name="model">nantian_erp.working_team</field>
             <field name="arch" type="xml">
-                <tree string="works_manager" colors="red:need_employee_count&gt;employee_count;gray:state=='off';">
+                <tree string="works_manager" colors="red:need_employee_count&gt;employee_count;gray:state=='off';blue:need_employee_count&lt;employee_count">
                     <field name="name" />
                     <field name="user_id" />
                     <field name="partner_id"  />
