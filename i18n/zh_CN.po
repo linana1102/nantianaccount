@@ -170,29 +170,3 @@ msgstr "仪表板"
 msgid "nantian_erp_my_dashboard"
 msgstr "我的仪表板"
 
-
-
-#. module: nantian_erp
-#: model:ir.ui.menu,name:nantian_erp.nantian_work_user1
-msgid "nantian_work_user1"
-msgstr "工作组"
-
-#. module: nantian_erp
-#: model:ir.ui.menu,name:nantian_erp.nantian_contract1
-msgid "nantian_contract1"
-msgstr "合同"
-
-#. module: nantian_erp
-#: model:ir.ui.menu,name:nantian_erp.nantian_service_partner1
-msgid "partner1"
-msgstr "服务客户"
-
-#. module: nantian_erp
-#: model:ir.ui.menu,name:nantian_erp.nantian_config1
-msgid "nantian_config1"
-msgstr "项目管理"
-
-#. module: nantian_erp
-#: model:ir.ui.menu,name:nantian_erp.nantian_works1
-msgid "works1"
-msgstr "工作组管理"
