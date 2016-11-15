@@ -845,7 +845,7 @@ class jobs(models.Model):
         string="计量单位", default='year'
     )
     amount = fields.Integer(string='人员数量', default=1)
-    unit_amount = fields.Float(string='时间数量', digits=(20,3),default=1.000)
+    unit_amount = fields.Float(string='时间数量', digits=(20,3), default=1.000)
     rate = fields.Selection(
         [
             ('0.00',u'0%'),

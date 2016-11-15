@@ -170,3 +170,14 @@ msgstr "仪表板"
 msgid "nantian_erp_my_dashboard"
 msgstr "我的仪表板"
 
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.ip_datas
+msgid "ip_datas"
+msgstr "数据管理"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.ip_data
+msgid "ip_data"
+msgstr "对接IP管理"
+

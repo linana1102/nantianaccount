@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="project_cost_form_view">
+            <field name="name">project_cost_form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name=&quot;buttons&quot;]" position="inside">
+                    <button class="oe_inline oe_stat_button" type="object"  name="get_cost" icon="fa-bug">
+                        <field string="成本总计" name="total_cost" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
