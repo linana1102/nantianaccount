@@ -69,6 +69,24 @@ class project_project(models.Model):
                 record.total_cost += task.task_cost
 
     @api.multi
+    def pop_window(self,active_id):
+
+        tree_res = self.env['ir.model.data'].search([('name', '=', 'nantian_erp_project_works_tree_view'), ('module', '=', 'nantian_erp')]).res_id
+        search_id = self.env['ir.model.data'].search([('name', '=', 'nantian_erp_project_works_filter_view'), ('module', '=', 'nantian_erp')]).res_id
+        value = {
+            'name': ('项目成本列表'),
+            'res_model': 'project.task.work',
+            'views': [(tree_res, 'tree')],
+            'search_view_id': search_id,
+            'type': 'ir.actions.act_window',
+            'target': 'self',
+            'context': {'search_default_task':True},
+            'domain': [('task_id.project_id', '=', active_id)],
+        }
+        print 'qqwe'
+        return value
+
+    @api.multi
     def get_cost(self):
         project = {'id': self.id}
         work = []
@@ -113,6 +131,7 @@ class project_project(models.Model):
                 for work_id in datas:
                     print work_id['cost']
                     self.env['project.task.work'].search([('id', '=', work_id['id'])], limit=1).cost = work_id['cost']
+                return self.pop_window(self.id)
         except:
             raise exceptions.ValidationError("由于安全限制，您无法获得所需信息，如有需要请联系服务人员")
 

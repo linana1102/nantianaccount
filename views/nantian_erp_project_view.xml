@@ -13,5 +13,28 @@
                 </xpath>
             </field>
         </record>
+        <record model="ir.ui.view" id="nantian_erp_project_works_tree_view">
+            <field name="name">	project.task.work_tree</field>
+            <field name="model">project.task.work</field>
+            <field name="arch" type="xml">
+                <tree string="nantian_erp_project_works_tree" create="false" delete="false" copy="false">
+                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
+                    <field name="date"/>
+                    <field name="hours" widget="float_time"/>
+                    <field name="cost" sum="total"/>
+                </tree>
+            </field>
+        </record>
+        <record id="nantian_erp_project_works_filter_view" model="ir.ui.view">
+            <field name="name">nantian_erp_project_works_search</field>
+            <field name="model">project.task.work</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <group expand="0" string="分组">
+                        <filter string="任务" name="task" context="{'group_by':'task_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
     </data>
 </openerp>

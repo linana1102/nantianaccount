@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="nantian_erp_adjusting" model="ir.actions.act_window">
+            <field name="name">待调整的人员</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="nantian_erp_hr_kanban_employees"/>
+            <field name="domain">[]</field>
+        </record>
+
+        <menuitem id="adjusting" parent="hr.menu_hr_main"  name="adjusting" action='nantian_erp_adjusting' groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header" />
+
+
         <record id="nantian_erp_certificate_category" model="ir.actions.act_window">
             <field name="name">认证类型</field>
             <field name="res_model">nantian_erp.certificate_category</field>
