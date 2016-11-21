@@ -88,12 +88,22 @@ class hr_employee(models.Model):
             (u'正常在岗', u"正常在岗"),
             (u'长期病假', u"长期病假"),
             (u'长期事假', u"长期事假"),
-            (u'离职办理中', u"离职办离中"),
+            (u'离职办理中', u"离职办理中"),
             (u'离职', u"离职"),
-            (u'孕期', u"孕期"),
+            (u'孕假', u"孕假"),
 
         ],
         default=u'正常在岗', string="工作状态")
+    dis_states = fields.Selection([
+        (u'正常', u'正常'),
+        (u'待调整', u"待调整"),
+        (u'可调整', u"可调整"),
+        (u'申请离职', u"申请离职"),
+        (u'已离职', u"已离职"),
+        (u'调整完成', u"调整完成"),
+
+    ], default=u'正常', string="调整状态")
+    adjust_ids = fields.One2many('nantian_erp.hr_adjusting', 'employee_id', ondelete='set null', string="adjust_ids")
     @api.onchange('phone_money','level','job_id')
     def _check_phone_money(self):
         print 'aaaaaaaaaaaaa'
@@ -324,16 +334,17 @@ class hr_employee(models.Model):
         hr_id = self.env['res.groups'].search([('id', '=', group_hr_id)])
         for rec in recs:
             user = self.env['res.users'].create(
-                {'login': rec.work_email, 'password': '123456', 'name': rec.name})
+                {'login': rec.work_email, 'password': '123456', 'name': rec.name,'email':rec.work_email})
             rec.user_id = user
             hr_id.users |= user
+
 
 #证书
 class certificate(models.Model):
     _name = 'nantian_erp.certificate'
     _rec_name = 'name'
     name = fields.Char(related='certificate_direction_id.name', store=True)
-    certificate_direction_id= fields.Many2one('nantian_erp.certificate_direction',string='方向')
+    certificate_direction_id = fields.Many2one('nantian_erp.certificate_direction',string='方向')
     certificate_category_id = fields.Many2one('nantian_erp.certificate_category', string='认证类型')
     certificate_institutions_id = fields.Many2one('nantian_erp.certificate_institutions', string='颁发机构或行业')
     certificate_level_id = fields.Many2one('nantian_erp.certificate_level', string='级别')
@@ -1362,3 +1373,17 @@ class working_team(models.Model):
     @api.depends('name', 'need_employee_count')
     def name_get(self):
         return [(r.id, (r.name + '-' + u'所需人数' + (str(r.need_employee_count)) + u'人')) for r in self]
+#人员调整记录
+class hr_adjusting(models.Model):
+    _name = 'nantian_erp.hr_adjusting'
+
+    employee_id = fields.Many2one('hr.employee', string="hr")
+    states = fields.Selection([
+        (u'待调整', u"待调整"),
+        (u'可调整', u"可调整"),
+        (u'申请离职', u"申请离职"),
+        (u'已离职', u"已离职"),
+        (u'调整完成', u"调整完成"),
+    ], default=u'待调整', string="调整状态")
+    notes = fields.Char(string=u"备注")
+    adjust_date = fields.Date(string=u'可调整日期')

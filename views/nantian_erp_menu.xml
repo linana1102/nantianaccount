@@ -10,8 +10,15 @@
             <field name="domain">[]</field>
         </record>
 
-        <menuitem id="adjusting" parent="hr.menu_hr_main"  name="adjusting" action='nantian_erp_adjusting' groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header" />
 
+        <menuitem id="adjusting" parent="hr.menu_hr_main"  name="adjusting" action='nantian_erp_adjusting' groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header" />
+        <record id="nantian_erp_certificate_tree" model="ir.actions.act_window">
+            <field name="name">证书</field>
+            <field name="res_model">nantian_erp.certificate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('employee_ids','=',active_id)]</field>
+        </record>
 
         <record id="nantian_erp_certificate_category" model="ir.actions.act_window">
             <field name="name">认证类型</field>

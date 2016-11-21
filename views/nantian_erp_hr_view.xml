@@ -1,12 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="nantian_erp_hr_adjusting_form">
+            <field name="name">人员调整</field>
+            <field name="model">nantian_erp.hr_adjusting</field>
+            <field name="arch" type="xml">
+                <form string="nantian_erp_hr_adjusting_form" >
+                     <group>
+                        <group>
+                            <field name="employee_id" required="True" string="调整人员" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                            <field name="states" required="True"/>
+                            <field name="adjust_date" />
+                        </group>
+                        <group >
+                            <field name="notes" />
+                        </group>
+                    </group>
+
+                </form>
+            </field>
+        </record>
+        <act_window id="nantian_erp_start_adjusting"
+            name="待调整的人员"
+            src_model="hr.employee"
+            res_model="nantian_erp.hr_adjusting"
+            view_mode="form"
+            view_id="nantian_erp_hr_adjusting_form"
+            target="new"
+            key2="client_action_multi"
+        />
         <record model="ir.ui.view" id="nantian_erp_employee_form_view">
             <field name="name">employee.form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager'),ref('nantian_erp.group_nantian_assistant_manager'),ref('nantian_erp.group_hr_bm_manager'),ref('nantian_erp.group_hr_assistant'),ref('nantian_erp.group_hr_manager_assistant'),ref('nantian_erp.group_nantian_header')])]"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(nantian_erp_start_adjusting)d" type="action" class="oe_stat_button" icon="fa-clock-o">
+                        <field name="dis_states" string="点击按钮填写内容" widget="statinfo"/>
+                    </button>
+                </xpath>
                 <xpath expr="//page[@string='HR Settings']" position="replace">
                   <page string="HR Settings" >
                     <group>
@@ -17,7 +50,7 @@
                   </page>
                 </xpath>
                 <xpath expr="//page[@string='Personal Information']" position="replace">
-                    <page string="Public Information"  >
+                    <page string="Public Information" >
                                 <group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
@@ -651,16 +684,16 @@
                     <!--<field name="department_id" string="部门"/>-->
                     <!--<field name="interval">month</field>-->
                     <field name="customer_id" string="行业"/>
-
                 </graph>
             </field>
         </record>
+
         <record model="ir.ui.view" id="nantian_erp_hr_kanban_employees">
-        <field name="name">HR-Employess Kanban</field>
+        <field name="name">可调整人员看板</field>
         <field name="model">hr.employee</field>
         <field name="priority">15</field>
-        <field name="arch" type="xml">
-            <kanban>
+        <field name="arch" type="xml" >
+            <kanban create="false">
                 <field name="last_login"/>
                 <field name="message_is_follower"/>
                 <field name="message_follower_ids"/>
@@ -668,9 +701,9 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
-                            <div class="oe_employee_details">
+                            <div class="oe_employee_details"  style="background-color:#ddd">
                                 <h4>
-                                    <a type="open"><field name="name"/><t t-if="record.states.raw_value"> (<field name="states"/>)</t></a>
+                                    <a type="open"><field name="name"/><t t-if="record.dis_states.raw_value"> (<field name="dis_states"/>)</t></a>
                                 </h4>
                                 <ul>
                                     <li id="last_login">
@@ -681,19 +714,17 @@
                                     <li t-if="record.education.raw_value"><field name="education"/></li>
                                     <li t-if="record.working_team_id.raw_value"><sapn>原</sapn><field name="working_team_id"/></li>
                                     <li t-if="record.work_age.raw_value"><sapn>工作年限：</sapn><field name="work_age"/><sapn>年</sapn></li>
-                                    <li t-if="record.certificate_ids.raw_value"><a type="open"><sapn>证书：</sapn><field name="certificate_ids"/></a></li>
                                 </ul>
+                                <button t-if="record.certificate_ids.raw_value" name="%(nantian_erp_certificate_tree)d" type="action" ><sapn>证书：</sapn><field name="certificate_ids"/></button>
 
                             </div>
                         </div>
-                        <script>
-                            $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
-                        </script>
                     </t>
                 </templates>
             </kanban>
 
         </field>
     </record>
+
     </data>
 </openerp>
