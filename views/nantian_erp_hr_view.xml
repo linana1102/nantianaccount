@@ -26,15 +26,15 @@
                 </form>
             </field>
         </record>
-        <act_window id="nantian_erp_start_adjusting"
-            name="待调整人员"
-            src_model="hr.employee"
-            res_model="nantian_erp.hr_adjusting"
-            view_mode="form"
-            view_id="nantian_erp_hr_adjusting_form"
-            target="new"
-            key2="client_action_multi"
-        />
+        <!--<act_window id="nantian_erp_start_adjusting"-->
+            <!--name="待调整人员"-->
+            <!--src_model="hr.employee"-->
+            <!--res_model="nantian_erp.hr_adjusting"-->
+            <!--view_mode="form"-->
+            <!--view_id="nantian_erp_hr_adjusting_form"-->
+            <!--target="new"-->
+            <!--key2="client_action_multi"-->
+        <!--/>-->
         <record model="ir.ui.view" id="nantian_erp_employee_form_view">
             <field name="name">employee.form</field>
             <field name="model">hr.employee</field>
