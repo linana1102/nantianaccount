@@ -97,13 +97,13 @@ class hr_employee(models.Model):
     dis_states = fields.Selection([
         (u'正常', u'正常'),
         (u'待调整', u"待调整"),
-        (u'可调整', u"可调整"),
+        (u'可调用', u"可调用"),
         (u'申请离职', u"申请离职"),
         (u'已离职', u"已离职"),
         (u'调整完成', u"调整完成"),
 
-    ], default=u'正常', string="调整状态")
-    adjust_ids = fields.One2many('nantian_erp.hr_adjusting', 'employee_id', ondelete='set null', string="adjust_ids")
+    ], default=u'正常', string="调整状态",)
+    adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids")
     @api.onchange('phone_money','level','job_id')
     def _check_phone_money(self):
         print 'aaaaaaaaaaaaa'
@@ -1377,13 +1377,28 @@ class working_team(models.Model):
 class hr_adjusting(models.Model):
     _name = 'nantian_erp.hr_adjusting'
 
-    employee_id = fields.Many2one('hr.employee', string="hr")
+    def _default_SN(self):
+        return self.env['hr.employee'].browse(self._context.get('active_ids'))
+
+
+    employee_id = fields.Many2many('hr.employee','emp_to_adjust_ref',string="hr",default =_default_SN,store = True)
     states = fields.Selection([
         (u'待调整', u"待调整"),
-        (u'可调整', u"可调整"),
+        (u'可调用', u"可调用"),
         (u'申请离职', u"申请离职"),
         (u'已离职', u"已离职"),
         (u'调整完成', u"调整完成"),
     ], default=u'待调整', string="调整状态")
     notes = fields.Char(string=u"备注")
     adjust_date = fields.Date(string=u'可调整日期')
+
+
+    @api.multi
+    def subscribe(self):
+        for s in self.employee_id:
+            models = self.env['hr.employee'].search([('id','=',s.id)])
+            print models.name,models.dis_states
+            models.write({'dis_states':self.states})
+            print models.name,models.dis_states
+        return {'aaaaaaaaaaaaaa'}
+

@@ -16,12 +16,18 @@
                             <field name="notes" />
                         </group>
                     </group>
+                    <footer>
+                        <button name="subscribe" type="object"
+                                string="保存调整" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="取消调整"/>
+                    </footer>
 
                 </form>
             </field>
         </record>
         <act_window id="nantian_erp_start_adjusting"
-            name="待调整的人员"
+            name="待调整人员"
             src_model="hr.employee"
             res_model="nantian_erp.hr_adjusting"
             view_mode="form"
@@ -130,6 +136,7 @@
                         <group>
                             <group string="Active" name="active_group">
                                 <field name="active"/>
+                                <field name="dis_states" string="人员调整"/>
                                 </group>
                         </group>
                     </page>

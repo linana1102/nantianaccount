@@ -7,7 +7,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="nantian_erp_hr_kanban_employees"/>
-            <field name="domain">[]</field>
+            <field name="domain">['|','|',('dis_states','=',u"可调用"),('dis_states','=',u"待调整"),('dis_states','=',u"申请离职")]</field>
         </record>
 
 
