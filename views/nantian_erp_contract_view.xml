@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="nantian_erp_employee_link_view" model="ir.actions.act_window">
+            <field name="name">对应人员</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"active_id":active_id}</field>
+            <field name="domain">[('nantian_erp_contract_id','=',active_id)]</field>
+            <field name="target">current</field>
+        </record>
         <record model="ir.ui.view" id="nantian_erp_contract_user">
             <field name="name">南天合同</field>
             <field name="model">nantian_erp.contract</field>

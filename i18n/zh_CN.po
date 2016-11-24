@@ -20,6 +20,11 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.adjusting
+msgid "adjusting"
+msgstr "待调整的人员"
+
+#. module: nantian_erp
 #: model:ir.ui.menu,name:nantian_erp.certificate
 msgid "certificate"
 msgstr "证书相关"
@@ -169,4 +174,15 @@ msgstr "仪表板"
 #: model:ir.ui.menu,name:nantian_erp.nantian_my_dashboard
 msgid "nantian_erp_my_dashboard"
 msgstr "我的仪表板"
+
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.ip_datas
+msgid "ip_datas"
+msgstr "数据管理"
+
+#. module: nantian_erp
+#: model:ir.ui.menu,name:nantian_erp.ip_data
+msgid "ip_data"
+msgstr "对接IP管理"
 
