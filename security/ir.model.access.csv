@@ -51,3 +51,4 @@ nantian_erp_work_assitant_account_all,nantian_erp_work_assitant_account all,anal
 
 nantian_erp_hr_job_all,nantian_erp_hr_job all,hr.model_hr_job,,1,1,0,0
 nantian_erp_hr_job_hr_manager_assistant,nantian_erp_hr_job hr_manager_assistant,hr.model_hr_job,nantian_erp.group_hr_manager_assistant,1,1,1,1
+nantian_erp_hr_adjusting_all,nantian_erp_hr_adjusting all,nantian_erp.model_nantian_erp_hr_adjusting,,1,1,1,1
