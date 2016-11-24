@@ -8,7 +8,8 @@
                 <form string="nantian_erp_hr_adjusting_form" >
                      <group>
                         <group>
-                            <field name="employee_id" required="True" string="调整人员" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                            <field name="employee_id" required="True" widget="many2many_tags" string="调整人员" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'>
+                            </field>
                             <field name="states" required="True"/>
                             <field name="adjust_date" />
                         </group>
@@ -26,15 +27,16 @@
                 </form>
             </field>
         </record>
-        <!--<act_window id="nantian_erp_start_adjusting"-->
-            <!--name="待调整人员"-->
-            <!--src_model="hr.employee"-->
-            <!--res_model="nantian_erp.hr_adjusting"-->
-            <!--view_mode="form"-->
-            <!--view_id="nantian_erp_hr_adjusting_form"-->
-            <!--target="new"-->
-            <!--key2="client_action_multi"-->
-        <!--/>-->
+
+        <record id="nantian_erp_start_adjusting" model="ir.actions.act_window">
+            <field name="name">待调整的人员</field>
+            <field name="res_model">nantian_erp.hr_adjusting</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{"active_id":active_id}</field>
+            <field name="view_id" ref="nantian_erp_hr_adjusting_form"/>
+        </record>
         <record model="ir.ui.view" id="nantian_erp_employee_form_view">
             <field name="name">employee.form</field>
             <field name="model">hr.employee</field>
@@ -695,6 +697,13 @@
             </field>
         </record>
 
+        <record id="nantian_erp_certificate_tree" model="ir.actions.act_window">
+            <field name="name">证书</field>
+            <field name="res_model">nantian_erp.certificate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('employee_ids','=',active_id)]</field>
+        </record>
         <record model="ir.ui.view" id="nantian_erp_hr_kanban_employees">
         <field name="name">可调整人员看板</field>
         <field name="model">hr.employee</field>

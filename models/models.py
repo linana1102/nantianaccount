@@ -1389,7 +1389,7 @@ class hr_adjusting(models.Model):
         (u'已离职', u"已离职"),
         (u'调整完成', u"调整完成"),
     ], default=u'待调整', string="调整状态")
-    notes = fields.Char(string=u"备注")
+    notes = fields.Text(string=u"备注")
     adjust_date = fields.Date(string=u'可调整日期')
 
 
