@@ -4,7 +4,6 @@ import urllib2
 import urllib
 import cookielib
 import json
-import jsonpickle
 
 def get_url_content(url,session,postData):
     headers = {
