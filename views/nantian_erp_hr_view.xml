@@ -717,9 +717,9 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
-                            <div class="oe_employee_details"  style="background-color:#ddd">
+                            <div class="oe_employee_details selfDefColor">
                                 <h4>
-                                    <a type="open"><field name="name"/><t t-if="record.dis_states.raw_value"> (<field name="dis_states"/>)</t></a>
+                                    <a type="open"><field name="name"/><t t-if="record.dis_states.raw_value"> (<span class="dis_states"><field name="dis_states"/></span>)</t></a>
                                 </h4>
                                 <ul>
                                     <li id="last_login">

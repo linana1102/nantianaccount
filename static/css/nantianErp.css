@@ -18,3 +18,19 @@ body .openerp .look_employee span {
   color: #d67911;
   font-weight: bold;
 }
+body .openerp td.oe_application div.selfDefColor {
+  background-color: #f0eeee;
+  border: 2px solid #666;
+  border-radius: 4px;
+  box-shadow: #666 3px 3px 3px 0px;
+  padding: 14px;
+}
+body .openerp td.oe_application div.selfDefColor h4 {
+  margin-bottom: 6px;
+}
+body .openerp td.oe_application div.selfDefColor h4 a:hover {
+  color: #e85f2d;
+}
+body .openerp td.oe_application div.selfDefColor ul {
+  margin: 6px;
+}
