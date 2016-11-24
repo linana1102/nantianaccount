@@ -258,16 +258,23 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <!--<record id="project_header_rule" model="ir.rule">-->
-        <!--<field name="name">project行业负责人访问控制</field>-->
-        <!--<field name="model_id" ref="project.model_project_project"/>-->
-        <!--<field name="domain_force">['|',('partner_id.customer_manager','=',user.id),('partner_id','=',None)]</field>-->
-        <!--<field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>-->
-        <!--<field name="perm_write" eval="1"/>-->
-        <!--<field name="perm_read" eval="1"/>-->
-        <!--<field name="perm_create" eval="0"/>-->
-        <!--<field name="perm_unlink" eval="0"/>-->
-    <!--</record>-->
+    <record id="nantian_erp_hr_adjusting_rule1" model="ir.rule">
+        <field name="name">调整行业负责人访问控制</field>
+        <field name="model_id" ref="nantian_erp.model_nantian_erp_hr_adjusting"/>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="1"/>
+    </record>
+    <record id="nantian_erp_hr_adjusting_rule2" model="ir.rule">
+        <field name="name">调整总经理助理访问控制</field>
+        <field name="model_id" ref="nantian_erp.model_nantian_erp_hr_adjusting"/>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_manager_assistant'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
     <!--<record id="project_header_read_rule" model="ir.rule">-->
         <!--<field name="name">project行业负责人-读</field>-->
         <!--<field name="model_id" ref="project.model_project_project"/>-->
