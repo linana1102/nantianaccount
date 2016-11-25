@@ -104,6 +104,14 @@ class hr_employee(models.Model):
 
     ], default=u'正常', string="调整状态",)
     adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids")
+
+    @api.multi
+    def over_adjust(self):
+        if self.dis_states == u'申请离职':
+            self.dis_states = u'已离职'
+        else:
+            self.dis_states = u'正常'
+
     @api.onchange('phone_money','level','job_id')
     def _check_phone_money(self):
         print 'aaaaaaaaaaaaa'
@@ -1378,7 +1386,8 @@ class hr_adjusting(models.Model):
     _name = 'nantian_erp.hr_adjusting'
 
     def _default_SN(self):
-        return self.env['hr.employee'].browse(self._context.get('active_ids'))
+        object = self.env['hr.employee'].browse(self._context.get('active_ids'))
+        return object
 
 
     employee_id = fields.Many2many('hr.employee','emp_to_adjust_ref',string="hr",default =_default_SN,store = True)
@@ -1396,6 +1405,12 @@ class hr_adjusting(models.Model):
     @api.multi
     def subscribe(self):
         for s in self.employee_id:
+            if s.dis_states ==u"待调整":
+                raise exceptions.ValidationError("人员正在调整中,请取消重新处理")
+                return None
+            elif s.dis_states == u"申请离职":
+                raise exceptions.ValidationError("人员正在离职中,请取消重新处理")
+                return None
             models = self.env['hr.employee'].search([('id','=',s.id)])
             print models.name,models.dis_states
             models.write({'dis_states':self.states})
