@@ -1412,8 +1412,8 @@ class hr_adjusting(models.Model):
                 raise exceptions.ValidationError("人员正在离职中,请取消重新处理")
                 return None
             models = self.env['hr.employee'].search([('id','=',s.id)])
-            print models.name,models.dis_states
+            #print models.name,models.dis_states
             models.write({'dis_states':self.states})
-            print models.name,models.dis_states
+            #print models.name,models.dis_states
         return {'aaaaaaaaaaaaaa'}
 
