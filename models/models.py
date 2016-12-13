@@ -104,7 +104,15 @@ class hr_employee(models.Model):
 
     ], default=u'正常', string="调整状态",)
     adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids")
+    adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True)
 
+    @api.depends('adjust_ids.states')
+    def get_adjust_dst(self):
+        for record in self.adjust_ids:
+            if record.states == u"待调整":
+                self.adjust_dst = record.dst
+            else:
+                self.adjust_dst = ''
     @api.multi
     def over_adjust(self):
         if self.dis_states == u'申请离职':
@@ -1398,6 +1406,7 @@ class hr_adjusting(models.Model):
         (u'已离职', u"已离职"),
         (u'调整完成', u"调整完成"),
     ], default=u'待调整', string="调整状态")
+    dst = fields.Char(string="调整至")
     notes = fields.Text(string=u"备注")
     adjust_date = fields.Date(string=u'可调整日期')
 

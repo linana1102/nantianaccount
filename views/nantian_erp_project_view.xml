@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name=&quot;buttons&quot;]" position="inside">
-                    <button class="oe_inline oe_stat_button" type="object"  name="get_cost" icon="fa-bug">
+                    <button class="oe_inline oe_stat_button" type="object"  name="get_cost" icon="fa-credit-card">
                         <field string="成本总计" name="total_cost" widget="statinfo"/>
                     </button>
                 </xpath>
