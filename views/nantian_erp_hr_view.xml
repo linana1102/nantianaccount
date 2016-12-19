@@ -285,7 +285,7 @@
                     <filter string="合同岗位" icon="terp-personal+" domain="[]" context="{'group_by':'contract_jobs_id'}"/>
                     <filter string="在司年限分布" icon="terp-personal+" domain="[]" context="{'group_by':'entry_age_distribute'}"/>
                     <filter string="离职时间" icon="terp-personal+" domain="[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]" context="{'group_by':'leave_time'}"/>
-                    <filter string="入职时间" icon="terp-personal+" domain="[('entry_time','&gt;=',((context_today()-relativedelta(months=3))).strftime('%%Y/%%m/%%d'))]" context="{'group_by':'entry_time'}"/>
+                    <filter string="入职时间" icon="terp-personal+" domain="[('entry_time','&gt;=',((context_today()-relativedelta(months=12))).strftime('%%Y/%%m/%%d'))]" context="{'group_by':'entry_time'}"/>
                 </xpath>
                 <xpath expr="//filter[@string='Job']" position="replace">
                 <filter string="职位" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
