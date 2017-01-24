@@ -13,18 +13,18 @@ import logging
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
-    working_team_id = fields.Many2one('nantian_erp.working_team', ondelete='set null', )
-    contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null',string='合同岗位')
-    nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同')
-    certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书")
-    graduation = fields.Char(string="毕业学校")    
-    major = fields.Char(string='专业')
-    work_time = fields.Date()
-    entry_time = fields.Date()
-    contract_starttime = fields.Date()
-    contract_endtime = fields.Date(store=True,compute='_get_end_date')
-    contract_len = fields.Integer()
-    is_forever = fields.Boolean(string='无期限？')
+    working_team_id = fields.Many2one('nantian_erp.working_team', ondelete='set null',track_visibility='onchange' )
+    contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null',string='合同岗位',track_visibility='onchange')
+    nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同',track_visibility='onchange')
+    certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书",track_visibility='onchange')
+    graduation = fields.Char(string="毕业学校",track_visibility='onchange')
+    major = fields.Char(string='专业',track_visibility='onchange')
+    work_time = fields.Date(track_visibility='onchange')
+    entry_time = fields.Date(track_visibility='onchange')
+    contract_starttime = fields.Date(track_visibility='onchange')
+    contract_endtime = fields.Date(store=True,compute='_get_end_date',track_visibility='onchange')
+    contract_len = fields.Integer(track_visibility='onchange')
+    is_forever = fields.Boolean(string='无期限？',track_visibility='onchange')
     education = fields.Selection(
         [
             (u'专科', u"专科"),
@@ -34,8 +34,8 @@ class hr_employee(models.Model):
             (u'专升本', u"专升本"),
             (u'高级技工', u"高级技工"),
             (u'高中', u"高中"),
-        ]
-
+        ],
+            track_visibility='onchange'
     )
     level = fields.Selection(
         [
@@ -48,7 +48,8 @@ class hr_employee(models.Model):
             (u'7',7),
             (u'8',8),
             (u'9',9),
-        ]
+        ],
+            track_visibility='onchange'
     )
     category = fields.Selection(
         [
@@ -62,17 +63,17 @@ class hr_employee(models.Model):
             (u'借入人员', u"借入人员"),
             (u'现场备岗', u"现场备岗"),
         ],
-    default = u'公司储备', string = "人员状态"
+    default = u'公司储备', string = "人员状态",track_visibility='onchange'
     )
-    specialty = fields.Text(string="特长")
-    certificate_direction_id = fields.Many2one(related='certificate_ids.certificate_direction_id', string='certificate_direction')
-    certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='certificate_category')
-    certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='certificate_institutions')
-    certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='certificate_level')
-    work_age = fields.Integer(compute='_compute_work_age',store=True)
-    api_res = fields.Char(default="sys")
-    customer_id = fields.Many2one('res.partner', compute='_get_customer',string="客户",store=True)
-    leave_time = fields.Date(string="离职时间")
+    specialty = fields.Text(string="特长",track_visibility='onchange')
+    certificate_direction_id = fields.Many2one(related='certificate_ids.certificate_direction_id', string='certificate_direction',track_visibility='onchange')
+    certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='certificate_category',track_visibility='onchange')
+    certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='certificate_institutions',track_visibility='onchange')
+    certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='certificate_level',track_visibility='onchange')
+    work_age = fields.Integer(compute='_compute_work_age',store=True,track_visibility='onchange')
+    api_res = fields.Char(default="sys",track_visibility='onchange')
+    customer_id = fields.Many2one('res.partner', compute='_get_customer',string="客户",store=True,track_visibility='onchange')
+    leave_time = fields.Date(string="离职时间",track_visibility='onchange')
     entry_age_distribute = fields.Selection(
         [
             (u'在司1年以下', u"在司1年以下"),
@@ -81,11 +82,11 @@ class hr_employee(models.Model):
             (u'在司10年以上', u"在司10年以上"),
 
         ],
-        default=u'在司1年以下', string="在司年限分布"
+        default=u'在司1年以下', string="在司年限分布",track_visibility='onchange'
     )
-    entry_len = fields.Integer(string='在司年限')
-    phone_money = fields.Integer(string='话费额度')
-    states=fields.Selection([
+    entry_len = fields.Integer(string='在司年限',track_visibility='onchange')
+    phone_money = fields.Integer(string='话费额度',track_visibility='onchange')
+    states = fields.Selection([
             (u'正常在岗', u"正常在岗"),
             (u'长期病假', u"长期病假"),
             (u'长期事假', u"长期事假"),
@@ -94,7 +95,7 @@ class hr_employee(models.Model):
             (u'孕假', u"孕假"),
 
         ],
-        default=u'正常在岗', string="工作状态")
+        default=u'正常在岗', string="工作状态",track_visibility='onchange')
     dis_states = fields.Selection([
         (u'正常', u'正常'),
         (u'待调整', u"待调整"),
@@ -103,9 +104,9 @@ class hr_employee(models.Model):
         (u'已离职', u"已离职"),
         (u'调整完成', u"调整完成"),
 
-    ], default=u'正常', string="调整状态",)
-    adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids")
-    adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True)
+    ], default=u'正常', string="调整状态",track_visibility='onchange')
+    adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids",track_visibility='onchange')
+    adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True,track_visibility='onchange')
 
     @api.depends('adjust_ids.states')
     def get_adjust_dst(self):
