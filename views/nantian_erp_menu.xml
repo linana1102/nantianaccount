@@ -7,12 +7,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="nantian_erp_hr_kanban_employees"/>
-            <field name="domain">['|','|',('dis_states','=',u"可调用"),('dis_states','=',u"待调整"),('dis_states','=',u"申请离职")]</field>
+            <field name="domain">['|','|','|',('dis_states','=',u"可调用"),('dis_states','=',u"待调整"),('dis_states','=',u"申请离职"),('dis_states','=',u"借调中")]</field>
         </record>
 
 
+        <menuitem id="adjusting" parent="hr.menu_hr_main"  name="adjusting-a" action='nantian_erp_adjusting' groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header" />
 
-        <menuitem id="adjusting" parent="hr.menu_hr_main"  name="adjusting" action='nantian_erp_adjusting' groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header" />
 
 
         <record id="nantian_erp_certificate_category" model="ir.actions.act_window">

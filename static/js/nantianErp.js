@@ -11,8 +11,9 @@ openerp.nantian_erp=function(instance){
         init:function(){
             var self=this;
             this.color={
-                "可调用":"rgba(255,226,50,0.73)",
-                "申请离职":"rgba(255,0,0,0.73)"
+                "可调用":"rgba(24,161,95,0.73)",
+                "申请离职":"rgba(255,0,0,0.73)",
+                "借调中":"rgba(255,226,50,0.73)"
             }
         },
         start:function(o){
@@ -27,7 +28,6 @@ openerp.nantian_erp=function(instance){
                         clearInterval(timer);
                         $("div.selfDefColor").each(function(i,v){
                             var status=$(v).find("span.dis_states").html();
-                            console.log(status);
                             $(v).css({
                                 "border-color":self.color[status],
                                 "box-shadow":self.color[status]+" 3px 3px 3px 0px"

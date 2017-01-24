@@ -18,7 +18,7 @@
                             <field name="name" default_focus="1" on_change="_onchange_to_service_customer(name)" placeholder="Name"/>
                         </h1>
                         <group>
-                            <field name="full_name" string='全称' placeholder="全称"/>
+                             <field name="full_name" string='全称' placeholder="全称"/>
                             <field name = "customer_manager" string='行业负责人' placeholder="行业负责人" default_focus="1"/>
                        </group>
                         <field name="parent_id"
