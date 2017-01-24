@@ -101,7 +101,6 @@ class hr_employee(models.Model):
         (u'可调用', u"可调用"),
         (u'申请离职', u"申请离职"),
         (u'已离职', u"已离职"),
-        (u'借调中', u"借调中"),
         (u'调整完成', u"调整完成"),
 
     ], default=u'正常', string="调整状态",)
@@ -1406,6 +1405,7 @@ class hr_adjusting(models.Model):
         (u'可调用', u"可调用"),
         (u'申请离职', u"申请离职"),
         (u'已离职', u"已离职"),
+        (u'借调中', u"借调中"),
         (u'调整完成', u"调整完成"),
     ], default=u'待调整', string="调整状态")
     dst = fields.Char(string="调整至")
