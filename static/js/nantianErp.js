@@ -11,7 +11,7 @@ openerp.nantian_erp=function(instance){
         init:function(){
             var self=this;
             this.color={
-                "可调用":"rgba(50,255,50,0.73)",
+                "可调用":"rgba(24,161,95,0.73)",
                 "申请离职":"rgba(255,0,0,0.73)",
                 "借调中":"rgba(255,226,50,0.73)"
             }
