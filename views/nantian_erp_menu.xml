@@ -276,13 +276,37 @@
         <menuitem name="nantian_working_team" id="nantian_working_team"  groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_boss" />
         <menuitem name="nantian_working_teams" id="nantian_working_teams" sequence="5" parent="nantian_working_team" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss" />
 
-        <record id="nantian_erp_contract_view" model="ir.actions.act_window">
-            <field name="name">合同</field>
+        <!--<record id="nantian_erp_contract_view" model="ir.actions.act_window">-->
+            <!--<field name="name">合同</field>-->
+            <!--<field name="res_model">nantian_erp.contract</field>-->
+            <!--<field name="view_type">form</field>-->
+            <!--<field name="view_mode">tree,form</field>-->
+        <!--</record>-->
+        <menuitem name="nantian_contract" id="nantian_contract" sequence="10"  parent="nantian_working_team"   groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
+        <record id="closed_nantian_erp_contract_view" model="ir.actions.act_window">
+            <field name="name">关闭的合同</field>
             <field name="res_model">nantian_erp.contract</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','off')]</field>
         </record>
-        <menuitem name="nantian_contract" id="nantian_contract" sequence="20"  parent="nantian_working_teams"  action="nantian_erp_contract_view" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
+        <menuitem name="已关闭" id="closed_nantian_contract" sequence="3"  parent="nantian_contract"  action="closed_nantian_erp_contract_view" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
+        <record id="renew_nantian_erp_contract_view" model="ir.actions.act_window">
+            <field name="name">续签的合同</field>
+            <field name="res_model">nantian_erp.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','renew')]</field>
+        </record>
+        <menuitem name="待续签" id="renew_nantian_contract" sequence="2"  parent="nantian_contract"  action="renew_nantian_erp_contract_view" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
+        <record id="pending_nantian_erp_contract_view" model="ir.actions.act_window">
+            <field name="name">进行的合同</field>
+            <field name="res_model">nantian_erp.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','going')]</field>
+        </record>
+        <menuitem name="进行中" id="pending_nantian_contract" sequence="1"  parent="nantian_contract"  action="pending_nantian_erp_contract_view" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
 
         <record id="nantian_MA_contract_view" model="ir.actions.act_window">
             <field name="name">维保合同</field>

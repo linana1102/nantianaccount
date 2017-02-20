@@ -15,7 +15,7 @@ class hr_employee(models.Model):
 
     working_team_id = fields.Many2one('nantian_erp.working_team', ondelete='set null',track_visibility='onchange' )
     contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null',string='合同岗位',track_visibility='onchange')
-    nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同',track_visibility='onchange')
+    nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同', domain=[('state', '!=', 'off')],track_visibility='onchange')
     certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书",track_visibility='onchange')
     graduation = fields.Char(string="毕业学校",track_visibility='onchange')
     major = fields.Char(string='专业',track_visibility='onchange')

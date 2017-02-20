@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="nantian_pre_sale_form">
+            <field name="name">pre_sale.form</field>
+            <field name="model">nantian_erp.pre_sale</field>
+            <field name="arch" type="xml">
+                <form string="pre_sale" >
+                    <group>
+                        <group>
+                            <field name="name" string="项目名称"/>
+                            <field name="no" string="项目编号"/>
+                            <field name="partner" string="客户"/>
+                            <field name="amount_money" string="金额"/>
+                            <field name="state" string="阶段"/>
+                            <field name="pre_bid_date" string="投标日期"/>
+                            <field name="rate_of_success" string="成功率"/>
+
+                        </group>
+                        <group>
+                             <field name="type" string="类型"/>
+                            <field name="competitors" string="主要竞争对手"/>
+                            <field name="process_scrib" string="进展说明"/>
+                            <field name="user_id" string="负责人"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_pre_sale_tree">
+            <field name="name">pre_sale.tree</field>
+            <field name="model">nantian_erp.pre_sale</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="name" string="项目名称"/>
+                    <field name="no" string="项目编号"/>
+                    <field name="partner" string="客户"/>
+                    <field name="amount_money" string="金额"/>
+                    <field name="state" string="阶段"/>
+                    <field name="pre_bid_date" string="投标日期"/>
+                    <field name="rate_of_success" string="成功率(%)"/>
+                </tree>
+            </field>
+        </record>
+         <record id="nantian_pre_sale_action" model="ir.actions.act_window">
+            <field name="name">售前项目</field>
+            <field name="res_model">nantian_erp.pre_sale</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+         </record>
+        <menuitem id="nantian_pre_second_sale_menu" sequence="15" parent="nantian_working_team"  name="销售" />
+        <menuitem id="nantian_pre_sale_menu" parent="nantian_pre_second_sale_menu" action="nantian_pre_sale_action" name="售前" string='售前项目'/>
+
+
+    </data>
+</openerp>

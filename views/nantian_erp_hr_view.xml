@@ -592,8 +592,8 @@
                 <header>
                      <button name="set_to_again_check" type="workflow" string="同意" states="check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
                      <button name="set_to_done" type="workflow" string="同意" states="again_check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
-                    <button name="set_to_no" type="workflow" string="拒绝" states="check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
-                    <button name="set_to_no1" type="workflow" string="拒绝" states="again_check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                     <button name="set_to_no" type="workflow" string="拒绝" states="check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
+                     <button name="set_to_no1" type="workflow" string="拒绝" states="again_check" class="oe_highlight" attrs="{'invisible': [('dealer','!=','uid')]}"/>
                      <field name="state" widget="statusbar"/>
                 </header>
                 <group >
