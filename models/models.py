@@ -109,14 +109,7 @@ class hr_employee(models.Model):
     adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids",track_visibility='onchange')
     adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True,track_visibility='onchange')
 
-    @api.multi
-    def test_manage(self):
-        hrs = self.env['hr.employee'].search([])
-        for hr in hrs:
-            if hr.customer_id:
-                if hr.customer_id.customer_manager.employee_ids:
-                    print(hr.customer_id.customer_manager.employee_ids[0])
-                    hr.parent_id = hr.customer_id.customer_manager.employee_ids[0]
+
     @api.depends('adjust_ids.states')
     def get_adjust_dst(self):
         for record in self.adjust_ids:

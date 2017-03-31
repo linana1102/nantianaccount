@@ -48,10 +48,6 @@
                     <button name="%(nantian_erp_start_adjusting)d" type="action" class="oe_stat_button" icon="fa-clock-o">
                         <field name="dis_states" string="点击按钮填写内容" widget="statinfo"/>
                     </button>
-                    <button name="test_manage" type="object" class="oe_stat_button" icon="fa-clock-o">
-                        <field name="dis_states" string="test" widget="statinfo"/>
-                    </button>
-
                 </xpath>
                 <xpath expr="//page[@string='HR Settings']" position="replace">
                   <page string="HR Settings" >
