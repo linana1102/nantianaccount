@@ -133,6 +133,16 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+     <record id="hr_employee_president_read_write_rule" model="ir.rule">
+        <field name="name">employee总裁-读写</field>
+        <!--<field name="domain_force">['|',('department_id','in',[x.department_id.id for x in user.employee_ids]),('department_id.parent_id','in',[x.department_id.id for x in user.employee_ids])]</field>-->
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_president'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <record id="hr_employee_bm_manager_rule" model="ir.rule">
         <field name="name">employee人力部门经理访问控制_读</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
