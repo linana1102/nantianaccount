@@ -4,14 +4,48 @@
     <record model="res.groups" id="base.group_user">
         <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
     </record>
-
-    <record model="res.groups" id="nantian_erp.group_hr_bm_manager">
-        <field name="name">人力-部门经理</field>
+    <record model="res.groups" id="nantian_erp.data_center_group_hr_user">
+        <field name="name">人力-数据中心员工</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
     </record>
+    <record model="res.groups" id="nantian_erp.group_hr_user">
+        <field name="name">人力-其他部门员工</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+    <record model="res.groups" id="nantian_erp.group_hr_bm_manager">
+        <field name="name">人力-部门经理</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')),(4, ref('nantian_erp.group_hr_user'))]"/>
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+     <record id="nantian_erp.group_nantian_header" model="res.groups">
+        <field name="name">行业负责人</field>
+        <field name="implied_ids" eval="[(4, ref('nantian_erp.group_work_team_user')),(4, ref('nantian_erp.data_center_group_hr_user'))]"/>
+        <field name="category_id" ref="base.module_category_nantianerp"/>
+    </record>
+    <record model="res.groups" id="nantian_erp.group_hr_manager">
+        <field name="name">总经理</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <!--<field name="implied_ids" eval="[(4, ref('nantian_erp.group_hr_bm_manager')),(4, ref('nantian_erp.group_nantian_header'))]"/>-->
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+    <record model="res.groups" id="nantian_erp.group_hr_president">
+        <field name="name">总裁</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('nantian_erp.group_hr_manager'))]"/>
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
 
+    <record model="res.groups" id="nantian_erp.group_hr_recruitment">
+        <field name="name">招聘组</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
     <record model="res.groups" id="nantian_erp.group_hr_assistant">
         <field name="name">人力-助理</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
@@ -27,12 +61,7 @@
     </record>
 
     <!--下面是新建组-->
-    <record model="res.groups" id="nantian_erp.group_hr_user">
-        <field name="name">人力-员工</field>
-        <field name="category_id" ref="base.module_category_human_resources"/>
-        <!--<field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>-->
-        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
-    </record>
+
 
      <record id="nantian_erp.group_work_team_user" model="res.groups">
         <field name="name">工作组成员</field>
@@ -50,11 +79,7 @@
         <field name="category_id" ref="base.module_category_nantianerp"/>
         <field name="implied_ids" eval="[(4, ref('nantian_erp.group_work_team_user'))]"/>
     </record>
-     <record id="nantian_erp.group_nantian_header" model="res.groups">
-        <field name="name">行业负责人</field>
-        <field name="implied_ids" eval="[(4, ref('nantian_erp.group_work_team_user'))]"/>
-        <field name="category_id" ref="base.module_category_nantianerp"/>
-    </record>
+
     <record id="nantian_erp.group_nantian_assistant_manager" model="res.groups">
         <field name="name">项目助理</field>
          <field name="implied_ids" eval="[(4, ref('nantian_erp.group_work_team_user'))]"/>
@@ -68,10 +93,20 @@
     </record>
 
      <!--下面是新的权限-->
-    <record id="hr_employee_header_rule" model="ir.rule">
+    <record id="hr_employee_recruitment_rule" model="ir.rule">
+        <field name="name">employee招聘组-写</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_recruitment'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="hr_employee_header_write_rule" model="ir.rule">
         <field name="name">employee人力行业负责人-写</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">['|',('customer_id.customer_manager','=',user.id),('customer_id','=',None)]</field>
+        <field name="domain_force">['|',('customer_id.customer_manager','=',user.id),('customer_id','=',None),]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_read" eval="0"/>
@@ -80,6 +115,7 @@
     </record>
     <record id="hr_employee_header_read_rule" model="ir.rule">
         <field name="name">employee人力行业负责人-读</field>
+        <field name="domain_force">['|',('department_id','in',[x.department_id.id for x in user.employee_ids]),('department_id.parent_id','in',[x.department_id.id for x in user.employee_ids])]</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
         <field name="perm_write" eval="0"/>
@@ -87,10 +123,20 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+    <record id="hr_employee_manager_read_rule" model="ir.rule">
+        <field name="name">employee总经理-读写</field>
+        <field name="domain_force">['|',('department_id','in',[x.department_id.id for x in user.employee_ids]),('department_id.parent_id','in',[x.department_id.id for x in user.employee_ids])]</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <record id="hr_employee_bm_manager_rule" model="ir.rule">
         <field name="name">employee人力部门经理访问控制_读</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">['|',('customer_id','in',[x.customer_id.id for x in user.employee_ids]),('customer_id','=',None)]</field>
+        <field name="domain_force">['|',('department_id','in',[x.department_id.id for x in user.employee_ids]),('department_id.parent_id','in',[x.department_id.id for x in user.employee_ids])]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_hr_bm_manager'))]"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_read" eval="1"/>
@@ -108,6 +154,7 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+
     <record id="hr_employee_rule" model="ir.rule">
         <field name="name">employee人力助理_读写</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
@@ -140,6 +187,28 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+     <record id="hr_employee_data_center_user_read_rule" model="ir.rule">
+        <field name="name">employee数据中心人力员工_读</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('customer_id','in',[x.customer_id.id for x in user.employee_ids])]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.data_center_group_hr_user'))]"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="hr_employee_data_center_user_write_rule" model="ir.rule">
+        <field name="name">employee数据中心人力员工_写</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.data_center_group_hr_user'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
     <record id="work_header_rule" model="ir.rule">
         <field name="name">工作组行业负责人访问控制</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
