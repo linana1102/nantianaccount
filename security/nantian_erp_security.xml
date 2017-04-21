@@ -190,7 +190,7 @@
      <record id="hr_employee_data_center_user_read_rule" model="ir.rule">
         <field name="name">employee数据中心人力员工_读</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">[('customer_id','in',[x.customer_id.id for x in user.employee_ids])]</field>
+        <field name="domain_force">[('customer_id','in',[x.customer_id.id for x in user.employee_ids]),'|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.data_center_group_hr_user'))]"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_read" eval="1"/>
