@@ -451,6 +451,7 @@ class certificate(models.Model):
     time = fields.Date(placeholder="截止日期",string="有效期")
     is_forever_validate = fields.Boolean(string="是否长期有效",default = False)
     employee_ids = fields.Many2one('hr.employee',ondelete='set null')
+    image = fields.Binary(string='证书扫描件')
 
     #当选中永久时修改证书时限
     @api.multi
