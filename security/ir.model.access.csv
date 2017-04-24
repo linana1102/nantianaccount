@@ -61,3 +61,6 @@ nantian_erp_hr_adjusting_all,nantian_erp_hr_adjusting all,nantian_erp.model_nant
 nantian_erp_ip_data_all,nantian_erp_ip_data all,nantian_erp.model_nantian_erp_ip_data,,1,0,0,0
 nantian_erp_ip_data_write,nantian_erp_ip_data write,nantian_erp.model_nantian_erp_ip_data,nantian_erp.group_hr_manager_assistant,1,1,1,1
 nantian_erp_pre_sale,nantian_erp_pre_sale,model_nantian_erp_pre_sale,,1,1,1,1
+
+nantian_erp_job,nantian_erp_job,model_nantian_erp_job,,1,1,1,1
+nantian_erp_recruitment,nantian_erp_recruitment,model_nantian_erp_recruitment,,1,1,1,1
