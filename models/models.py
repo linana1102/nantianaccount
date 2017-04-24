@@ -9,6 +9,10 @@ import datetime as datetime_boss
 import time
 import string
 import logging
+import sys
+
+sys.setrecursionlimit(1000000)
+
 
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
@@ -358,6 +362,82 @@ class hr_employee(models.Model):
             rec.user_id = user
             hr_id.users |= user
 
+    @api.multi
+    def add_use_to_group(self):
+        print '*'*80
+        users = self.env['res.users'].search([('active','=',True)])
+        data_center_employee_group = self.env['res.groups'].search([('name', '=', u'人力-数据中心员工')])
+        employee_group = self.env['res.groups'].search([('name', '=', u'人力-其他部门员工')])
+        customer_managers_obj = self.env['res.partner'].search([('category','=',u'服务客户')])
+        customer_managers_ids=[]
+        customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')])
+        for i in customer_managers_obj:
+            customer_managers_ids.append(i.customer_manager.id)
+        print'行业负责人',customer_managers_ids
+        customer_managers = self.env['res.users'].search([('id','in',customer_managers_ids)])
+        customer_manager_group.users |= customer_managers
+
+        bm_managers_obj = self.env['hr.department'].search([('parent_id.parent_id.name', '=', u'集成服务事业部'),('parent_id.name', '!=', u'数据中心服务部'),('name', '!=',u'数据中心服务部')])
+        bm_managers_group = self.env['res.groups'].search([('name', '=', u'人力-部门经理')])
+        bm_managers_ids = []
+        for i in bm_managers_obj:
+            if i.manager_id.user_id:
+                bm_managers_ids.append(i.manager_id.user_id.id)
+        print'部门经理', bm_managers_ids
+        bm_managers = self.env['res.users'].search([('id','in',bm_managers_ids)])
+        if bm_managers:
+            bm_managers_group.users |= bm_managers
+        managers_obj = self.env['hr.department'].search([('parent_id.name', '=', u'集成服务事业部')])
+        manager_group = self.env['res.groups'].search([('name', '=', u'总经理')])
+        managers_ids=[]
+        for i in managers_obj:
+            if i.manager_id.user_id:
+                managers_ids.append(i.manager_id.user_id.id)
+        print '总经理', managers_ids
+        managers = self.env['res.users'].search([('id','in',managers_ids)])
+        print managers
+        manager_group.users |= managers
+        presidents = self.env['hr.department'].search([('name', '=', u'集成服务事业部')],limit=1)
+        president_group = self.env['res.groups'].search([('name', '=', u'总裁')])
+        if presidents.manager_id.user_id:
+            president_group.users |= presidents.manager_id.user_id
+            print '总裁',presidents.manager_id.user_id
+        data_center_employees_ids = []
+        data_employees = self.env['hr.employee'].search(['|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')])
+        print data_employees
+        for i in data_employees:
+            if i.user_id:
+                # print i.user_id
+                data_center_employees_ids.append(i.user_id.id)
+        print '数据中心员工',data_center_employees_ids
+        data_center_employees = self.env['res.users'].search([('id','in',data_center_employees_ids)])
+        data_center_employee_group.users |= data_center_employees
+        other_employees_ids = []
+        employees = self.env['hr.employee'].search([('department_id.name','!=',u'数据中心服务部'),('department_id.parent_id.name','!=',u'数据中心服务部'),('department_id.name','!=',u'集成服务事业部')])
+        # print '&'*80
+        for i in employees:
+            if i.user_id:
+                # print i.user_id
+                other_employees_ids.append(i.user_id.id)
+        print '其他部门员工',other_employees_ids
+        other_employees = self.env['res.users'].search([('id','in',other_employees_ids)])
+        employee_group.users |= other_employees
+        print '#'*80
+        # for user in users:
+        #     if user.employee_ids:
+        #         print user
+        #         if user.employee_ids[0].department_id.name == u'数据中心服务部' or user.employee_ids[0].department_id.parent_id.name == u'数据中心服务部':
+        #             data_center_employee_group.users |= user
+        #         else:
+        #             employee_group.users |= user
+        #         if user.employee_ids[0].department_id.name == u'数据中心服务部' or user.employee_ids[0].department_id.parent_id.name == u'数据中心服务部' and user in customer_managers:
+        #             customer_manager_group.users |= user
+        #         if user.employee_ids[0] in bm_managers:
+        #             bm_managers_group.users |= user
+        #         if user.employee_ids[0] in managers:
+        #             manager_group.users |= user
+        #         if user.employee_ids[0] in presidents:
+        #             president_group.users |= user
 
 #证书
 class certificate(models.Model):
@@ -371,6 +451,7 @@ class certificate(models.Model):
     time = fields.Date(placeholder="截止日期",string="有效期")
     is_forever_validate = fields.Boolean(string="是否长期有效",default = False)
     employee_ids = fields.Many2one('hr.employee',ondelete='set null')
+    image = fields.Binary(string='证书扫描件')
 
     #当选中永久时修改证书时限
     @api.multi

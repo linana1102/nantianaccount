@@ -18,6 +18,10 @@ nantian_erp_hr_header_all,nantian_erp_hr_header all,model_hr_employee,nantian_er
 nantian_erp_hr_bm_manager_all,nantian_erp_hr_bm_manager all,model_hr_employee,nantian_erp.group_hr_bm_manager,1,1,0,0
 nantian_erp_hr_assistant_all,nantian_erp_hr_assistant all,model_hr_employee,nantian_erp.group_hr_assistant,1,1,0,0
 nantian_erp_hr_user_all,nantian_erp_hr_user all,model_hr_employee,nantian_erp.group_hr_user,1,1,0,0
+nantian_erp_hr_manager_all,nantian_erp_hr_manager all,model_hr_employee,nantian_erp.group_hr_manager,1,1,0,0
+nantian_erp_hr_president_all,nantian_erp_hr_president all,model_hr_employee,nantian_erp.group_hr_president,1,1,0,0
+nantian_erp_hr_recruitment_all,nantian_erp_hr_recruitment all,model_hr_employee,nantian_erp.group_hr_recruitment,1,1,0,0
+
 nantian_erp_working_team_user_all,nantian_erp_working_team_user all,model_nantian_erp_working_team,nantian_erp.group_work_team_user,1,0,0,0
 nantian_erp_working_team_boss_all,nantian_erp_working_team_boss all,model_nantian_erp_working_team,nantian_erp.group_nantian_boss,1,1,0,0
 nantian_erp_work_assistant_manager_all,nantian_erp_work_assistant_manager all,model_nantian_erp_working_team,nantian_erp.group_nantian_assistant_manager,1,1,0,0
@@ -56,7 +60,6 @@ nantian_erp_hr_adjusting_all,nantian_erp_hr_adjusting all,nantian_erp.model_nant
 
 nantian_erp_ip_data_all,nantian_erp_ip_data all,nantian_erp.model_nantian_erp_ip_data,,1,0,0,0
 nantian_erp_ip_data_write,nantian_erp_ip_data write,nantian_erp.model_nantian_erp_ip_data,nantian_erp.group_hr_manager_assistant,1,1,1,1
-
 nantian_erp_weekly_reports_dd,nantian_erp_weekly_reports_ddd,model_nantian_erp_weekly_reports,,1,1,1,0
 nantian_erp_pres_sale_dd,nantian_erp_pres_sale_ddd,model_nantian_erp_pres_sale,,1,1,1,0
 nantian_erp_project_gathering_dd,nantian_erp_project_gathering_ddd,model_nantian_erp_project_gathering,,1,1,1,0
@@ -64,3 +67,7 @@ nantian_erp_pers_transfer_dd,nantian_erp_pers_transfer_ddd,model_nantian_erp_per
 nantian_erp_demission_dd,nantian_erp_demission_ddd,model_nantian_erp_demission,,1,1,1,0
 nantian_erp_customer_adjust_dd,nantian_erp_customer_adjust_ddd,model_nantian_erp_customer_adjust,,1,1,1,0
 nantian_erp_project_progress_dd,nantian_erp_project_progress_ddd,model_nantian_erp_project_progress,,1,1,1,0
+nantian_erp_pre_sale,nantian_erp_pre_sale,model_nantian_erp_pre_sale,,1,1,1,1
+nantian_erp_job,nantian_erp_job,model_nantian_erp_job,,1,1,1,1
+nantian_erp_recruitment,nantian_erp_recruitment,model_nantian_erp_recruitment,,1,1,1,1
+
