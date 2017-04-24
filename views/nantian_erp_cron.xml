@@ -57,5 +57,39 @@
             <field name="args" eval="'(False,)'" />
         </record>
 
+        <!--<record model="ir.cron" id="nantian_erp_weekly_reports_create">-->
+            <!--<field name="name">自动化创建周报表</field>-->
+            <!--<field name="interval_number">1</field>-->
+            <!--<field name="interval_type">weeks</field>-->
+            <!--<field name="numbercall">-1</field>-->
+            <!--<field name="doall" eval="True"/>-->
+            <!--<field name="active" eval="True"/>-->
+            <!--<field name="model" eval="nantian_erp.weekly_reports"/>-->
+            <!--<field name="function" eval="create_weekly_reports"/>-->
+            <!--<field name="args" eval="'(False,)'" />-->
+        <!--</record>-->
+        <record model="ir.cron" id="nantian_erp_reminder_project_gathering">
+            <field name="name">自动计算项目首款提醒时间，并且创建项目收款表</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'nantian_erp.weekly_reports'"/>
+            <field name="function" eval="'fetch_contract'"/>
+            <field name="args" eval="'(False,)'" />
+        </record>
+        <record model="ir.cron" id="nantian_erp_copy_weekly_reports">
+            <field name="name">每周复制一份上周新周报</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'nantian_erp.weekly_reports'"/>
+            <field name="function" eval="'copy_weekly_reports'"/>
+            <field name="args" eval="'(False,)'" />
+        </record>
+
     </data>
 </openerp>

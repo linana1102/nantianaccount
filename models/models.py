@@ -655,6 +655,7 @@ class hr_attendance(models.Model):
     @api.one
     def action_done(self):
         self.state = 'done'
+
 #员工请假
 class hr_leave(models.Model):
     _name = 'nantian_erp.hr_leave'
@@ -924,6 +925,8 @@ class jobs(models.Model):
             else:
                 datas.append((r.id, (r.name+'--' + u'岗位要求人数' + unicode(r.amount) + u'人')))
         return datas
+
+
 #南天维保合同--明细
 class detail(models.Model):
     _name = 'nantian_erp.detail'
@@ -986,6 +989,8 @@ class collection(models.Model):
     name = fields.Char(string='名称')
     contract_id = fields.Many2one('nantian_erp.contract', string="合同")
     date = fields.Date(string='合同收款时间')
+    materials_date = fields.Date(string='合同准备材料收款时间')
+    project_gathering_id = fields.Many2one('nantian_erp.project_gathering', string="项目收款")
     evaluate_money = fields.Float(string='预期收款金额')
     conditions = fields.Text(string='收款前提条件')
     money = fields.Float(string='实际收款金额')
@@ -1116,6 +1121,7 @@ class contract(models.Model):
                 datas+=u'<p>'+text+u'</p>'
             body= u'<div>'+u'<p>您好:</p>'+u'<p>&nbsp;&nbsp;&nbsp;&nbsp;以下合同即将过期或已经过期，请您及时续签或关闭,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p>' + datas + u'</div>'
             self.send_email(user_id,body,subject)
+
     #邮件发送函数
     def send_email(self, cr, uid, users, body='',subject='',context=None):
         to_list = []

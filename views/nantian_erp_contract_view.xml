@@ -86,6 +86,7 @@
                                     <field name="evaluate_money" />
                                     <field name="conditions" />
                                     <field name="date" />
+                                    <field name="materials_date" />
                                     <field name="money"/>
                                     <field name="rate"/>
                                     <field name="rated_moneys"/>
