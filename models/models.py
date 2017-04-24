@@ -1070,7 +1070,7 @@ class collection(models.Model):
     name = fields.Char(string='名称')
     contract_id = fields.Many2one('nantian_erp.contract', string="合同")
     date = fields.Date(string='合同收款时间')
-    materials_date = fields.Date(string='合同准备材料收款时间')
+    materials_date = fields.Date(string='准备合同材料收款时间')
     project_gathering_id = fields.Many2one('nantian_erp.project_gathering', string="项目收款")
     evaluate_money = fields.Float(string='预期收款金额')
     conditions = fields.Text(string='收款前提条件')
