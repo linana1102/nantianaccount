@@ -747,6 +747,15 @@
 
         </field>
     </record>
-
+    <record model="ir.ui.view" id="nantian_erp_department_form_view">
+        <field name="name">department_form</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="level" string="级别"/>
+            </xpath>
+        </field>
+     </record>
     </data>
 </openerp>

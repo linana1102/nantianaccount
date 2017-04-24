@@ -1512,3 +1512,23 @@ class hr_adjusting(models.Model):
             #print models.name,models.dis_states
         return {'aaaaaaaaaaaaaa'}
 
+
+class department(models.Model):
+    _inherit = 'hr.department'
+
+    level = fields.Integer(string='级别',compute='compute_level',store=True)
+
+    @api.multi
+    @api.depends('parent_id')
+    def compute_level(self):
+        print '*'*80
+        departments = self.env['hr.department'].search([])
+        for record in departments:
+            if not record.parent_id:
+                record.level = 1
+            elif record.parent_id.parent_id:
+                record.level = 3
+            else:
+                record.level = 2
+
+
