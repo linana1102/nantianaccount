@@ -416,7 +416,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
         <menuitem name="nantian_detail" id="nantian_detail" sequence="20"  parent="nantian_config"  action="nantian_erp_detail_view" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
 
 
