@@ -128,7 +128,7 @@
                                                 <field name="certificate_level_id" domain="[('direction_id','=',certificate_direction_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                                 <field name="is_forever_validate" string="是否长期有效" on_change="onchange_time(is_forever_validate)"></field>
                                                 <field name="time" attrs="{'readonly': [('is_forever_validate', '!=', False)]}"/>
-                                                 <field name="image" string="证书扫描件"></field>
+                                                <field name="image" string="证书扫描件"></field>
                                             </tree>
                                         </field>
                                         <field name="specialty" string="技术特长" />
