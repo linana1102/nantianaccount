@@ -16,6 +16,11 @@ class recruitment(models.Model):
     level_1_department_id = fields.Many2one('hr.department',string='一级部门')
     level_2_department_id = fields.Many2one('hr.department',string='二级部门')
     working_team = fields.Many2one('nantian_erp.working_team',string='工作组')
+
+    department_id = fields.Many2one('hr.department',string='部门',compute='compute_department',store=True)
+    # level_1_department_id = fields.Many2one('hr.department',string='一级部门')
+    # level_2_department_id = fields.Many2one('hr.department',string='二级部门')
+    working_team_id = fields.Many2one('nantian_erp.working_team',string='工作组',compute='compute_working_team',store=True)
     position_categroy = fields.Selection([(u'系统',u'系统'),(u'网络',u'网络'),(u'开发',u'开发')],string= '岗位类别')
     job_id =fields.Many2one('nantian_erp.job',string='职位',)
     job_level = fields.Selection([(u'1',u'1'),(u'2',u'2'),(u'3',u'3')],string='职级')
@@ -30,6 +35,20 @@ class recruitment(models.Model):
     state = fields.Selection([(u'需求方', u'需求方'), (u'行业负责人',u'行业负责人'),(u'总经理',u'总经理') ,(u'取消',u'取消'),(u'发布',u'发布')])
     examine_user = fields.Many2one('res.users',string= '审批人')
 
+
+    @api.multi
+    @api.depends('user_id')
+    def compute_department(self):
+        for record in self:
+            if record.user_id.employee_ids[0]:
+                record.department_id = record.user_id.employee_ids[0].department_id
+
+    @api.multi
+    @api.depends('user_id')
+    def compute_working_team(self):
+        for record in self:
+            if record.user_id.employee_ids[0]:
+                record.working_team_id = record.user_id.employee_ids[0].working_team_id
 
 class job_examine(models.Model):
     _name = 'nantian_erp.job_examine'

@@ -125,7 +125,7 @@
     </record>
     <record id="hr_employee_header_read_rule" model="ir.rule">
         <field name="name">employee人力行业负责人-读</field>
-        <field name="domain_force">['|','|',('department_id','in',[x.department_id.id for x in user.employee_ids]),('department_id.parent_id','in',[x.department_id.id for x in user.employee_ids]),('department_id.parent_id','in',[x.department_id.parent_id.id for x in user.employee_ids])]</field>
+        <field name="domain_force">['|','|','|',('department_id','in',[x.department_id.id for x in user.employee_ids]),'&amp;',('department_id.parent_id','in',[x.department_id.parent_id.id for x in user.employee_ids]),('department_id.level','=','3'),'&amp;',('department_id.parent_id.id','in',[x.department_id.id for x in user.employee_ids]),('department_id.level','=','3'),'&amp;',('department_id','in',[x.department_id.parent_id.id for x in user.employee_ids]),('department_id.level','=','2')]</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
         <field name="perm_write" eval="0"/>
