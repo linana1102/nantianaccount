@@ -134,7 +134,7 @@
                                         <field name="work_experience_ids" string="项目经验">
                                             <tree string="work_experience" editable="bottom">
                                                 <field name="date" string="时间"/>
-                                                <field name="name" string="时间"/>
+                                                <field name="name" string="项目名称"/>
                                                 <field name="job" string="项目职务"/>
                                                 <field name="description" string="工作描述"/>
                                             </tree>
@@ -246,7 +246,7 @@
                                         <field name="work_experience_ids" string="项目经验">
                                             <tree string="work_experience" editable="bottom">
                                                 <field name="date" string="时间"/>
-                                                <field name="name" string="时间"/>
+                                                <field name="name" string="项目名称"/>
                                                 <field name="job" string="项目职务"/>
                                                 <field name="description" string="工作描述"/>
                                             </tree>

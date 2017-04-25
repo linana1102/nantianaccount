@@ -67,7 +67,10 @@ nantian_erp_pers_transfer_dd,nantian_erp_pers_transfer_ddd,model_nantian_erp_per
 nantian_erp_demission_dd,nantian_erp_demission_ddd,model_nantian_erp_demission,,1,1,1,0
 nantian_erp_customer_adjust_dd,nantian_erp_customer_adjust_ddd,model_nantian_erp_customer_adjust,,1,1,1,0
 nantian_erp_project_progress_dd,nantian_erp_project_progress_ddd,model_nantian_erp_project_progress,,1,1,1,0
-nantian_erp_pre_sale,nantian_erp_pre_sale,model_nantian_erp_pre_sale,,1,1,1,1
+
 nantian_erp_job,nantian_erp_job,model_nantian_erp_job,,1,1,1,1
 nantian_erp_recruitment,nantian_erp_recruitment,model_nantian_erp_recruitment,,1,1,1,1
+nantian_erp_categroy,nantian_erp_categroy,model_nantian_erp_categroy,,1,1,1,1
+nantian_erp_job_categroy,nantian_erp_job_categroy,model_nantian_erp_job_categroy,,1,1,1,1
+nantian_erp_work_experience,nantian_erp_work_experience,model_nantian_erp_work_experience,,1,1,1,1
 
