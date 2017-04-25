@@ -6,17 +6,19 @@
             <field name="res_model">nantian_erp.weekly_reports</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+            <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
+             -->
          </record>
         <record id="nantian_erp_weekly_boss_current_action" model="ir.actions.act_window">
-            <field name="name">本周周报</field>
+            <field name="name">本期周报</field>
             <field name="res_model">nantian_erp.weekly_reports</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+            <field name="context">{'search_default_create_date': 1}</field>
+            <field name ="domain">[]</field>
          </record>
         <record id="nantian_erp_weekly_personal_current_action" model="ir.actions.act_window">
-            <field name="name">本周周报</field><!--本人-->
+            <field name="name">我的周报</field><!--本人-->
             <field name="res_model">nantian_erp.weekly_reports</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -124,14 +126,28 @@
             <field name="arch" type="xml">
                 <tree >
                     <field name="pres_sale_ids" string="售前项目"/>
-                            <field name="gathering_ids" string="项目收款" />
-                            <field name="pers_transfer_ids" string="人员调动"/>
-                            <field name="demission_ids" string="人员离职"/>
-                            <field name="customer_adjust_ids" string="客户动态或人事变动" />
-                            <field name="project_progress_ids" string="项目进度"/>
-                             <field name="user_id" string="创建者"/>
-                            <field name="create_date" string = "创建日期" readonly = "True"/>
+                    <field name="gathering_ids" string="项目收款" />
+                    <field name="pers_transfer_ids" string="人员调动"/>
+                    <field name="demission_ids" string="人员离职"/>
+                    <field name="customer_adjust_ids" string="客户动态或人事变动" />
+                    <field name="project_progress_ids" string="项目进度"/>
+                     <field name="user_id" string="创建者"/>
+                    <field name="create_date" string = "创建日期" readonly = "True"/>
                 </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="nantian_erp_weekly_reports_search">
+            <field name="name">nantian_erp.weekly_reports.search</field>
+            <field name="model">nantian_erp.weekly_reports</field>
+            <field name="arch" type="xml">
+                <search string="search_w" >
+                    <filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>
+                <group expand="0" string="分组">
+                    <filter string="行业负责人" name="user_id" context="{'group_by':'user_id'}"/>
+                </group>
+                </search>
+
             </field>
         </record>
         <record id="nantian_erp_pres_sale_action" model="ir.actions.act_window">
@@ -146,6 +162,7 @@
             <field name="model">nantian_erp.pres_sale</field>
             <field name="arch" type="xml">
                 <form  >
+                     <sheet>
                     <heard>
                         <field name="state" widget="statusbar" class="oe_right"/>
                     </heard>
@@ -178,6 +195,7 @@
                             <field name="sign_date" string="签订日期"/>
                         </group>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -210,6 +228,7 @@
             <field name="model">nantian_erp.project_gathering</field>
             <field name="arch" type="xml">
                 <form >
+                    <sheet>
                     <group >
                         <group string="提醒如下">
                             <field name="contract_id" string="合同"/>
@@ -220,6 +239,7 @@
                             <field name="gather_progress" string="收款工作进度"/>
                         </group>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -246,6 +266,7 @@
             <field name="model">nantian_erp.pers_transfer</field>
             <field name="arch" type="xml">
                 <form >
+                    <sheet>
                     <heard>
                         <button name="send_to_after_leader" type="object" string="转交新的负责人"  attrs="{'invisible':[('before_leader','=','uid')]}" class="oe_highlight" />
                         <!--<button name="email_to_sys" type="object" string="发送邮件"  attrs="{'invisible':[()]}" class="oe_highlight" />-->
@@ -270,6 +291,7 @@
 
                         </group>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -305,6 +327,7 @@
             <field name="model">nantian_erp.demission</field>
             <field name="arch" type="xml">
                 <form >
+                    <sheet>
                     <heard>
                     </heard>
                     <group >
@@ -321,6 +344,7 @@
 
                         </group>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -353,6 +377,7 @@
             <field name="model">nantian_erp.project_progress</field>
             <field name="arch" type="xml">
                 <form >
+                    <sheet>
                     <group >
                         <group >
                             <field name="major_change" string="本周是否重大变更"/>
@@ -375,6 +400,7 @@
                             <field name="possible_risk_detail" string="详情叙述"  attrs="{'invisible':[('possible_risk','=',False)]}" />
                         </group>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -407,6 +433,7 @@
             <field name="model">nantian_erp.customer_adjust</field>
             <field name="arch" type="xml">
                 <form  >
+                    <sheet>
                     <group >
                         <group >
                             <field name="major_adjust" string="近一月客户是否有重大动态或人事变动"/>
@@ -416,6 +443,7 @@
 
                         </group>
                     </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -430,23 +458,21 @@
             </field>
         </record>
 
-        <menuitem id="nantian_erp_weekly_reports_menu" name="周报" />
-        <menuitem id="nantian_erp_weekly_plan_menu" parent="nantian_erp_weekly_reports_menu" name="周报"/>
-        <menuitem id="nantian_erp_weekly_plan_current_for_personal" parent="nantian_erp_weekly_plan_menu" name="当前周报"   action = "nantian_erp_weekly_personal_current_action"/>
-        <menuitem id="nantian_erp_weekly_plan_current_for_boss" parent="nantian_erp_weekly_plan_menu" name="本周周报" action = "nantian_erp_weekly_boss_current_action"/><!--只有魏总看到本周，action加时间过滤-->
-        <menuitem id="nantian_erp_weekly_plan_history" parent="nantian_erp_weekly_plan_menu" name="历史周报" action = "nantian_erp_weekly_boss_history_action"/><!--只有魏总看到全部-->
+        <menuitem id="nantian_erp_weekly_reports_menu" name="周报" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>
+        <menuitem id="nantian_erp_weekly_plan_menu" parent="nantian_erp_weekly_reports_menu" name="周报" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>
+        <menuitem id="nantian_erp_weekly_plan_current_for_personal" parent="nantian_erp_weekly_plan_menu" name="我的周报"   action = "nantian_erp_weekly_personal_current_action" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss"/>
+        <menuitem id="nantian_erp_weekly_plan_current_for_boss" parent="nantian_erp_weekly_plan_menu" name="本期周报" action = "nantian_erp_weekly_boss_current_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/><!--只有魏总看到本周，action加时间过滤-->
+        <menuitem id="nantian_erp_weekly_plan_history" parent="nantian_erp_weekly_plan_menu" name="历史周报" action = "nantian_erp_weekly_boss_history_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/><!--只有魏总看到全部-->
         <!--#权限设置，菜单加组，-->
-        <menuitem id="nantian_erp_pres_sale_menu" parent="nantian_erp_weekly_reports_menu" name="售前项目"/>
-        <menuitem id="nantian_erp_pres_sale1" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="售前项目"/>
+        <menuitem id="nantian_erp_pres_sale_menu" parent="nantian_erp_weekly_reports_menu" name="售前项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant" />
+        <menuitem id="nantian_erp_pres_sale1" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="售前项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
 
-        <menuitem id="nantian_erp_ongoing_sale_menu" parent="nantian_erp_weekly_reports_menu" name="进行中的项目"/>
+        <menuitem id="nantian_erp_ongoing_sale_menu" parent="nantian_erp_weekly_reports_menu" name="进行中的项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
 
-        <menuitem id="nantian_erp_project_gathering_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_project_gathering_action" name="项目收款" />
-        <menuitem id="nantian_erp_pers_transfer_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_pers_transfer_action" name="人员调动"/>
-        <menuitem id="nantian_erp_project_progress_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_project_progress_action" name="项目进程" />
-        <menuitem id="nantian_erp_demission_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_demission_action" name="人员离职"/>
-        <menuitem id="nantian_erp_customer_adjust_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_customer_adjust_action" name="客户变动"/>
-
-
+        <menuitem id="nantian_erp_project_gathering_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_project_gathering_action" name="项目收款" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
+        <menuitem id="nantian_erp_pers_transfer_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_pers_transfer_action" name="人员调动" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
+        <menuitem id="nantian_erp_project_progress_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_project_progress_action" name="项目进程" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
+        <menuitem id="nantian_erp_demission_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_demission_action" name="人员离职" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
+        <menuitem id="nantian_erp_customer_adjust_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_customer_adjust_action" name="客户变动" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
     </data>
 </openerp>

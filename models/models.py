@@ -1085,7 +1085,7 @@ class collection(models.Model):
         string="税率", default='0.00'
     )
     rated_moneys = fields.Float(compute='_count_rated_moneys', store=True, string="税金")
-    money_total = fields.Float(compute='_count_money_total', store=True, string="税后收款金额")
+    money_total = fields.Float(compute='_count_money_total', store=True, string="税前收款金额")
     state = fields.Selection(
         [
             (u'创建中', u'创建中'),
@@ -1101,8 +1101,8 @@ class collection(models.Model):
     def _count_rated_moneys(self):
         for record in self:
             if record.rate:
-                record.rated_moneys = record.money * string.atof(record.rate)
-    #自动计算税后金额
+                record.rated_moneys = record.money / (string.atof(record.rate)+1)*string.atof(record.rate)
+    #自动计算税前金额
     @api.depends('money', 'rated_moneys')
     def _count_money_total(self):
         for record in self:
@@ -1138,7 +1138,7 @@ class contract(models.Model):
     money_total = fields.Float(string="税后总计金额" ,compute='_count_money_total',store=True)
     collection_money = fields.Float(string="收款金额", compute='_count_collection_money', store=True)
     collection_money_tax = fields.Float(string="收款税金", compute='_count_collection_money_tax', store=True)
-    collection_money_total = fields.Float(string="税后总计收款金额", compute='_count_collection_money_total', store=True)
+    collection_money_total = fields.Float(string="税前总计收款金额", compute='_count_collection_money_total', store=True)
     collection_ids = fields.One2many('nantian_erp.collection', 'contract_id',string="收款")
     detail_ids = fields.One2many('nantian_erp.detail', 'contract_id', string="维保明细")
     hr_requirements = fields.Text(string="人员要求")
@@ -1350,23 +1350,23 @@ class contract(models.Model):
                 record.next_collection_date=min(dates)
             else:
                 record.next_collection_date=None
-    #自动计算收款金额
+    #自动计算税前金额
     @api.depends('collection_ids.money_total')
-    def _count_collection_money(self):
+    def _count_collection_money_total(self):
         for record in self:
             for collection in record.collection_ids:
-                record.collection_money += collection.money_total
+                record.collection_money_total += collection.money_total
     #自动计算收款税金
     @api.depends('collection_ids.rated_moneys')
     def _count_collection_money_tax(self):
         for record in self:
             for collection in record.collection_ids:
                 record.collection_money_tax += collection.rated_moneys
-    #自动计算税后金额
+    #自动计算收款金额
     @api.depends('collection_money', 'collection_money_tax')
-    def _count_collection_money_total(self):
+    def _count_collection_money(self):
         for record in self:
-            record.collection_money_total = record.collection_money - record.collection_money_tax
+            record.collection_money = record.collection_money_total + record.collection_money_tax
     #修改作为外键时的显示
     @api.multi
     @api.depends('name', 'employee_count')
