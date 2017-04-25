@@ -15,7 +15,7 @@ class recruitment(models.Model):
     user_id = fields.Many2one('res.users',default=lambda self: self.env.user)
     level_1_department_id = fields.Many2one('hr.department',string='一级部门')
     level_2_department_id = fields.Many2one('hr.department',string='二级部门')
-    working_team = fields.Many2one('nantian.working_team',string='工作组')
+    working_team = fields.Many2one('nantian_erp.working_team',string='工作组')
     position_categroy = fields.Selection([(u'系统',u'系统'),(u'网络',u'网络'),(u'开发',u'开发')],string= '岗位类别')
     job_id =fields.Many2one('nantian_erp.job',string='职位',)
     job_level = fields.Selection([(u'1',u'1'),(u'2',u'2'),(u'3',u'3')],string='职级')
