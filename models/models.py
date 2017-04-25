@@ -112,7 +112,7 @@ class hr_employee(models.Model):
     ], default=u'正常', string="调整状态",track_visibility='onchange')
     adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids",track_visibility='onchange')
     adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True,track_visibility='onchange')
-
+    work_experience_ids = fields.One2many('nantian_erp.work_experience','employee_id')
 
     @api.depends('adjust_ids.states')
     def get_adjust_dst(self):
@@ -1518,6 +1518,15 @@ class hr_adjusting(models.Model):
             #print models.name,models.dis_states
         return {'aaaaaaaaaaaaaa'}
 
+
+class work_experience(models.Model):
+    _name = 'nantian_erp.work_experience'
+
+    name = fields.Char()
+    job = fields.Char()
+    description = fields.Text()
+    date = fields.Char()
+    employee_id = fields.Many2one('hr.employee')
 
 class department(models.Model):
     _inherit = 'hr.department'

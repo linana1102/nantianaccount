@@ -131,6 +131,16 @@
                                                 <field name="image" string="证书扫描件"></field>
                                             </tree>
                                         </field>
+                                        <field name="work_experience_ids" string="项目经验">
+                                            <tree string="work_experience" editable="bottom">
+                                                <field name="date" string="时间"/>
+                                                <field name="name" string="时间"/>
+                                                <field name="job" string="项目职务"/>
+                                                <field name="description" string="工作描述"/>
+                                            </tree>
+
+                                        </field>
+
                                         <field name="specialty" string="技术特长" />
                                 </group>
                             </page>
@@ -232,6 +242,15 @@
                                                 <field name="time" attrs="{'readonly': [('is_forever_validate', '!=', False)]}"/>
                                                 <field name="image" string="证书扫描件"></field>
                                             </tree>
+                                        </field>
+                                        <field name="work_experience_ids" string="项目经验">
+                                            <tree string="work_experience" editable="bottom">
+                                                <field name="date" string="时间"/>
+                                                <field name="name" string="时间"/>
+                                                <field name="job" string="项目职务"/>
+                                                <field name="description" string="工作描述"/>
+                                            </tree>
+
                                         </field>
                                         <field name="specialty" string="技术特长" />
                                 </group>
