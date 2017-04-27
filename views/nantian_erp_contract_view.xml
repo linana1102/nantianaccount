@@ -86,6 +86,7 @@
                                     <field name="evaluate_money" />
                                     <field name="conditions" />
                                     <field name="date" />
+                                    <field name="materials_date" />
                                     <field name="money"/>
                                     <field name="rate"/>
                                     <field name="rated_moneys"/>
@@ -93,10 +94,10 @@
                                     <field name="state" readonly="True"/>
                                 </tree>
                             </field>
-                            <group class="oe_subtotal_footer oe_right" colspan="2" name="collection_money_total">
-                                <field name="collection_money" widget="monetary" />
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="collection_money">
+                                <field name="collection_money_total" widget="monetary" />
                                 <field name="collection_money_tax" widget="monetary" />
-                                <field name="collection_money_total" class="oe_subtotal_footer_separator" widget="monetary" />
+                                <field name="collection_money" class="oe_subtotal_footer_separator" widget="monetary" />
                             </group>
                     </group>
                 </form>
@@ -204,10 +205,10 @@
                                     <field name="state" readonly="True"/>
                                 </tree>
                             </field>
-                            <group class="oe_subtotal_footer oe_right" colspan="2" name="collection_money_total">
-                                <field name="collection_money" widget="monetary" />
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="collection_money">
+                                <field name="collection_money_total" widget="monetary" />
                                 <field name="collection_money_tax" widget="monetary" />
-                                <field name="collection_money_total" class="oe_subtotal_footer_separator" widget="monetary" />
+                                <field name="collection_money" class="oe_subtotal_footer_separator" widget="monetary" />
                             </group>
                     </group>
                 </form>

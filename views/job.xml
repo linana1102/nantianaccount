@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <menuitem id="nantian_recruitment_2_level_menu" parent="hr.menu_hr_main" name="招聘" />
+
         <record model="ir.ui.view" id="nantian_erp_job_form">
             <field name="name">nantian_job.form</field>
             <field name="model">nantian_erp.job</field>
@@ -11,7 +13,7 @@
                             <field name="name" string="岗位名称"/>
                         </group>
                         <group>
-                            <field name="categroy" string="类型"/>
+                            <field name="categroy_id" string="类型"/>
                         </group>
                     </group>
                 </form>
@@ -24,7 +26,7 @@
             <field name="arch" type="xml">
                 <tree >
                     <field name="name" string="岗位名称"/>
-                    <field name="categroy" string="类型"/>
+                    <field name="categroy_id" string="类型"/>
                 </tree>
             </field>
         </record>
@@ -35,7 +37,7 @@
             <field name="view_mode">tree,form</field>
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
          </record>
-        <menuitem id="nantian_erp_job_menu" parent="base.menu_crm_case_job_req_main"  name="岗位" action="nantian_erp_job_action"/>
+        <menuitem id="nantian_erp_job_menu" parent="nantian_recruitment_2_level_menu"  name="岗位" action="nantian_erp_job_action"/>
 
         <record model="ir.ui.view" id="nantian_erp_recruitment_form">
             <field name="name">nantian_recruitment.form</field>
@@ -45,22 +47,23 @@
                     <group>
                         <group>
                             <field name="user_id" string="申请人"/>
-                            <field name="level_2_department_id" string="二级部门"/>
-                            <field name="position_categroy" string="岗位类别"/>
+                            <field name="working_team_id" string="工作组" domain="['|',('partner_id.customer_manager.id','=',uid),('user_id.id','=',uid)]"/>
+                             <field name="position_categroy_1" string="岗位类别"/>
+                             <field name="job_id" string="岗位名称" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                            <field name="job_name" invisible="True"/>
+                             <field name="position_categroy_2" string="岗位级别" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])]}"/>
                             <field name="job_level" string="职级"/>
                             <field name="current_employee_num" string="现有人数"/>
                             <field name="reason" string="招聘原因"/>
                             <field name="duties" string="岗位职责"/>
                         </group>
                         <group>
-                            <field name="level_1_department_id" string="一级部门"/>
-                            <field name="working_team" string="工作组"/>
-                            <field name="job_id" string="岗位名称"/>
+                            <field name="department_id" string="部门"/>
                             <field name="salary" string="薪资范围"/>
                             <field name="need_people_num" string="所需人数"/>
                             <field name="cycle" string="招聘周期"/>
                             <field name="channel" string="招聘渠道"/>
-
+                            <field name="requirements" string="要求"/>
                         </group>
                     </group>
                 </form>
@@ -73,11 +76,13 @@
             <field name="arch" type="xml">
                 <tree >
                     <field name="user_id" string="申请人"/>
-                    <field name="level_1_department_id" string="一级部门"/>
-                    <field name="level_2_department_id" string="二级部门"/>
-                    <field name="working_team" string="工作组"/>
+                    <!--<field name="level_1_department_id" string="一级部门"/>-->
+                    <!--<field name="level_2_department_id" string="二级部门"/>-->
+                    <field name="department_id" string="部门"/>
+                    <field name="working_team_id" string="工作组"/>
                     <field name="job_id" string="岗位名称"/>
                     <field name="job_level" string="职级"/>
+                    <field name="examine_user" string="审批人"/>
                 </tree>
             </field>
         </record>
@@ -88,7 +93,43 @@
             <field name="view_mode">tree,form</field>
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
          </record>
-        <menuitem id="nantian_recruitment_menu" parent="base.menu_crm_case_job_req_main" action="nantian_erp_recruitment_action" name="招聘申请" />
+        <menuitem id="nantian_recruitment_menu" parent="nantian_recruitment_2_level_menu" action="nantian_erp_recruitment_action" name="招聘申请" />
+
+        <record model="ir.ui.view" id="nantian_erp_job_categroy_form">
+            <field name="name">nantian_position_categroy.form</field>
+            <field name="model">nantian_erp.job_categroy</field>
+            <field name="arch" type="xml">
+                <form string="job_categroy" >
+                    <group>
+                        <group>
+                            <field name="name" string="岗位级别"/>
+                        </group>
+                        <group>
+                            <field name="job_id" string="岗位名称"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="nantian_erp_job_categroy_tree">
+            <field name="name">nantian_job_categroy.tree</field>
+            <field name="model">nantian_erp.job_categroy</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="name" string="岗位级别"/>
+                    <field name="job_id" string="岗位名称"/>
+                </tree>
+            </field>
+        </record>
+         <record id="nantian_erp_job_categroy_action" model="ir.actions.act_window">
+            <field name="name">岗位级别</field>
+            <field name="res_model">nantian_erp.job_categroy</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+         </record>
+        <menuitem id="nantian_erp_job_categroy_menu" parent="nantian_recruitment_2_level_menu"  name="岗位级别" action="nantian_erp_job_categroy_action"/>
 
 
     </data>

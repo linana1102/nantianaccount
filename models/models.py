@@ -112,7 +112,7 @@ class hr_employee(models.Model):
     ], default=u'正常', string="调整状态",track_visibility='onchange')
     adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids",track_visibility='onchange')
     adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True,track_visibility='onchange')
-
+    work_experience_ids = fields.One2many('nantian_erp.work_experience','employee_id')
 
     @api.depends('adjust_ids.states')
     def get_adjust_dst(self):
@@ -736,6 +736,7 @@ class hr_attendance(models.Model):
     @api.one
     def action_done(self):
         self.state = 'done'
+
 #员工请假
 class hr_leave(models.Model):
     _name = 'nantian_erp.hr_leave'
@@ -1005,6 +1006,8 @@ class jobs(models.Model):
             else:
                 datas.append((r.id, (r.name+'--' + u'岗位要求人数' + unicode(r.amount) + u'人')))
         return datas
+
+
 #南天维保合同--明细
 class detail(models.Model):
     _name = 'nantian_erp.detail'
@@ -1067,6 +1070,8 @@ class collection(models.Model):
     name = fields.Char(string='名称')
     contract_id = fields.Many2one('nantian_erp.contract', string="合同")
     date = fields.Date(string='合同收款时间')
+    materials_date = fields.Date(string='准备合同材料收款时间')
+    project_gathering_id = fields.Many2one('nantian_erp.project_gathering', string="项目收款")
     evaluate_money = fields.Float(string='预期收款金额')
     conditions = fields.Text(string='收款前提条件')
     money = fields.Float(string='实际收款金额')
@@ -1080,7 +1085,7 @@ class collection(models.Model):
         string="税率", default='0.00'
     )
     rated_moneys = fields.Float(compute='_count_rated_moneys', store=True, string="税金")
-    money_total = fields.Float(compute='_count_money_total', store=True, string="税后收款金额")
+    money_total = fields.Float(compute='_count_money_total', store=True, string="税前收款金额")
     state = fields.Selection(
         [
             (u'创建中', u'创建中'),
@@ -1096,8 +1101,8 @@ class collection(models.Model):
     def _count_rated_moneys(self):
         for record in self:
             if record.rate:
-                record.rated_moneys = record.money * string.atof(record.rate)
-    #自动计算税后金额
+                record.rated_moneys = record.money / (string.atof(record.rate)+1)*string.atof(record.rate)
+    #自动计算税前金额
     @api.depends('money', 'rated_moneys')
     def _count_money_total(self):
         for record in self:
@@ -1133,7 +1138,7 @@ class contract(models.Model):
     money_total = fields.Float(string="税后总计金额" ,compute='_count_money_total',store=True)
     collection_money = fields.Float(string="收款金额", compute='_count_collection_money', store=True)
     collection_money_tax = fields.Float(string="收款税金", compute='_count_collection_money_tax', store=True)
-    collection_money_total = fields.Float(string="税后总计收款金额", compute='_count_collection_money_total', store=True)
+    collection_money_total = fields.Float(string="税前总计收款金额", compute='_count_collection_money_total', store=True)
     collection_ids = fields.One2many('nantian_erp.collection', 'contract_id',string="收款")
     detail_ids = fields.One2many('nantian_erp.detail', 'contract_id', string="维保明细")
     hr_requirements = fields.Text(string="人员要求")
@@ -1197,6 +1202,7 @@ class contract(models.Model):
                 datas+=u'<p>'+text+u'</p>'
             body= u'<div>'+u'<p>您好:</p>'+u'<p>&nbsp;&nbsp;&nbsp;&nbsp;以下合同即将过期或已经过期，请您及时续签或关闭,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a>查看详细信息</p>' + datas + u'</div>'
             self.send_email(user_id,body,subject)
+
     #邮件发送函数
     def send_email(self, cr, uid, users, body='',subject='',context=None):
         to_list = []
@@ -1344,23 +1350,23 @@ class contract(models.Model):
                 record.next_collection_date=min(dates)
             else:
                 record.next_collection_date=None
-    #自动计算收款金额
+    #自动计算税前金额
     @api.depends('collection_ids.money_total')
-    def _count_collection_money(self):
+    def _count_collection_money_total(self):
         for record in self:
             for collection in record.collection_ids:
-                record.collection_money += collection.money_total
+                record.collection_money_total += collection.money_total
     #自动计算收款税金
     @api.depends('collection_ids.rated_moneys')
     def _count_collection_money_tax(self):
         for record in self:
             for collection in record.collection_ids:
                 record.collection_money_tax += collection.rated_moneys
-    #自动计算税后金额
+    #自动计算收款金额
     @api.depends('collection_money', 'collection_money_tax')
-    def _count_collection_money_total(self):
+    def _count_collection_money(self):
         for record in self:
-            record.collection_money_total = record.collection_money - record.collection_money_tax
+            record.collection_money = record.collection_money_total + record.collection_money_tax
     #修改作为外键时的显示
     @api.multi
     @api.depends('name', 'employee_count')
@@ -1511,4 +1517,33 @@ class hr_adjusting(models.Model):
             models.write({'dis_states':self.states})
             #print models.name,models.dis_states
         return {'aaaaaaaaaaaaaa'}
+
+
+class work_experience(models.Model):
+    _name = 'nantian_erp.work_experience'
+
+    name = fields.Char()
+    job = fields.Char()
+    description = fields.Text()
+    date = fields.Char()
+    employee_id = fields.Many2one('hr.employee')
+
+class department(models.Model):
+    _inherit = 'hr.department'
+
+    level = fields.Integer(string='级别',compute='compute_level',store=True)
+
+    @api.multi
+    @api.depends('parent_id')
+    def compute_level(self):
+        print '*'*80
+        departments = self.env['hr.department'].search([])
+        for record in departments:
+            if not record.parent_id:
+                record.level = 1
+            elif record.parent_id.parent_id:
+                record.level = 3
+            else:
+                record.level = 2
+
 
