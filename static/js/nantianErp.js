@@ -98,9 +98,9 @@ openerp.nantian_erp=function(instance){
             $("span.oe_facet_values>span.oe_facet_value").each(function (i,span) {
                 var html=$(span).html().trim();
                 if(html.indexOf(tag[t])===0){
-                    isTrigger=true;
+                    self.isTrigger=true;
                     $(this).parent("span").siblings("span.oe_facet_remove").trigger("click");
-                    isTrigger=false;
+                    self.isTrigger=false;
                 }
             });
 
@@ -137,7 +137,7 @@ openerp.nantian_erp=function(instance){
                 $("form button.oe_apply:first").trigger("submit");
             }
             $("div.oe_searchview_facets span.oe_facet_remove").click(function () {
-                if(!isTrigger){
+                if(!self.isTrigger){
                     var tar=$(this).siblings(".oe_facet_values").find("span.oe_facet_value").html().trim();
                     $.each(tag,function (i,v) {
                         if(tar.indexOf(v)>=0){
