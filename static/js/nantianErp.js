@@ -45,14 +45,13 @@ openerp.nantian_erp=function(instance){
         },
 
         init: function(parent) {
-            this._super(parent);
+            this.parent = parent;
             this.isTrigger = false;
             this.indexObj = {};
         },
 
         start: function() {
             var self = this;
-            var sup = this._super();
             this.$("li>a").click(function(e){
                 var e=e||event;
                 if (e.preventDefault){
@@ -78,8 +77,20 @@ openerp.nantian_erp=function(instance){
                     }
                     self.indexObj[tag].push(value);
                 }
-                // console.log(JSON.stringify(indexObj));
                 self.refreshData(self.indexObj,tag);
+
+                //test code
+                /*var domain = ["|",["level","=","3"],["level","=","5"]],
+                    propositions = [{label:"Level 是 3",value:["level","=","3"]},{label:"Level 是 5",value:["level","=","5"]}]
+                self.parent.view.query.add({
+                    category: _t("Advanced"),
+                    values: propositions,
+                    field: {
+                        get_context: function () { },
+                        get_domain: function () { return domain;},
+                        get_groupby: function () { }
+                    }
+                });*/
 
             });
             $("div.oe_searchview_clear").click(function () {
@@ -163,13 +174,13 @@ openerp.nantian_erp=function(instance){
         }
     });
 
-    instance.web.SearchViewDrawer.include({
-        prepare_filters:function(data){
+    instance.web.search.Advanced.include({
+        start:function(){
             var self = this;
-            this.ready.done(function(){
-                if(data.model == "hr.employee"){
+            this.view.ready.done(function(){
+                if(self.view.model == "hr.employee"){
                     var searchKey = new instance.nantian_erp.SearchKey(self);
-                    searchKey.appendTo(self.$el);
+                    searchKey.appendTo(".oe_searchview_drawer");
                 }
             });
             return this._super.apply(this, arguments);
