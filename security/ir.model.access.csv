@@ -70,7 +70,12 @@ nantian_erp_project_progress_dd,nantian_erp_project_progress_ddd,model_nantian_e
 
 nantian_erp_job,nantian_erp_job,model_nantian_erp_job,,1,1,1,1
 nantian_erp_recruitment,nantian_erp_recruitment,model_nantian_erp_recruitment,,1,1,1,1
+nantian_erp_performance_month,nantian_erp_performance_month,model_nantian_erp_performance_month,,1,1,1,1
+nantian_erp_performance_year,nantian_erp_performance_year,model_nantian_erp_performance_year,,1,1,1,1
+nantian_erp_performance_note,nantian_erp_performance_note,model_nantian_erp_performance_note,,1,1,1,1
+
 nantian_erp_categroy,nantian_erp_categroy,model_nantian_erp_categroy,,1,1,1,1
 nantian_erp_job_categroy,nantian_erp_job_categroy,model_nantian_erp_job_categroy,,1,1,1,1
 nantian_erp_work_experience,nantian_erp_work_experience,model_nantian_erp_work_experience,,1,1,1,1
+
 

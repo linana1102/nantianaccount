@@ -17,6 +17,8 @@ sys.setrecursionlimit(1000000)
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
+
+    performance_year_ids = fields.One2many('nantian_erp.performance_year','employee_id',ondelete = 'set null')
     working_team_id = fields.Many2one('nantian_erp.working_team', ondelete='set null',track_visibility='onchange' )
     contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null',string='合同岗位',track_visibility='onchange')
     nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同', domain=[('state', '!=', 'off')],track_visibility='onchange')
@@ -357,7 +359,11 @@ class hr_employee(models.Model):
             [('name', '=', 'group_hr_user'), ('module', '=', 'nantian_erp')]).res_id
         hr_id = self.env['res.groups'].search([('id', '=', group_hr_id)])
         for rec in recs:
-            user = self.env['res.users'].create(
+            old_user = self.env['res.users'].search([('login','=', rec.work_email)])
+            if old_user:
+                user = old_user
+            else:
+                user = self.env['res.users'].create(
                 {'login': rec.work_email, 'password': '123456', 'name': rec.name,'email':rec.work_email})
             rec.user_id = user
             hr_id.users |= user
