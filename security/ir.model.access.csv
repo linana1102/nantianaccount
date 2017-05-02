@@ -69,4 +69,8 @@ nantian_erp_customer_adjust_dd,nantian_erp_customer_adjust_ddd,model_nantian_erp
 nantian_erp_project_progress_dd,nantian_erp_project_progress_ddd,model_nantian_erp_project_progress,,1,1,1,0
 nantian_erp_job,nantian_erp_job,model_nantian_erp_job,,1,1,1,1
 nantian_erp_recruitment,nantian_erp_recruitment,model_nantian_erp_recruitment,,1,1,1,1
+nantian_erp_performance_month,nantian_erp_performance_month,model_nantian_erp_performance_month,,1,1,1,1
+nantian_erp_performance_year,nantian_erp_performance_year,model_nantian_erp_performance_year,,1,1,1,1
+nantian_erp_performance_note,nantian_erp_performance_note,model_nantian_erp_performance_note,,1,1,1,1
+
 

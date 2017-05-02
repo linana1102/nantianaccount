@@ -39,7 +39,8 @@
         'views/nantian_erp_project_view.xml',
         'views/nantian_erp_ip_data_menu.xml',
         'views/sale.xml',
-        'views/job.xml'
+        'views/job.xml',
+        'views/human_cost.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

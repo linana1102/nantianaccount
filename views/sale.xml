@@ -38,7 +38,7 @@
                      <group>
                          <field name="user_id" string="创建者" readonly="True"/>
                      </group>
-                     </group>
+                 </group>
                      <notebook>
                     <page string="售前项目" >
                             <field name="pres_sale_ids" >
@@ -288,7 +288,6 @@
                             <field name="des_contract_name" string="合同名称"/>
                             <field name="des_contract_job" string="合同岗位"/>
                             <field name="touch"/>
-
                         </group>
                     </group>
                     </sheet>
@@ -332,16 +331,15 @@
                     </heard>
                     <group >
                         <group >
-                            <field name="employee_id" string="离职申请人" domain="[()]"  />
+                            <field name="employee_id" string="离职申请人"/>
                             <field name="contract_name" string="合同名称" />
                             <field name="contract_post" string="合同岗位"/>
                             <field name="sro_project" string="项目组"/>
                             <field name="demission_reason" string="离职原因"/>
                             <field name="demission_date" string="离职时间"/>
-                            <field name="is_recruit" string="是否招聘"/>
                         </group>
                         <group >
-
+                            <field name="is_recruit" string="是否招聘"/>
                         </group>
                     </group>
                     </sheet>
@@ -354,12 +352,12 @@
             <field name="arch" type="xml">
                 <tree >
                     <field name="employee_id" string="离职申请人"/>
-                            <field name="contract_name" string="合同名称" />
-                            <field name="contract_post" string="合同岗位"/>
-                            <field name="sro_project" string="项目组"/>
-                            <field name="demission_reason" string="离职原因"/>
-                            <field name="demission_date" string="离职时间"/>
-                            <field name="is_recruit" string="是否招聘"/>
+                    <field name="contract_name" string="合同名称" />
+                    <field name="contract_post" string="合同岗位"/>
+                    <field name="sro_project" string="项目组"/>
+                    <field name="demission_reason" string="离职原因"/>
+                    <field name="demission_date" string="离职时间"/>
+                    <field name="is_recruit" string="是否招聘"/>
                 </tree>
             </field>
         </record>
@@ -440,7 +438,6 @@
                         </group>
                         <group >
                             <field name="major_adjust_detail" string="详情叙述"/>
-
                         </group>
                     </group>
                     </sheet>
@@ -459,7 +456,7 @@
         </record>
 
         <menuitem id="nantian_erp_weekly_reports_menu" name="周报" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>
-        <menuitem id="nantian_erp_weekly_plan_menu" parent="nantian_erp_weekly_reports_menu" name="周报" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>
+        <menuitem id="nantian_erp_weekly_plan_menu" parent="nantian_erp_weekly_reports_menu" name="周报" sequence="1" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>
         <menuitem id="nantian_erp_weekly_plan_current_for_personal" parent="nantian_erp_weekly_plan_menu" name="我的周报"   action = "nantian_erp_weekly_personal_current_action" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss"/>
         <menuitem id="nantian_erp_weekly_plan_current_for_boss" parent="nantian_erp_weekly_plan_menu" name="本期周报" action = "nantian_erp_weekly_boss_current_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/><!--只有魏总看到本周，action加时间过滤-->
         <menuitem id="nantian_erp_weekly_plan_history" parent="nantian_erp_weekly_plan_menu" name="历史周报" action = "nantian_erp_weekly_boss_history_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/><!--只有魏总看到全部-->

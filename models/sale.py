@@ -2,6 +2,9 @@
 from openerp import tools
 from openerp import models, fields, api,exceptions
 import datetime
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 
 class weekly_reports(models.Model):
@@ -25,9 +28,9 @@ class weekly_reports(models.Model):
         now = fields.datetime.now()
         SevenDayAgo = fields.Date.to_string((now - datetime.timedelta(days=8)))
         records = self.env['nantian_erp.weekly_reports'].search([('create_date','>=',SevenDayAgo)])
-        print '找到了所有人上次周报',records
+        # print '找到了所有人上次周报',records
         for record in records:
-            print '给他创建周报',record.user_id.id
+            #print '给他创建周报',record.user_id.id
             objects = self.env['nantian_erp.weekly_reports'].create(
                 {"user_id": record.user_id.id})
 
@@ -37,27 +40,22 @@ class weekly_reports(models.Model):
     @api.multi
     def fetch_contract(self):
         now = fields.datetime.now()
-        print "begin 触发动作22", now
-        records = self.env['nantian_erp.weekly_reports'].search([])#
+        records = self.env['nantian_erp.weekly_reports'].search([])
         for record in records:
-            print "到这了请求"
             print record.user_id.name
             objects = self.env['nantian_erp.contract'].search([("header_id", "=", record.user_id.id)])
             print objects
             if objects:
-                print "begin_找到了合同", objects
                 for object in objects:
                     if object.collection_ids:
-                        print "begin_找到了收款合同", object.collection_ids
                         for collection in object.collection_ids:
                             if collection.materials_date:
-                                print "begin_找到了材料的时间", collection.materials_date
                                 SevenDayAgo = (now + datetime.timedelta(days=0))
                                 ReminderDate = fields.Date.from_string(collection.materials_date)
                                 print "七天后的时间", SevenDayAgo
                                 print "准备材料的时间", ReminderDate
                                 if SevenDayAgo.day == ReminderDate.day and SevenDayAgo.month == ReminderDate.month and SevenDayAgo.year == ReminderDate.year:
-                                    print "创建一个项目收款的表"
+                                    # print "创建一个项目收款的表"
                                     objects = self.env['nantian_erp.project_gathering'].create(
                                         {"contract_id": collection.contract_id.id, "gather_reminder": collection.name,
                                          "weekly_reports_id": record.id})
@@ -150,8 +148,6 @@ class project_gathering(models.Model):#
     # 准备收款材料时间前一周在周报该项中提醒需要开始准备收款，并给出此项工作进度选项：
     # 开始准备材料、完成准备材料、已提交审核、审核通过准备付款、完成付款。以此来反应收款工作进度。
     gather_count = fields.Float(string='预期收款金额')
-    #contract_id = fields.Many2one( 'nantian_erp.contract',string='合同名称')#这个值待定
-    #contract_id = fields.Char(string='合同名称')
     collection_ids = fields.One2many('nantian_erp.collection','project_gathering_id',string='合同收款表')
     gather_reminder = fields.Char(string='特此提醒，开始准备收款！')
     # 这个字段填写的是到哪一期第几阶段
@@ -171,8 +167,8 @@ class pers_transfer(models.Model):#
     move_date = fields.Date(string='调动时间')
     is_recruit = fields.Boolean(string='是否招聘')
     after_leader = fields.Many2one('hr.employee',string='调动后负责人',domain="['|',('job_id','=',u'部门经理'),('job_id','=',u'副总经理')]")
-    before_leader = fields.Many2one('res.users',string='调动前负责人',default = lambda self: self.env.user)# 做个限制谁能提单
-
+    before_leader = fields.Many2one('res.users',string='调动前负责人',default=lambda self: self.env.user,readonly = True)
+    # default=lambda self: self.env.user.employee_ids[0] 用户可能不是员工就不能适合default
     des_team = fields.Char(string='新项目组')
     des_contract_name = fields.Char(string='合同名称')
     des_contract_job = fields.Char(string='合同岗位')
@@ -186,16 +182,11 @@ class pers_transfer(models.Model):#
     def send_to_after_leader(self):
         if self.touch == u'未转交':
             print self.touch
-            print "*****************************",self.after_leader.name
             object = self.env['nantian_erp.weekly_reports'].search([("user_id", "=", self.after_leader.user_id.id)])[-1]
             print object
             objects1 = self.env['nantian_erp.weekly_reports'].search([("user_id", "=", self.before_leader.id)])
             print objects1
             if object:
-                # print object.user_id.name  # (0, _, values)
-                # print object.pers_transfer_ids,self
-                # object.pers_transfer_ids|=self
-                # print object.pers_transfer_ids
                 objects2 = self.env['nantian_erp.pers_transfer'].create(
                     {"weekly_reports_id": object.id, "employee_id":self.employee_id.id,
                      "res_contract_name": self.res_contract_name.id,
@@ -218,15 +209,25 @@ class demission(models.Model):#
     _name = 'nantian_erp.demission'
 
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')#项目组即工作组
-    employee_id = fields.Many2one('hr.employee', ondelete='set null',string='离职申请人')#这个人的调动人是他项目组的负责人
+    employee_id = fields.Many2one('hr.employee',string='离职申请人')#这个人的调动人是他项目组的负责人
     contract_name = fields.Many2one(related='employee_id.nantian_erp_contract_id',string='合同名称')
     contract_post = fields.Many2one(related='employee_id.contract_jobs_id',string='合同岗位')
     sro_project = fields.Many2one(related='employee_id.working_team_id',string='项目组')
     demission_reason = fields.Char(string='离职原因')
-    demission_date = fields.Date(string='离职时间')
+    demission_date = fields.Datetime(string='离职时间',require = True)
     is_recruit = fields.Boolean(string='是否招聘')
 
 
+    def create(self, cr, uid, vals, context=None):
+        if vals['employee_id']:
+            template_model = self.pool.get('hr.employee')
+            id = str(vals['employee_id'])
+            ids = template_model.search(cr, uid, [('id', '=', id)], context=None)
+            objects = template_model.browse(cr, uid, ids, context=None)
+            for object in objects:
+                object.dis_states = u'申请离职'
+                print object.dis_states
+        return super(demission, self).create(cr, uid, vals, context=context)
 
 
 #  客户动态或人事变动
