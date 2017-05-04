@@ -31,7 +31,6 @@ openerp.nantian_erp=function(instance){
                     });
                 }
             },200);
-
         }
     });
 
@@ -79,19 +78,6 @@ openerp.nantian_erp=function(instance){
                 }
                 self.refreshData(self.indexObj,tag);
 
-                //test code
-                /*var domain = ["|",["level","=","3"],["level","=","5"]],
-                    propositions = [{label:"Level 是 3",value:["level","=","3"]},{label:"Level 是 5",value:["level","=","5"]}]
-                self.parent.view.query.add({
-                    category: _t("Advanced"),
-                    values: propositions,
-                    field: {
-                        get_context: function () { },
-                        get_domain: function () { return domain;},
-                        get_groupby: function () { }
-                    }
-                });*/
-
             });
             $("div.oe_searchview_clear").click(function () {
                 $("div.col-md-12>ul>li").removeClass("active");
@@ -101,11 +87,11 @@ openerp.nantian_erp=function(instance){
         refreshData:function(obj,t){
             var self = this;
             //开始先删除相关的已选择的选项标签
-            var tag={level:"Level",
-                certificate_institutions_id:"certificate_institutions",
+            var tag={level:"级别",
+                certificate_institutions_id:"证书",
                 category:"人员状态",
-                working_team_id:"Working team",
-                work_age:"Work age"};
+                working_team_id:"工作组",
+                work_age:"工作年限"};
             $("span.oe_facet_values>span.oe_facet_value").each(function (i,span) {
                 var html=$(span).html().trim();
                 if(html.indexOf(tag[t])===0){
@@ -116,37 +102,45 @@ openerp.nantian_erp=function(instance){
             });
 
             //开始根据页面上勾选的选择去自动添加查询
-            var length=obj[t].length;
-            for(var i=1;i<length;i++){
-                $('.oe_add_condition').trigger("click");
-            }
+            var length = obj[t].length,
+                domain = [],
+                propositions = [];
             for(var i=0;i<length;i++){
-                $("form li:eq("+i+") .searchview_extended_prop_field").val(t);
-                $("form li:eq("+i+") .searchview_extended_prop_field").trigger("change");
+                if(i>0){
+                    domain.unshift("|");
+                }
+                var child = [t,"",obj[t][i]];
                 if(t==="level"){
-                    $("form li:eq("+i+") .searchview_extended_prop_op").val("=");
-                    $("form li:eq("+i+") .searchview_extended_prop_value>select").val(obj[t][i]);
+                    child[1] = "=";
                 }else if(t==="certificate_institutions_id"){
-                    $("form li:eq("+i+") .searchview_extended_prop_op").val("ilike");
-                    $("form li:eq("+i+") .searchview_extended_prop_value>input.field_char").val(obj[t][i]);
+                    child[1] = "ilike";
                 }else if(t==="category"){
-                    $("form li:eq("+i+") .searchview_extended_prop_op").val("=");
-                    $("form li:eq("+i+") .searchview_extended_prop_value>select").val(obj[t][i]);
+                    child[1] = "=";
                 }else if(t==="working_team_id"){
-                    $("form li:eq("+i+") .searchview_extended_prop_op").val("ilike");
-                    $("form li:eq("+i+") .searchview_extended_prop_value>input.field_char").val(obj[t][i]);
+                    child[1] = "ilike";
                 }else if(t==="work_age"){
                     if(obj[t][i]=="7"){
-                        $("form li:eq("+i+") .searchview_extended_prop_op").val(">=");
+                        child[1] = ">=";
                     }else{
-                        $("form li:eq("+i+") .searchview_extended_prop_op").val("=");
+                        child[1] = "=";
                     }
-                    $("form li:eq("+i+") .searchview_extended_prop_value>input.field_integer").val(obj[t][i]);
                 }
+                domain.push(child);
+                var str = (child[1] == "=" ? "是":"包含");
+                propositions.push({label: tag[t]+" "+str+" "+obj[t][i]});
             }
-            if(length>0){
-                $("form button.oe_apply:first").trigger("submit");
+            if(domain.length>0){
+                self.parent.view.query.add({
+                    category: _t("Advanced"),
+                    values: propositions,
+                    field: {
+                        get_context: function () { },
+                        get_domain: function () { return domain; },
+                        get_groupby: function () { }
+                    }
+                });
             }
+
             $("div.oe_searchview_facets span.oe_facet_remove").click(function () {
                 if(!self.isTrigger){
                     var tar=$(this).siblings(".oe_facet_values").find("span.oe_facet_value").html().trim();
@@ -164,9 +158,9 @@ openerp.nantian_erp=function(instance){
 
 
 
-    instance.web_kanban.KanbanView.include({
-        start:function(){
-            if(this.dataset.model == "hr.employee"){
+    instance.web_kanban.KanbanGroup.include({
+        do_add_records:function(){
+            if(this.view && this.view.fields_view.name == "可调整人员看板"){
                 var erp =  new instance.nantian_erp.ModifyColor(this);
                 erp.start();
             }
