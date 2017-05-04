@@ -20,6 +20,8 @@ class hr_employee(models.Model):
 
     performance_year_ids = fields.One2many('nantian_erp.performance_year','employee_id',ondelete = 'set null')
     working_team_id = fields.Many2one('nantian_erp.working_team', ondelete='set null',track_visibility='onchange' )
+    department_first = fields.Char(string='一级部门',compute='get_department_first',store= True)
+    department_second = fields.Char(string='二级部门',compute='get_department_first',store= True)
     contract_jobs_id = fields.Many2one('nantian_erp.jobs', ondelete='set null',string='合同岗位',track_visibility='onchange')
     nantian_erp_contract_id = fields.Many2one('nantian_erp.contract', ondelete='set null',string='服务合同', domain=[('state', '!=', 'off')],track_visibility='onchange')
     certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书",track_visibility='onchange')
@@ -115,6 +117,20 @@ class hr_employee(models.Model):
     adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids",track_visibility='onchange')
     adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True,track_visibility='onchange')
     work_experience_ids = fields.One2many('nantian_erp.work_experience','employee_id')
+
+    @api.multi
+    @api.depends('department_id')
+    def get_department_first(self):
+        for record in self:
+            if record.department_id.level == 1:
+                pass
+            elif record.department_id.level == 2:
+                record.department_first = record.department_id.name
+            elif record.department_id.level == 3:
+                record.department_first = record.department_id.parent_id.name
+                record.department_second = record.department_id.name
+            else:
+                pass
 
     @api.depends('adjust_ids.states')
     def get_adjust_dst(self):

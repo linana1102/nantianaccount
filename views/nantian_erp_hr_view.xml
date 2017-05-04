@@ -279,7 +279,6 @@
                         <field name="working_team_id" string="工作组"/>
                         <field name="level" string="级别"/>
                         <field name="parent_id" string="上级领导"/>
-                        <field name="work_age" string="工作年限"/>
                          <field name="states" string="状态" />
                     </tree>
                 </xpath>
@@ -292,13 +291,16 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='department_id']" position="after">
                     <field name="working_team_id" string="所在工作组"/>
-                    <field name="nantian_erp_contract_id" string="服务合同"/>
                     <field name="certificate_institutions_id" string="证书颁发机构"/>
+                    <field name="nantian_erp_contract_id" string="服务合同"/>
                     <field name="certificate_direction_id" string="证书方向"/>
                     <field name="certificate_level_id" string="证书等级"/>
                 </xpath>
                 <xpath expr="//filter[@string='Company']" position="after">
+                    <filter string="一级部门" icon="terp-personal+" domain="[]" context="{'group_by':'department_first'}"/>
+                    <filter string="二级部门" icon="terp-personal+" domain="[]" context="{'group_by':'department_second'}"/>
                     <filter string="工作组" icon="terp-personal+" domain="[]" context="{'group_by':'working_team_id'}"/>
+                    <filter string="职位" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                     <filter string="人员状态" icon="terp-personal+" domain="[]" context="{'group_by':'category'}"/>
                     <filter string="工作状态" icon="terp-personal+" domain="[]" context="{'group_by':'states'}"/>
                     <filter string="服务客户" icon="terp-personal+" domain="[]" context="{'group_by':'customer_id'}"/>
@@ -309,11 +311,12 @@
                     <filter string="入职时间" icon="terp-personal+" domain="[('entry_time','&gt;=',((context_today()-relativedelta(months=12))).strftime('%%Y/%%m/%%d'))]" context="{'group_by':'entry_time'}"/>
                 </xpath>
                 <xpath expr="//filter[@string='Job']" position="replace">
-                <filter string="职位" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                 </xpath>
                 <xpath expr="//filter[@string='Manager']" position="replace">
                 </xpath>
                 <xpath expr="//filter[@string='Coach']" position="replace">
+                </xpath>
+                 <xpath expr="//filter[@string='Department']" position="replace">
                 </xpath>
             </field>
         </record>

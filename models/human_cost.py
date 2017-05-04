@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp import tools
 from openerp import models, fields, api,exceptions
-from datetime import datetime,timedelta
+import datetime
 import time
 import string
 import logging
@@ -23,7 +23,7 @@ class performance_month(models.Model):
     _name = 'nantian_erp.performance_month'
 
     performance_year_id = fields.Many2one('nantian_erp.performance_year',string="员工年绩效")
-    employee_id = fields.Many2one('hr.employee',string="员工姓名")
+    employee_id = fields.Many2one('hr.employee',string="员工姓名",store = True)
     gender = fields.Selection([('male', 'Male'), ('female', 'Female')],related='employee_id.gender',string="性别")
     department_id = fields.Many2one(related='employee_id.department_id',string="一级部门（数据中心服务部）",store = True)
     department_first = fields.Char(string="一级部门",compute = 'get_department_level',store = True)
@@ -114,10 +114,24 @@ class performance_year(models.Model):
     @api.multi
     def create_year_performance(self):
         now = fields.datetime.now()
-        records = self.env['hr.employnee'].search([])
+        OneMonthAgo = (now - datetime.timedelta(days=1))
+        records = self.env['hr.employee'].search([])
         for record in records:
-            for i in record.performance_year_ids:
-                if i.create_date:
-
-                    pass
+            objects = self.env['nantian_erp.performance_year'].search([("employee_id", "=", record.id)])
+            for x in objects:
+                CreateDate = fields.Date.from_string(x.create_date)
+                if CreateDate >= OneMonthAgo:
+                    break
+            else:
+                object = self.env['nantian_erp.performance_year'].create(
+                {"employee_id": record.id})
+        # 如果for执行完了，就去执行continue，
+        # 如果没有就去执行最外层break，跳出两层循环
+        # for i in xrange(N):
+        #     for j in xrange(M):
+        #         if something:
+        #             break
+        #     else:
+        #         continue
+        #     break
 
