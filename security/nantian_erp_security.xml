@@ -340,5 +340,26 @@
         <field name="perm_unlink" eval="1"/>
     </record>
 
+    <record id="resume_project_header_rule" model="ir.rule">
+        <field name="name">行业负责人或工作组经理对简历的权限控制</field>
+        <field name="model_id" ref="nantian_erp.model_nantian_erp_resume"/>
+        <field name="domain_force">[('interviewer','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header')),(4,ref('nantian_erp.group_nantian_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="resume_project_header_rule" model="ir.rule">
+        <field name="name">行业负责人或工作组经理对招聘需求的权限控制</field>
+        <field name="model_id" ref="nantian_erp.model_nantian_erp_recruitment"/>
+        <field name="domain_force">['|',('examine_user','=',user.id),('user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header')),(4,ref('nantian_erp.group_nantian_manager')),(4,ref('nantian_erp.group_hr_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
     </data>
 </openerp>

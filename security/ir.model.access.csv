@@ -73,4 +73,11 @@ nantian_erp_recruitment,nantian_erp_recruitment,model_nantian_erp_recruitment,,1
 nantian_erp_categroy,nantian_erp_categroy,model_nantian_erp_categroy,,1,1,1,1
 nantian_erp_job_categroy,nantian_erp_job_categroy,model_nantian_erp_job_categroy,,1,1,1,1
 nantian_erp_work_experience,nantian_erp_work_experience,model_nantian_erp_work_experience,,1,1,1,1
+nantian_erp_job_examine,nantian_erp_job_examine,model_nantian_erp_job_examine,,1,1,1,1
+
+nantian_erp_resume,nantian_erp_resume,model_nantian_erp_resume,,1,1,1,1
+nantian_erp_interview,nantian_erp_interview,model_nantian_erp_interview,,1,1,1,1
+nantian_erp_offer_information,nantian_erp_offer_information,model_nantian_erp_offer_information,,1,1,1,1
+nantian_erp_offer_examine,nantian_erp_offer_examine,model_nantian_erp_offer_examine,,1,1,1,1
+
 

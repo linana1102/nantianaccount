@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="nantian_erp_interview_root_menu" parent="nantian_recruitment_2_level_menu" name="面试" sequence="80"/>
+        <record model="ir.ui.view" id="nantian_erp_interview_form">
+            <field name="name">nantian_interview.form</field>
+            <field name="model">nantian_erp.interview</field>
+            <field name="arch" type="xml">
+                <form string="interview" >
+                    <group>
+                        <group>
+                            <field name="resume_id" domain="[('state','=','简历库中')]" />
+                            <field name="recruitment_id" domain="[('state','=','released')]"/>
+                            <field name="review" />
+                        </group>
+                        <group>
+                            <field name="result" />
+                            <field name="interviewer" />
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="nantian_erp_interview_tree">
+            <field name="name">nantian_interview.tree</field>
+            <field name="model">nantian_erp.interview</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="resume_id" string="求职者"/>
+                    <field name="recruitment_id" string="招聘申请"/>
+                    <field name="result" string="面试结果"/>
+                    <field name="interviewer" string="面试官"/>
+                    <field name="write_date" string="面试时间"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_interview_filter" model="ir.ui.view">
+            <field name="name">interview Search</field>
+            <field name="model">nantian_erp.interview</field>
+            <field name="arch" type="xml">
+            <search string="Search Interview">
+                <filter string="My" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <field name="recruitment_id"/>
+                <field name="resume_id"/>
+            </search>
+            </field>
+         </record>
+
+        <record id="nantian_erp_interview_action" model="ir.actions.act_window">
+            <field name="name">面试</field>
+            <field name="res_model">nantian_erp.interview</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="nantian_erp_interview_tree" />
+        </record>
+        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="面试" action="nantian_erp_interview_action" sequence="2"/>
+
+
+
+    </data>
+</openerp>
