@@ -76,16 +76,3 @@ body .openerp td.oe_application div.selfDefColor ul {
   line-height: 12px;
   margin-top: 4px;
 }
-.oe_form_container .oe_form_sheet .file {
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-}
-.oe_form_container .oe_form_sheet .file input {
-  position: absolute;
-  font-size: 100px;
-  right: 0;
-  top: 0;
-  opacity: 0;
-  cursor: pointer;
-}

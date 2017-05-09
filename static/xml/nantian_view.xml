@@ -50,10 +50,10 @@
         </div>
     </t>
 
-    <t t-name="uploadResume">
-        <!-- accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"-->
-        <p enctype="multipart/form-data" id="import_excel" class="file btn btn-info btn-sm">简历上传
-            <input type="file" name="resume"  />
-        </p>
+    <t t-name="nantian_erp.uploadResume">
+        <button type="button" class="uploadResume oe_stat_button btn btn-default oe_inline">
+            <div class="stat_button_icon fa fa-book fa-fw"></div>
+            <div>上传简历</div>
+        </button>
     </t>
 </templates>
