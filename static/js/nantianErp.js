@@ -181,4 +181,18 @@ openerp.nantian_erp=function(instance){
         }
     });
 
+    instance.nantian_erp.UploadResume = instance.web.Widget.extend({
+        template: "uploadResume",
+        events: {
+        },
+        init: function(parent) {
+            this.parent = parent;
+
+        },
+
+        start: function() {
+
+        }
+    })
+
 }

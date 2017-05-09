@@ -49,4 +49,11 @@
             </ul>
         </div>
     </t>
+
+    <t t-name="uploadResume">
+        <!-- accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"-->
+        <form enctype="multipart/form-data" id="import_excel" class="file btn btn-info btn-sm">简历上传
+            <input type="file" name="resume"  />
+        </form>
+    </t>
 </templates>
