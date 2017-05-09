@@ -183,6 +183,7 @@ openerp.nantian_erp=function(instance){
 
     instance.nantian_erp.UploadResume = instance.web.Widget.extend({
         template: "uploadResume",
+        tagName:"form",
         events: {
         },
         init: function(parent) {
@@ -194,5 +195,16 @@ openerp.nantian_erp=function(instance){
 
         }
     })
+    instance.web.form.FormRenderingEngine.include({
+        process_sheet:function(){
+            if(this.view.model == "nantian_erp.resume"){
+                var UploadResume = new instance.nantian_erp.UploadResume();
+                console.log(UploadResume);
+                UploadResume.appendTo(this.$form.find("div.oe_right"));
+            }
+            return this._super.apply(this, arguments);
+        }
+    });
+
 
 }
