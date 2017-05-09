@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="nantian_erp_performance_month_action" model="ir.actions.act_window">
+            <field name="name">月度绩效</field>
+            <field name="res_model">nantian_erp.performance_month</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
+             -->
+         </record>
+        <record model="ir.ui.view" id="nantian_erp_performance_month_form">
+            <field name="name">nantian_erp.performance_month.form</field>
+            <field name="model">nantian_erp.performance_month</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <group >
+                        <group string="">
+                            <field name="employee_id" />
+                            <field name="gender" />
+                            <field name="department_first" string = '一级部门'/>
+                            <field name="department_second" />
+                            <field name="department_third" />
+                            <field name="month_percent" />
+                            <field name="month_performance" />
+                        </group>
+                        <group string="">
+                            <field name="date" />
+                            <field name="note_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_performance_month_tree">
+            <field name="name">nantian_erp.performance_month.tree</field>
+            <field name="model">nantian_erp.performance_month</field>
+            <field name="arch" type="xml">
+                <tree >
+                   <field name="employee_id" />
+                    <field name="gender" />
+                    <field name="department_first" string = '一级部门'/>
+                    <field name="department_second" />
+                    <field name="department_third" />
+                    <field name="month_percent" />
+                    <field name="month_performance" />
+                     <field name="date" />
+                    <field name="note_ids" />
+
+                </tree>
+            </field>
+        </record>
+
+        <record id="nantian_erp_performance_year_action" model="ir.actions.act_window">
+            <field name="name">年度绩效</field>
+            <field name="res_model">nantian_erp.performance_year</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
+             -->
+         </record>
+
+        <record model="ir.ui.view" id="nantian_erp_performance_year_form">
+            <field name="name">nantian_erp.performance_year.form</field>
+            <field name="model">nantian_erp.performance_year</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <group >
+                        <group string="">
+                            <field name="employee_id" />
+                            <field name="working_team_id" />
+                            <field name="month_count" />
+                            <field name="wages" />
+                            <field name="base_protect" />
+                            <field name="performance_month" />
+
+                        </group>
+                        <group string="">
+                            <field name="pay_of_company" />
+                            <field name="union_funds_month" />
+                            <field name="grants_year" />
+                            <field name="variable_expenses" />
+                            <field name="performance_year" />
+                            <field name="project_human_cost" />
+                            <field name="total_year" />
+                        </group>
+                        </group>
+                        <notebook>
+                            <page string="每月绩效">
+                                <field name="performance_month_ids" >
+                                    <tree string="Registered feedback" edit="false">
+                                        <field name="month_performance"/>
+                                        <field name="date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_performance_year_tree">
+            <field name="name">nantian_erp.performance_year.tree</field>
+            <field name="model">nantian_erp.performance_year</field>
+            <field name="arch" type="xml">
+                <tree >
+                   <field name="employee_id" />
+                    <field name="working_team_id" />
+                    <field name="month_count" />
+                    <field name="wages" />
+                    <field name="performance_month" />
+                    <field name="union_funds_month" />
+                    <field name="grants_year" />
+                    <field name="variable_expenses" />
+                    <field name="performance_year" />
+                    <field name="project_human_cost" />
+                    <field name="total_year" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="nantian_erp_performance_note_action" model="ir.actions.act_window">
+            <field name="name">绩效选项</field>
+            <field name="res_model">nantian_erp.performance_note</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
+             -->
+         </record>
+
+        <record model="ir.ui.view" id="nantian_erp_performance_note_form">
+            <field name="name">nantian_erp.performance_note.form</field>
+            <field name="model">nantian_erp.performance_note</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <group >
+                        <group string="">
+                            <field name="title" />
+                        </group>
+                        <group string="">
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_performance_note_tree">
+            <field name="name">nantian_erp.performance_note.tree</field>
+            <field name="model">nantian_erp.performance_note</field>
+            <field name="arch" type="xml">
+                <tree >
+                   <field name="title" />
+                    <field name="performance_month_id" />
+                </tree>
+            </field>
+        </record>
+
+
+        <!--<menuitem id="nantian_erp_human_cost_menu" name="人力成本管理" groups="nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>-->
+        <menuitem id="nantian_erp_performance_menu" parent="nantian_erp_weekly_reports_menu" name="成本管理" sequence="2"  groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
+        <menuitem id="nantian_erp_performance_month_menu" parent="nantian_erp_performance_menu" name="月度绩效"  sequence="2"  action = "nantian_erp_performance_month_action" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
+        <menuitem id="nantian_erp_performance_year_menu" parent="nantian_erp_performance_menu" name="年度绩效"    sequence="1" action = "nantian_erp_performance_year_action" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
+        <menuitem id="nantian_erp_performance_note_menu" parent="nantian_erp_performance_menu" name="绩效选项"    sequence="3" action = "nantian_erp_performance_note_action" groups="base.group_system"/>
+
+    </data>
+</openerp>

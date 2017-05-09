@@ -1,41 +1,24 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <openerp>
     <data >
-        <!--<record id="send_new_user_mail" model="ir.actions.server">-->
-            <!--<field name="name">为系统新用户发邮件</field>-->
-            <!--<field name="type">ir.actions.server</field>-->
-            <!--<field name="model_id" ref="base.model_res_users"/>-->
-            <!--<field name="state">email</field>-->
-            <!--<field name="condition" eval="'True'"/>-->
-            <!--<field name="sequence" eval="1"/>-->
-            <!--<field name="template_id" ref="auth_signup.reset_password_email"/>-->
-        <!--</record>-->
+        <record id="send_new_user_mail" model="ir.actions.server">
+            <field name="name">为系统新用户发邮件</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="state">email</field>
+            <field name="condition" eval="'True'"/>
+            <field name="sequence" eval="1"/>
+            <field name="template_id" ref="auth_signup.reset_password_email"/>
+        </record>
 
-        <!--<record model="base.action.rule" id="nantian_erp_invitation">-->
-            <!--<field name="name">为系统新用户发送邀请并提示修改密码</field>-->
-            <!--<field name="model_id" ref="base.model_res_users"/>-->
-            <!--<field name="active" eval="True"/>-->
-            <!--<field name="sequence" eval="1"/>-->
-            <!--<field name="kind" eval="'on_create'"/>-->
-            <!--<field name="server_action_ids" eval="[(4, ref('nantian_erp.send_new_user_mail'))]" />-->
-        <!--</record>-->
-         <!--<record id="reminder_project_gathering" model="ir.actions.server">-->
-            <!--<field name="name">自动计算项目首款提醒时间，并且创建项目收款表</field>-->
-            <!--<field name="type">ir.actions.server</field>-->
-            <!--<field name="model_id" ref="base.model_res_users"/>-->
-            <!--<field name="state">email</field>-->
-            <!--<field name="condition" eval="'True'"/>-->
-            <!--<field name="sequence" eval="1"/>-->
-            <!--<field name="template_id" ref="auth_signup.reset_password_email"/>-->
-        <!--</record>-->
-        <!--<record model="base.action.rule" id="nantian_erp_remind_project_gathering">-->
-            <!--<field name="name">自动计算项目首款提醒时间，并且创建项目收款表</field>-->
-            <!--<field name="model_id" ref="nantian_erp.model_weekly_reports"/>-->
-            <!--<field name="active" eval="True"/>-->
-            <!--<field name="sequence" eval="1"/>-->
-            <!--<field name="kind" eval="'on_create'"/>-->
-            <!--<field name="server_action_ids" eval="[(4, ref('nantian_erp.reminder_project_gathering'))]" />-->
-        <!--</record>-->
+        <record model="base.action.rule" id="nantian_erp_invitation">
+            <field name="name">为系统新用户发送邀请并提示修改密码</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="active" eval="True"/>
+            <field name="sequence" eval="1"/>
+            <field name="kind" eval="'on_create'"/>
+            <field name="server_action_ids" eval="[(4, ref('nantian_erp.send_new_user_mail'))]" />
+        </record>
 
     </data>
 </openerp>

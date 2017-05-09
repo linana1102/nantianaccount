@@ -43,6 +43,7 @@
         'views/resume.xml',
         'views/interview.xml',
         'views/template.xml',
+        'views/human_cost.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
