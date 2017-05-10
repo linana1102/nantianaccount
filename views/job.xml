@@ -10,7 +10,7 @@
             <field name="model">nantian_erp.job</field>
             <field name="arch" type="xml">
                 <form string="job" >
-                    <group>
+                     <group>
                         <group>
                             <field name="name" string="岗位名称"/>
                         </group>
@@ -72,13 +72,22 @@
                                 <field name="position_categroy_1" string="岗位类别" class="oe_inline"/>
                                 <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                 <field name="job_name" invisible="True" class="oe_inline"/>
-                                 <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])]}"/>
-                                <field name="job_level" string="职级" class="oe_inline"/>
-                                 <field name="examine_user" string="审批人" readonly="True"/>
+                                <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])]}"/>
+                                <label for="job_level"/>
+                                <div>
+                                <field name="job_level" string="职级" class="oe_inline"/><label string="级" class="oe_inline"/>
+                                </div>
+                                <field name="examine_user" string="审批人" readonly="True"/>
                             </group>
                             <group>
-                                <field name="current_employee_num" string="现有人数" class="oe_inline"/>
-                                <field name="need_people_num" string="所需人数" class="oe_inline"/>
+                                <label for="current_employee_num"/>
+                                <div>
+                                <field name="current_employee_num" string="现有人数" class="oe_inline"/><label string="人" class="oe_inline"/>
+                                </div>
+                                <label for="need_people_num"/>
+                                <div>
+                                <field name="need_people_num" string="所需人数" class="oe_inline"/><label string="人" class="oe_inline"/>
+                                </div>
                                 <field name="salary" string="薪资范围" class="oe_inline"/>
                                 <field name="cycle" string="招聘周期" class="oe_inline"/>
                                 <field name="reason" string="招聘原因" class="oe_inline"/>
@@ -125,12 +134,21 @@
                                 <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
                                 <field name="job_name" invisible="True" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
                                  <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])],'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
-                                <field name="job_level" string="职级" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
+                                <label for="job_level"/>
+                                <div>
+                                <field name="job_level" string="职级" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/><label string="级" class="oe_inline"/>
+                                </div>
                                  <field name="examine_user" string="审批人" readonly="True"/>
                             </group>
                             <group>
-                                <field name="current_employee_num" string="现有人数" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
-                                <field name="need_people_num" string="所需人数" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
+                                <label for="current_employee_num"/>
+                                <div>
+                                <field name="current_employee_num" string="现有人数" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/><label string="人" class="oe_inline"/>
+                                </div>
+                                 <label for="need_people_num"/>
+                                <div>
+                                <field name="need_people_num" string="所需人数" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/><label string="人" class="oe_inline"/>
+                                </div>
                                 <field name="salary" string="薪资范围" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
                                 <field name="cycle" string="招聘周期" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
                                 <field name="reason" string="招聘原因" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
@@ -149,9 +167,10 @@
                         <div>
                             <group>
                                 <field name="examine_ids" string="审批记录">
-                                    <tree string="examine">
+                                    <tree string="examine" create="false" edit="false">
                                         <field name = 'user_id' string="审批人"/>
                                         <field name="result" string="审批结果"/>
+                                        <field name="date" string="审批时间"/>
                                     </tree>
                                 </field>
                             </group>
@@ -184,12 +203,21 @@
                                 <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                 <field name="job_name" invisible="True" class="oe_inline"/>
                                  <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])]}"/>
-                                <field name="job_level" string="职级" class="oe_inline"/>
+                                <label for="job_level"/>
+                                <div>
+                                <field name="job_level" string="职级" class="oe_inline"/><label string="级" class="oe_inline"/>
+                               </div>
                                 <field name="examine_user" string="审批人" readonly="True"/>
                             </group>
                             <group>
-                                <field name="current_employee_num" string="现有人数" class="oe_inline"/>
-                                <field name="need_people_num" string="所需人数" class="oe_inline"/>
+                                <label for="current_employee_num"/>
+                                <div>
+                                <field name="current_employee_num" string="现有人数" class="oe_inline"/><label string="人" class="oe_inline"/>
+                                </div>
+                                <label for="need_people_num"/>
+                                <div>
+                                <field name="need_people_num" string="所需人数" class="oe_inline"/><label string="人" class="oe_inline"/>
+                                </div>
                                 <field name="salary" string="薪资范围" class="oe_inline"/>
                                 <field name="cycle" string="招聘周期" class="oe_inline"/>
                                 <field name="reason" string="招聘原因" class="oe_inline"/>
@@ -208,16 +236,15 @@
                        <div>
                            <group>
                                 <field name="examine_ids" string="审批记录">
-                                    <tree string="examine">
+                                    <tree string="examine" create="false" edit="false">
                                         <field name = 'user_id' string="审批人"/>
                                         <field name="result" string="审批结果"/>
+                                        <field name="date" string="审批时间"/>
                                     </tree>
                                 </field>
                            </group>
                         </div>
                     </sheet>
-
-
                 </form>
             </field>
         </record>

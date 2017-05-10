@@ -101,7 +101,7 @@ class recruitment(models.Model):
 
     @api.multi
     def agree(self):
-        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'同意','recruitment_id':self.id})
+        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'同意','recruitment_id':self.id,'date':fields.Date.today()})
         customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')],limit=1)
         nagmaer_group = self.env['res.groups'].search([('name', '=', u'总经理')],limit=1)
         employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
@@ -115,12 +115,12 @@ class recruitment(models.Model):
             self.send_email(self.examine_user)
             self.examine_user = examine_user
         elif self.env.user in nagmaer_group.users:
-            self.examine_user = None
             self.state = 'released'
+            self.examine_user = None
 
     @api.multi
     def disagree(self):
-        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'不同意','recruitment_id':self.id})
+        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'不同意','recruitment_id':self.id,'date':fields.Date.today()})
         self.state = 'refused'
         self.examine_user = self.user_id
 
@@ -134,12 +134,22 @@ class recruitment(models.Model):
         self.state = 'archive'
         self.examine_user = None
 
+    # 修改作为外键时的显示
+    @api.multi
+    @api.depends('job_id.name', 'user_id.name')
+    def name_get(self):
+        datas = []
+        for r in self:
+            datas.append((r.id, (r.job_id.name + '(' + (r.user_id.name) + ')')))
+        return datas
+
 class job_examine(models.Model):
     _name = 'nantian_erp.job_examine'
 
     user_id = fields.Many2one('res.users',string='审批人')
     result = fields.Selection([(u'同意',u'同意'),(u'不同意',u'不同意')])
     recruitment_id = fields.Many2one('nantian_erp.recruitment',string='招聘需求')
+    date = fields.Date(string='审批时间')
 
 
 class resume(models.Model):
@@ -193,7 +203,7 @@ class resume(models.Model):
                     interviewer = department.manager_id.user_id
                 else:
                     interviewer = department.parent_id.manager_id.user_id
-                self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)]).write({'examiner_user':interviewer})
+                self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)]).write({'examiner_user':interviewer.id})
                 self.interviewer = interviewer
         elif self.env.user == self.interview_ids[0].recruitment_id.user_id:
             if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
@@ -307,7 +317,7 @@ class offer_information(models.Model):
     @api.multi
     def agree(self):
         self.state=u'已审批'
-        self.resume_id.states = u'发offer'
+        self.resume_id.state = u'发offer'
         self.resume_id.interviewer = None
         offer=self.search([('id','=',self.id)])
         user_id=self.env['res.users'].search([('login','=','admin')],limit=1)[0].id
