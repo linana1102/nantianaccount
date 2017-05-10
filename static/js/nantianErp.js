@@ -193,9 +193,22 @@ openerp.nantian_erp=function(instance){
 
         start: function() {
             this._super(this);
+            if(this.parent.items.files.length){
+                this.parent.$el.addClass("hidden_upload_btn");
+                this.act = "preview";
+            }else{
+                this.parent.$el.removeClass("hidden_upload_btn");
+                this.act = "upload";
+            }
         },
         triggerInput:function(e){
-            this.parent.$el.find(".oe_form_binary_file").trigger("click");
+            if(this.act == "upload"){
+                this.parent.$el.find(".oe_form_binary_file").trigger("click");
+            }else{
+                var url = String(this.parent.items.files[0].url).replace("saveas","html_page");
+                window.open(url,"_blank");
+                //this.parent.$(".oe_sidebar_action_a[data-section=files]")[0].click();
+            }
         }
     });
 
@@ -203,8 +216,9 @@ openerp.nantian_erp=function(instance){
         redraw:function(){
             if(this.dataset && this.model_id && this.dataset.model == "nantian_erp.resume"){
                 var UploadResume = new instance.nantian_erp.UploadResume(this);
-                this.view.$el.find("div.oe_right .uploadResume").remove();
-                UploadResume.appendTo(this.view.$el.find("div.oe_right"));
+                //UploadResume.destroy();
+                this.view.$el.find(".oe_right .uploadResume").remove();
+                UploadResume.appendTo(this.view.$el.find(".oe_right[name=buttons]"));
             }
             return this._super.apply(this, arguments);
         }

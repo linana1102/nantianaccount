@@ -53,7 +53,8 @@
     <t t-name="nantian_erp.uploadResume">
         <button type="button" class="uploadResume oe_stat_button btn btn-default oe_inline">
             <div class="stat_button_icon fa fa-book fa-fw"></div>
-            <div>上传简历</div>
+            <div t-if="!widget.parent.items.files.length">上传简历</div>
+            <div t-if="widget.parent.items.files.length">预览简历</div>
         </button>
     </t>
 </templates>
