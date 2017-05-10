@@ -184,7 +184,8 @@ openerp.nantian_erp=function(instance){
     instance.nantian_erp.UploadResume = instance.web.Widget.extend({
         template:"nantian_erp.uploadResume",
         events: {
-            "click":"triggerInput"
+            "click":"triggerInput",
+            "click .delete_resume":"delete_resume"
         },
         init: function(parent) {
             this._super(parent);
@@ -209,6 +210,11 @@ openerp.nantian_erp=function(instance){
                 window.open(url,"_blank");
                 //this.parent.$(".oe_sidebar_action_a[data-section=files]")[0].click();
             }
+        },
+        delete_resume:function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            this.parent.on_attachment_delete(e);
         }
     });
 
