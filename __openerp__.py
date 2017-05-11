@@ -40,6 +40,9 @@
         'views/nantian_erp_ip_data_menu.xml',
         'views/sale.xml',
         'views/job.xml',
+        'views/resume.xml',
+        'views/interview.xml',
+        'views/template.xml',
         'views/human_cost.xml',
     ],
     # only loaded in demonstration mode
