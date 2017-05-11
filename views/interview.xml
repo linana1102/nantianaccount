@@ -53,7 +53,7 @@
             <field name="res_model">nantian_erp.interview</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="nantian_erp_interview_tree" />
+            <!--<field name="view_id" ref="nantian_erp_interview_tree" />-->
         </record>
         <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="面试" action="nantian_erp_interview_action" sequence="2"/>
 

@@ -46,7 +46,6 @@
             <field name="res_model">nantian_erp.interview</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="nantian_erp_interview_tree" />
             <field name="context">{'search_default_recruitment_id': [active_id], 'default_recruitment_id': active_id}</field>
         </record>
 

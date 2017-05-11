@@ -88,7 +88,10 @@
                         </group>
                         <notebook>
                             <page string="每月绩效">
-                                <field name="performance_month_id"></field>>
+                                <field name="performance_month_id">
+                                   <field name="month_percent" />
+                            <field name="month_performance" />
+                                </field>>
                             </page>
                         </notebook>
                     </sheet>
