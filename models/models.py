@@ -1422,6 +1422,7 @@ class res_partner(models.Model):
         value['category'] = u'case客户'
         value['is_company'] = 'True'
         return {'value':value}
+
 #工作组
 class working_team(models.Model):
     _name = 'nantian_erp.working_team'

@@ -41,7 +41,7 @@
                  </group>
                      <notebook>
                     <page string="售前项目" >
-                            <field name="pres_sale_ids" >
+                            <field name="pres_sale_ids">
                                     <tree string="Registered feedback" edit="true">
                                         <field name="project_name" string="项目名称"/>
                                         <field name="partner" string="客户名称" />
@@ -94,7 +94,7 @@
                     </page>
 
                     <page string="项目进度">
-                             <field name="project_progress_ids" >
+                             <field name="project_progress_ids" widget="many2many_tags" options='{"limit": 2,"no_open":True,"no_create":1,"no_create_edit":1}'>
                                     <tree string="Registered feedback" edit="true">
                                         <field name="major_change" string="本周是否重大变更"/>
                                         <field name="repeat" string="本周是否重保"/>
@@ -156,12 +156,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
-         </record>
+
+        </record>
         <record model="ir.ui.view" id="nantian_erp_pres_sale_form">
             <field name="name">pres_sale.form</field>
             <field name="model">nantian_erp.pres_sale</field>
             <field name="arch" type="xml">
-                <form  >
+                <form>
                      <sheet>
                     <heard>
                         <field name="state" widget="statusbar" class="oe_right"/>
@@ -179,8 +180,8 @@
                             <field name="bid_commpany" string="中标单位"/>
                             <field name="pre_bid_date" string="预计投标日期"/>
                             <field name="competitors" string="竞争对手"/>
-                             </group>
-                        <group string="编写标书人员待完善">
+                        </group>
+                        <group string="编写标书人员待完善" groups="nantian_erp.group_hr_manager_assistant">
                             <field name="contract_name" string="合同名称"/>
                             <field name="salesman_id" string="销售负责人"/>
                             <field name="contract_number" string="合同编号"/>
@@ -273,7 +274,7 @@
                     </heard>
                     <group >
                         <group string="调动前">
-                            <field name="employee_id" string="调动人"/>
+                            <field name="employee_id" string="调动人" placeholder="仅限本行业下的人员"/>
                             <field name="res_contract_name" string="合同名称" />
                             <field name="res_contract_job" string="合同岗位"/>
                             <field name="sour_team" string="原项目组"/>
@@ -281,9 +282,9 @@
                             <field name="move_date" string="调动时间"/>
                             <field name="is_recruit" string="是否招聘"/>
                             <field name="before_leader" string="调动前负责人"/>
+                            <field name="after_leader" string="调动后负责人"/>
                         </group>
                         <group string="调动后">
-                            <field name="after_leader" string="调动后负责人"/>
                             <field name="des_team" string="新项目组"/>
                             <field name="des_contract_name" string="合同名称"/>
                             <field name="des_contract_job" string="合同岗位"/>
@@ -331,7 +332,7 @@
                     </heard>
                     <group >
                         <group >
-                            <field name="employee_id" string="离职申请人"/>
+                            <field name="employee_id" string="离职申请人" placeholder="注意权限"/>
                             <field name="contract_name" string="合同名称" />
                             <field name="contract_post" string="合同岗位"/>
                             <field name="sro_project" string="项目组"/>

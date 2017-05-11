@@ -292,6 +292,21 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+     <record id="nantian_erp.group_nantian_sever_sale_before" model="res.groups">
+        <field name="name">服务拓展部—售前组</field>
+         <field name="implied_ids" eval="[(4, ref('nantian_erp.group_work_team_user'))]"/>
+        <field name="category_id" ref="base.module_category_nantianerp"/>
+    </record>
+    <record id="sever_partment_read_rule" model="ir.rule">
+        <field name="name">服务部门员工售前表访问控制</field>
+        <field name="model_id" ref="nantian_erp.model_nantian_erp_contract"/>
+        <field name="domain_force">[]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_sever_sale_before'))]"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <!--base.group_partner_manager是人力总经理组-->
     <!--nantian_erp.group_nantian_boss是任务和项目总经理组-->
     <record id="work_assiistant_rule" model="ir.rule">

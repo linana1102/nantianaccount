@@ -48,13 +48,70 @@
                     <field name="month_performance" />
                      <field name="date" />
                     <field name="note_ids" />
+                </tree>
+            </field>
+        </record>
+        <record id="nantian_erp_employee_month_cost_action" model="ir.actions.act_window">
+            <field name="name">员工月成本表</field>
+            <field name="res_model">nantian_erp.employee_month_cost</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
+             -->
+         </record>
 
+        <record model="ir.ui.view" id="nantian_erp_employee_month_costar_form">
+            <field name="name">nantian_erp.employee_month_cost.form</field>
+            <field name="model">nantian_erp.employee_month_cost</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <group >
+                        <group string="">
+                            <field name="employee_id" />
+                            <field name="email" />
+                             <field name="department_first" />
+                            <field name="department_second" />
+                            <field name="date" />
+                        </group>
+                        <group string="">
+                            <field name="wages" />
+                            <field name="grants_year" />
+                            <field name="variable_expenses" />
+                            <field name="base_protect" />
+                            <field name="pay_of_company" />
+                            <field name="union_funds_month" />
+                            <field name="month_cost" />
+                            <field name="performance_month" />
+                             <field name="cost_day" />
+                        </group>
+                        </group>
+                        <notebook>
+                            <page string="每月绩效">
+                                <field name="performance_month_id"></field>>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_employee_month_cost_tree">
+            <field name="name">nantian_erp.employee_month_cost.tree</field>
+            <field name="model">nantian_erp.employee_month_cost</field>
+            <field name="arch" type="xml">
+                <tree >
+                  <field name="employee_id" />
+                        <field name="email" />
+                    <field name="wages" />
+                    <field name="grants_year" />
                 </tree>
             </field>
         </record>
 
+
+
         <record id="nantian_erp_performance_year_action" model="ir.actions.act_window">
-            <field name="name">年度绩效</field>
+            <field name="name">年度成本表</field>
             <field name="res_model">nantian_erp.performance_year</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -70,22 +127,17 @@
                     <sheet>
                     <group >
                         <group string="">
-                            <field name="employee_id" />
-                            <field name="working_team_id" />
-                            <field name="month_count" />
-                            <field name="wages" />
-                            <field name="base_protect" />
-                            <field name="performance_month" />
-
+                            <field name="create_date" string = "创建日期" readonly = "True"/>
+                        <field name="employee_id" />
+                        <field name="working_team_id" />
+                        <field name="performance_year" />
+                        <field name="total_year" />
                         </group>
                         <group string="">
-                            <field name="pay_of_company" />
-                            <field name="union_funds_month" />
-                            <field name="grants_year" />
-                            <field name="variable_expenses" />
-                            <field name="performance_year" />
-                            <field name="project_human_cost" />
-                            <field name="total_year" />
+                            <field name="department_id" />
+                            <field name="department_first" />
+                            <field name="department_second" />
+                             <field name="total_month_cost" />
                         </group>
                         </group>
                         <notebook>
@@ -94,6 +146,15 @@
                                     <tree string="Registered feedback" edit="false">
                                         <field name="month_performance"/>
                                         <field name="date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="每月工资表">
+                                <field name="employee_month_cost_ids" >
+                                    <tree string="Registered feedback" edit="false">
+                                       <field name="month_cost" />
+                                        <field name="month_cost_other" />
+                                        <field name="cost_day" />
                                     </tree>
                                 </field>
                             </page>
@@ -109,15 +170,6 @@
                 <tree >
                    <field name="employee_id" />
                     <field name="working_team_id" />
-                    <field name="month_count" />
-                    <field name="wages" />
-                    <field name="performance_month" />
-                    <field name="union_funds_month" />
-                    <field name="grants_year" />
-                    <field name="variable_expenses" />
-                    <field name="performance_year" />
-                    <field name="project_human_cost" />
-                    <field name="total_year" />
                 </tree>
             </field>
         </record>
@@ -158,13 +210,125 @@
                 </tree>
             </field>
         </record>
+        <record id="nantian_erp_project_cost_action" model="ir.actions.act_window">
+            <field name="name">项目成本表</field>
+            <field name="res_model">nantian_erp.project_cost</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_partner_id': 1}</field>
+            <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
+             -->
+         </record>
+        <record model="ir.ui.view" id="nantian_erp_project_cost_form">
+            <field name="name">nantian_erp.project_cost.form</field>
+            <field name="model">nantian_erp.project_cost</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <group >
+                        <group string="">
+                            <field name="working_team_id" />
+                            <field name="partner_id" />
+                            <field name="customer_manager" />
+                            <field name="user_id" />
+                        </group>
+                        <group string="">
+                            <field name="all_employees_cost" />
+                            <field name="project_variable_expenses" />
+                            <field name="project_total"/>
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_project_cost_tree">
+            <field name="name">nantian_erp.project_cost.tree</field>
+            <field name="model">nantian_erp.project_cost</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="working_team_id" />
+                    <field name="partner_id" />
+                    <field name="customer_manager" />
+                    <field name="user_id" />
+                    <field name="all_employees_cost" />
+                    <field name="project_variable_expenses" />
+                     <field name="project_total" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_project_cost_search">
+            <field name="name">nantian_erp.project_cost.search</field>
+            <field name="model">nantian_erp.project_cost</field>
+            <field name="arch" type="xml">
+                <search string="search_w" >
+                    <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
+                    <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
+                        <filter string="项目(客户)" name="partner_id" context="{'group_by':'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+         <record id="nantian_erp_worktime_in_project_action" model="ir.actions.act_window">
+            <field name="name">员工在项目中工作时长</field>
+            <field name="res_model">nantian_erp.worktime_in_project</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
+             -->
+         </record>
+
+        <record model="ir.ui.view" id="nantian_erp.worktime_in_project_form">
+            <field name="name">nantian_erp.worktime_in_project.form</field>
+            <field name="model">nantian_erp.worktime_in_project</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <group >
+                        <group string="">
+                            <field name="working_team_id" />
+                            <field name="partner_id" />
+                        </group>
+                        <group string="">
+                            <field name="enter_date" />
+                            <field name="exit_date" />
+                            <field name="employee_id" />
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_worktime_in_project_tree">
+            <field name="name">nantian_erp.worktime_in_project.tree</field>
+            <field name="model">nantian_erp.worktime_in_project</field>
+            <field name="arch" type="xml">
+                <tree >
+                   <field name="working_team_id" />
+                    <field name="partner_id" />
+                    <field name="enter_date" />
+                    <field name="exit_date" />
+                    <field name="employee_id" />
+                </tree>
+            </field>
+        </record>
 
 
         <!--<menuitem id="nantian_erp_human_cost_menu" name="人力成本管理" groups="nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>-->
         <menuitem id="nantian_erp_performance_menu" parent="nantian_erp_weekly_reports_menu" name="成本管理" sequence="2"  groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
-        <menuitem id="nantian_erp_performance_month_menu" parent="nantian_erp_performance_menu" name="月度绩效"  sequence="2"  action = "nantian_erp_performance_month_action" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
-        <menuitem id="nantian_erp_performance_year_menu" parent="nantian_erp_performance_menu" name="年度绩效"    sequence="1" action = "nantian_erp_performance_year_action" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
-        <menuitem id="nantian_erp_performance_note_menu" parent="nantian_erp_performance_menu" name="绩效选项"    sequence="3" action = "nantian_erp_performance_note_action" groups="base.group_system"/>
+        <menuitem id="nantian_erp_human_cost_menu" parent="nantian_erp_performance_menu" name="人力成本"  sequence="1"/>
+        <menuitem id="nantian_erp_project_cost_menu" parent="nantian_erp_performance_menu" name="项目成本"  sequence="2"/>
+        <menuitem id="nantian_erp_back_manager_menu" parent="nantian_erp_performance_menu" name="后台管理"  sequence="3"/>
+
+
+        <menuitem id="nantian_erp_performance_month_menu" parent="nantian_erp_human_cost_menu" name="月度绩效表"  sequence="3" action = "nantian_erp_performance_month_action" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
+        <menuitem id="nantian_erp_human_cost_year_menu" parent="nantian_erp_human_cost_menu" name="人力成本(年计)"    sequence="2" action = "nantian_erp_performance_year_action" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
+        <menuitem id="nantian_erp_human_cost_month_menu" parent="nantian_erp_human_cost_menu" name="人力成本(月计)"    sequence="1" action = "nantian_erp_employee_month_cost_action" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
+        <menuitem id="nantian_erp_performance_note_menu" parent="nantian_erp_back_manager_menu" name="绩效选项"    sequence="4" action = "nantian_erp_performance_note_action" groups="base.group_system"/>
+        <menuitem id="nantian_erp_worktime_in_project_menu" parent="nantian_erp_back_manager_menu" name="员工出入项目记录"    sequence="4" action = "nantian_erp_worktime_in_project_action" groups="base.group_system"/>
+        <menuitem id="nantian_erp_project_cost_second_menu" parent="nantian_erp_project_cost_menu" name="项目成本"    sequence="1" action = "nantian_erp_project_cost_action" groups="base.group_system"/>
 
     </data>
 </openerp>
