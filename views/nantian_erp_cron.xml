@@ -103,9 +103,8 @@
             <field name="function" eval="'create_month_performance'"/>
             <field name="args" eval="'(False,)'" />
         </record>
-<<<<<<< HEAD
         <record model="ir.cron" id="nantian_erp_project_cost">
-            <field name="name">每月每人创建一张月度绩效表和月成本(魏总)</field>
+            <field name="name">自动化更新工作组和他客户</field>
             <field name="interval_number">1</field>
             <field name="interval_type">months</field>
             <field name="numbercall">-1</field>
@@ -115,8 +114,5 @@
             <field name="function" eval="'fetch_partner'"/>
             <field name="args" eval="'(False,)'" />
         </record>
-=======
-
->>>>>>> 4ef9d2c18481aa7267332fb5028c59bfa7e0a2c2
     </data>
 </openerp>
