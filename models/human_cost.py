@@ -30,10 +30,16 @@ class performance_month(models.Model):
     department_first = fields.Char(related='performance_year_id.department_first',string="一级部门",store = True,readonly = True)
     department_second = fields.Char(related='performance_year_id.department_second',string="二级部门",store = True,readonly = True)
     department_third = fields.Many2one(related='performance_year_id.employee_id.working_team_id',string="三级工作组",store = True,readonly = True)
+    department_third_name = fields.Char(string="工作组",compute='split_workteam_name',store = True)
     month_percent = fields.Float(string="本月绩效百分比" ,default = 1)
     month_performance = fields.Float(string="本月绩效")
     note_ids = fields.One2many('nantian_erp.performance_note','performance_month_id',string="备注")# 助理可以添加选项
     date = fields.Date(string="绩效日期")
+
+    @api.depends("department_third",'month_performance',"performance_year_id")
+    @api.multi
+    def split_workteam_name(self):
+        self.department_third_name = self.department_third.name
 
     #根据邮箱找到这个人的绩效
 
@@ -269,3 +275,6 @@ class performance_year(models.Model):
                 else:
                     #上个自动化动作已经检测他的年边是否在
                     pass
+            else:
+                #上个自动化动作已经检测他的年边是否存在
+                pass

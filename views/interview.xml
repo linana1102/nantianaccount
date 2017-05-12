@@ -9,13 +9,13 @@
                 <form string="interview" >
                     <group>
                         <group>
-                            <field name="resume_id" domain="[('state','=','简历库中')]" />
-                            <field name="recruitment_id" domain="[('state','=','released')]"/>
-                            <field name="review" />
+                            <field name="resume_id" domain="[('state','=','简历库中')]" required="True"/>
+                            <field name="recruitment_id" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                            <field name="review" required="True"/>
                         </group>
                         <group>
-                            <field name="result" />
-                            <field name="interviewer" />
+                            <field name="result" required="True"/>
+                            <field name="interviewer" required="True"/>
                         </group>
                     </group>
                 </form>
@@ -55,7 +55,7 @@
             <field name="view_mode">tree,form</field>
             <!--<field name="view_id" ref="nantian_erp_interview_tree" />-->
         </record>
-        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="面试" action="nantian_erp_interview_action" sequence="2"/>
+        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="面试" action="nantian_erp_interview_action" sequence="2" groups="nantian_erp.group_hr_recruitment"/>
 
 
 

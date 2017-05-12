@@ -117,6 +117,8 @@ class hr_employee(models.Model):
     adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids",track_visibility='onchange')
     adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True,track_visibility='onchange')
     work_experience_ids = fields.One2many('nantian_erp.work_experience','employee_id')
+    resume_id = fields.Many2one('nantian_erp.resume',string='简历')
+    position_id = fields.Many2one('nantian_erp.job',string= '职位')
 
     @api.multi
     @api.depends('department_id')
