@@ -81,7 +81,7 @@
             <field name="args" eval="'(False,)'" />
         </record>
         <record model="ir.cron" id="nantian_erp_create_year_performance">
-            <field name="name">每年每人创建一张年度绩效表</field>
+            <field name="name">每年每人创建一张年度成本表(魏总)</field>
             <field name="interval_number">1</field>
             <field name="interval_type">months</field>
             <field name="numbercall">-1</field>
@@ -91,17 +91,28 @@
             <field name="function" eval="'create_year_performance'"/>
             <field name="args" eval="'(False,)'" />
         </record>
+
         <record model="ir.cron" id="nantian_erp_create_month_performance">
-            <field name="name">每月每人创建一张月度绩效表</field>
+            <field name="name">每月每人创建一张月度绩效表和月成本(魏总)</field>
             <field name="interval_number">1</field>
             <field name="interval_type">months</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="True"/>
             <field name="active" eval="True"/>
-            <field name="model" eval="'nantian_erp.performance_month'"/>
+            <field name="model" eval="'nantian_erp.performance_year'"/>
             <field name="function" eval="'create_month_performance'"/>
             <field name="args" eval="'(False,)'" />
         </record>
-
+        <record model="ir.cron" id="nantian_erp_project_cost">
+            <field name="name">自动化更新工作组和他客户</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'nantian_erp.project_cost'"/>
+            <field name="function" eval="'fetch_partner'"/>
+            <field name="args" eval="'(False,)'" />
+        </record>
     </data>
 </openerp>

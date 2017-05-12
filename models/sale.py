@@ -172,9 +172,9 @@ class pers_transfer(models.Model):#
     des_team = fields.Char(string='新项目组')
     des_contract_name = fields.Char(string='合同名称')
     des_contract_job = fields.Char(string='合同岗位')
-    touch = fields.Selection([(u'未转交',u"未转交"),
-                              (u'已转交', u"已转交")
-                              ],default = u'未转交',string = '调整状态',store = True)
+    touch = fields.Selection([(u'调整',u"调整"),
+                              (u'修改', u"修改")
+                              ],string = '调整状态',store = True)
 
     # @api.one
     # @api.depends('after_leader')# button实现 创建一个新调动纪录
