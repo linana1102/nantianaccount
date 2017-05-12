@@ -249,21 +249,23 @@ class performance_year(models.Model):
         records = self.env['hr.employee'].search([])
         # print type(time.strftime("%Y-01-01"))
         for record in records:
-            object = self.env['nantian_erp.performance_year'].search([("employee_id", "=", record.id),('create_date', '>=',time.strftime("%Y-01-01"))])[0]
-            print object.create_date
-            print "对比时间"
-            print (time.strftime("%Y-%m-%d"))
-            if object:
-                month_id = self.env['nantian_erp.employee_month_cost'].search([("employee_id", "=", record.id),('create_date', '>=',time.strftime("%Y-%m-01"))])
-                if month_id:
-                    print record.name + '月工资表和绩效表已存在'
-                else:
-                    print record.name + '创建月工资表和绩效表'
-                    month_cost = self.env['nantian_erp.performance_month'].create(
+            objects = self.env['nantian_erp.performance_year'].search([("employee_id", "=", record.id),('create_date', '>=',time.strftime("%Y-01-01"))])
+            if objects:
+                object = objects[0]
+                print object.create_date
+                print "对比时间"
+                print (time.strftime("%Y-%m-%d"))
+                if object:
+                    month_id = self.env['nantian_erp.employee_month_cost'].search([("employee_id", "=", record.id),('create_date', '>=',time.strftime("%Y-%m-01"))])
+                    if month_id:
+                        print record.name + '月工资表和绩效表已存在'
+                    else:
+                        print record.name + '创建月工资表和绩效表'
+                        month_cost = self.env['nantian_erp.performance_month'].create(
                         {"performance_year_id": object.id}
                     )
-                    month_cost_id = self.env['nantian_erp.employee_month_cost'].create(
+                        month_cost_id = self.env['nantian_erp.employee_month_cost'].create(
                         {"performance_year_id": object.id,"performance_month_id": month_cost.id})
-            else:
-                #上个自动化动作已经检测他的年边是否存在
-                pass
+                else:
+                    #上个自动化动作已经检测他的年边是否在
+                    pass
