@@ -55,7 +55,7 @@
             <field name="view_mode">tree,form</field>
             <!--<field name="view_id" ref="nantian_erp_interview_tree" />-->
         </record>
-        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="面试" action="nantian_erp_interview_action" sequence="2"/>
+        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="面试" action="nantian_erp_interview_action" sequence="2" groups="nantian_erp.group_hr_recruitment"/>
 
 
 

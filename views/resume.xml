@@ -6,7 +6,6 @@
             <field name="res_model">nantian_erp.interview</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="nantian_erp_interview_tree" />
             <field name="context">{'search_default_resume_id': [active_id], 'default_resume_id': active_id}</field>
         </record>
 
@@ -84,7 +83,7 @@
                                 <h1><field name="name" class="oe_inline" readonly="True"/></h1>
                          </div>
                          <div class="oe_right" name="buttons">
-                            <button class="oe_inline oe_stat_button" type="action" name="%(nantian_erp_resume_interview_default_action)d" icon="fa-star" string="面试"/>
+                            <!--<button class="oe_inline oe_stat_button" type="action" name="%(nantian_erp_resume_interview_default_action)d" icon="fa-star" string="面试"/>-->
                             <!--<button  class="oe_stat_button" icon="fa-book" string="简历"/>-->
                          </div>
                          <group>
@@ -314,8 +313,8 @@
             <field name="view_id" ref="nantian_erp_pending_resume_form" />
             <field name="act_window_id" ref="nantian_erp_processing_resume_action" />
         </record>
-        <menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="简历" action="nantian_erp_resume_action" sequence="1"/>
-        <menuitem id="nantian_erp_interviewing_resume_menu" parent="nantian_erp_resume_root_menu" name="面试中的简历" action="nantian_erp_interviewing_resume_action" sequence="4" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager,nantian_erp.group_hr_recruitment"/>
+        <menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="简历" action="nantian_erp_resume_action" sequence="1" groups="nantian_erp.group_hr_recruitment"/>
+        <menuitem id="nantian_erp_interviewing_resume_menu" parent="nantian_erp_resume_root_menu" name="面试中的简历" action="nantian_erp_interviewing_resume_action" sequence="4" groups="nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_processed_resume_menu" parent="nantian_erp_resume_root_menu" name="面试过的简历" action="nantian_erp_processed_resume_action" sequence="3" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager,nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_processing_resume_menu" parent="nantian_erp_resume_root_menu" name="待面试的简历" action="nantian_erp_processing_resume_action" sequence="2" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager"/>
         <!--<menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="简历" action="nantian_erp_resume_action" sequence="2"/>-->
@@ -535,8 +534,8 @@
         </record>
 
         <menuitem id="nantian_erp_pending_offer_menu" parent="nantian_erp_resume_root_menu" name="待审批的offer信息" action="nantian_erp_offer_pending_information_action" sequence="5" groups="nantian_erp.group_hr_manager"/>
-        <menuitem id="nantian_erp_pended_offer_menu" parent="nantian_erp_resume_root_menu" name="待入职人员" action="nantian_erp_offer_pended_information_action" sequence="6" />
-        <menuitem id="nantian_erp_wait_set_email_menu" parent="nantian_erp_resume_root_menu" name="未设置邮箱人员" action="nantian_erp_wait_set_email_action" sequence="7" />
+        <menuitem id="nantian_erp_pended_offer_menu" parent="nantian_erp_resume_root_menu" name="待入职人员" action="nantian_erp_offer_pended_information_action" sequence="6" groups="nantian_erp.group_hr_manager"/>
+        <menuitem id="nantian_erp_wait_set_email_menu" parent="nantian_erp_resume_root_menu" name="未设置邮箱人员" action="nantian_erp_wait_set_email_action" sequence="7" groups="nantian_erp.group_hr_manager,nantian_erp.group_hr_assistant"/>
 
     </data>
 </openerp>

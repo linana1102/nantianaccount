@@ -128,6 +128,7 @@ class recruitment(models.Model):
 
     @api.multi
     def back(self):
+        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'追回','recruitment_id':self.id,'date':fields.Date.today()})
         self.state = 'backed'
         self.examine_user = self.user_id
 
@@ -152,7 +153,7 @@ class job_examine(models.Model):
     _name = 'nantian_erp.job_examine'
 
     user_id = fields.Many2one('res.users',string='审批人')
-    result = fields.Selection([(u'同意',u'同意'),(u'不同意',u'不同意')])
+    result = fields.Selection([(u'同意',u'同意'),(u'不同意',u'不同意'),(u'追回',u'追回')])
     recruitment_id = fields.Many2one('nantian_erp.recruitment',string='招聘需求')
     date = fields.Date(string='审批时间')
 
@@ -195,7 +196,7 @@ class resume(models.Model):
 
     @api.multi
     def agree(self):
-        if self.env.uid == self.interviewer:
+        if self.env.user == self.interviewer:
             self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)]).write({'result':'agree','date':fields.Date.today()})
             customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')],limit=1)
             nagmaer_group = self.env['res.groups'].search([('name', '=', u'总经理')],limit=1)
@@ -238,6 +239,7 @@ class resume(models.Model):
         if self.env.uid == self.interviewer:
             if self.state == u'简历库中':
                 self.state = u'淘汰'
+
             else:
                 if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
                     raise exceptions.ValidationError("请填面试评价")
