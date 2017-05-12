@@ -5,6 +5,7 @@ from email.utils import formataddr
 import email
 from email.header import Header
 
+
 class categroy(models.Model):
     _name = 'nantian_erp.categroy'
     name = fields.Char()
@@ -44,6 +45,7 @@ class recruitment(models.Model):
     state = fields.Selection([(u'examineing', u'审批中'), (u'released',u'已发布'),(u'refused',u'被退回') ,(u'backed',u'被追回'),(u'archived',u'已归档')],default='examineing')
     examine_user = fields.Many2one('res.users',string='审批人',default=lambda self: self.compute_examine_user())
     examine_ids = fields.One2many('nantian_erp.job_examine','recruitment_id')
+    hired_num = fields.Integer(string='已招聘人数')
 
     def send_email(self,cr,uid,users,context=None):
         # template_model = self.pool.get('email.template')
@@ -101,7 +103,7 @@ class recruitment(models.Model):
 
     @api.multi
     def agree(self):
-        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'同意','recruitment_id':self.id})
+        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'同意','recruitment_id':self.id,'date':fields.Date.today()})
         customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')],limit=1)
         nagmaer_group = self.env['res.groups'].search([('name', '=', u'总经理')],limit=1)
         employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
@@ -115,17 +117,18 @@ class recruitment(models.Model):
             self.send_email(self.examine_user)
             self.examine_user = examine_user
         elif self.env.user in nagmaer_group.users:
-            self.examine_user = None
             self.state = 'released'
+            self.examine_user = None
 
     @api.multi
     def disagree(self):
-        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'不同意','recruitment_id':self.id})
+        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'不同意','recruitment_id':self.id,'date':fields.Date.today()})
         self.state = 'refused'
         self.examine_user = self.user_id
 
     @api.multi
     def back(self):
+        self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'追回','recruitment_id':self.id,'date':fields.Date.today()})
         self.state = 'backed'
         self.examine_user = self.user_id
 
@@ -134,16 +137,30 @@ class recruitment(models.Model):
         self.state = 'archive'
         self.examine_user = None
 
+    # 修改作为外键时的显示
+    @api.multi
+    @api.depends('job_id.name', 'user_id.name')
+    def name_get(self):
+        datas = []
+        for r in self:
+            if r.job_id.name and r.position_categroy_2.name:
+                datas.append((r.id, (r.position_categroy_2.name+r.job_id.name + '(' + (r.user_id.name)+ ')')))
+            elif r.job_id.name:
+                datas.append((r.id, (r.job_id.name + '(' + (r.user_id.name)+ ')')))
+        return datas
+
 class job_examine(models.Model):
     _name = 'nantian_erp.job_examine'
 
     user_id = fields.Many2one('res.users',string='审批人')
-    result = fields.Selection([(u'同意',u'同意'),(u'不同意',u'不同意')])
+    result = fields.Selection([(u'同意',u'同意'),(u'不同意',u'不同意'),(u'追回',u'追回')])
     recruitment_id = fields.Many2one('nantian_erp.recruitment',string='招聘需求')
+    date = fields.Date(string='审批时间')
 
 
 class resume(models.Model):
     _name = 'nantian_erp.resume'
+    _rec_name ='name'
 
     name = fields.Char(string='姓名')
     gender = fields.Selection([('male','男'),('female','女')],string='性别')
@@ -179,65 +196,83 @@ class resume(models.Model):
 
     @api.multi
     def agree(self):
-        self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)]).write({'result':'agree','date':fields.Date.today()})
-        customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')],limit=1)
-        nagmaer_group = self.env['res.groups'].search([('name', '=', u'总经理')],limit=1)
-        employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
-        department = employee.department_id
-        if self.env.user in customer_manager_group.users:
-            if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review or not self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)])[-1].contract_time:
-                raise exceptions.ValidationError("请填面试评价和offer信息 ")
-            else:
-                self.state = u'offer审批'
-                if department.level == 2:
-                    interviewer = department.manager_id.user_id
+        if self.env.user == self.interviewer:
+            self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)]).write({'result':'agree','date':fields.Date.today()})
+            customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')],limit=1)
+            nagmaer_group = self.env['res.groups'].search([('name', '=', u'总经理')],limit=1)
+            employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
+            department = employee.department_id
+            recruit_group = self.env['res.groups'].search([('name','=',u'招聘组')],limit=1)
+            if self.env.user in customer_manager_group.users:
+                if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review or not self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)])[-1].contract_time:
+                    raise exceptions.ValidationError("请填面试评价和offer信息 ")
                 else:
-                    interviewer = department.parent_id.manager_id.user_id
-                self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)]).write({'examiner_user':interviewer})
-                self.interviewer = interviewer
-        elif self.env.user == self.interview_ids[0].recruitment_id.user_id:
-            if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
-                raise exceptions.ValidationError("请填面试评价")
-            else:
-                interviewer = self.interview_ids[0].recruitment_id.working_team_id.partner_id.customer_manager.id
-                print interviewer
-                self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'interviewer':interviewer})
-                self.env['nantian_erp.offer_information'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'user_id':interviewer,})
-                self.interviewer = interviewer
+                    self.state = u'offer审批'
+                    if department.level == 2:
+                        interviewer = department.manager_id.user_id
+                    else:
+                        interviewer = department.parent_id.manager_id.user_id
+                    self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)]).write({'examiner_user':interviewer.id})
+                    self.interviewer = interviewer
+            elif self.env.user == self.interview_ids[0].recruitment_id.user_id:
+                if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
+                    raise exceptions.ValidationError("请填面试评价")
+                else:
+                    interviewer = self.interview_ids[0].recruitment_id.working_team_id.partner_id.customer_manager.id
+                    print interviewer
+                    self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'interviewer':interviewer})
+                    self.env['nantian_erp.offer_information'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'user_id':interviewer,})
+                    self.interviewer = interviewer
 
+            elif self.env.user in recruit_group.users:
+                if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
+                    raise exceptions.ValidationError("请填面试评价")
+                else:
+                    self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[-1].recruitment_id.id,'interviewer':self.interview_ids[-1].recruitment_id.user_id.id})
+                    self.interviewer = self.interview_ids[-1].recruitment_id.user_id.id
         else:
-            self.state = u'发offer'
-            self.interviewer = None
+            raise exceptions.ValidationError("你没有权利操作此记录")
+
 
     @api.multi
     def disagree(self):
-        if self.state == u'简历库中':
-            self.state = u'淘汰'
-        else:
-            if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
-                raise exceptions.ValidationError("请填面试评价")
-            else:
+        if self.env.uid == self.interviewer:
+            if self.state == u'简历库中':
                 self.state = u'淘汰'
-                self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)]).write({'result':'disagree','date':fields.Date.context_today()})
-                self.interviewer = None
+
+            else:
+                if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
+                    raise exceptions.ValidationError("请填面试评价")
+                else:
+                    self.state = u'淘汰'
+                    self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)]).write({'result':'disagree','date':fields.Date.context_today()})
+                    self.interviewer = None
+        else:
+            raise exceptions.ValidationError("你没有权利操作此记录")
 
     @api.multi
     def consider(self):
-        if self.state == u'简历库中':
-            self.state = u'暂存'
-        else:
-            if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
-                raise exceptions.ValidationError("请填面试评价")
-            else:
+        if self.env.uid == self.interviewer:
+            if self.state == u'简历库中':
                 self.state = u'暂存'
-                self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)]).write({'result':'consider','date':fields.Date.context_today()})
-                self.interviewer = None
+            else:
+                if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
+                    raise exceptions.ValidationError("请填面试评价")
+                else:
+                    self.state = u'暂存'
+                    self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)]).write({'result':'consider','date':fields.Date.context_today()})
+                    self.interviewer = None
+        else:
+            raise exceptions.ValidationError("你没有权利操作此记录")
 
-    # @api.multi
-    # @api.onchange('interview_ids')
-    # def change_state(self):
-    #     print 'aaaaaaaaaa'
-    #     self.state = u'审批中'
+    @api.multi
+    def back(self):
+        if self.state != u'offer审批':
+            self.interviewer = self.env.uid
+            self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'interviewer':self.env.uid})
+            self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('review','=',None)]).delete()
+        else:
+            raise exceptions.ValidationError("不能追回")
 
 class interview(models.Model):
     _name = 'nantian_erp.interview'
@@ -272,8 +307,11 @@ class interview(models.Model):
             vals['date'] = fields.Date.today()
         return super(interview,self).create(cr,uid,vals,context=context)
 
+
+
 class offer_information(models.Model):
     _name = 'nantian_erp.offer_information'
+    _rec_name = 'resume_id'
 
     resume_id = fields.Many2one('nantian_erp.resume')
     phone = fields.Char(related='resume_id.phone',string='电话')
@@ -289,11 +327,14 @@ class offer_information(models.Model):
     working_team_id = fields.Many2one('nantian_erp.working_team',related='recruitment_id.working_team_id',string='三级工作组')
     contract_time = fields.Integer(string='合同期限')
     test_time = fields.Integer(string='试用期限')
-    state = fields.Selection([(u'审批中',u'审批中'),(u'已审批',u'已审批'),(u'未通过',u'未通过')],string='状态',default=u'审批中')
+    state = fields.Selection([(u'审批中',u'审批中'),(u'已审批',u'已审批'),(u'未通过',u'未通过'),(u'已入职',u'已入职'),(u'未设置邮箱',u'未设置邮箱'),(u'完成',u'完成'),(u'未入职',u'未入职')],string='状态',default=u'审批中')
     user_id = fields.Many2one('res.users',string='offer填写人')
     examiner_user = fields.Many2one('res.users',string='offer审批人')
     offer_examine_id = fields.One2many('nantian_erp.offer_examine','offer_id')
-
+    emp_id = fields.Many2one('hr.employee',string="员工")
+    entry_id = fields.Many2one('nantian_erp.entry',string='入职办理')
+    work_email = fields.Char(string= '公司邮箱')
+    user = fields.Many2one('res.users',)
     def offer_information_email(self, cr, uid, user_id,offer,offer_examine,context=None):
         context = dict(context or {})
         template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'nantian_erp', 'offer_information_email_template')[1]
@@ -307,7 +348,7 @@ class offer_information(models.Model):
     @api.multi
     def agree(self):
         self.state=u'已审批'
-        self.resume_id.states = u'发offer'
+        self.resume_id.state = u'发offer'
         self.resume_id.interviewer = None
         offer=self.search([('id','=',self.id)])
         user_id=self.env['res.users'].search([('login','=','admin')],limit=1)[0].id
@@ -325,6 +366,88 @@ class offer_information(models.Model):
         self.examiner_user = None
         self.resume_id.interviewer = None
 
+    def create_employee_from_resume(self, cr, uid, ids, context=None):
+        """ Create an hr.employee from the nantian_erp.offer """
+        if context is None:
+            context = {}
+        hr_employee = self.pool.get('hr.employee')
+        nantian_entry = self.pool.get('nantian_erp.entry')
+        model_data = self.pool.get('ir.model.data')
+        act_window = self.pool.get('ir.actions.act_window')
+        emp_id = False
+        for offer in self.browse(cr, uid, ids, context=context):
+            # address_id = contact_name = False
+            # if offer.partner_id:
+            #     address_id = self.pool.get('res.partner').address_get(cr, uid, [offer.partner_id.id], ['contact'])['contact']
+            #     contact_name = self.pool.get('res.partner').name_get(cr, uid, [offer.partner_id.id])[0][1]
+            if offer.recruitment_id:
+                offer.recruitment_id.write({'hired_num': offer.recruitment_id.hired_num + 1})
+                if offer.recruitment_id.hired_num == offer.recruitment_id.need_people_num:
+                    offer.recruitment_id.write({'state': 'archived'})
+                offer.resume_id.write({'state': u'已入职'})
+                create_ctx = dict(context, mail_broadcast=True)
+                emp_id = hr_employee.create(cr, uid, {'name': offer.resume_id.name,
+                                                      'position_id': offer.recruitment_id.job_id.id or False,                                                      'department_id': offer.second_department_id.id or False,
+                                                      'education':offer.resume_id.education or False,
+                                                      'level':offer.job_level or False,
+                                                      'mobile_phone':offer.phone or False,
+                                                      'gender':offer.resume_id.gender or False,
+                                                      'working_team_id':offer.recruitment_id.working_team_id.id or False
+                                                     }, context=create_ctx)
+                entry_id = nantian_entry.create(cr,uid,{
+                    'resume_id':offer.resume_id.id,
+                    'user_id':uid,
+
+                },context=create_ctx
+
+                )
+                self.write(cr, uid, [offer.id], {'emp_id': emp_id,'entry_id':entry_id,'state':u'未设置邮箱'}, context=context)
+                # self.pool['hr.job'].message_post(
+                #     cr, uid, [offer.job_id.id],
+                #     body=_('New Employee %s Hired') % offer.partner_name if offer.partner_name else offer.name,
+                #     subtype="hr_recruitment.mt_job_offer_hired", context=context)
+            else:
+                # raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this offer.'))
+                pass
+        action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+        dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
+        if emp_id:
+            dict_act_window['res_id'] = emp_id
+        dict_act_window['view_mode'] = 'form,tree'
+        return dict_act_window
+
+    @api.multi
+    def create_entry(self):
+        self.resume_id.states = u'未入职'
+        self.state = u"未入职"
+        self.env['nantian_erp.entry'].create({'resume_id': self.resume_id.id,'user_id':self.env.uid,'type':'发offer未入职'})
+
+    @api.multi
+    def create_user(self):
+        if self.work_email:
+            i=1
+            email = self.work_email
+            while(1):
+                if self.env['res.users'].search([('login','=',email)]):
+                    email = email+str(i)
+                    i=i+1
+                else:
+                    break
+            if i==1:
+                user = self.env['res.users'].sudo().create({'login':self.work_email,'password':'123456','name':self.resume_id.name,'email':self.work_email,'active':1})
+            else:
+                print email
+                a = self.env['res.users'].sudo().search([('login','=',self.work_email)])
+                print a.sudo().update({'login':email})
+                # self.env['res.users'].search([('login','=',email)]).update({'login':email})
+                user = self.env['res.users'].sudo().create({'login':self.work_email,'password':'123456','name':self.resume_id.name,'email':self.work_email,'active':1})
+            self.emp_id.user_id = user
+            self.state = u'完成'
+            self.user = user
+        else:
+            raise exceptions.ValidationError('请填写公司邮箱')
+
+
 class offer_examine(models.Model):
     _name = 'nantian_erp.offer_examine'
 
@@ -332,3 +455,14 @@ class offer_examine(models.Model):
     result = fields.Selection([(u'同意',u'同意'),(u'不同意',u'不同意')])
     time = fields.Date(default=fields.Date.today())
     offer_id = fields.Many2one('nantian_erp.offer_information')
+
+
+class entry(models.Model):
+    _name = 'nantian_erp.entry'
+    _rec_name = 'resume_id'
+
+    resume_id = fields.Many2one('nantian_erp.resume')
+    date = fields.Date(default=fields.Date.today())
+    reason = fields.Char(string='原因')
+    user_id = fields.Many2one('res.users')
+    type = fields.Char(string='类别')
