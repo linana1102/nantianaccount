@@ -49,4 +49,11 @@
             </ul>
         </div>
     </t>
+
+    <t t-name="nantian_erp.uploadResume">
+        <button type="button" class="uploadResume oe_stat_button btn btn-default oe_inline">
+            <div class="stat_button_icon fa fa-book fa-fw"></div>
+            <div>上传简历</div>
+        </button>
+    </t>
 </templates>

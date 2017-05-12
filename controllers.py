@@ -2,6 +2,8 @@
 from models import models
 from openerp import http
 
+
+
 # class exchange_data(http.Controller):
 #     @http.route('/get_ip/', type='http', auth='public', methods=['POST'])
 #     def get_ip(self, **post):

@@ -181,4 +181,34 @@ openerp.nantian_erp=function(instance){
         }
     });
 
+    instance.nantian_erp.UploadResume = instance.web.Widget.extend({
+        template:"nantian_erp.uploadResume",
+        events: {
+            "click":"triggerInput"
+        },
+        init: function(parent) {
+            this._super(parent);
+            this.parent = parent;
+        },
+
+        start: function() {
+            this._super(this);
+        },
+        triggerInput:function(e){
+            this.parent.$el.find(".oe_form_binary_file").trigger("click");
+        }
+    });
+
+    instance.web.Sidebar.include({
+        redraw:function(){
+            if(this.dataset && this.model_id && this.dataset.model == "nantian_erp.resume"){
+                var UploadResume = new instance.nantian_erp.UploadResume(this);
+                this.view.$el.find("div.oe_right .uploadResume").remove();
+                UploadResume.appendTo(this.view.$el.find("div.oe_right"));
+            }
+            return this._super.apply(this, arguments);
+        }
+    });
+
+
 }

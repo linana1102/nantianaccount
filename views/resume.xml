@@ -19,7 +19,7 @@
                 <form string="reusme" >
                     <header>
                          <button name="disagree" type="object" states='简历库中' string="淘汰"  class="oe_highlight" />
-                         <button name="consider" type="object" states='简历库中' string="暂存"  class="oe_highlight" />
+                         <button name="consider" type="object" states='简历库中' string="暂存"  class="oe_highlight"/>
                          <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -29,7 +29,7 @@
                          </div>
                         <div class="oe_right" name="buttons">
                             <button class="oe_inline oe_stat_button" type="action" name="%(nantian_erp_resume_interview_default_action)d" icon="fa-star" string="面试"/>
-                            <button  class="oe_stat_button" icon="fa-book" string="简历"/>
+                            <!--<button  class="oe_stat_button" icon="fa-book" string="简历"/>-->
                         </div>
                         <group>
                             <group>
@@ -72,10 +72,11 @@
             <field name="arch" type="xml">
                 <form string="reusme" create="false">
                     <header>
-                         <button name="agree" type="object" states='面试中' string="通过"  class="oe_highlight" />
-                         <button name="disagree" type="object" states='面试中' string="淘汰"  class="oe_highlight" />
-                         <button name="consider" type="object" states='面试中' string="暂存"  class="oe_highlight" />
+                         <button name="agree" type="object" states='面试中' string="通过"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}"/>
+                         <button name="disagree" type="object" states='面试中' string="淘汰"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}"/>
+                         <button name="consider" type="object" states='面试中' string="暂存"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}"/>
                          <field name="state" widget="statusbar"/>
+                         <field name="interviewer" invisible="True"></field>
                     </header>
                     <sheet>
                          <div class="oe_title">
@@ -83,8 +84,8 @@
                                 <h1><field name="name" class="oe_inline" readonly="True"/></h1>
                          </div>
                          <div class="oe_right" name="buttons">
-                            <!--<button class="oe_inline oe_stat_button" type="action" name="%(nantian_erp_resume_interview_default_action)d" icon="fa-star" string="面试"/>-->
-                            <button  class="oe_stat_button" icon="fa-book" string="简历"/>
+                            <button class="oe_inline oe_stat_button" type="action" name="%(nantian_erp_resume_interview_default_action)d" icon="fa-star" string="面试"/>
+                            <!--<button  class="oe_stat_button" icon="fa-book" string="简历"/>-->
                          </div>
                          <group>
                              <group>
@@ -111,7 +112,7 @@
                                  <tree string="interview" editable="bottom" create="false">
                                      <field name="recruitment_id" string="招聘岗位" readonly="True"/>
                                      <field name="interviewer" string="面试官" readonly="True"/>
-                                     <field name="review" string="面试评价" attrs="{'readonly':[('interviewer','=','uid')]}"/>
+                                     <field name="review" string="面试评价" />
                                      <field name="result" string="面试结果" readonly="True"/>
                                      <field name="date" string="面试时间" readonly="True"/>
                                  </tree>
@@ -141,7 +142,12 @@
             <field name="arch" type="xml">
                 <form string="reusme" create="false">
                     <header>
-                         <field name="state" widget="statusbar"/>
+                        <button name="back" type="object" states='面试中' string="追回"  class="oe_highlight" attrs="{'invisible':[('interviewer','=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
+                        <button name="agree" type="object" states='面试中' string="通过"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
+                         <button name="disagree" type="object" states='面试中' string="淘汰"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
+                         <button name="consider" type="object" states='面试中' string="暂存"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
+                        <field name="interviewer" invisible="True"></field>
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                          <div class="oe_title">
@@ -174,9 +180,9 @@
                          <group>
                              <field name="interview_ids" string="面试记录">
                                  <tree string="interview" editable="bottom" create="false">
-                                     <field name="recruitment_id" string="招聘岗位" readonly="True"/>
+                                     <field name="recruitment_id" string="招聘岗位" />
                                      <field name="interviewer" string="面试官" readonly="True"/>
-                                     <field name="review" string="面试评价" attrs="{'readonly':[('interviewer','!=','uid')]}"/>
+                                     <field name="review" string="面试评价" />
                                      <field name="result" string="面试结果" readonly="True"/>
                                      <field name="date" string="面试时间" readonly="True"/>
                                  </tree>
@@ -342,8 +348,14 @@
                                 <field name="first_department_id" string="一级部门"/>
                                 <field name="second_department_id" string="二级部门"/>
                                 <field name="working_team_id" string="工作组"/>
-                                <field name="contract_time" string="合同期限"/>
-                                <field name="test_time" string="试用期限"/>
+                                 <label for="contract_time"/>
+                                <div>
+                                <field name="contract_time" string="合同期限"/><label string="年" class="oe_inline"/>
+                                </div>
+                                <label for="test_time"/>
+                                <div>
+                                <field name="test_time" string="试用期限"/><label string="月" class="oe_inline"/>
+                                </div>
                                 <!--<field name="state"/>-->
                             </group>
                         </group>
@@ -384,7 +396,147 @@
             <field name="domain">[('state','=','已审批')]</field>
             <field name="view_id" ref="nantian_erp_offer_information_tree" />
         </record>
+        <record id="nantian_erp_offer_pended_information_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+             <field name="sequence" eval="1"/>
+            <field name="view_id" ref="nantian_erp_offer_information_tree" />
+            <field name="act_window_id" ref="nantian_erp_offer_pended_information_action" />
+        </record>
+        <record id="nantian_erp_offer_pended_information_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="nantian_erp_pended_offer_information_form" />
+            <field name="act_window_id" ref="nantian_erp_offer_pended_information_action" />
+        </record>
+
+        <record model="ir.ui.view" id="nantian_erp_set_work_email_form">
+            <field name="name">nantian_pended_offer_information.form</field>
+            <field name="model">nantian_erp.offer_information</field>
+            <field name="arch" type="xml">
+                <form string="offer" create="false" >
+                    <header>
+                         <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                         <div class="oe_title">
+                                <label for="resume_id" class="oe_edit_only"/>
+                                <h1><field name="resume_id" class="oe_inline" readonly="True"/></h1>
+                         </div>
+                         <div class="oe_right" name="buttons">
+                             <button  type='object' name="create_user" class="oe_stat_button" icon="fa-book" string="创建用户" attrs="{'invisible': [('user', '!=', False)]}"/>
+                         </div>
+                        <group>
+                            <group >
+                                <!--<field name="resume_id" string="姓名"/>-->
+                                <field name="phone" string="电话"/>
+                                <field name="email" string="邮箱"/>
+                                <field name="entrytime" string="办理入职时间"/>
+                                <field name="entry_recruitment_id" string="入职岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                                <field name="job_level" string="岗位级别"/>
+                                <field name="recruitment_id" string="招聘岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                                <field name = "work_email" string="工作邮箱"/>
+                            </group>
+                            <group>
+                                <field name="channel" string="渠道"/>
+                                <field name="reason" string="招聘理由"/>
+                                <field name="first_department_id" string="一级部门"/>
+                                <field name="second_department_id" string="二级部门"/>
+                                <field name="working_team_id" string="工作组"/>
+                                <field name="emp_id" readonly="1"></field>
+                                <field name="entry_id" readonly="1"/>
+                                <field name="user" readonly="1"/>
+                                 <label for="contract_time"/>
+                                <div>
+                                <field name="contract_time" string="合同期限"/><label string="年" class="oe_inline"/>
+                                </div>
+                                <label for="test_time"/>
+                                <div>
+                                <field name="test_time" string="试用期限"/><label string="月" class="oe_inline"/>
+                                </div>
+                                <!--<field name="state"/>-->
+                            </group>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="nantian_erp_wait_set_email_action" model="ir.actions.act_window">
+            <field name="name">未设置邮箱人员</field>
+            <field name="res_model">nantian_erp.offer_information</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','未设置邮箱')]</field>
+            <field name="view_id" ref="nantian_erp_offer_information_tree" />
+        </record>
+        <record id="nantian_erp_wait_set_email_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+             <field name="sequence" eval="1"/>
+            <field name="view_id" ref="nantian_erp_offer_information_tree" />
+            <field name="act_window_id" ref="nantian_erp_wait_set_email_action" />
+        </record>
+        <record id="nantian_erp_wait_set_email_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="nantian_erp_set_work_email_form" />
+            <field name="act_window_id" ref="nantian_erp_wait_set_email_action" />
+        </record>
+
+        <record model="ir.ui.view" id="nantian_erp_pended_offer_information_form">
+            <field name="name">nantian_pended_offer_information.form</field>
+            <field name="model">nantian_erp.offer_information</field>
+            <field name="arch" type="xml">
+                <form string="offer" create="false" edit="false">
+                    <header>
+                         <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                         <div class="oe_title">
+                                <label for="resume_id" class="oe_edit_only"/>
+                                <h1><field name="resume_id" class="oe_inline" readonly="True"/></h1>
+                         </div>
+                         <div class="oe_right" name="buttons">
+                             <button  type='object' name="create_employee_from_resume" class="oe_stat_button" icon="fa-book" string="入职" attrs="{'invisible': ['|',('emp_id', '!=', False),('entry_id', '!=', False)]}"/>
+                             <button  type='object' name="create_entry" class="oe_stat_button" icon="fa-book" string="不入职" attrs="{'invisible': ['|',('emp_id', '!=', False),('entry_id', '!=', False)]}"/>
+                         </div>
+                        <group>
+                            <group >
+                                <!--<field name="resume_id" string="姓名"/>-->
+                                <field name="phone" string="电话"/>
+                                <field name="email" string="邮箱"/>
+                                <field name="entrytime" string="办理入职时间"/>
+                                <field name="entry_recruitment_id" string="入职岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                                <field name="job_level" string="岗位级别"/>
+                                <field name="recruitment_id" string="招聘岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                            </group>
+                            <group>
+                                <field name="channel" string="渠道"/>
+                                <field name="reason" string="招聘理由"/>
+                                <field name="first_department_id" string="一级部门"/>
+                                <field name="second_department_id" string="二级部门"/>
+                                <field name="working_team_id" string="工作组"/>
+                                <field name="emp_id" readonly="1"></field>
+                                <field name="entry_id" readonly="1"/>
+                                 <label for="contract_time"/>
+                                <div>
+                                <field name="contract_time" string="合同期限"/><label string="年" class="oe_inline"/>
+                                </div>
+                                <label for="test_time"/>
+                                <div>
+                                <field name="test_time" string="试用期限"/><label string="月" class="oe_inline"/>
+                                </div>
+                                <!--<field name="state"/>-->
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <menuitem id="nantian_erp_pending_offer_menu" parent="nantian_erp_resume_root_menu" name="待审批的offer信息" action="nantian_erp_offer_pending_information_action" sequence="5" groups="nantian_erp.group_hr_manager"/>
-        <menuitem id="nantian_erp_pended_offer_menu" parent="nantian_erp_resume_root_menu" name="已审批的offer信息" action="nantian_erp_offer_pended_information_action" sequence="6" groups="nantian_erp.group_hr_manager"/>
+        <menuitem id="nantian_erp_pended_offer_menu" parent="nantian_erp_resume_root_menu" name="待入职人员" action="nantian_erp_offer_pended_information_action" sequence="6" />
+        <menuitem id="nantian_erp_wait_set_email_menu" parent="nantian_erp_resume_root_menu" name="未设置邮箱人员" action="nantian_erp_wait_set_email_action" sequence="7" />
+
     </data>
 </openerp>

@@ -43,7 +43,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
-		<menuitem id="certificate" parent="hr.menu_hr_root"  name="certificate" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header,nantian_erp.group_hr_bm_manager" />
+		<menuitem id="certificate" parent="hr.menu_hr_root"  name="certificate" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header,nantian_erp.group_hr_bm_manager,nantian_erp.group_hr_assistant" />
         <menuitem id="certificate_category" parent="certificate" action="nantian_erp_certificate_category" name="certificate_category"/>
         <menuitem id="certificate_institutions" parent="certificate" action="nantian_erp_certificate_institutions" name="certificate_institutions"/>
         <menuitem id="certificate_direction" parent="certificate" action="nantian_erp_certificate_direction" name="certificate_direction"/>

@@ -63,10 +63,11 @@
                             <h1><field name="user_id" class="oe_inline"/></h1>
                         </div>
                         <div class="oe_right" name="buttons">
-                            <button class="oe_inline oe_stat_button" type="action" name="%(nantian_erp_interview_default_action)d" icon="fa-star" string="添加面试"/>
+                            <button class="oe_inline oe_stat_button" type="action" name="%(nantian_erp_interview_default_action)d" icon="fa-star" string="添加面试" attrs="{'invisible': [('state', '!=', 'released')]}" groups="nantian_erp.group_hr_recruitment"/>
                         </div>
                         <group name="employee_data">
                             <group>
+                                <field name="state" readonly="1"></field>
                                 <field name="department_id" string="部门" class="oe_inline"/>
                                 <field name="working_team_id" string="工作组" class="oe_inline" domain="['|',('partner_id.customer_manager.id','=',uid),('user_id.id','=',uid)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                 <field name="position_categroy_1" string="岗位类别" class="oe_inline"/>
@@ -116,8 +117,8 @@
                 <form string="recruitment" create="false">
                      <header>
                          <button name="action_to_confirm" type="object" states='refused,backed' string="提交"  class="oe_highlight" />
-                         <button name="agree" type="object" states='examineing' string="同意"  class="oe_highlight" />
-                         <button name="disagree" type="object" states='examineing' string="不同意"  class="oe_highlight" />
+                         <button name="agree" type="object" states='examineing' string="同意"  class="oe_highlight" attrs="{'invisible':[('examine_user','!=','uid')]}"/>
+                         <button name="disagree" type="object" states='examineing' string="不同意"  class="oe_highlight" attrs="{'invisible':[('examine_user','!=','uid')]}"/>
                          <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -202,7 +203,7 @@
                                 <field name="position_categroy_1" string="岗位类别" class="oe_inline"/>
                                 <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                 <field name="job_name" invisible="True" class="oe_inline"/>
-                                 <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])]}"/>
+                                <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])]}"/>
                                 <label for="job_level"/>
                                 <div>
                                 <field name="job_level" string="职级" class="oe_inline"/><label string="级" class="oe_inline"/>
