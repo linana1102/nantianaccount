@@ -94,17 +94,14 @@
                             <field name="base_protect" />
                             <field name="pay_of_company" />
                             <field name="union_funds_month" />
-                            <field name="month_cost" />
                             <field name="performance_month" />
+                            <field name="month_cost" />
                              <field name="cost_day" />
                         </group>
                         </group>
                         <notebook>
                             <page string="每月绩效">
-                                <field name="performance_month_id">
-                                   <field name="month_percent" />
-                            <field name="month_performance" />
-                                </field>>
+                                <field name="performance_month_id" widget="many2many_tags"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -117,9 +114,14 @@
             <field name="arch" type="xml">
                 <tree >
                   <field name="employee_id" />
-                        <field name="email" />
+                    <field name="email" />
                     <field name="wages" />
                     <field name="grants_year" />
+                    <field name="variable_expenses" />
+                    <field name="pay_of_company" />
+                    <field name="union_funds_month" />
+                    <field name="performance_month" />
+                    <field name="month_cost" />
                 </tree>
             </field>
         </record>
