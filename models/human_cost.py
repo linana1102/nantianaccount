@@ -193,9 +193,10 @@ class performance_year(models.Model):
     performance_month_ids = fields.One2many('nantian_erp.performance_month','performance_year_id',string="员工月度绩效")
 
     @api.multi
-    @api.depends('department_id',)
+    @api.depends('department_id',"employee_month_cost_ids","employee_month_cost_ids")
     def get_department_level(self):
-        for record in self:
+        records = self.env['nantian_erp.performance_year'].search([])
+        for record in records:
             if record.department_id.level == 1:
                 pass
             elif record.department_id.level == 2:
