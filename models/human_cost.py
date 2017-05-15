@@ -85,24 +85,47 @@ class worktime_in_project(models.Model):
     _name = 'nantian_erp.worktime_in_project'
 
     # 用来保存每个人进入项目和出项目的时间
-    # 来源有1，人员调动表，人员离职表
+    # 来源有人员调动表，人员离职表
     working_team_id = fields.Many2one('nantian_erp.working_team',string="工作组(项目)名称")
     partner_id = fields.Many2one(related='working_team_id.partner_id',string="行业(客户)")
     enter_date = fields.Date(string='进入项目时间')
     exit_date = fields.Date(string='离开项目时间')
     employee_id = fields.Many2one('hr.employee',string="员工姓名")
 
+    # 自动化给每个人一个项目开始的时间
+    @api.multi
+    def make_worktime_enter_date(self):
+        YEAR_FORMAT = "%Y-01-01"
+        now = fields.datetime.now()
+        CreateDate = fields.Datetime.from_string(now)
+        CreateDate = datetime.datetime.strftime(CreateDate, YEAR_FORMAT)
+        records = self.env['hr.employee'].search([])
+        for record in records:
+            id = self.env['nantian_erp.worktime_in_project'].create(
+                {"employee_id": record.id, "working_team_id": record.working_team_id.id,"enter_date":CreateDate})
+
 
 class project_cost_month(models.Model):
     _name = 'nantian_erp.project_cost_month'
 
     working_team_id = fields.Many2one('nantian_erp.working_team',string="工作组(项目)名称")
+    workteam_name = fields.Char(string="工作组",compute='split_workteam_name',store = True)
     # 这个relate怎么写？
     # employee_ids = fields.One2many(related = 'working_team_id.employee_ids',string="工作组(人员)名称",store = True)
+    partner_id = fields.Many2one("res.partner",compute = "split_workteam_name",string="行业(客户)",store=True)
     month_cost = fields.Float(compute='compute_month_workteam_cost',string = '工作组月总计',store = True)
     variable_expenses_ids = fields.One2many('nantian_erp.variable_expenses','project_cost_month_id',string="人员月变动费用")
     variable_expenses = fields.Float(compute='compute_month_workteam_cost',string="工作组变动费用(月计)",store = True)
     project_cost_year_id = fields.Many2one('nantian_erp.project_cost',string="工作组(项目)年")
+
+    @api.depends("working_team_id","variable_expenses")
+    @api.multi
+    def split_workteam_name(self):
+        for x in self:
+            x.workteam_name = x.working_team_id.name
+            x.partner_id = x.working_team_id.partner_id.id
+            # 根据邮箱找到这个人的绩效
+
 
     #每个月项目要花多少钱，这个位置还没有把工作项目时长加进去
     @api.multi
@@ -137,13 +160,20 @@ class project_cost(models.Model):
     _name = 'nantian_erp.project_cost'
 
     working_team_id= fields.Many2one('nantian_erp.working_team',string="工作组(项目)名称")
+    workteam_name = fields.Char(string="工作组",compute='split_workteam_name',store = True)
     partner_id = fields.Many2one("res.partner",compute = "fetch_partner",string="行业(客户)",store=True)
-    user_id = fields.Many2one(related ='working_team_id.user_id',string="工作组负责人")
+    user_id = fields.Many2one(related='working_team_id.user_id',string="工作组负责人")
     customer_manager = fields.Many2one('res.users',ompute ="fetch_partner", string="行业负责人",store=True)
     all_employees_cost = fields.Float(string="人员总费用(年度)")
     project_variable_expenses = fields.Float(string="该项目变动费用(年度)")
-    project_total = fields.Float(compute ="fetch_partner",string="项目成本(年度)",store=True)
+    project_total = fields.Float(compute="fetch_partner",string="项目成本(年度)",store=True)
 
+    @api.depends("working_team_id","all_employees_cost")
+    @api.multi
+    def split_workteam_name(self):
+        for x in self:
+            x.workteam_name = x.working_team_id.name
+            # 根据邮箱找到这个人的绩效
 
     #1.自动化更新所有工作组名称
     #2.计算字段找到他的客户,创建项目年表
@@ -162,7 +192,6 @@ class project_cost(models.Model):
                 object.partner_id = record.partner_id.id
                 object.customer_manager = record.partner_id.customer_manager.id
                 object.project_total = object.all_employees_cost + object.project_variable_expenses
-
             else:
                 project_cost_id = self.env['nantian_erp.project_cost'].create(
                         {"working_team_id": record.id})

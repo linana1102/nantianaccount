@@ -268,7 +268,7 @@
             <field name="model">nantian_erp.project_cost</field>
             <field name="arch" type="xml">
                 <tree >
-                    <field name="working_team_id" />
+                    <field name="workteam_name" />
                     <field name="partner_id" />
                     <field name="customer_manager" />
                     <field name="user_id" />
@@ -310,11 +310,20 @@
                             <field name="working_team_id" />
                             <field name="variable_expenses" />
                             <field name="month_cost" />
-                        </group>
-                        <group string="">
                             <field name="project_cost_year_id" />
-                            <field name="variable_expenses_ids"/>
                         </group>
+                        <notebook >
+                            <page string="人员变动费用">
+                                <field name="variable_expenses_ids">
+                                <tree>
+                                    <field name="employee_id" />
+                                    <field name="cost" />
+                                    <field name="date" />
+                                    <field name="workteam_name" />
+                                </tree>
+                            </field>
+                            </page>
+                        </notebook>
                     </group>
                     </sheet>
                 </form>
@@ -325,15 +334,15 @@
             <field name="model">nantian_erp.project_cost_month</field>
             <field name="arch" type="xml">
                 <tree >
-                    <field name="working_team_id" />
+                    <field name="workteam_name" />
                     <field name="variable_expenses" />
                     <field name="month_cost" />
                 </tree>
             </field>
         </record>
-        <record model="ir.ui.view" id="nantian_erp_project_cost_search">
-            <field name="name">nantian_erp.project_cost.search</field>
-            <field name="model">nantian_erp.project_cost</field>
+        <record model="ir.ui.view" id="nantian_erp_project_cost_month_search">
+            <field name="name">nantian_erp.project_cost_month.search</field>
+            <field name="model">nantian_erp.project_cost_month</field>
             <field name="arch" type="xml">
                 <search string="search_w" >
                     <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
