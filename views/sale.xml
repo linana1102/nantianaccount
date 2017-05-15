@@ -156,7 +156,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name ="domain">[('weekly_reports_id.user_id','=',uid)]</field>
-            <field name="view_id" ref="action_nantian_erp_pres_sale_tree"/>
         </record>
          <record id="action_nantian_erp_pres_sale_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -176,7 +175,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name ="domain">[('state_w','=',u'will_be')]</field>
-            <field name="view_id" ref="action_nantian_erp_pres_sale1_tree"/>
         </record>
          <record id="action_nantian_erp_pres_sale1_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -196,7 +194,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name ="domain">[('state_w','=',u'have_be')]</field>
-             <field name="view_id" ref="action_nantian_erp_pres_sale2_tree"/>
         </record>
          <record id="action_nantian_erp_pres_sale2_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
