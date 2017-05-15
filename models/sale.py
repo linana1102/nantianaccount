@@ -94,7 +94,12 @@ class pres_sale(models.Model):
         [
             (u'lose',u'未中标'),
             (u'win',u'项目开始'),
-        ],string=u"状态")
+        ],default = u'lose',string=u"标书进展")
+    state_w = fields.Selection(
+        [
+            (u'will_be', u'未投标'),
+            (u'have_be', u'已投标'),
+        ], default=u'will_be', string=u"标书状态")
 
 
     contract_view = {
