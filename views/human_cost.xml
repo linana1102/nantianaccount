@@ -27,7 +27,7 @@
                         </group>
                         <group string="">
                             <field name="date" />
-                            <field name="note_ids" widget="many2many_tags"/>
+                            <field name="note"/>
                         </group>
                     </group>
                     </sheet>
@@ -45,8 +45,8 @@
                     <field name="department_second" />
                     <field name="department_third_name" />
                     <field name="month_performance" />
-                     <field name="date" />
                     <field name="month_percent" />
+                    <field name="note"/>
                 </tree>
             </field>
         </record>
@@ -101,7 +101,7 @@
                         </group>
                         <notebook>
                             <page string="每月绩效">
-                                <field name="performance_month_id" widget="many2many_tags"/>
+                                <field name="performance_month_id"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -125,7 +125,20 @@
                 </tree>
             </field>
         </record>
-
+         <record model="ir.ui.view" id="nantian_erp_employee_month_cost_search">
+                <field name="name">nantian_erp.employee_month_cost.search</field>
+                <field name="model">nantian_erp.employee_month_cost</field>
+                <field name="arch" type="xml">
+                    <search string="search_w" >
+                        <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
+                        <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
+                            <filter string="一级部门" name="department_first" context="{'group_by':'department_first'}"/>
+                            <filter string="二级部门" name="department_second" context="{'group_by':'department_second'}"/>
+                            <filter string="成本月份" name="create_date" context="{'group_by':'create_date:month'}"/>
+                        </group>
+                    </search>
+                </field>
+            </record>
 
 
         <record id="nantian_erp_performance_year_action" model="ir.actions.act_window">
@@ -194,6 +207,20 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="nantian_erp_performance_year_search">
+                <field name="name">nantian_erp.performance_year.search</field>
+                <field name="model">nantian_erp.performance_year</field>
+                <field name="arch" type="xml">
+                    <search string="search_w" >
+                        <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
+                        <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
+                            <filter string="一级部门" name="department_first" context="{'group_by':'department_first'}"/>
+                            <filter string="二级部门" name="department_second" context="{'group_by':'department_second'}"/>
+                            <filter string="成本年份" name="create_date" context="{'group_by':'create_date:year'}"/>
+                        </group>
+                    </search>
+                </field>
+            </record>
 
         <record id="nantian_erp_performance_note_action" model="ir.actions.act_window">
             <field name="name">绩效选项</field>
@@ -347,8 +374,9 @@
                 <search string="search_w" >
                     <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
                     <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
-                        <!--<filter string="项目月份" name="create_date" context="{'group_by':'create_date.month'}"/>-->
                         <filter string="项目(工作组)" name="working_team_id" context="{'group_by':'working_team_id'}"/>
+                        <filter string="项目月份" name="create_date" context="{'group_by':'create_date:month'}"/>
+
                     </group>
                 </search>
             </field>
@@ -389,11 +417,11 @@
             <field name="model">nantian_erp.worktime_in_project</field>
             <field name="arch" type="xml">
                 <tree >
-                   <field name="working_team_id" />
-                    <field name="partner_id" />
-                    <field name="enter_date" />
-                    <field name="exit_date" />
                     <field name="employee_id" />
+                    <field name="enter_date" />
+                   <field name="working_team_id" />
+                    <field name="exit_date" />
+                    <field name="partner_id" />
                 </tree>
             </field>
         </record>
