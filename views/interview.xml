@@ -26,7 +26,7 @@
             <field name="name">nantian_interview.tree</field>
             <field name="model">nantian_erp.interview</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree default_order="id desc">
                     <field name="resume_id" string="求职者"/>
                     <field name="recruitment_id" string="招聘申请"/>
                     <field name="result" string="面试结果"/>

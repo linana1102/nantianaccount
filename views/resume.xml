@@ -417,7 +417,7 @@
             <field name="name">nantian_erp_offer_information.tree</field>
             <field name="model">nantian_erp.offer_information</field>
             <field name="arch" type="xml">
-                <tree create="false">
+                <tree create="false" default_order="id desc">
                     <field name="resume_id" string="姓名"/>
                     <field name="phone" string="电话"/>
                     <field name="email" string="邮箱"/>

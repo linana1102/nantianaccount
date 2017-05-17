@@ -434,10 +434,10 @@ class performance_year(models.Model):
                         print record.name + '月工资表和绩效表已存在'
                     else:
                         month_cost = self.env['nantian_erp.performance_month'].create(
-                            {"performance_year_id": object.id})
-                        print record.name + '创建月工资表和绩效表'
+                        {"performance_year_id": object.id}
+                    )
                         month_cost_id = self.env['nantian_erp.employee_month_cost'].create(
-                            {"performance_year_id": object.id,"performance_month_id": month_cost.id,"working_team_id":record.working_team_id.id})
+                        {"performance_year_id": object.id,"performance_month_id": month_cost.id})
             else:
                 #上个自动化动作已经检测他的年边是否存在
                 pass

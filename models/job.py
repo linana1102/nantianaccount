@@ -33,7 +33,7 @@ class recruitment(models.Model):
     job_id =fields.Many2one('nantian_erp.job',string='职位',)
     job_name = fields.Char(related='job_id.name')
     position_categroy_2 = fields.Many2one('nantian_erp.job_categroy')
-    job_level = fields.Selection([(u'1',u'1'),(u'2',u'2'),(u'3',u'3')],string='职级')
+    job_level = fields.Selection([(u'1',u'1'),(u'2',u'2'),(u'3',u'3'),(u'4',u'4'),(u'5',u'5')],string='职级')
     duties = fields.Text(string= '职责')
     requirements = fields.Text(string='要求')
     salary = fields.Char(string='薪资')
@@ -187,6 +187,26 @@ class resume(models.Model):
     offer_information_id = fields.One2many('nantian_erp.offer_information','resume_id',string='offer信息')
     attach_id = fields.Many2one('ir.attachment',string='简历')
 
+    def send_email(self,cr,uid,user,context=None):
+        # template_model = self.pool.get('email.template')
+        # ids = template_model.search(cr,uid,[('name','=','case邮件提醒')],context=None)
+        # template = template_model.browse(cr,uid,ids,context=None)
+        to_list = []
+        to_list.append(formataddr((Header(user.name,'utf-8').encode(),user.email)))
+        mail_mail = self.pool.get('mail.mail')
+        # for i in range(len(data)):
+        #     if not data[i]:
+        #         data[i] = ''
+        mail_id = mail_mail.create(cr, uid, {
+                        'body_html': '<div><p>您好:</p>'
+                            '<p>有个面试需要您处理,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a></p></div>',
+                        # 'subject': 'Re: %s+%s+%s' %(str(data[0]).decode('utf-8').encode('gbk'),str(data[1]).decode('utf-8').encode('gbk'),str(data[2]).decode('utf-8').encode('gbk')),
+                        'subject':'岗位申请',
+                        'email_to': to_list,
+                        'auto_delete': True,
+                    }, context=context)
+        mail_mail.send(cr, uid, [mail_id], context=context)
+
     def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
         model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
         action = self.pool.get(model).read(cr, uid, action_id, context=context)
@@ -213,22 +233,25 @@ class resume(models.Model):
                     else:
                         interviewer = department.parent_id.manager_id.user_id
                     self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)]).write({'examiner_user':interviewer.id})
-                    self.interviewer = interviewer
+                    self.send_email(interviewer)
+                    self.interviewer = interviewer.id
             elif self.env.user == self.interview_ids[0].recruitment_id.user_id:
                 if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
                     raise exceptions.ValidationError("请填面试评价")
                 else:
-                    interviewer = self.interview_ids[0].recruitment_id.working_team_id.partner_id.customer_manager.id
+                    interviewer = self.interview_ids[0].recruitment_id.working_team_id.partner_id.customer_manager
                     print interviewer
-                    self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'interviewer':interviewer})
-                    self.env['nantian_erp.offer_information'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'user_id':interviewer,})
-                    self.interviewer = interviewer
+                    self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'interviewer':interviewer.id})
+                    self.env['nantian_erp.offer_information'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'user_id':interviewer.id,})
+                    self.send_email(interviewer)
+                    self.interviewer = interviewer.id
 
             elif self.env.user in recruit_group.users:
                 if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
                     raise exceptions.ValidationError("请填面试评价")
                 else:
                     self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[-1].recruitment_id.id,'interviewer':self.interview_ids[-1].recruitment_id.user_id.id})
+                    self.send_email(self.interview_ids[-1].recruitment_id.user_id)
                     self.interviewer = self.interview_ids[-1].recruitment_id.user_id.id
         else:
             raise exceptions.ValidationError("你没有权利操作此记录")
@@ -335,14 +358,18 @@ class offer_information(models.Model):
     entry_id = fields.Many2one('nantian_erp.entry',string='入职办理')
     work_email = fields.Char(string= '公司邮箱')
     user = fields.Many2one('res.users',)
-    def offer_information_email(self, cr, uid, user_id,offer,offer_examine,context=None):
+
+    def offer_information_email(self, cr, uid, user_id,offer,offer_examine,attachment_id,context=None):
         context = dict(context or {})
         template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'nantian_erp', 'offer_information_email_template')[1]
+        model = self.pool.get('email.template')
+        template = model.browse(cr, uid, template_id, context=context)
         print template_id
         print offer
         context['offer'] = offer
         context['offer_examine'] = offer_examine
-        self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
+        template.attachment_ids |= attachment_id
+        self.pool.get('email.template').send_mail(cr, uid, template_id, user_id,force_send=True, context=context)
         return True
 
     @api.multi
@@ -355,7 +382,8 @@ class offer_information(models.Model):
         self.env['nantian_erp.offer_examine'].create({'user_id':self.examiner_user.id,'result':u'同意','offer_id':self.id})
         offer_examine = self.env['nantian_erp.offer_examine'].search([('offer_id','=',self.id)],limit=1)
         print offer_examine.user_id.name,offer_examine.result,offer_examine.time
-        self.offer_information_email(user_id,offer,offer_examine)
+        attachment_id = self.resume_id.attach_id
+        self.offer_information_email(user_id,offer,offer_examine,attachment_id)
         self.examiner_user = None
 
     @api.multi
