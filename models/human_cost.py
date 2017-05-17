@@ -123,7 +123,8 @@ class project_cost_month(models.Model):
     working_team_id = fields.Many2one('nantian_erp.working_team',string="工作组(项目)名称")
     workteam_name = fields.Char(string="工作组",compute='split_workteam_name',store = True)
     partner_id = fields.Many2one("res.partner",compute = "split_workteam_name",string="行业(客户)",store=True)
-
+    user_id = fields.Many2one(related='working_team_id.user_id',string="工作组负责人")
+    customer_manager = fields.Many2one(related='partner_id.customer_manager',string="行业负责人",store=True)
     #employee_ids_begin = fields.One2many("hr.employee",string="本月开始人员",store = True)
     #employee_ids_over = fields.One2many("hr.employee",string="本月结束人员",store = True)
     month_cost = fields.Float(compute='compute_project_cost_month',string = '工作组月总计',store = True)
@@ -181,7 +182,7 @@ class project_cost(models.Model):
     workteam_name = fields.Char(string="工作组",compute='split_workteam_name',store = True)
     partner_id = fields.Many2one("res.partner",compute = "fetch_partner",string="行业(客户)",store=True)
     user_id = fields.Many2one(related='working_team_id.user_id',string="工作组负责人")
-    customer_manager = fields.Many2one('res.users',ompute ="fetch_partner", string="行业负责人",store=True)
+    customer_manager = fields.Many2one('res.users',compute ="fetch_partner", string="行业负责人",store=True)
     project_total = fields.Float(compute="fetch_partner",string="项目成本总计(年度)",store=True)
     project_cost_month_ids = fields.One2many('nantian_erp.project_cost_month','project_cost_year_id',string="人员月变动费用")
     project_variable_expenses = fields.Float(string="该项目变动费用(年度)")

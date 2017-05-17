@@ -148,7 +148,7 @@
 
 
         <record id="nantian_erp_performance_year_action" model="ir.actions.act_window">
-            <field name="name">年度成本表</field>
+            <field name="name">员工年度成本表</field>
             <field name="res_model">nantian_erp.performance_year</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -268,11 +268,10 @@
             </field>
         </record>
         <record id="nantian_erp_project_cost_action" model="ir.actions.act_window">
-            <field name="name">项目成本表</field>
+            <field name="name">项目年度成本表</field>
             <field name="res_model">nantian_erp.project_cost</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_partner_id': 1}</field>
             <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
              -->
          </record>
@@ -317,6 +316,8 @@
             <field name="model">nantian_erp.project_cost</field>
             <field name="arch" type="xml">
                 <search string="search_w" >
+                    <field name="user_id" />
+                    <field name="customer_manager" />
                     <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                         <filter string="项目(客户)" name="partner_id" context="{'group_by':'partner_id'}"/>
                         <filter string="成本年份" name="create_date" context="{'group_by':'create_date:year'}"/>
@@ -325,7 +326,7 @@
             </field>
         </record>
         <record id="nantian_erp_project_cost_month_action" model="ir.actions.act_window">
-            <field name="name">项目成本表(月计)</field>
+            <field name="name">项目月度成本表</field>
             <field name="res_model">nantian_erp.project_cost_month</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -342,6 +343,9 @@
                     <group >
                         <group string="">
                             <field name="working_team_id" />
+                            <field name="user_id" />
+                            <field name="partner_id" />
+                            <field name="customer_manager" />
                             <field name="variable_expenses" />
                             <field name="month_cost" />
                             <field name="project_cost_year_id" />
@@ -369,6 +373,8 @@
             <field name="arch" type="xml">
                 <tree >
                     <field name="workteam_name" />
+                    <field name="user_id" />
+                    <field name="partner_id" />
                     <field name="variable_expenses" />
                     <field name="month_cost" />
                 </tree>
@@ -379,6 +385,8 @@
             <field name="model">nantian_erp.project_cost_month</field>
             <field name="arch" type="xml">
                 <search string="search_w" >
+                    <field name="user_id" />
+                    <field name="partner_id" />
                     <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
                     <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                         <filter string="项目(工作组)" name="working_team_id" context="{'group_by':'working_team_id'}"/>

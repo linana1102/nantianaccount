@@ -94,7 +94,7 @@
                     </page>
 
                     <page string="项目进度">
-                             <field name="project_progress_ids" widget="many2many_tags" options='{"limit": 2,"no_open":True,"no_create":1,"no_create_edit":1}'>
+                             <field name="project_progress_ids">
                                     <tree string="Registered feedback" edit="true">
                                         <field name="major_change" string="本周是否重大变更"/>
                                         <field name="repeat" string="本周是否重保"/>
