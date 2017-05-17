@@ -41,7 +41,7 @@
                  </group>
                      <notebook>
                     <page string="售前项目" >
-                            <field name="pres_sale_ids">
+                            <field name="pres_sale_ids" context="{'form_view_ref': 'nantian_erp.nantian_erp_pres_sale_hearder_form'}">
                                     <tree string="Registered feedback" edit="true">
                                         <field name="project_name" string="项目名称"/>
                                         <field name="partner" string="客户名称" />
@@ -155,8 +155,86 @@
             <field name="res_model">nantian_erp.pres_sale</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
-
+            <field name ="domain">[('weekly_reports_id.user_id','=',uid)]</field>
+        </record>
+         <record id="action_nantian_erp_pres_sale_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_pres_sale_tree" />
+            <field name="act_window_id" ref="nantian_erp_pres_sale_action"/>
+        </record>
+         <record id="action_nantian_erp_pres_sale_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_pres_sale_form" />
+            <field name="act_window_id" ref="nantian_erp_pres_sale_action"/>
+        </record>
+        <record id="nantian_erp_pres_sale1_action" model="ir.actions.act_window">
+            <field name="name">售前项目(未投标)</field>
+            <field name="res_model">nantian_erp.pres_sale</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name ="domain">[('state_w','=',u'will_be')]</field>
+        </record>
+         <record id="action_nantian_erp_pres_sale1_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_pres_sale_tree" />
+            <field name="act_window_id" ref="nantian_erp_pres_sale1_action"/>
+        </record>
+        <record id="action_nantian_erp_pres_sale1_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_pres_sale_form" />
+            <field name="act_window_id" ref="nantian_erp_pres_sale1_action"/>
+        </record>
+         <record id="nantian_erp_pres_sale2_action" model="ir.actions.act_window">
+            <field name="name">售前项目(已投标)</field>
+            <field name="res_model">nantian_erp.pres_sale</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name ="domain">[('state_w','=',u'have_be')]</field>
+        </record>
+         <record id="action_nantian_erp_pres_sale2_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_pres_sale_tree" />
+            <field name="act_window_id" ref="nantian_erp_pres_sale2_action"/>
+        </record>
+        <record id="action_nantian_erp_pres_sale2_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_pres_sale_form" />
+            <field name="act_window_id" ref="nantian_erp_pres_sale2_action"/>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_pres_sale_hearder_form">
+            <field name="name">pres_sale.form</field>
+            <field name="model">nantian_erp.pres_sale</field>
+            <field name="arch" type="xml">
+                <form>
+                     <sheet>
+                    <heard>
+                        <field name="state" widget="statusbar" class="oe_right"/>
+                    </heard>
+                    <button name="win_the_biding" type="object" string="中标确认"  class="oe_highlight" />
+                        <!--ques1，这个type怎么创建合同的页面-->
+                    <button name="lose_a_bid" type="object"  string="未中标" attrs="{'invisible':[('state','=','win')]}" class="oe_highlight"/>
+                    <button name="creat_new_contract" type="object" string="创建新合同"  attrs="{'invisible':[('state','!=','win')]}" class="oe_highlight" />
+                    <group>
+                        <group string="售前项目预填写">
+                            <field name="project_name" string="项目名称"/>
+                            <field name="partner" string="客户名称" />
+                            <field name="process_scrib" string="本周主要进展说明"/>
+                            <field name="before_bid_amount" string="投标金额"/>
+                            <field name="bid_commpany" string="中标单位"/>
+                            <field name="pre_bid_date" string="预计投标日期"/>
+                            <field name="competitors" string="竞争对手"/>
+                            <field name="state_w"/>
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
         </record>
         <record model="ir.ui.view" id="nantian_erp_pres_sale_form">
             <field name="name">pres_sale.form</field>
@@ -180,8 +258,9 @@
                             <field name="bid_commpany" string="中标单位"/>
                             <field name="pre_bid_date" string="预计投标日期"/>
                             <field name="competitors" string="竞争对手"/>
+                            <field name="state_w"/>
                         </group>
-                        <group string="编写标书人员待完善" groups="nantian_erp.group_hr_manager_assistant">
+                        <group string="编写标书人员待完善">
                             <field name="contract_name" string="合同名称"/>
                             <field name="salesman_id" string="销售负责人"/>
                             <field name="contract_number" string="合同编号"/>
@@ -463,7 +542,10 @@
         <menuitem id="nantian_erp_weekly_plan_history" parent="nantian_erp_weekly_plan_menu" name="历史周报" action = "nantian_erp_weekly_boss_history_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/><!--只有魏总看到全部-->
         <!--#权限设置，菜单加组，-->
         <menuitem id="nantian_erp_pres_sale_menu" parent="nantian_erp_weekly_reports_menu" name="售前项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before" />
-        <menuitem id="nantian_erp_pres_sale1" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="售前项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
+        <menuitem id="nantian_erp_pres_sale1" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale1_action" name="未投标" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
+        <menuitem id="nantian_erp_pres_sale2" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale2_action" name="已投标" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
+        <menuitem id="nantian_erp_pres_sale_header" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="售前项目" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header"/>
+
 
         <menuitem id="nantian_erp_ongoing_sale_menu" parent="nantian_erp_weekly_reports_menu" name="进行中的项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
 

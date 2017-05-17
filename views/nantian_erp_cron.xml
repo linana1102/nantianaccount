@@ -104,7 +104,7 @@
             <field name="args" eval="'(False,)'" />
         </record>
         <record model="ir.cron" id="nantian_erp_project_cost">
-            <field name="name">自动化更新工作组和他客户</field>
+            <field name="name">每月检测项目年表，更新工作组和他客户</field>
             <field name="interval_number">1</field>
             <field name="interval_type">months</field>
             <field name="numbercall">-1</field>
@@ -114,5 +114,16 @@
             <field name="function" eval="'fetch_partner'"/>
             <field name="args" eval="'(False,)'" />
         </record>
+        <record model="ir.cron" id="nantian_erp_project_cost_month">
+            <field name="name">每月检测项目月表,更新工作组和他客户</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'nantian_erp.project_cost'"/>
+            <field name="function" eval="'create_project_cost_month'"/>
+            <field name="args" eval="'(False,)'" />
+         </record>
     </data>
 </openerp>

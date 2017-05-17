@@ -94,7 +94,12 @@ class pres_sale(models.Model):
         [
             (u'lose',u'未中标'),
             (u'win',u'项目开始'),
-        ],string=u"状态")
+        ],default = u'lose',string=u"标书进展")
+    state_w = fields.Selection(
+        [
+            (u'will_be', u'未投标'),
+            (u'have_be', u'已投标'),
+        ], default=u'will_be', string=u"标书状态")
 
 
     contract_view = {
@@ -182,22 +187,39 @@ class pers_transfer(models.Model):#
     def send_to_after_leader(self):
         if self.touch == u'未转交':
             print self.touch
-            object = self.env['nantian_erp.weekly_reports'].search([("user_id", "=", self.after_leader.user_id.id)])[-1]
-            print object
-            objects1 = self.env['nantian_erp.weekly_reports'].search([("user_id", "=", self.before_leader.id)])
-            print objects1
+            object = self.env['nantian_erp.weekly_reports'].search([("user_id", "=", self.after_leader.user_id.id)])
             if object:
-                objects2 = self.env['nantian_erp.pers_transfer'].create(
-                    {"weekly_reports_id": object.id, "employee_id":self.employee_id.id,
-                     "res_contract_name": self.res_contract_name.id,
-                     "res_contract_job": self.res_contract_job.id,
-                     "sour_team": self.sour_team.id,
-                     "move_reason": self.move_reason,"move_date": self.move_date,
-                     "after_leader": self.after_leader.id,
-                     "before_leader": self.before_leader.id,
-                     })
-                self.touch = u'已转交'
-                print self.touch
+                object = object[-1]
+                print object.user_id.name
+                # objects1 = self.env['nantian_erp.weekly_reports'].search([("user_id", "=", self.before_leader.id)])
+                # print objects1
+                if object:
+                    objects2 = self.env['nantian_erp.pers_transfer'].create(
+                        {"weekly_reports_id": object.id, "employee_id":self.employee_id.id,
+                         "res_contract_name": self.res_contract_name.id,
+                         "res_contract_job": self.res_contract_job.id,
+                         "sour_team": self.sour_team.id,
+                         "move_reason": self.move_reason,"move_date": self.move_date,
+                         "after_leader": self.after_leader.id,
+                         "before_leader": self.before_leader.id,
+                         })
+                    self.touch = u'已转交'
+                    print self.touch
+                    # 找到该员工项目组的项目出入表，并且创建两条信息
+                    sour_id_s = self.env['nantian_erp.worktime_in_project'].search(
+                        [("employee_id", "=", self.employee_id.id,"working_team_id","=",self.sour_team.id)])
+                    if sour_id_s:
+                        sour_id = sour_id_s[-1]
+                        sour_id.exit_date = self.move_date
+                    else:
+                        object = self.env['nantian_erp.worktime_in_project'].create(
+                            {"employee_id": self.employee_id.id,"working_team_id":self.sour_team.id,"exit_date":self.move_date})
+                    # 创建一条进入项目的时间
+                    object = self.env['nantian_erp.worktime_in_project'].create(
+                                        {"employee_id": self.employee_id.id,"enter_date": self.move_date })
+                    print self.employee_id.name + '创建一个项目进入表'
+            else:
+                raise exceptions.ValidationError('您没有填写调动后的负责人')
 
     @api.multi
     def email_to_sys(self):
