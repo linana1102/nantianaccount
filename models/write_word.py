@@ -1,14 +1,35 @@
+# -*- coding: utf-8 -*-
 from docx import Document
+import win32com.client as win32
 
-document = Document()
-table1 = document.add_table(rows=1, cols=1)
-table2 = document.add_table(rows=3, cols=6)
-table3 = document.add_table(rows=1, cols=4)
-table4 = document.add_table(rows=1, cols=1)
-table5 = document.add_table(rows=4, cols=4)
-table6 = document.add_table(rows=1, cols=1)
-table7 = document.add_table(rows=1, cols=1)
-table8 = document.add_table(rows=1, cols=1)
-table9 = document.add_table(rows=1, cols=1)
-document.add_page_break()
-document.save('demo.docx')
+app='Word'
+word= win32.gencache.EnsureDispatch('%s.Application' % app)
+doc=word.Documents.Add()
+word.Visible=False
+
+#Title begin
+sel =word.Selection
+sel.Font.Name = u"微软雅黑"
+sel.Font.Size = 8
+sel.Font.Bold = False
+sel.Font.Italic = False
+sel.Font.Underline = False
+sel.ParagraphFormat.Alignment = 1
+
+myRange = doc.Range(0,0)
+myRange.InsertBefore(u'标题1  测试表格') # 使用样式
+#Title end
+#Table Start
+sel.SetRange(10,10)
+tab = doc.Tables.Add(sel.Range, 9, 3)
+tab.Columns(1).SetWidth(10.35*20.35, 0)
+tab.Rows.Alignment = 1
+tab.Style = u"网格型"
+tabnow = doc.Tables(1)
+cell1 = tabnow.Cell(1,1)
+cell2 = tabnow.Cell(3,1)
+
+#myrange = doc.Range(cell1.Range.Start, cell2.Range.End)
+
+sel.SetRange(cell1.Range.Start, cell2.Range.End)
+sel.Cells.Merge()
