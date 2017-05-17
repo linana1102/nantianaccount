@@ -12,7 +12,6 @@ class variable_expenses(models.Model):
 
 
     email = fields.Char(string="员工邮箱")# 导一个即可
-    # name = fields.Char(string="姓名")
     employee_id = fields.Many2one('hr.employee',compute = 'match_workingteam_and_employee',store = True)
     workteam_name = fields.Char(string="工作组名称")
     work_team_id = fields.Many2one('nantian_erp.working_team',compute = 'match_workingteam_and_employee',store = True)
@@ -29,7 +28,8 @@ class variable_expenses(models.Model):
         for x in self:
             employee_id = self.env['hr.employee'].search([("user_id.email", "=", x.email)])
             if x.date:
-                Date = datetime.datetime.strftime(x.date, DATE_FORMAT)  # 日期转化为字符串
+                CreateDate = fields.Datetime.from_string(x.date)
+                Date = datetime.datetime.strftime(CreateDate, DATE_FORMAT)  # 日期转化为字符串
                 if employee_id:
                     x.employee_id = employee_id[0].id
                 work_team_id = self.env['nantian_erp.working_team'].search([("name", "=", x.workteam_name)])
@@ -122,13 +122,14 @@ class project_cost_month(models.Model):
 
     working_team_id = fields.Many2one('nantian_erp.working_team',string="工作组(项目)名称")
     workteam_name = fields.Char(string="工作组",compute='split_workteam_name',store = True)
-    # 这个relate怎么写？
-    # employee_ids = fields.One2many(related = 'working_team_id.employee_ids',string="工作组(人员)名称",store = True)
     partner_id = fields.Many2one("res.partner",compute = "split_workteam_name",string="行业(客户)",store=True)
-    month_cost = fields.Float(compute='compute_month_workteam_cost',string = '工作组月总计',store = True)
+
+    #employee_ids_begin = fields.One2many("hr.employee",string="本月开始人员",store = True)
+    #employee_ids_over = fields.One2many("hr.employee",string="本月结束人员",store = True)
+    month_cost = fields.Float(compute='compute_project_cost_month',string = '工作组月总计',store = True)
     variable_expenses_ids = fields.One2many('nantian_erp.variable_expenses','project_cost_month_id',string="人员月变动费用")
-    variable_expenses = fields.Float(compute='compute_month_workteam_cost',string="工作组变动费用(月计)",store = True)
-    project_cost_year_id = fields.Many2one('nantian_erp.project_cost',string="工作组(项目)年")
+    variable_expenses = fields.Float(compute='compute_project_cost_month',string="工作组变动费用(月计)",store = True)
+    project_cost_year_id = fields.Many2one('nantian_erp.project_cost',string="工作组年表")
 
     @api.depends("working_team_id","variable_expenses")
     @api.multi
@@ -141,8 +142,8 @@ class project_cost_month(models.Model):
 
     #每个月项目要花多少钱，这个位置还没有把工作项目时长加进去
     @api.multi
-    @api.depends('working_team_id','variable_expenses')
-    def compute_month_workteam_cost(self):
+    @api.depends("workteam_name",'working_team_id','variable_expenses_ids')
+    def compute_project_cost_month(self):
         employees_cost = 0
         DATE_FORMAT = "%Y-%m-01"
         for x in self:
@@ -157,6 +158,11 @@ class project_cost_month(models.Model):
                     records = self.env['nantian_erp.working_team'].search([("id","=",x.working_team_id.id)])
                     if records:
                         record = records[0]
+                        """
+                        这个人员是不准确的是没有变动的，解决方案每个月末，记载一下公作组里的人的ID
+                        如果这个人和上个月里的人比不变的就加满整月的工资，如果是变化的就查找走的人和来的人的具体时间
+                        新进入的看何时进入，离开的看何时离开
+                        """
                         for y in record.employee_ids:
                             if y:
                                 month_ids = self.env['nantian_erp.employee_month_cost'].search([("employee_id","=", y.id),("create_date", ">=",CreateDate)])
@@ -167,7 +173,7 @@ class project_cost_month(models.Model):
                                     print "这个月该员工这个项目没有参加"
             x.month_cost = employees_cost + x.variable_expenses
 
-
+# 工作组年成本表
 class project_cost(models.Model):
     _name = 'nantian_erp.project_cost'
 
@@ -176,26 +182,28 @@ class project_cost(models.Model):
     partner_id = fields.Many2one("res.partner",compute = "fetch_partner",string="行业(客户)",store=True)
     user_id = fields.Many2one(related='working_team_id.user_id',string="工作组负责人")
     customer_manager = fields.Many2one('res.users',ompute ="fetch_partner", string="行业负责人",store=True)
-    all_employees_cost = fields.Float(string="人员总费用(年度)")
+    project_total = fields.Float(compute="fetch_partner",string="项目成本总计(年度)",store=True)
+    project_cost_month_ids = fields.One2many('nantian_erp.project_cost_month','project_cost_year_id',string="人员月变动费用")
     project_variable_expenses = fields.Float(string="该项目变动费用(年度)")
-    project_total = fields.Float(compute="fetch_partner",string="项目成本(年度)",store=True)
 
-    @api.depends("working_team_id","all_employees_cost")
+
+    # 这两个字段好像无用
+    all_employees_cost = fields.Float(string="人员总费用(年度)")
+
+    @api.depends("working_team_id",)
     @api.multi
     def split_workteam_name(self):
         for x in self:
             x.workteam_name = x.working_team_id.name
-            # 根据邮箱找到这个人的绩效
 
-    #1.自动化更新所有工作组名称
-    #2.计算字段找到他的客户,创建项目年表
-    @api.depends("working_team_id","all_employees_cost","project_variable_expenses")
+
+    #计算字段找到他的客户,创建项目年表
+    @api.depends("working_team_id","project_cost_month_ids")
     @api.multi
     def fetch_partner(self):
         now = fields.datetime.now()
         YEAR_FORMAT = "%Y-01-01"
-        CreateDate = fields.Datetime.from_string(now)
-        CreateDate = datetime.datetime.strftime(CreateDate,YEAR_FORMAT)  # 日期转化为字符串
+        CreateDate = datetime.datetime.strftime(now,YEAR_FORMAT)  # 日期转化为字符串
         records = self.env['nantian_erp.working_team'].search([])
         for record in records:
             objects = self.env['nantian_erp.project_cost'].search([("working_team_id", "=", record.id),("create_date", ">=",CreateDate)])
@@ -203,7 +211,9 @@ class project_cost(models.Model):
                 object = objects[0]
                 object.partner_id = record.partner_id.id
                 object.customer_manager = record.partner_id.customer_manager.id
-                object.project_total = object.all_employees_cost + object.project_variable_expenses
+                for x in object.project_cost_month_ids:
+                    object.project_total = object.project_total + x.month_cost
+                    # 这里加不加年终奖？
             else:
                 project_cost_id = self.env['nantian_erp.project_cost'].create(
                         {"working_team_id": record.id})
@@ -233,8 +243,8 @@ class project_cost(models.Model):
                 print '还没有建项目年表'
 
 
+    # 项目年成本算了两遍
     @api.multi
-    @api.depends('partner_id')
     def compute_project_cost(self):
         MONTH_FORMAT = "%Y-%m-01"
         YEAR_FORMAT = "%Y-01-01"
@@ -248,7 +258,9 @@ class project_cost(models.Model):
                     [("project_cost_year_id", "=", record.id)])
             for id in ids:
                 if id.month_cost:
-                    record.project_total=+id.month_cost
+                    record.project_total = record.project_total + id.month_cost
+                if id.variable_expenses:
+                    record.project_variable_expenses = record.project_variable_expenses + variable_expenses
 
 
 # 员工每月工资表
@@ -257,23 +269,23 @@ class employee_month_cost(models.Model):
 
 
     email = fields.Char(related='employee_id.user_id.email',string="员工邮箱")
+    employee_id = fields.Many2one(related='performance_year_id.employee_id', string="员工姓名")
+    working_team_id = fields.Many2one("nantian_erp.working_team",string="所在项目组",store = True)
+    department_id = fields.Many2one(related='performance_year_id.department_id', string="部门",store=True)
+    department_first = fields.Char(related='performance_year_id.department_first', string="一级部门",store=True)
+    department_second = fields.Char(related='performance_year_id.department_second', string="二级部门",store=True)
     wages = fields.Float(string="税前工资")
-    grants_year = fields.Float(string="补助")#这个补助
+    grants_year = fields.Float(string="补助")
     variable_expenses = fields.Float(string="变动费用")# 这个标动费用是报销只适合计算个人的，分成很多客户的，所
+    variable_expenses_ids = fields.One2many("nantian_erp.variable_expenses","employee_month_cost_id",store=True)
     base_protect = fields.Float(string="社保基数")
     pay_of_company = fields.Float(string="社保+公积金(公司缴纳部分)", compute='compute_month_cost', store=True)
     union_funds_month = fields.Float(string="工会经费(月度)",compute='compute_month_cost',store=True)
-    employee_id = fields.Many2one(related='performance_year_id.employee_id', string="员工姓名")
-    department_id = fields.Many2one(related='performance_year_id.department_id', string="部门", store=True)
-    department_first = fields.Char(related='performance_year_id.department_first',string="一级部门",store=True)
-    department_second = fields.Char(related='performance_year_id.department_second',string="二级部门",store=True)
     date = fields.Date(string='工资月份')
     month_cost = fields.Float(string="人力成本合计(月度)",compute = 'compute_month_cost',store = True)
     month_cost_other = fields.Float(string="人力成本合计(月度,不计变动费用)",compute ='compute_month_cost',store = True)
-    performance_year_id = fields.Many2one('nantian_erp.performance_year',string="员工年成本")
-    working_team_id = fields.Many2one(related='employee_id.working_team_id',string="所在项目组",store = True)
-    # 这样的他的人员表里面relate值改变
 
+    performance_year_id = fields.Many2one('nantian_erp.performance_year',string="员工年成本表")
     performance_month_id = fields.Many2one('nantian_erp.performance_month',string="员工月度绩效")
     performance_month = fields.Float(related='performance_month_id.month_performance',string="绩效")
     cost_day = fields.Float(string="人力成本(每天)",compute='compute_month_cost',store=True)
@@ -288,10 +300,12 @@ class employee_month_cost(models.Model):
         pass
 
     @api.multi
-    @api.depends('wages','base_protect','pay_of_company','performance_month',\
+    @api.depends('wages','base_protect','pay_of_company','performance_month',"variable_expenses_ids",\
                  'union_funds_month', 'grants_year','variable_expenses','month_cost','month_cost_other')
     def compute_month_cost(self):
         for record in self:
+            for var in record.variable_expenses_ids:
+                record.variable_expenses = record.variable_expenses + var.cost
             if record.base_protect > 2834:
                 m1 = record.base_protect*0.19
             else:
@@ -320,7 +334,7 @@ class employee_month_cost(models.Model):
 
             record.month_cost_other = record.wages + record.pay_of_company + record.performance_month\
             + record.union_funds_month+ record.grants_year
-            record.cost_day = record.month_cost/21.5#（不计变动费用）
+            record.cost_day = record.month_cost/30#（不计变动费用）
             # 暂时不管计算
 
 
@@ -330,21 +344,24 @@ class performance_year(models.Model):
     _name = 'nantian_erp.performance_year'
 
     employee_id = fields.Many2one('hr.employee',string="员工姓名")
-    working_team_id = fields.Many2one(related='employee_id.working_team_id',string="所在项目组")
-    performance_year = fields.Float(string="年终奖")
-    total_year = fields.Float(string="成本总计",compute = 'compute_year_cost',store = True)
-    total_year_other = fields.Float(string="成本总计(项目)",compute = 'compute_year_cost',store = True)
-    department_id = fields.Many2one(related='employee_id.department_id', string="部门", store=True)
+    working_team_id = fields.Many2one(related = "employee_id.working_team_id",string="所在项目组",store = True)
+    department_id = fields.Many2one(related = "employee_id.department_id",string="部门", store=True)
     department_first = fields.Char(string="一级部门", compute='get_department_level', store=True)
     department_second = fields.Char(string="二级部门", compute='get_department_level', store=True)
-
+    performance_year = fields.Float(string="年终奖")
+    # 以下这两个字段便于显示
     employee_month_cost_ids = fields.One2many('nantian_erp.employee_month_cost','performance_year_id',string="员工月度成本")
-    total_month_cost = fields.Float(string="人力成本合计(年度)",compute='compute_year_cost',store = True)
-    total_month_cost_other = fields.Float(string="人力成本合计(年度,不计变动费用)",compute='compute_year_cost',store = True)
     performance_month_ids = fields.One2many('nantian_erp.performance_month','performance_year_id',string="员工月度绩效")
+    total_month_cost = fields.Float(string="员工月成本合计(12月)",compute='compute_year_cost',store = True)
+    total_year = fields.Float(string="成本总计",compute = 'compute_year_cost',store = True)
+
+    # 以下字段好像无用
+    total_month_cost_other = fields.Float(string="人力成本合计(年度,不计变动费用)",compute='compute_year_cost',store = True)
+    total_year_other = fields.Float(string="成本总计(项目)",compute = 'compute_year_cost',store = True)
+
 
     @api.multi
-    @api.depends('department_id',"employee_month_cost_ids")
+    @api.depends('department_id')
     def get_department_level(self):
         records = self.env['nantian_erp.performance_year'].search([])
         for record in records:
@@ -361,58 +378,52 @@ class performance_year(models.Model):
     @api.multi
     @api.depends("employee_id","working_team_id","performance_year","total_month_cost","total_month_cost_other")
     def compute_year_cost(self):
-        MONTH_FORMAT = "%Y-%m-01"
-        YEAR_FORMAT = "%Y-01-01"
-        now = fields.datetime.now()
-        CreateMDate = datetime.datetime.strftime(now, MONTH_FORMAT)  #
-        CreateYDate = datetime.datetime.strftime(now, YEAR_FORMAT)  #
-        records = self.env['nantian_erp.performance_year'].search([("create_date",">=",CreateYDate)])
-        for record in records:
-            for x in record.employee_month_cost_ids:
-                worktime_id = self.env['nantian_erp.worktime_in_project'].search(
-                    [("employee_id", "=",x.employee_id.id)])
-                # worktime_id = self.env['nantian_erp.worktime_in_project'].search(
-                #     [("employee_id", "=", x.employee_id.id), ('working_team_id', '=', x.working_team_id.id)])
-                # if x.month_cost:
-                #     record.total_month_cost = record.total_month_cost + x.month_cost
-                pass
-        record.total_year = record.total_month_cost + record.performance_year
-
-
+        # MONTH_FORMAT = "%Y-%m-01"
+        # YEAR_FORMAT = "%Y-01-01"
+        # now = fields.datetime.now()
+        # CreateMDate = datetime.datetime.strftime(now, MONTH_FORMAT)  #
+        # CreateYDate = datetime.datetime.strftime(now, YEAR_FORMAT)  #
+        # records = self.env['nantian_erp.performance_year'].search([("create_date",">=",CreateYDate)])
+        # for record in records:
+        #     print record.employee_id.name
+        #     for x in record.employee_month_cost_ids:
+        #         print x.email
+        #         record.total_month_cost = record.total_month_cost + x.month_cost
+        #     record.total_year = record.total_month_cost + record.performance_year
+        for x in self.employee_month_cost_ids:
+            print x.email
+            self.total_month_cost = self.total_month_cost + x.month_cost
+        self.total_year = self.total_month_cost + self.performance_year
 
     # 每年自动创建年绩效表
     @api.multi
     def create_year_performance(self):
+        MONTH_FORMAT = "%Y-%m-01"
+        YEAR_FORMAT = "%Y-01-01"
         now = fields.datetime.now()
         OneyearAgo = (now - datetime.timedelta(days=365))
+        CreateMDate = datetime.datetime.strftime(now, MONTH_FORMAT)  #
+        CreateYDate = datetime.datetime.strftime(now, YEAR_FORMAT)  #
         records = self.env['hr.employee'].search([])
         for record in records:
-            objects = self.env['nantian_erp.performance_year'].search([("employee_id", "=", record.id)])
+            objects = self.env['nantian_erp.performance_year'].search([("employee_id", "=", record.id),("create_date", ">=",CreateYDate)])
             if objects:
-                for x in objects:
-                    CreateDate = fields.Date.from_string(x.create_date)
-                    if CreateDate.year == now.year:
-                        print record.name + '不必创建年表'
-                        break
-                else:
-                    print record.name + '创建年表'
-                    object = self.env['nantian_erp.performance_year'].create(
-                    {"employee_id": record.id})
+                object = objects[-1]
+                pass
             else:
                 object = self.env['nantian_erp.performance_year'].create(
-                {"employee_id": record.id})
-                print record.name + '没有年表'
+                    {"employee_id": record.id,"working_team_id":record.working_team_id.id})
+
+
 
     # 每个月自动创建月绩效表和工资表
     @api.multi
     def create_month_performance(self):
-        # date = fields.Date.to_string(now)
         records = self.env['hr.employee'].search([])
-        # print type(time.strftime("%Y-01-01"))
         for record in records:
-            objects = self.env['nantian_erp.performance_year'].search([("employee_id", "=", record.id),('create_date', '>=',time.strftime("%Y-01-01"))])
+            objects = self.env['nantian_erp.performance_year'].search([("employee_id","=",record.id),('create_date', '>=',time.strftime("%Y-01-01"))])
             if objects:
-                object = objects[0]
+                object = objects[-1]
                 print object.create_date
                 print "对比时间"
                 print (time.strftime("%Y-%m-%d"))
@@ -421,12 +432,11 @@ class performance_year(models.Model):
                     if month_id:
                         print record.name + '月工资表和绩效表已存在'
                     else:
-                        print record.name + '创建月工资表和绩效表'
                         month_cost = self.env['nantian_erp.performance_month'].create(
-                            {"performance_year_id": object.id}
-                        )
+                            {"performance_year_id": object.id})
+                        print record.name + '创建月工资表和绩效表'
                         month_cost_id = self.env['nantian_erp.employee_month_cost'].create(
-                            {"performance_year_id": object.id,"performance_month_id": month_cost.id})
+                            {"performance_year_id": object.id,"performance_month_id": month_cost.id,"working_team_id":record.working_team_id.id})
             else:
                 #上个自动化动作已经检测他的年边是否存在
                 pass
