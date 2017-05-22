@@ -79,3 +79,10 @@ body .openerp td.oe_application div.selfDefColor ul {
 .hidden_upload_btn ul.oe_dropdown_menu li.oe_sidebar_add_attachment {
   display: none;
 }
+i.uploadResume_tip {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  color: #e4393c;
+  font-style: normal;
+}

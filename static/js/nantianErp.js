@@ -206,9 +206,7 @@ openerp.nantian_erp=function(instance){
                 this.parent.$el.removeClass("hidden_upload_btn");
                 this.act = "upload";
                 var me = this;
-                this.$el.tooltip({
-                    delay: { show: 500, hide: 0}
-                });
+                $(target).css("position","relative");
                 target.ondragenter = function(e){
                     e.preventDefault();
                 }
@@ -220,7 +218,6 @@ openerp.nantian_erp=function(instance){
                 }
                 target.ondrop = function(e){
                     e.preventDefault();
-                    console.log('拖拽释放');
                     var files = e.dataTransfer.files;
                     me.parent.$el.find(".oe_form_binary_file")[0].files = files;
                 }
