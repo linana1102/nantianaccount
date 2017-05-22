@@ -51,7 +51,11 @@
     </t>
 
     <t t-name="nantian_erp.uploadResume">
-        <button type="button" class="uploadResume oe_stat_button btn btn-default oe_inline">
+        <t t-set="title" t-value="" />
+        <t t-if="!widget.parent.items.files.length" >
+            <t t-set="title" t-value="'可以将附件拖拽到此处实现上传'" />
+        </t>
+        <button type="button" t-att-title="title" class="uploadResume oe_stat_button btn btn-default oe_inline">
             <div class="stat_button_icon fa fa-book fa-fw"></div>
             <div t-if="!widget.parent.items.files.length">上传简历</div>
             <t t-if="widget.parent.items.files.length">
