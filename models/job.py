@@ -185,7 +185,7 @@ class resume(models.Model):
     interviewer = fields.Many2one('res.users',string='面试官')
     interview_ids = fields.One2many('nantian_erp.interview','resume_id')
     offer_information_id = fields.One2many('nantian_erp.offer_information','resume_id',string='offer信息')
-    attach_id = fields.Many2one('ir.attachment',string='简历')
+    # attach_id = fields.Many2one('ir.attachment',string='简历')
 
     def send_email(self,cr,uid,user,context=None):
         # template_model = self.pool.get('email.template')
@@ -359,16 +359,12 @@ class offer_information(models.Model):
     work_email = fields.Char(string= '公司邮箱')
     user = fields.Many2one('res.users',)
 
-    def offer_information_email(self, cr, uid, user_id,offer,offer_examine,attachment_id,context=None):
+    def offer_information_email(self, cr, uid, user_id,offer,offer_examine,attach_ids=[],context=None):
         context = dict(context or {})
         template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'nantian_erp', 'offer_information_email_template')[1]
-        model = self.pool.get('email.template')
-        template = model.browse(cr, uid, template_id, context=context)
-        print template_id
-        print offer
         context['offer'] = offer
         context['offer_examine'] = offer_examine
-        template.attachment_ids |= attachment_id
+        self.pool.get('email.template').write(cr,uid,template_id,{'attachment_ids':[(6,0,attach_ids)]})
         self.pool.get('email.template').send_mail(cr, uid, template_id, user_id,force_send=True, context=context)
         return True
 
@@ -382,8 +378,11 @@ class offer_information(models.Model):
         self.env['nantian_erp.offer_examine'].create({'user_id':self.examiner_user.id,'result':u'同意','offer_id':self.id})
         offer_examine = self.env['nantian_erp.offer_examine'].search([('offer_id','=',self.id)],limit=1)
         print offer_examine.user_id.name,offer_examine.result,offer_examine.time
-        attachment_id = self.resume_id.attach_id
-        self.offer_information_email(user_id,offer,offer_examine,attachment_id)
+        attachment_ids = self.env['ir.attachment'].search([('res_id','=',self.resume_id.id),('res_model','=','nantian_erp.resume')])
+        attach_ids = []
+        for attachment_id in attachment_ids:
+            attach_ids.append(attachment_id.id)
+        self.offer_information_email(user_id,offer,offer_examine,attach_ids)
         self.examiner_user = None
 
     @api.multi

@@ -44,6 +44,7 @@
         'views/interview.xml',
         'views/template.xml',
         'views/human_cost.xml',
+        # 'views/export_resume.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
