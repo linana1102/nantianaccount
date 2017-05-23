@@ -486,12 +486,12 @@ class hr_employee(models.Model):
         for employee in employees:
             fp = StringIO()
             experiences = []
-            certificates=[]
+            certifications=[]
             for i in employee.work_experience_ids:
                 exper = {'date':i.date,'name':i.name,'job':i.job,'description':i.description}
                 experiences.append(exper)
                 # certificate = {'name':name,'':}
-                certificates.append(certificate)
+                certifications.append(certificate)
             resume_dict = {'name':employee.name,
                            'gender':employee.name,
                            'birthday':employee.birthday,
