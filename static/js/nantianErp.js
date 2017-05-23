@@ -194,12 +194,34 @@ openerp.nantian_erp=function(instance){
 
         start: function() {
             this._super(this);
+            var target = $(".oe_form_sheet")[0];
             if(this.parent.items.files.length){
                 this.parent.$el.addClass("hidden_upload_btn");
                 this.act = "preview";
+                target.ondragenter = null;
+                target.ondragover = null;
+                target.ondragleave = null;
+                target.ondrop = null;
             }else{
                 this.parent.$el.removeClass("hidden_upload_btn");
                 this.act = "upload";
+                var me = this;
+                $(target).css("position","relative");
+                target.ondragenter = function(e){
+                    e.preventDefault();
+                }
+                target.ondragover = function(e){
+                    e.preventDefault();
+                }
+                target.ondragleave = function(e){
+                    e.preventDefault();
+                }
+                target.ondrop = function(e){
+                    e.preventDefault();
+                    var files = e.dataTransfer.files;
+                    me.parent.$el.find(".oe_form_binary_file")[0].files = files;
+                }
+
             }
         },
         triggerInput:function(e){

@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-from openerp import tools
 from openerp import models, fields, api,exceptions
 import datetime
 import time
-import string
-import logging
-import sys
+
 
 class variable_expenses(models.Model):
     _name = 'nantian_erp.variable_expenses'
@@ -74,7 +71,7 @@ class performance_month(models.Model):
     date = fields.Date(string="绩效日期")
     note = fields.Char(string="备注")
 
-    @api.depends("department_third",'month_performance',"performance_year_id")
+    @api.depends("department_third")
     @api.multi
     def split_workteam_name(self):
         for x in self:
@@ -123,26 +120,31 @@ class project_cost_month(models.Model):
     working_team_id = fields.Many2one('nantian_erp.working_team',string="工作组(项目)名称")
     workteam_name = fields.Char(string="工作组",compute='split_workteam_name',store = True)
     partner_id = fields.Many2one("res.partner",compute = "split_workteam_name",string="行业(客户)",store=True)
-
-    #employee_ids_begin = fields.One2many("hr.employee",string="本月开始人员",store = True)
-    #employee_ids_over = fields.One2many("hr.employee",string="本月结束人员",store = True)
+    user_id = fields.Many2one(related='working_team_id.user_id',string="工作组负责人")
+    customer_manager = fields.Many2one(related='partner_id.customer_manager',string="行业负责人",store=True)
     month_cost = fields.Float(compute='compute_project_cost_month',string = '工作组月总计',store = True)
     variable_expenses_ids = fields.One2many('nantian_erp.variable_expenses','project_cost_month_id',string="人员月变动费用")
     variable_expenses = fields.Float(compute='compute_project_cost_month',string="工作组变动费用(月计)",store = True)
     project_cost_year_id = fields.Many2one('nantian_erp.project_cost',string="工作组年表")
+    adjust = fields.Char(string="更新")
 
-    @api.depends("working_team_id","variable_expenses")
+
+    @api.depends("working_team_id","variable_expenses","adjust")
     @api.multi
     def split_workteam_name(self):
         for x in self:
-            x.workteam_name = x.working_team_id.name
-            x.partner_id = x.working_team_id.partner_id.id
-            # 根据邮箱找到这个人的绩效
+            if x.working_team_id:
+                x.workteam_name = x.working_team_id.name
+                print x.workteam_name
+            if x.working_team_id.partner_id:
+                x.partner_id = x.working_team_id.partner_id.id
+                print x.partner_id.name
+        # 根据邮箱找到这个人的绩效
 
 
     #每个月项目要花多少钱，这个位置还没有把工作项目时长加进去
     @api.multi
-    @api.depends("workteam_name",'working_team_id','variable_expenses_ids')
+    @api.depends("working_team_id",'variable_expenses_ids')
     def compute_project_cost_month(self):
         employees_cost = 0
         DATE_FORMAT = "%Y-%m-01"
@@ -181,16 +183,16 @@ class project_cost(models.Model):
     workteam_name = fields.Char(string="工作组",compute='split_workteam_name',store = True)
     partner_id = fields.Many2one("res.partner",compute = "fetch_partner",string="行业(客户)",store=True)
     user_id = fields.Many2one(related='working_team_id.user_id',string="工作组负责人")
-    customer_manager = fields.Many2one('res.users',ompute ="fetch_partner", string="行业负责人",store=True)
+    customer_manager = fields.Many2one('res.users',compute ="fetch_partner", string="行业负责人",store=True)
     project_total = fields.Float(compute="fetch_partner",string="项目成本总计(年度)",store=True)
     project_cost_month_ids = fields.One2many('nantian_erp.project_cost_month','project_cost_year_id',string="人员月变动费用")
-    project_variable_expenses = fields.Float(string="该项目变动费用(年度)")
+    project_variable_expenses = fields.Float(string="该工作组变动费用(年度)")
 
 
     # 这两个字段好像无用
-    all_employees_cost = fields.Float(string="人员总费用(年度)")
+    adjust = fields.Char(string="更新")
 
-    @api.depends("working_team_id",)
+    @api.depends("working_team_id","adjust")
     @api.multi
     def split_workteam_name(self):
         for x in self:
@@ -198,7 +200,7 @@ class project_cost(models.Model):
 
 
     #计算字段找到他的客户,创建项目年表
-    @api.depends("working_team_id","project_cost_month_ids")
+    @api.depends("working_team_id","project_cost_month_ids","adjust")
     @api.multi
     def fetch_partner(self):
         now = fields.datetime.now()
@@ -211,14 +213,12 @@ class project_cost(models.Model):
                 object = objects[0]
                 object.partner_id = record.partner_id.id
                 object.customer_manager = record.partner_id.customer_manager.id
-                for x in object.project_cost_month_ids:
-                    object.project_total = object.project_total + x.month_cost
-                    # 这里加不加年终奖？
             else:
                 project_cost_id = self.env['nantian_erp.project_cost'].create(
                         {"working_team_id": record.id})
 
     # 创建月项目表
+    @api.depends("adjust")
     @api.multi
     def create_project_cost_month(self):
         MONTH_FORMAT = "%Y-%m-01"
@@ -244,6 +244,7 @@ class project_cost(models.Model):
 
 
     # 项目年成本算了两遍
+    @api.depends("adjust")
     @api.multi
     def compute_project_cost(self):
         MONTH_FORMAT = "%Y-%m-01"
@@ -295,7 +296,7 @@ class employee_month_cost(models.Model):
 
     # 根据邮箱找到员工录入这些基本费用
     @api.multi
-    @api.depends('email')
+    @api.depends('email',"date")
     def search_employee(self):
         pass
 

@@ -53,7 +53,12 @@
     <t t-name="nantian_erp.uploadResume">
         <button type="button" class="uploadResume oe_stat_button btn btn-default oe_inline">
             <div class="stat_button_icon fa fa-book fa-fw"></div>
-            <div t-if="!widget.parent.items.files.length">上传简历</div>
+            <div t-if="!widget.parent.items.files.length">
+                上传简历
+                <i class="uploadResume_tip">
+                    可以将简历拖拽到该名片实现简历上传！
+                </i>
+            </div>
             <t t-if="widget.parent.items.files.length">
                 <div>预览简历</div>
                 <div style="padding-left:16px;">
