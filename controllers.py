@@ -75,6 +75,7 @@ class Binary(http.Controller):
         #print ids
         tpl = DocxTemplate(r'myaddons/nantian_erp/resume_template.docx')
         id_list = json.loads(ids)
+        print id_list
         Model = request.session.model('hr.employee')
         employees = Model.search_read([('id','in',id_list)])
         print employees
@@ -82,20 +83,24 @@ class Binary(http.Controller):
             fp = StringIO()
             experiences = []
             certifications=[]
-            for i in employee.work_experience_ids:
-                exper = {'date':i.date,'name':i.name,'job':i.job,'description':i.description}
-                experiences.append(exper)
+            if employee['work_experience_ids']:
+                Model = request.session.model('nantian_erp.work_experience')
+                experiences = Model.search_read([('id','in',employee['work_experience_ids'])])
+                for exper in experiences:
+                    exper_dict = {'date':exper['date'],'name':exper['name'],'job':exper['job'],'description':exper['description']}
+                    experiences.append(exper_dict)
+
                 certificate = {'name':employee.name}
                 # certifications.append(certificate)
-            resume_dict = {'name':employee.name,
-                           'gender':employee.name,
-                           'birthday':employee.birthday,
-                           'education':employee.education,
-                           'graduction':employee.graduation,
-                           'major':employee.major,
-                           'job':employee.job,
-                           'work_time':employee.work_time,
-                           'specialty':employee.work_time,
+            resume_dict = {'name':employee['name'],
+                           'gender':employee['gender'],
+                           'birthday':employee['birthday'],
+                           'education':employee['education'],
+                           'graduction':employee['graduation'],
+                           'major':employee['major'],
+                           'job':employee['job'][1],
+                           'work_time':employee['work_time'],
+                           'specialty':employee['work_time'],
                            'work_experiences':experiences,
                            # 'certifications':certifications
 
@@ -105,12 +110,12 @@ class Binary(http.Controller):
             fp.seek(0)
             data = fp.read()
             fp.close()
-            # print data
-            request.make_response(data,
-            headers=[('Content-Disposition',
-                            content_disposition('employee.name'+u'简历'+'.docx')),
-                     ('Content-Type', 'application/vnd.ms-word')],
-            )
+            print data
+            # request.make_response(data,
+            # headers=[('Content-Disposition',
+            #                 content_disposition('employee.name'+u'简历'+'.docx')),
+            #          ('Content-Type', 'application/vnd.ms-word')],
+            # )
 
             #  response = HttpResponse(wrapper, content_type='application/zip')
             # response['Content-Disposition'] = 'attachment; filename=your_zipfile.zip'
