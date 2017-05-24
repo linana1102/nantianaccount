@@ -261,14 +261,20 @@ openerp.nantian_erp=function(instance){
 
         exportAction:function(self){
             var ids = self.getParent().get_selected_ids();
-
             /*self.rpc("/web",{param:ids}).then(function(a){
                 console.log(1);
             },function(b){
                 console.log(b);
             });*/
-
-            console.log(ids);
+            var data = JSON.stringify(ids);
+            var url = "/nantian_erp/export_resume";
+            var $inputContent = $('<input>').attr({ name: "ids", value: data });
+            var $form = $("<form>");
+            $form.addClass("hidden");
+            $form.attr({ target: '_blank', method: 'post', action: url }).append($inputContent);
+            $form.appendTo('body');
+            $form.submit();
+            $form.remove();
         }
     });
 
