@@ -10,26 +10,10 @@ import time
 import string
 import logging
 import sys
-from docxtpl import DocxTemplate
-from cStringIO import StringIO
-from openerp.http import request
-from openerp.tools import ustr
-import urllib2
+
 
 sys.setrecursionlimit(1000000)
 
-
-def content_disposition(filename):
-    filename = ustr(filename)
-    escaped = urllib2.quote(filename.encode('utf8'))
-    browser = request.httprequest.user_agent.browser
-    version = int((request.httprequest.user_agent.version or '0').split('.')[0])
-    if browser == 'msie' and version < 9:
-        return "attachment; filename=%s" % escaped
-    elif browser == 'safari' and version < 537:
-        return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
-    else:
-        return "attachment; filename*=UTF-8''%s" % escaped
 
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
@@ -479,44 +463,6 @@ class hr_employee(models.Model):
         #             manager_group.users |= user
         #         if user.employee_ids[0] in presidents:
         #             president_group.users |= user
-    @api.multi
-    def export_resume(self):
-        tpl = DocxTemplate(r'C:/Users/nantian/Desktop/resume_template.docx')
-        employees = self.env['hr.employee'].browse(self._context.get('active_ids'))
-        for employee in employees:
-            fp = StringIO()
-            experiences = []
-            certificates=[]
-            for i in employee.work_experience_ids:
-                exper = {'date':i.date,'name':i.name,'job':i.job,'description':i.description}
-                experiences.append(exper)
-                # certificate = {'name':name,'':}
-                certificates.append(certificate)
-            resume_dict = {'name':employee.name,
-                           'gender':employee.name,
-                           'birthday':employee.birthday,
-                           'education':employee.education,
-                           'graduction':employee.graduation,
-                           'major':employee.major,
-                           'job':employee.job,
-                           'work_time':employee.work_time,
-                           'specialty':employee.work_time,
-                           'work_experiences':experiences,
-                           'certifications':certifications
-
-                           }
-            tpl.render(resume_dict)
-            tpl.save(fp)
-            fp.seek(0)
-            data = fp.read()
-            fp.close()
-            # print data
-            request.make_response(data,
-            headers=[('Content-Disposition',
-                            content_disposition('employee.name'+u'简历'+'.docx')),
-                     ('Content-Type', 'application/vnd.ms-word')],
-            )
-
 
 #证书
 class certificate(models.Model):
