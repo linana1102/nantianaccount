@@ -259,8 +259,15 @@ openerp.nantian_erp=function(instance){
             });
         },
 
-        exportAction:function(a){
-            var ids = a.getParent().get_selected_ids();
+        exportAction:function(self){
+            var ids = self.getParent().get_selected_ids();
+
+            /*self.rpc("/web",{param:ids}).then(function(a){
+                console.log(1);
+            },function(b){
+                console.log(b);
+            });*/
+
             console.log(ids);
         }
     });

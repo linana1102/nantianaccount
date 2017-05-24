@@ -9,6 +9,7 @@ from cStringIO import StringIO
 from openerp.http import request
 from openerp.tools import ustr
 import urllib2
+import json
 
 
 def content_disposition(filename):
@@ -71,8 +72,10 @@ class Binary(http.Controller):
 
     @http.route('/nantian_erp/export_resume', type='http', auth="public")
     def export_resume(self,ids):
-        tpl = DocxTemplate(r'resume_template.docx')
-        employees = self.env['hr.employee'].browse(ids)
+        #print ids
+        tpl = DocxTemplate(r'myaddons/nantian_erp/resume_template.docx')
+        id_list = json.loads(ids)
+        employees = self.env['hr.employee'].browse(id_list)
         for employee in employees:
             fp = StringIO()
             experiences = []
