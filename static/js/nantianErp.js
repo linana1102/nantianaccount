@@ -240,17 +240,48 @@ openerp.nantian_erp=function(instance){
         }
     });
 
+    instance.nantian_erp.ExportResume = instance.web.Widget.extend({
+
+        init: function(parent) {
+            this._super(parent);
+            this.parent = parent;
+        },
+
+        start:function(){
+            var me = this;
+            this._super(this);
+            this.parent.items['other'].push({
+                classname:"oe_sidebar_action",
+                label:"导出简历",
+                callback:function(){
+                    me.exportAction(this);
+                }
+            });
+        },
+
+        exportAction:function(a){
+            var ids = a.getParent().get_selected_ids();
+            console.log(ids);
+        }
+    });
+
     instance.web.Sidebar.include({
         redraw:function(){
             if(this.dataset && this.model_id && this.dataset.model == "nantian_erp.resume"){
                 var UploadResume = new instance.nantian_erp.UploadResume(this);
-                //UploadResume.destroy();
                 this.view.$el.find(".oe_right .uploadResume").remove();
                 UploadResume.appendTo(this.view.$el.find(".oe_right[name=buttons]"));
             }
             return this._super.apply(this, arguments);
+        },
+        start:function(){
+            if(this.view.model == "hr.employee"){
+                var ExportResume = new instance.nantian_erp.ExportResume(this);
+                ExportResume.insertAfter(this.$(".oe_sidebar_action"));
+            };
+            return this._super.apply(this, arguments);
         }
-    });
 
+    });
 
 }
