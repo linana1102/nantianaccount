@@ -75,7 +75,9 @@ class Binary(http.Controller):
         #print ids
         tpl = DocxTemplate(r'myaddons/nantian_erp/resume_template.docx')
         id_list = json.loads(ids)
-        employees = self.env['hr.employee'].browse(id_list)
+        Model = request.session.model('hr.employee')
+        employees = Model.search_read([('id','in',id_list)])
+        print employees
         for employee in employees:
             fp = StringIO()
             experiences = []
