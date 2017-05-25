@@ -15,7 +15,7 @@ import urllib2
 import json
 import base64
 import zipfile,os
-
+import sys
 def content_disposition(filename):
     filename = ustr(filename)
     escaped = urllib2.quote(filename.encode('utf8'))
@@ -93,7 +93,8 @@ class Binary(http.Controller):
         for i,employee in enumerate(employees):
 
             # 获取模板
-            tpl = DocxTemplate(r'myaddons/nantian_erp/resume_template.docx')
+            path = os.path.abspath(os.path.dirname(sys.argv[0]))
+            tpl = DocxTemplate(path.replace('\\','/')+'/myaddons/nantian_erp/resume_template.docx')
             # 简历写入的文件流
             fp = StringIO()
             experiences_list = []
