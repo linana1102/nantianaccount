@@ -120,10 +120,14 @@ class Binary(http.Controller):
                     certificate = {'name':cer['name'] or '','image': image or '',}
 
                     certifications_dict.append(certificate)
-
+            gender = ''
+            if employee['gender'] == 'male':
+                gender = u'男'
+            elif employee['gender'] == 'female':
+                gender = u'女'
             # 模板所需数据
             resume_dict = {'name':employee['name'] or '',
-                           'gender':employee['gender'] or '',
+                           'gender':gender or '',
                            'birthday':employee['birthday']or '',
                            'education':employee['education']or '',
                            'graduction':employee['graduation']or '',
