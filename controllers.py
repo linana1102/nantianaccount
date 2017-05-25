@@ -4,13 +4,17 @@ from openerp import http
 
 from openerp.http import request
 import base64
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate,InlineImage
+from docx.shared import Mm, Inches, Pt
+import openerp
+
 from cStringIO import StringIO
 from openerp.http import request
 from openerp.tools import ustr
 import urllib2
 import json
-
+import base64
+import zipfile,os
 
 def content_disposition(filename):
     filename = ustr(filename)
@@ -72,50 +76,76 @@ class Binary(http.Controller):
 
     @http.route('/nantian_erp/export_resume', type='http', auth="public")
     def export_resume(self,ids):
-        #print ids
-        tpl = DocxTemplate(r'myaddons/nantian_erp/resume_template.docx')
+        # 定义压缩文件流
+        zip_stream = StringIO()
+        resume_zip = zipfile.ZipFile(zip_stream,'w')
+
+        # 将参数转为列表
         id_list = json.loads(ids)
-        print id_list
+
+        # 获取要到处简历的员工
         Model = request.session.model('hr.employee')
         employees = Model.search_read([('id','in',id_list)])
-        print employees
-        for employee in employees:
+
+
+        job=''
+
+        for i,employee in enumerate(employees):
+
+            # 获取模板
+            tpl = DocxTemplate(r'myaddons/nantian_erp/resume_template.docx')
+            # 简历写入的文件流
             fp = StringIO()
-            experiences = []
-            certifications=[]
+            experiences_list = []
+            certifications_dict=[]
+            if employee['job_id']:
+                job = employee['job_id'][1]
             if employee['work_experience_ids']:
                 Model = request.session.model('nantian_erp.work_experience')
                 experiences = Model.search_read([('id','in',employee['work_experience_ids'])])
                 for exper in experiences:
-                    exper_dict = {'date':exper['date'],'name':exper['name'],'job':exper['job'],'description':exper['description']}
-                    experiences.append(exper_dict)
+                    exper_dict = {'date':exper['date'] or '','name':exper['name'] or '','job':exper['job'] or '','description':exper['description'] or ''}
+                    experiences_list.append(exper_dict)
 
-                certificate = {'name':employee.name}
-                # certifications.append(certificate)
-            resume_dict = {'name':employee['name'],
-                           'gender':employee['gender'],
-                           'birthday':employee['birthday'],
-                           'education':employee['education'],
-                           'graduction':employee['graduation'],
-                           'major':employee['major'],
-                           'job':employee['job'][1],
-                           'work_time':employee['work_time'],
-                           'specialty':employee['work_time'],
-                           'work_experiences':experiences,
-                           # 'certifications':certifications
+            if employee['certificate_ids']:
+                Model = request.session.model('nantian_erp.certificate')
+                certificates = Model.search_read([('id','in',employee['certificate_ids'])])
+                for cer in certificates:
+                    image = ''
+                    if cer['image']:
+                        # 将base64 转为图片
+                        f = StringIO(base64.b64decode(str(cer['image'])))
+                        image = InlineImage(tpl,f,height=Mm(30))
+                        f.close()
+                    certificate = {'name':cer['name'] or '','image': image or '',}
+
+                    certifications_dict.append(certificate)
+
+            # 模板所需数据
+            resume_dict = {'name':employee['name'] or '',
+                           'gender':employee['gender'] or '',
+                           'birthday':employee['birthday']or '',
+                           'education':employee['education']or '',
+                           'graduction':employee['graduation']or '',
+                           'major':employee['major']or '',
+                           'job':job or '',
+                           'work_time':employee['work_time']or '',
+                           'specialty':employee['specialty']or '',
+                           'work_experiences':experiences_list or '',
+                           'certifications':certifications_dict or '',
 
                            }
             tpl.render(resume_dict)
             tpl.save(fp)
             fp.seek(0)
-            data = fp.read()
+            resume_zip.writestr(employee['name']+u'简历'+'.docx',fp.getvalue())
             fp.close()
-            print data
-            # request.make_response(data,
-            # headers=[('Content-Disposition',
-            #                 content_disposition('employee.name'+u'简历'+'.docx')),
-            #          ('Content-Type', 'application/vnd.ms-word')],
-            # )
+        resume_zip.close()
+        zip_stream.seek(0)
+        # 返回压缩文件
+        return request.make_response(zip_stream.getvalue() ,
+            headers=[('Content-Disposition',
+                            content_disposition(u'简历'+'.zip')),
+                     ('Content-Type', 'application/zip')],
+            )
 
-            #  response = HttpResponse(wrapper, content_type='application/zip')
-            # response['Content-Disposition'] = 'attachment; filename=your_zipfile.zip'
