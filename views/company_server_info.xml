@@ -108,13 +108,13 @@
                                 </page>
                          <page string="四.用章申请类">
                                      <group>
-                                         <group string = "入职人员社保表格提交">
+                                         <group string = "开取社保证明">
                                                 <field name="text4_1_1" />
                                                 <field name="text4_1_3" />
                                                 <field name="text4_1_2" />
                                                 <field name="text4_1_4" />
                                          </group>
-                                         <group>
+                                         <group string = "协助办理各类用章申请">
                                                 <field name="text4_2_1" />
                                                 <field name="text4_2_3" />
                                                 <field name="text4_2_2" />
@@ -124,13 +124,13 @@
                                 </page>
                          <page string="五.福利类">
                                      <group>
-                                         <group string = "入职人员社保表格提交">
+                                         <group string = "发放生日券、慰问卡、工服、年节贺卡等">
                                              <field name="text5_1_1" />
                                              <field name="text5_1_3" />
                                              <field name="text5_1_2" />
                                              <field name="text5_1_4" />
                                          </group>
-                                         <group>
+                                         <group string = "办公电脑领取/验机">
                                              <field name="text5_2_1" />
                                              <field name="text5_2_3" />
                                              <field name="text5_2_2" />
