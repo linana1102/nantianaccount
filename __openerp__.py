@@ -45,6 +45,7 @@
         'views/template.xml',
         'views/human_cost.xml',
         'views/company_server_info.xml',
+        # 'views/export_resume.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

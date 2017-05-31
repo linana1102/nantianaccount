@@ -194,12 +194,34 @@ openerp.nantian_erp=function(instance){
 
         start: function() {
             this._super(this);
+            var target = $(".oe_form_sheet")[0];
             if(this.parent.items.files.length){
                 this.parent.$el.addClass("hidden_upload_btn");
                 this.act = "preview";
+                target.ondragenter = null;
+                target.ondragover = null;
+                target.ondragleave = null;
+                target.ondrop = null;
             }else{
                 this.parent.$el.removeClass("hidden_upload_btn");
                 this.act = "upload";
+                var me = this;
+                $(target).css("position","relative");
+                target.ondragenter = function(e){
+                    e.preventDefault();
+                }
+                target.ondragover = function(e){
+                    e.preventDefault();
+                }
+                target.ondragleave = function(e){
+                    e.preventDefault();
+                }
+                target.ondrop = function(e){
+                    e.preventDefault();
+                    var files = e.dataTransfer.files;
+                    me.parent.$el.find(".oe_form_binary_file")[0].files = files;
+                }
+
             }
         },
         triggerInput:function(e){
@@ -218,17 +240,61 @@ openerp.nantian_erp=function(instance){
         }
     });
 
+    instance.nantian_erp.ExportResume = instance.web.Widget.extend({
+
+        init: function(parent) {
+            this._super(parent);
+            this.parent = parent;
+        },
+
+        start:function(){
+            var me = this;
+            this._super(this);
+            this.parent.items['other'].push({
+                classname:"oe_sidebar_action",
+                label:"导出简历",
+                callback:function(){
+                    me.exportAction(this);
+                }
+            });
+        },
+
+        exportAction:function(self){
+            var ids = self.getParent().get_selected_ids();
+            /*self.rpc("/web",{param:ids}).then(function(a){
+                console.log(1);
+            },function(b){
+                console.log(b);
+            });*/
+            var data = JSON.stringify(ids);
+            var url = "/nantian_erp/export_resume";
+            var $inputContent = $('<input>').attr({ name: "ids", value: data });
+            var $form = $("<form>");
+            $form.addClass("hidden");
+            $form.attr({ target: '_blank', method: 'post', action: url }).append($inputContent);
+            $form.appendTo('body');
+            $form.submit();
+            $form.remove();
+        }
+    });
+
     instance.web.Sidebar.include({
         redraw:function(){
             if(this.dataset && this.model_id && this.dataset.model == "nantian_erp.resume"){
                 var UploadResume = new instance.nantian_erp.UploadResume(this);
-                //UploadResume.destroy();
                 this.view.$el.find(".oe_right .uploadResume").remove();
                 UploadResume.appendTo(this.view.$el.find(".oe_right[name=buttons]"));
             }
             return this._super.apply(this, arguments);
+        },
+        start:function(){
+            if(this.view.model == "hr.employee"){
+                var ExportResume = new instance.nantian_erp.ExportResume(this);
+                ExportResume.insertAfter(this.$(".oe_sidebar_action"));
+            };
+            return this._super.apply(this, arguments);
         }
-    });
 
+    });
 
 }

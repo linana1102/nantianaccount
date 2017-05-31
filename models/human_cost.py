@@ -176,14 +176,14 @@ class project_cost_month(models.Model):
                         如果这个人和上个月里的人比不变的就加满整月的工资，如果是变化的就查找走的人和来的人的具体时间
                         新进入的看何时进入，离开的看何时离开
                         """
-                        for y in record.employee_ids:
-                            if y:
-                                month_ids = self.env['nantian_erp.employee_month_cost'].search([("employee_id","=", y.id),("create_date", ">=",CreateDate)])
-                                # 该员工月工资表里，工作组为本工作组时，大于创建日期的第一个就是该月的成本month_ids[0]
-                                if month_ids:
-                                    employees_cost = employees_cost + month_ids[0].month_cost_other
-                                else:
-                                    print "这个月该员工这个项目没有参加"
+                        # for y in record.employee_ids:
+                        #     if y:
+                        #         month_ids = self.env['nantian_erp.employee_month_cost'].search([("employee_id","=", y.id),("create_date", ">=",CreateDate)])
+                        #         # 该员工月工资表里，工作组为本工作组时，大于创建日期的第一个就是该月的成本month_ids[0]
+                        #         if month_ids:
+                        #             employees_cost = employees_cost + month_ids[0].month_cost_other
+                        #         else:
+                        #             print "这个月该员工这个项目没有参加"
             x.month_cost = employees_cost + x.variable_expenses
 
 # 工作组年成本表
