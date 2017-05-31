@@ -89,3 +89,5 @@ nantian_erp_interview,nantian_erp_interview,model_nantian_erp_interview,,1,1,1,1
 nantian_erp_offer_information,nantian_erp_offer_information,model_nantian_erp_offer_information,,1,1,1,1
 nantian_erp_offer_examine,nantian_erp_offer_examine,model_nantian_erp_offer_examine,,1,1,1,1
 nantian_erp_entry,nantian_erp_entry,model_nantian_erp_entry,,1,1,1,1
+
+nantian_erp_company_info_deplay_dd,nantian_erp_company_info_deplay_ddd,model_nantian_erp_company_info_deplay,,1,1,1,0

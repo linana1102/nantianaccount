@@ -273,7 +273,7 @@
 
 
 
-        <menuitem name="nantian_working_team" id="nantian_working_team"  groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_boss" />
+        <menuitem name="nantian_working_team" id="nantian_working_team"   sequence="5" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_boss" />
         <menuitem name="nantian_working_teams" id="nantian_working_teams" sequence="5" parent="nantian_working_team" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss" />
 
         <!--<record id="nantian_erp_contract_view" model="ir.actions.act_window">-->
@@ -417,8 +417,6 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem name="nantian_detail" id="nantian_detail" sequence="20"  parent="nantian_config"  action="nantian_erp_detail_view" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
-
-
         <menuitem name="nantian_dashboard" id="nantian_dashboard" sequence="9"  parent="mail.mail_feeds_main" />
         <menuitem name="nantian_my_dashboard" id="nantian_my_dashboard" sequence="9"  parent="nantian_dashboard" action="board.open_board_my_dash_action"/>
 

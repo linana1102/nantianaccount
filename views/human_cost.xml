@@ -44,8 +44,8 @@
                     <field name="department_first" string = '一级部门'/>
                     <field name="department_second" />
                     <field name="department_third_name" />
-                    <field name="month_performance" />
                     <field name="month_percent" />
+                    <field name="month_performance" />
                     <field name="note"/>
                 </tree>
             </field>
@@ -61,7 +61,7 @@
                     <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
                     <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                         <filter string="一级部门" name="department_first" context="{'group_by':'department_first'}"/>
-                        <filter string="二级部门" name="department_second" context="{'group_by':'department_second'}"/>
+                        <filter string="行业(客户)" name="partner_id" context="{'group_by':'partner_id'}"/>
                         <filter string="三级工作组" name="department_third_name" context="{'group_by':'department_third_name'}"/>
                     </group>
                 </search>
@@ -352,6 +352,9 @@
                             <field name="project_cost_year_id" />
                             <field name="adjust" groups="base.group_system"/>
                         </group>
+                        <group>
+                            <field name="employee_ids" widget="many2many_tags"></field>
+                        </group>
                         <notebook >
                             <page string="人员变动费用">
                                 <field name="variable_expenses_ids">
@@ -361,7 +364,7 @@
                                     <field name="date" />
                                     <field name="workteam_name" />
                                 </tree>
-                            </field>
+                                </field>
                             </page>
                         </notebook>
                     </group>
