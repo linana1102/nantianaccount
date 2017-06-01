@@ -18,7 +18,7 @@
                     <sheet>
                     <group >
                         <group string="">
-                            <field name="number" />
+                            <field name="SN" />
                             <field name="employee_id" />
                             <field name="gender" />
                             <field name="department_first" string = '一级部门'/>
@@ -41,7 +41,7 @@
             <field name="model">nantian_erp.performance_month</field>
             <field name="arch" type="xml">
                 <tree editable="top">
-                    <field name="number" />
+                    <field name="SN" />
                    <field name="employee_id" />
                     <field name="gender" />
                     <field name="department_first" string = '一级部门'/>
@@ -61,6 +61,7 @@
                     <field name="employee_id" />
                          <field name="department_first" />
                         <field name="department_second" />
+                    <filter string="数据中心服务部"  name="department_first" domain="[('department_first','=','数据中心服务部')]"/>
                     <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
                     <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                         <filter string="一级部门" name="department_first" context="{'group_by':'department_first'}"/>
@@ -227,6 +228,7 @@
                         <field name="employee_id" />
                          <field name="department_first" />
                         <field name="department_second" />
+                        <filter string="数据中心服务部"  name="department_first" domain="[('department_first','=','数据中心服务部')]"/>
                         <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
                         <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                             <filter string="一级部门" name="department_first" context="{'group_by':'department_first'}"/>

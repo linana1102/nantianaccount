@@ -58,7 +58,7 @@ class performance_note(models.Model):
 class performance_month(models.Model):
     _name = 'nantian_erp.performance_month'
 
-    number = fields.Char(string="财务序号")# 导一个即可
+    SN = fields.Char(string="财务序号")# 导一个即可
     email = fields.Char(string="员工邮箱")# 导一个即可
     performance_year_id = fields.Many2one('nantian_erp.performance_year',string="员工年绩效")
     employee_id = fields.Many2one("hr.employee",string="员工姓名",store = True)

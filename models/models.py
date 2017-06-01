@@ -18,7 +18,7 @@ sys.setrecursionlimit(1000000)
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
-
+    SN = fields.Char(string="财务序列号") #序列号
     project_cost_month_ids = fields.Many2many('nantian_erp.project_cost_month',"project_cost_month_employee_ref",string='工作组成本表')
     performance_year_ids = fields.One2many('nantian_erp.performance_year','employee_id',ondelete = 'set null')
     working_team_id = fields.Many2one('nantian_erp.working_team', ondelete='set null',track_visibility='onchange' )
