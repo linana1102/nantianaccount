@@ -19,7 +19,7 @@
                     <group >
                         <group string="">
                             <field name="SN" />
-                            <field name="employee_id" />
+                            <field name="name" />
                             <field name="gender" />
                             <field name="department_first" string = '一级部门'/>
                             <field name="department_second" />
@@ -30,6 +30,7 @@
                         <group string="">
                             <field name="date" />
                             <field name="note"/>
+                            <field name="employee_id" />
                         </group>
                     </group>
                     </sheet>
@@ -42,7 +43,7 @@
             <field name="arch" type="xml">
                 <tree editable="top">
                     <field name="SN" />
-                   <field name="employee_id" />
+                    <field name="name" />
                     <field name="gender" />
                     <field name="department_first" string = '一级部门'/>
                     <field name="department_second" />

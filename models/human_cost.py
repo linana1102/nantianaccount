@@ -61,11 +61,12 @@ class performance_month(models.Model):
     SN = fields.Char(string="财务序号")# 导一个即可
     email = fields.Char(string="员工邮箱")# 导一个即可
     performance_year_id = fields.Many2one('nantian_erp.performance_year',string="员工年绩效")
-    employee_id = fields.Many2one("hr.employee",string="员工姓名",store = True)
-    gender = fields.Selection([('male','Male'), ('female', 'Female')],string="性别")
+    employee_id = fields.Many2one("hr.employee",string="员工表",default=lambda self: self._related_employee_id_def(),store = True)
+    name = fields.Char(string="姓名")# 导一个即可
+    gender = fields.Char(string="性别")
     department_id = fields.Many2one("hr.department", string="部门", store=True)
-    department_first = fields.Char(string="一级部门", compute='get_department_level', store=True)
-    department_second = fields.Char(string="二级部门", compute='get_department_level', store=True)
+    department_first = fields.Char(string="一级部门",store=True)
+    department_second = fields.Char(string="二级部门",store=True)
     department_third = fields.Many2one("nantian_erp.working_team",string="三级工作组",store = True)
     department_third_name = fields.Char(string="工作组",store = True)
     partner_id = fields.Many2one("res.partner",string="行业(客户)",store=True)
@@ -74,18 +75,13 @@ class performance_month(models.Model):
     date = fields.Date(string="绩效日期")
     note = fields.Char(string="备注")
 
-    @api.depends('department_id')
-    def get_department_level(self):
-        for record in self:
-            if record.department_id.level == 1:
-                pass
-            elif record.department_id.level == 2:
-                record.department_first = record.department_id.name
-            elif record.department_id.level == 3:
-                record.department_first = record.department_id.parent_id.name
-                record.department_second = record.department_id.name
-            else:
-                pass
+    @api.model
+    def _related_employee_id_def(self):
+        records = self.env['hr.employee'].search([('SN', '=',self.SN)])
+        if records:
+            record = records[-1]
+            return record.id
+        
     # @api.multi
     # def make_history_data(self):
     #     MONTH_FORMAT = "%Y-%m-01"
@@ -305,8 +301,8 @@ class employee_month_cost(models.Model):
     employee_id = fields.Many2one('hr.employee',string="员工姓名")
     working_team_id = fields.Many2one("nantian_erp.working_team",string="所在项目组",store = True)
     department_id = fields.Many2one("hr.department", string="部门", store=True)
-    department_first = fields.Char(string="一级部门", compute='get_department_level', store=True)
-    department_second = fields.Char(string="二级部门", compute='get_department_level', store=True)
+    department_first = fields.Char(string="一级部门",store=True)
+    department_second = fields.Char(string="二级部门",store=True)
     wages = fields.Float(string="税前工资")
     grants_year = fields.Float(string="补助")
     variable_expenses = fields.Float(string="变动费用")# 这个标动费用是报销只适合计算个人的，分成很多客户的，所
@@ -466,15 +462,27 @@ class performance_year(models.Model):
                     if month_id:
                         print record.name + '月工资表和绩效表已存在'
                     else:
+                        if record.department_id.level == 1:
+                            department_first = ""
+                            department_second = ""
+                        elif record.department_id.level == 2:
+                            department_first = record.department_id.name
+                            department_second = ""
+                        elif record.department_id.level == 3:
+                            department_first = record.department_id.parent_id.name
+                            department_second = record.department_id.name
+                        else:
+                            pass
                         month_cost = self.env['nantian_erp.performance_month'].create(
                         {"employee_id": record.id,"email": record.users_id.email,"department_third": record.working_team_id.id,
                         "department_id": record.department_id.id,"gender":record.gender,"department_third_name": record.working_team_id.name,
-                         "performance_year_id":object.id}
+                         "performance_year_id":object.id,"department_first": department_first,"department_second": department_second,}
                     )
                         month_cost_id = self.env['nantian_erp.employee_month_cost'].create(
                         {"employee_id": record.id,"email": record.users_id.email,"working_team_id": record.working_team_id.id,
                         "department_id": record.department_id.id,"workteam_name": record.working_team_id.name,
-                         "performance_year_id": object.id,"performance_month_id": month_cost.id})
+                         "performance_year_id": object.id,"performance_month_id": month_cost.id,
+                         "department_first": department_first, "department_second": department_second,})
             else:
                 #上个自动化动作已经检测他的年边是否存在
                 pass
