@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="nantian_erp_company_info_deplay1_action" model="ir.actions.act_window">
-            <field name="name">行政</field>
-            <field name="res_model">nantian_erp.company_info_deplay</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-         </record>
         <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form">
             <field name="name">company_info_deplay.form</field>
             <field name="model">nantian_erp.company_info_deplay</field>
@@ -73,12 +67,15 @@
                                     </group>
                                 </page>
                          <page string="三.入，离职，合同类">
-                                     <group>
                                          <group string = "员工入职">
-                                              <field name="text3_1_1" />
-                                              <field name="text3_1_3" />
-                                              <field name="text3_1_2" />
-                                              <field name="text3_1_4" />
+                                             <group>
+                                                 <field name="text3_1_1" />
+                                                <field name="text3_1_3" />
+                                             </group>
+                                             <group>
+                                                 <field name="text3_1_2" />
+                                                    <field name="text3_1_4" />
+                                             </group>                                            <group></group>
                                          </group>
                                          <group string = "员工转正">
                                             <field name="text3_2_1" />
@@ -104,7 +101,6 @@
                                             <field name="text3_5_2" />
                                             <field name="text3_5_4" />
                                          </group>
-                                    </group>
                                 </page>
                          <page string="四.用章申请类">
                                      <group>
@@ -144,6 +140,14 @@
                 </form>
             </field>
         </record>
+        <record id="nantian_erp_company_info_deplay1_action" model="ir.actions.act_window">
+            <field name="name">行政</field>
+            <field name="res_model">nantian_erp.company_info_deplay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="usage">menu</field>
+         </record>
+
         <menuitem id="nantian_erp_company_info_deplay_menu" name="行政" sequence="1"/>
         <menuitem id="nantian_erp_company_info_deplay" parent="nantian_erp_company_info_deplay_menu" name="行政"/>
         <menuitem id="nantian_erp_company_info_deplay_1" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay1_action" name="行政"/>

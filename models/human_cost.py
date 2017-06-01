@@ -58,6 +58,7 @@ class performance_note(models.Model):
 class performance_month(models.Model):
     _name = 'nantian_erp.performance_month'
 
+    number = fields.Char(string="财务序号")# 导一个即可
     email = fields.Char(string="员工邮箱")# 导一个即可
     performance_year_id = fields.Many2one('nantian_erp.performance_year',string="员工年绩效")
     employee_id = fields.Many2one("hr.employee",string="员工姓名",store = True)
@@ -75,8 +76,7 @@ class performance_month(models.Model):
 
     @api.depends('department_id')
     def get_department_level(self):
-        records = self.env['nantian_erp.performance_year'].search([])
-        for record in records:
+        for record in self:
             if record.department_id.level == 1:
                 pass
             elif record.department_id.level == 2:
@@ -86,6 +86,26 @@ class performance_month(models.Model):
                 record.department_second = record.department_id.name
             else:
                 pass
+    # @api.multi
+    # def make_history_data(self):
+    #     MONTH_FORMAT = "%Y-%m-01"
+    #     YEAR_FORMAT = "%Y-01-01"
+    #     now = fields.datetime.now()
+    #     CreateMDate = datetime.datetime.strftime(now, MONTH_FORMAT)  #
+    #     CreateYDate = datetime.datetime.strftime(now, YEAR_FORMAT)  #
+    #     employees = self.env['hr.employee'].search(['|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')])
+    #     for employee_id in employees:
+    #         for x in range(6):
+    #             MONTH_FORMAT = "%Y-%0%s-01"%(x+1)
+    #             print "&&&&&&&"+MONTH_FORMAT
+    #             CreateMDate = datetime.datetime.strftime(now, MONTH_FORMAT)
+    #             records = self.env['nantian_erp.performance_month'].search([('employee_id','=',employee_id),('create_date','=',CreateMDate)])
+    #             if records:
+    #                 record = records[0]
+    #                 print record.employee_id.name+"月度绩效表存在"
+    #             else:
+    #                 pass
+
 
 
 class worktime_in_project(models.Model):
@@ -108,7 +128,8 @@ class worktime_in_project(models.Model):
         YEAR_FORMAT = "%Y-01-01"
         now = fields.datetime.now()
         CreateYDate = datetime.datetime.strftime(now, YEAR_FORMAT)
-        records = self.env['hr.employee'].search([])
+        records_all = self.env['hr.employee'].search([])
+        records = self.env['hr.employee'].search(['|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')])
         for record in records:
             id = self.env['nantian_erp.worktime_in_project'].search([("employee_id","=",record.id),("working_team_id","=",record.working_team_id.id)])
             if id:
@@ -137,6 +158,7 @@ class project_cost_month(models.Model):
     project_cost_year_id = fields.Many2one('nantian_erp.project_cost',string="工作组年表")
     adjust = fields.Char(string="更新")
     employee_ids = fields.Many2many('hr.employee',"project_cost_month_employee_ref",store=True)
+    date = fields.Date(string="项目月份")
 
 
     def create(self, cr, uid, vals, context=None):
@@ -278,6 +300,7 @@ class employee_month_cost(models.Model):
     _name = 'nantian_erp.employee_month_cost'
 
 
+    date = fields.Date(string="工资月份")
     email = fields.Char(string="员工邮箱")
     employee_id = fields.Many2one('hr.employee',string="员工姓名")
     working_team_id = fields.Many2one("nantian_erp.working_team",string="所在项目组",store = True)
@@ -304,8 +327,7 @@ class employee_month_cost(models.Model):
     #这个部分可以做成每月copy一份工资表然后倒入新的工资表改变话的
     @api.depends('department_id')
     def get_department_level(self):
-        records = self.env['nantian_erp.performance_year'].search([])
-        for record in records:
+        for record in self:
             if record.department_id.level == 1:
                 pass
             elif record.department_id.level == 2:
@@ -327,8 +349,9 @@ class employee_month_cost(models.Model):
                  'union_funds_month', 'grants_year','variable_expenses','month_cost','month_cost_other')
     def compute_month_cost(self):
         for record in self:
-            for var in record.variable_expenses_ids:
-                record.variable_expenses = record.variable_expenses + var.cost
+            if record.variable_expenses_ids:
+                for var in record.variable_expenses_ids:
+                    record.variable_expenses = record.variable_expenses + var.cost
             if record.base_protect > 2834:
                 m1 = record.base_protect*0.19
             else:
@@ -386,8 +409,7 @@ class performance_year(models.Model):
     @api.multi
     @api.depends('department_id')
     def get_department_level(self):
-        records = self.env['nantian_erp.performance_year'].search([])
-        for record in records:
+        for record in self:
             if record.department_id.level == 1:
                 pass
             elif record.department_id.level == 2:
@@ -401,12 +423,14 @@ class performance_year(models.Model):
     @api.multi
     @api.depends("employee_month_cost_ids","performance_year","total_month_cost","total_month_cost_other")
     def compute_year_cost(self):
-        for x in self.employee_month_cost_ids:
-            print x.email
-            self.total_month_cost = self.total_month_cost + x.month_cost
-        self.total_year = self.total_month_cost + self.performance_year
+        for record in self:
+            if record.employee_month_cost_ids:
+                for x in record.employee_month_cost_ids:
+                    print x.email
+                    record.total_month_cost = record.total_month_cost + x.month_cost
+            record.total_year = record.total_month_cost + record.performance_year
 
-    # 每年自动创建年绩效表
+    # 每年自动创建年表
     @api.multi
     def create_year_performance(self):
         MONTH_FORMAT = "%Y-%m-01"
@@ -415,14 +439,15 @@ class performance_year(models.Model):
         OneyearAgo = (now - datetime.timedelta(days=365))
         CreateMDate = datetime.datetime.strftime(now, MONTH_FORMAT)  #
         CreateYDate = datetime.datetime.strftime(now, YEAR_FORMAT)  #
-        records = self.env['hr.employee'].search([])
+        records_all = self.env['hr.employee'].search([])
+        records = self.env['hr.employee'].search(['|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')])
         for record in records:
             objects = self.env['nantian_erp.performance_year'].search([("employee_id", "=", record.id),("create_date", ">=",CreateYDate)])
             if objects:
                 object = objects[-1]
                 pass
             else:
-                object = self.env['nantian_erp.performance_year'].create(
+                  object = self.env['nantian_erp.performance_year'].create(
                     {"employee_id": record.id,"working_team_id":record.working_team_id.id,"department_id":record.department_id.id})
 
 
@@ -430,7 +455,8 @@ class performance_year(models.Model):
     # 每个月自动创建月绩效表和工资表
     @api.multi
     def create_month_performance(self):
-        records = self.env['hr.employee'].search([])
+        records_all = self.env['hr.employee'].search([])
+        records = self.env['hr.employee'].search(['|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')])
         for record in records:
             objects = self.env['nantian_erp.performance_year'].search([("employee_id","=",record.id),('create_date', '>=',time.strftime("%Y-01-01"))])
             if objects:
