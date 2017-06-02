@@ -59,23 +59,23 @@
                                              <field name="text2_2_4" />
                                          </group>
                                          <group string = "费用报销">
-                                                <field name="text2_3_1" />
+                                             <group>
+                                                 <field name="text2_3_1" />
                                                 <field name="text2_3_3" />
-                                                <field name="text2_3_2" />
+                                             </group>
+                                             <group>
+                                                 <field name="text2_3_2" />
                                                 <field name="text2_3_4" />
+                                             </group>
                                          </group>
                                     </group>
                                 </page>
                          <page string="三.入，离职，合同类">
                                          <group string = "员工入职">
-                                             <group>
                                                  <field name="text3_1_1" />
                                                 <field name="text3_1_3" />
-                                             </group>
-                                             <group>
                                                  <field name="text3_1_2" />
                                                     <field name="text3_1_4" />
-                                             </group>                                            <group></group>
                                          </group>
                                          <group string = "员工转正">
                                             <field name="text3_2_1" />

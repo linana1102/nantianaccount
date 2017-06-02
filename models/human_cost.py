@@ -81,7 +81,7 @@ class performance_month(models.Model):
         if records:
             record = records[-1]
             return record.id
-        
+
     # @api.multi
     # def make_history_data(self):
     #     MONTH_FORMAT = "%Y-%m-01"
