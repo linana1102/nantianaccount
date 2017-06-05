@@ -262,6 +262,7 @@
                         <group>
                             <group string="Active" name="active_group">
                                 <field name="active" />
+                                <field name="SN" />
                              </group>
                         </group>
                     </page>

@@ -211,7 +211,7 @@
      <record id="hr_employee_data_center_user_read_rule" model="ir.rule">
         <field name="name">employee数据中心人力员工_读</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">[('customer_id','in',[x.customer_id.id for x in user.employee_ids]),'|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')]</field>
+        <field name="domain_force">['&amp;',('department_id','in',[x.department_id.id for x in user.employee_ids]),'|',('customer_id','=',None),'&amp;',('customer_id','in',[x.customer_id.id for x in user.employee_ids]),'&amp;',('customer_id','!=',None),'|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.data_center_group_hr_user'))]"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_read" eval="1"/>
@@ -383,6 +383,15 @@
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header')),(4,ref('nantian_erp.group_nantian_manager')),(4,ref('nantian_erp.group_hr_manager'))]"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="company_info_deplay_menu_rule" model="ir.rule">
+        <field name="name">对行政菜单里面的内容进行控制</field>
+        <field name="model_id" ref="nantian_erp.model_nantian_erp_company_info_deplay"/>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_manager')),(4,ref('nantian_erp.group_hr_manager'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>

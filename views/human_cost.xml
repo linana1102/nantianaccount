@@ -6,6 +6,7 @@
             <field name="res_model">nantian_erp.performance_month</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_date': 1}</field>
             <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
              -->
          </record>
@@ -17,7 +18,8 @@
                     <sheet>
                     <group >
                         <group string="">
-                            <field name="employee_id" />
+                            <field name="SN" />
+                            <field name="name" />
                             <field name="gender" />
                             <field name="department_first" string = '一级部门'/>
                             <field name="department_second" />
@@ -28,6 +30,7 @@
                         <group string="">
                             <field name="date" />
                             <field name="note"/>
+                            <field name="employee_id" />
                         </group>
                     </group>
                     </sheet>
@@ -39,13 +42,14 @@
             <field name="model">nantian_erp.performance_month</field>
             <field name="arch" type="xml">
                 <tree editable="top">
-                   <field name="employee_id" />
+                    <field name="SN" />
+                    <field name="name" />
                     <field name="gender" />
                     <field name="department_first" string = '一级部门'/>
                     <field name="department_second" />
                     <field name="department_third_name" />
-                    <field name="month_performance" />
                     <field name="month_percent" />
+                    <field name="month_performance" />
                     <field name="note"/>
                 </tree>
             </field>
@@ -58,11 +62,15 @@
                     <field name="employee_id" />
                          <field name="department_first" />
                         <field name="department_second" />
+                    <filter string="数据中心服务部"  name="department_first" domain="[('department_first','=','数据中心服务部')]"/>
                     <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
+                    <filter string="绩效月份"  name="date" domain="[('date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>
                     <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                         <filter string="一级部门" name="department_first" context="{'group_by':'department_first'}"/>
-                        <filter string="二级部门" name="department_second" context="{'group_by':'department_second'}"/>
                         <filter string="三级工作组" name="department_third_name" context="{'group_by':'department_third_name'}"/>
+                        <filter string="行业(客户)" name="partner_id" context="{'group_by':'partner_id'}"/>
+                        <filter string="绩效月份" name="date" context="{'group_by':'date:month'}"/>
+
                     </group>
                 </search>
             </field>
@@ -140,7 +148,8 @@
                         <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                             <filter string="一级部门" name="department_first" context="{'group_by':'department_first'}"/>
                             <filter string="二级部门" name="department_second" context="{'group_by':'department_second'}"/>
-                            <filter string="成本月份" name="create_date" context="{'group_by':'create_date:month'}"/>
+                            <filter string="成本月份" name="date" context="{'group_by':'date:month'}"/>
+
                         </group>
                     </search>
                 </field>
@@ -221,6 +230,7 @@
                         <field name="employee_id" />
                          <field name="department_first" />
                         <field name="department_second" />
+                        <filter string="数据中心服务部"  name="department_first" domain="[('department_first','=','数据中心服务部')]"/>
                         <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
                         <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                             <filter string="一级部门" name="department_first" context="{'group_by':'department_first'}"/>
@@ -331,7 +341,7 @@
             <field name="res_model">nantian_erp.project_cost_month</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_create_date': 1}</field>
+            <field name="context">{'search_default_date': 1}</field>
             <!--<field name ="domain">[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]</field>
              -->
          </record>
@@ -352,6 +362,9 @@
                             <field name="project_cost_year_id" />
                             <field name="adjust" groups="base.group_system"/>
                         </group>
+                        <group>
+                            <field name="employee_ids" widget="many2many_tags"></field>
+                        </group>
                         <notebook >
                             <page string="人员变动费用">
                                 <field name="variable_expenses_ids">
@@ -361,7 +374,7 @@
                                     <field name="date" />
                                     <field name="workteam_name" />
                                 </tree>
-                            </field>
+                                </field>
                             </page>
                         </notebook>
                     </group>
@@ -392,8 +405,8 @@
                     <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
                     <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                         <filter string="项目(工作组)" name="working_team_id" context="{'group_by':'working_team_id'}"/>
-                        <filter string="项目月份" name="create_date" context="{'group_by':'create_date:month'}"/>
-
+                        <filter string="创建时间" name="create_date" context="{'group_by':'create_date:month'}"/>
+                        <filter string="项目月份" name="date" context="{'group_by':'date:month'}"/>
                     </group>
                 </search>
             </field>
