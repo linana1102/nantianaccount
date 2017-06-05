@@ -15,6 +15,12 @@
                                             <field name="text1_1_3" />
                                             <field name="text1_1_2" />
                                             <field name="text1_1_4" />
+                                             <field name="text1_binary" >
+                                                 <tree>
+                                                     <field name="title" />
+                                                     <field name="text_binary" />
+                                                 </tree>
+                                             </field>
                                          </group>
                                          <group string = "修改社保医院" >
                                             <field name="text1_2_1" />
@@ -145,13 +151,99 @@
             <field name="name">行政</field>
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="usage">menu</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('id','=','1')]</field>
          </record>
+        <record id="nantian_erp_company_info_kind_action" model="ir.actions.act_window">
+            <field name="name">行政须知</field>
+            <field name="res_model">nantian_erp.company_info_kind</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+         </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_kind_form">
+            <field name="name">company_info_kind.form</field>
+            <field name="model">nantian_erp.company_info_kind</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                                 <div class="oe_title">
+                                    <label for="title" class="oe_edit_only" />
+                                    <h1><field name="title" required="True"/></h1>
+                                </div>
+                                 <field name="text_ids" >
+                                     <tree>
+                                         <field name="text1" />
+                                         <field name="text2" />
+                                         <field name="text3" />
+                                         <field name="text4" />
+                                     </tree>
+                                 </field>
+                                 <field name="attachment_ids" >
+                                     <tree>
+                                         <field name="title" />
+                                         <field name="text_binary" />
+                                     </tree>
+                                 </field>
+                        <field name="kind" attrs="{'invisible': [('kind','=', True)]}"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="nantian_erp_company_info_kind1_action" model="ir.actions.act_window">
+            <field name="name">社保，医疗报销</field>
+            <field name="res_model">nantian_erp.company_info_kind</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('kind','=','社保，医疗报销类')]</field>
+         </record>
+        <record id="nantian_erp_company_info_kind2_action" model="ir.actions.act_window">
+            <field name="name">工资，公积金，费用报销</field>
+            <field name="res_model">nantian_erp.company_info_kind</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('kind','=','工资，公积金，费用报销类')]</field>
+         </record>
+        <record id="nantian_erp_company_info_kind3_action" model="ir.actions.act_window">
+            <field name="name">入，离职，合同</field>
+            <field name="res_model">nantian_erp.company_info_kind</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('kind','=','入，离职，合同类')]</field>
+         </record>
+        <record id="nantian_erp_company_info_kind4_action" model="ir.actions.act_window">
+            <field name="name">用章申请</field>
+            <field name="res_model">nantian_erp.company_info_kind</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('kind','=','用章申请类')]</field>
+         </record>
+        <record id="nantian_erp_company_info_kind5_action" model="ir.actions.act_window">
+            <field name="name">福利</field>
+            <field name="res_model">nantian_erp.company_info_kind</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('kind','=','福利类')]</field>
+         </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_kind1_tree">
+            <field name="name">nantian_erp.company_info_kind.tree</field>
+            <field name="model">nantian_erp.company_info_kind</field>
+            <field name="arch" type="xml">
+                <tree >
+                  <field name="title"/>
+                </tree>
+            </field>
+        </record>
 
         <menuitem id="nantian_erp_company_info_deplay_menu" name="行政" sequence="1"/>
         <menuitem id="nantian_erp_company_info_deplay" parent="nantian_erp_company_info_deplay_menu" name="行政"/>
         <menuitem id="nantian_erp_company_info_deplay_1" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay1_action" name="行政"/>
+        <menuitem id="nantian_erp_company_info_kind" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_kind_action" name="行政须知" groups="base.group_system"/>
+        <menuitem id="nantian_erp_company_info_kind1" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_kind1_action" name="社保，医疗报销"/>
+        <menuitem id="nantian_erp_company_info_kind2" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_kind2_action" name="工资，公积金，费用报销"/>
+        <menuitem id="nantian_erp_company_info_kind3" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_kind3_action" name="入，离职，合同"/>
+        <menuitem id="nantian_erp_company_info_kind4" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_kind4_action" name="用章申请"/>
+        <menuitem id="nantian_erp_company_info_kind5" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_kind5_action" name="福利"/>
 
     </data>
 </openerp>
