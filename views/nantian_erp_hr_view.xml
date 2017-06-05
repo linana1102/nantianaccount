@@ -210,16 +210,17 @@
                 <xpath expr="//page[@string='Public Information']" position="replace">
                     <page string="Personal Information" >
                                 <group>
-                                    <group string="Citizenship &amp; Other Info">
+
+                                    <group string="个人信息">
+                                        <field name="mobile_phone"/>
+                                        <field name="birthday"/>
+                                    </group>
+                                    <group string="Citizenship &amp; Other Info" attrs="{'invisible':[('user_id','!=','uid')]}">
 <!--                                         <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
  -->                                        <field name="identification_id" />
 <!--                                         <field name="passport_id" />
                                         <field name="bank_account_id"/>
                                         <field name="otherid"/> -->
-                                    </group>
-                                    <group string="个人信息">
-                                        <field name="mobile_phone"/>
-                                        <field name="birthday"/>
                                     </group>
                                     <group string="Status">
                                         <field name="gender"/>

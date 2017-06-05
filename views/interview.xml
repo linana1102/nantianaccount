@@ -12,10 +12,13 @@
                             <field name="resume_id" domain="[('state','=','简历库中')]" required="True"/>
                             <field name="recruitment_id" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
                             <field name="review" required="True"/>
+                            <field name="rec_user" invisible="True"></field>
                         </group>
                         <group>
                             <field name="result" required="True"/>
                             <field name="interviewer" required="True"/>
+                            <field name="customer" invisible="True"></field>
+                            <field name="next_user" domain="['|',('name','=',rec_user),('name','=',customer)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'></field>
                         </group>
                     </group>
                 </form>

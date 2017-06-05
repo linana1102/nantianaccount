@@ -69,7 +69,7 @@
             <field name="name">nantian_pending_resume.form</field>
             <field name="model">nantian_erp.resume</field>
             <field name="arch" type="xml">
-                <form string="reusme" create="false">
+                <form string="reusme" create="false" >
                     <header>
                          <button name="agree" type="object" states='面试中' string="通过"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}"/>
                          <button name="disagree" type="object" states='面试中' string="淘汰"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}"/>
@@ -139,7 +139,7 @@
             <field name="name">nantian_pended_resume.form</field>
             <field name="model">nantian_erp.resume</field>
             <field name="arch" type="xml">
-                <form string="reusme" create="false">
+                <form string="reusme" create="false" edit="false">
                     <header>
                         <button name="back" type="object" states='面试中' string="追回"  class="oe_highlight" attrs="{'invisible':[('interviewer','=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
                         <button name="agree" type="object" states='面试中' string="通过"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
