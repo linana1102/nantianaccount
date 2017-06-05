@@ -29,6 +29,7 @@ class recruitment(models.Model):
     user_id = fields.Many2one('res.users',default=lambda self: self.env.user,string='申请人')
     department_id = fields.Many2one('hr.department',string='部门',default=lambda self: self.compute_department(),store=True)
     working_team_id = fields.Many2one('nantian_erp.working_team',string='工作组',)
+    working_team_id1 = fields.Many2one('nantian_erp.working_team',string='工作组',)
     position_categroy_1 = fields.Many2one('nantian_erp.categroy',string='岗位类别')
     job_id =fields.Many2one('nantian_erp.job',string='职位',)
     job_name = fields.Char(related='job_id.name')
@@ -43,9 +44,38 @@ class recruitment(models.Model):
     channel = fields.Selection([('1','招聘网站发布职位'),('2','伯乐奖职位'),('3','其他渠道')],string='招聘渠道')
     cycle = fields.Char(string='招聘周期')
     state = fields.Selection([(u'examineing', u'审批中'), (u'released',u'已发布'),(u'refused',u'被退回') ,(u'backed',u'被追回'),(u'archived',u'已归档')],default='examineing')
-    examine_user = fields.Many2one('res.users',string='审批人',default=lambda self: self.compute_examine_user())
+    examine_user = fields.Many2one('res.users',string='审批人',)
     examine_ids = fields.One2many('nantian_erp.job_examine','recruitment_id')
     hired_num = fields.Integer(string='已招聘人数')
+    work_place = fields.Char(string= '工作地点')
+
+    def create(self, cr, uid, vals, context=None):
+        user = self.pool.get('res.users').browse(cr,uid,uid,context=None)
+        if vals['working_team_id1'] and not vals['working_team_id']:
+            vals['working_team_id']=vals['working_team_id1']
+        groups_model = self.pool.get('res.groups')
+        customer_group_ids = groups_model.search(cr, uid, [('name', '=', u'行业负责人')],limit=1, context=context)
+        customer_manager_group = groups_model.browse(cr,uid,customer_group_ids,context=None)
+        recruit_group_ids = groups_model.search(cr, uid, [('name', '=', u'招聘组')],limit=1,context=context)
+        recruit_group = groups_model.browse(cr,uid,recruit_group_ids,context=None)
+        employee_model = self.pool.get('hr.employee')
+        employee_ids = employee_model.search(cr,uid,[('user_id','=',uid)],limit=1,context=None)
+        employee =employee_model.browse(cr,uid,employee_ids,context=None)
+        department = employee[0].department_id
+        working_team_model =self.pool.get('nantian_erp.working_team')
+        working_team = working_team_model.browse(cr,uid,vals['working_team_id'],context=None)
+        if user in customer_manager_group[0].users:
+            if department.level == 2:
+                vals['examine_user'] = department.manager_id.user_id
+            else:
+                vals['examine_user'] = department.parent_id.manager_id.user_id
+        elif user in recruit_group[0].users:
+            vals['examine_user'] = working_team.partner_id.customer_manager
+        else:
+            vals['examine_user'] = employee.working_team_id.partner_id.customer_manager
+        user = self.pool.get('res.groups').browse(cr,uid,vals['examine_user'],context=None)
+        self.send_email(cr,uid,user,context=None)
+        return super(recruitment,self).create(cr,uid,vals,context=context)
 
     def send_email(self,cr,uid,users,context=None):
         # template_model = self.pool.get('email.template')
@@ -80,20 +110,23 @@ class recruitment(models.Model):
         employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
         return employee.working_team_id
 
-    @api.multi
-    def compute_examine_user(self):
-        customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')],limit=1)
-        employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
-        department =employee.department_id
-        if self.env.user in customer_manager_group.users:
-            if department.level == 2:
-                user = department.manager_id.user_id
-            else:
-                user = department.parent_id.manager_id.user_id
-        else:
-            user = employee.working_team_id.partner_id.customer_manager
-        self.send_email(user)
-        return user
+    # @api.multi
+    # def compute_examine_user(self):
+    #     customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')],limit=1)
+    #     recruit_group = self.env['res.groups'].search([('name', '=', u'招聘组')],limit=1)
+    #     employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
+    #     department = employee.department_id
+    #     if self.env.user in customer_manager_group.users:
+    #         if department.level == 2:
+    #             user = department.manager_id.user_id
+    #         else:
+    #             user = department.parent_id.manager_id.user_id
+    #     elif self.env.user in recruit_group.users:
+    #         user = self.working_team_id.partner_id.customer_manager
+    #     else:
+    #         user = employee.working_team_id.partner_id.customer_manager
+    #     self.send_email(user)
+    #     return user
 
 
     @api.multi
@@ -146,8 +179,11 @@ class recruitment(models.Model):
             if r.job_id.name and r.position_categroy_2.name:
                 datas.append((r.id, (r.position_categroy_2.name+r.job_id.name + '(' + (r.user_id.name)+ ')')))
             elif r.job_id.name:
-                datas.append((r.id, (r.job_id.name + '(' + (r.user_id.name)+ ')')))
+                datas.append((r.id, (str(r.job_id.name) + '(' + (str(r.user_id.name))+ ')')))
         return datas
+
+
+
 
 class job_examine(models.Model):
     _name = 'nantian_erp.job_examine'
@@ -164,8 +200,8 @@ class resume(models.Model):
 
     name = fields.Char(string='姓名')
     gender = fields.Selection([('male','男'),('female','女')],string='性别')
-    age = fields.Integer(string='年龄')
-    work_age = fields.Integer(string='工作年限')
+    age = fields.Char(string='年龄')
+    work_age = fields.Char(string='工作年限')
     education = fields.Selection(
         [
             (u'专科', u"专科"),
@@ -306,6 +342,9 @@ class interview(models.Model):
     result = fields.Selection([('agree',u'通过'),('disagree',u'淘汰'),('consider',u'暂存')],string= '面试结果',)
     interviewer = fields.Many2one('res.users',default=lambda self: self.env.user,string='面试官')
     date = fields.Date(string='面试时间')
+    next_user = fields.Many2one('res.users',string='下步处理人')
+    rec_user = fields.Char(related = 'recruitment_id.user_id.name',string='招聘发起人')
+    customer = fields.Char(related ='recruitment_id.working_team_id.partner_id.customer_manager.name',string='行业负责人')
     # @api.onchange('result','interviewer')
     # def _onchange_price(self):
     #     if self.result == 'agree':
@@ -325,9 +364,15 @@ class interview(models.Model):
             print vals['recruitment_id']
             print recruitment.user_id.id
             resume.state = u'面试中'
-            self.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'interviewer':recruitment.user_id.id})
-            resume.interviewer = recruitment.user_id.id
+
+            resume.interviewer = vals['next_user']
+            self.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'interviewer':vals['next_user']})
             vals['date'] = fields.Date.today()
+            print resume.interviewer.name
+            print vals['customer']
+            if resume.interviewer.name == vals['customer']:
+                offer_model = self.pool.get('nantian_erp.offer_information')
+                offer_model.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'user_id':vals['next_user']},context=context)
         return super(interview,self).create(cr,uid,vals,context=context)
 
 

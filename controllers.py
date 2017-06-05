@@ -16,6 +16,8 @@ import json
 import base64
 import zipfile,os
 import sys
+import requests
+
 def content_disposition(filename):
     filename = ustr(filename)
     escaped = urllib2.quote(filename.encode('utf8'))
@@ -154,3 +156,135 @@ class Binary(http.Controller):
                      ('Content-Type', 'application/zip')],
             )
 
+
+class SynchronousResume(http.Controller):
+
+    def search_model(self,model,domain):
+        search_model = http.request.env[model]
+        records = search_model.sudo().search(domain)
+        return records
+
+    @http.route('/nantian_erp/SynchronousResume/get_data/', type='http', auth='public')
+    def get_data(self,):
+        r = requests.get('http://123.56.147.94/talents/get_all_position_and_examine')
+        positions = r.json()
+        print positions
+        cate_model = request.session.model('nantian_erp.categroy')
+        categroy = cate_model.create({'name':'原系统'})
+        for position in positions:
+            job_model = request.session.model('nantian_erp.job')
+            job = job_model.create({'name':position['PositionName'],'categroy_id':categroy})
+            # users = http.request.env['res.users'].sudo().search([('name','=',position['UserID'])])
+            users=self.search_model('res.users',[('name','=',position['UserID'])])
+            if users:
+                user = users[0].id
+            else:
+                user = None
+            departs = self.search_model('hr.department',[('name','=',position['Depart'])])
+            if departs:
+                depart =departs[0].id
+
+            else:
+                depart = None
+            working_teams = self.search_model('nantian_erp.working_team',[('name','=',position['ProjectName'])])
+            if working_teams:
+                working_team = working_teams[0].id
+            else:
+                working_team=None
+            examine_users=self.search_model('res.users',[('name','=',position['Approver'])])
+            if examine_users:
+                exam_user = examine_users[0].id
+            else:
+                exam_user = None
+            if position['Filing'] == 1:
+                state='archived'
+            elif position['Filing'] == 0:
+                state='released'
+            else:
+                pass
+            recr_dict={'user_id':user,'department_id':depart,'working_team_id':working_team,'position_categroy_1':categroy,'job_id':job,'duties':position['WorkContent'],'requirements':position['CandidateRequirement'],'salary':position["Salary"],'current_employee_num':position["ExistingPersonNum"],'need_people_num':position['NeedPersonNum'],'reason':str(position["RecruitReason"])
+ ,'channel':str(position['RecruitWay']),'cycle':position['RecruitTime'],'state':state,'examine_user':exam_user,'hired_num':position['recruitednum'],'work_place':position['Workplace']}
+            rec_model = request.session.model('nantian_erp.recruitment')
+            recruit = rec_model.create(recr_dict)
+            examine_model = request.session.model('nantian_erp.job_examine')
+            examines = position['examine']
+            for examine in examines:
+                exam_users = self.search_model('res.users',[('name','=',examine['UserID'])])
+                if exam_users:
+                    ex_user = exam_users[0].id
+                else:
+                    ex_user = None
+                if examine['Result'] == u'同意':
+                    result = u'同意'
+                elif examine['Result'] == u'不同意':
+                    result = u'不同意'
+                else:
+                    pass
+
+                examine_dict = {'user_id':ex_user,'result':result,'recruitment_id': recruit,'date':examine['Time']}
+                examine_model.create(examine_dict)
+
+class Resume(http.Controller):
+    @http.route('/resume_import', type='http', auth='public', methods=['POST','GET'])
+    def resume_import(self):
+        r = requests.get('http://123.56.147.94/talents/get_all_resume_and_interview/')
+        datas = r.json()
+        for data in datas:
+            # print '--' * 80
+            # print data['CandidateName'], data['CandidateSex'], data['CandidateAge'], data['CandidateProfile'], data[
+            #     'Candidate_edu']
+            # print data['CandidatePhone'], data['CandidateEmail'], data['PositionName'], data['Status'], data['UserID']
+            resume_dict = {'name': data['CandidateName'].strip() if data['CandidateName'] else data['CandidateName'],
+                           'age': data['CandidateAge'].strip(),
+                           'work_age': data['CandidateProfile'],
+                           'phone': data['CandidatePhone'], 'email': data['CandidateEmail'].strip(),
+                           'job': data['PositionName'].strip() if data['PositionName'] else data['PositionName']}
+            if data['CandidateSex']:
+                gender = data['CandidateSex']
+                if gender == u'男':
+                    gender = u'male'
+                    resume_dict['gender'] = gender
+                elif gender == u'女':
+                    gender = u'female'
+                    resume_dict['gender'] = gender
+            if data['Candidate_edu']:
+                edu = re.sub(r'\d+', '', data['Candidate_edu']).strip()
+                if edu in [u'大专']:
+                    edu = u'专科'
+                if edu in [u'专科', u"本科", u"硕士", u"博士", u"专升本", u"高级技工", u"高中"]:
+                    resume_dict['education'] = edu
+            if data['Status']:
+                status = data['Status']
+                if status == u'未处理':
+                    status = u'简历库中'
+                resume_dict['state'] = status
+
+            resume_obj = http.request.env['nantian_erp.resume'].sudo().create(resume_dict)
+            interviews = data['interview']
+            if interviews:
+                for interview in interviews:
+                    # print '##' * 80
+                    # print interview['InterviewResults'].strip()
+                    # print interview['Notes'], interview['user'], interview['handletime'][:10] if interview[
+                    #     'handletime'] else None, interview['InterStatus']
+                    inter_dict = {'review': interview['InterviewResults'].strip(),
+                                  'date': interview['handletime'][:10] if interview['handletime'] else None}
+                    if interview['user']:
+                        inter_dict['interviewer'] = interview['user']
+                    if interview['InterStatus'] in [u'通过', u'淘汰']:
+                        inter_dict['result'] = interview['InterStatus']
+                    inter_dict['resume_id'] = resume_obj
+                    user = http.request.env['res.users'].sudo().search([('name', '=', interview['user'])], limit=1)
+                    if user:
+                        inter_dict['interviewer'] = user
+                    interview_obj = http.request.env['nantian_erp.interview'].sudo().create(inter_dict)
+            offers = data['offer']
+            for offer in offers:
+                # print '!!' * 80
+                # print offer['Ephone'], offer['Email'].strip(), offer['Eentrytime'], offer['Epost'], offer['Epostgrade'], offer[
+                #     'Ejob'], offer['Ejobin'], offer['Ejobaim']
+                # print offer['Eprimary'], offer['Esecond'], offer['Eproject'], offer['Ecompacttime'], offer[
+                #     'Eapplytime'], offer['handleuser']
+                offer_dict = {'phone':offer['Ephone'],'email':offer['Ecompacttime'].strip(),'contract_time':offer['Email'],'test_time':offer['Eapplytime']}
+                offer_obj = http.request.env['nantian_erp.offer_information'].sudo().create(offer_dict)
+        return 'success'

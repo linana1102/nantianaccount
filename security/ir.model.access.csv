@@ -89,3 +89,6 @@ nantian_erp_interview,nantian_erp_interview,model_nantian_erp_interview,,1,1,1,1
 nantian_erp_offer_information,nantian_erp_offer_information,model_nantian_erp_offer_information,,1,1,1,1
 nantian_erp_offer_examine,nantian_erp_offer_examine,model_nantian_erp_offer_examine,,1,1,1,1
 nantian_erp_entry,nantian_erp_entry,model_nantian_erp_entry,,1,1,1,1
+
+nantian_erp_working_team_recruitment_all,nantian_erp_working_team_recruitment all,model_nantian_erp_working_team,nantian_erp.group_hr_recruitment,1,0,0,0
+nantian_erp_res_partner_recruitment_all,nantian_erp_res_partner_recruitment all,model_res_partner,nantian_erp.group_hr_recruitment,1,1,0,0
