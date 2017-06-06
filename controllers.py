@@ -225,7 +225,7 @@ class SynchronousResume(http.Controller):
 
                 examine_dict = {'user_id':ex_user,'result':result,'recruitment_id': recruit,'date':examine['Time']}
                 examine_model.create(examine_dict)
-            return 'success'
+        return 'success'
 
 
 class Resume(http.Controller):
