@@ -49,6 +49,71 @@
             <field name="context">{'search_default_recruitment_id': [active_id], 'default_recruitment_id': active_id}</field>
         </record>
 
+        <record model="ir.ui.view" id="nantian_erp_edit_recruitment_form">
+            <field name="name">nantian_recruitment_edit_form</field>
+            <field name="model">nantian_erp.recruitment</field>
+            <field name="arch" type="xml">
+                <form string="recruitment" create="false" >
+
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="user_id" class="oe_edit_only"/>
+                            <h1><field name="user_id" class="oe_inline" /></h1>
+                        </div>
+                        <div class="oe_right" name="buttons"/>
+                        <group name="employee_data">
+                            <group>
+                                <field name="department_id" string="部门" class="oe_inline" />
+                                <field name="working_team_id" string="工作组" class="oe_inline" domain="['|',('partner_id.customer_manager.id','=',uid),('user_id.id','=',uid)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' />
+                                <field name="position_categroy_1" string="岗位类别" class="oe_inline" />
+                                <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' />
+                                <field name="job_name" invisible="True" class="oe_inline" />
+                                 <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' />
+                                <label for="job_level"/>
+                                <div>
+                                <field name="job_level" string="职级" class="oe_inline" /><label string="级" class="oe_inline"/>
+                                </div>
+                                 <field name="examine_user" string="审批人" readonly="True"/>
+                            </group>
+                            <group>
+                                <label for="current_employee_num"/>
+                                <div>
+                                <field name="current_employee_num" string="现有人数" class="oe_inline" /><label string="人" class="oe_inline"/>
+                                </div>
+                                 <label for="need_people_num"/>
+                                <div>
+                                <field name="need_people_num" string="所需人数" class="oe_inline"/><label string="人" class="oe_inline"/>
+                                </div>
+                                <field name="salary" string="薪资范围" class="oe_inline" />
+                                <field name="cycle" string="招聘周期" class="oe_inline" />
+                                <field name="reason" string="招聘原因" class="oe_inline" />
+                                <field name="channel" string="招聘渠道" class="oe_inline"/>
+                            </group>
+
+                        </group>
+                        <div>
+                            <label for="duties"/>
+                            <field name="duties"/>
+                        </div>
+                        <div>
+                            <label for="requirements"/>
+                            <field name="requirements"/>
+                        </div>
+                        <div>
+                            <group>
+                                <field name="examine_ids" string="审批记录">
+                                    <tree string="examine" create="false" edit="false">
+                                        <field name = 'user_id' string="审批人"/>
+                                        <field name="result" string="审批结果"/>
+                                        <field name="date" string="审批时间"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <record model="ir.ui.view" id="nantian_erp_recruitment_form">
             <field name="name">nantian_recruitment.form</field>
             <field name="model">nantian_erp.recruitment</field>
@@ -296,7 +361,7 @@
         <record id="nantian_erp_recruitment_form_action" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
             <field name="sequence" eval="10"/>
-            <field name="view_id" ref="nantian_erp_readonly_recruitment_form" />
+            <field name="view_id" ref="nantian_erp_edit_recruitment_form" />
             <field name="act_window_id" ref="nantian_erp_recruitment_action" />
         </record>
         <record id="nantian_erp_released_recruitment_action" model="ir.actions.act_window">
