@@ -11,13 +11,13 @@ import openerp
 
 import re
 from cStringIO import StringIO
-from openerp.http import request
 from openerp.tools import ustr
 import urllib2
 import json
 import base64
 import zipfile,os
 import sys
+
 import requests
 
 def content_disposition(filename):

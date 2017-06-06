@@ -112,7 +112,10 @@
                         </group>
                         <notebook>
                             <page string="每月绩效">
-                                <field name="performance_month_id"/>
+                                <group>
+                                    <field name="performance_month_id"/>
+                                </group>
+                                <group></group>
                             </page>
                         </notebook>
                     </sheet>
