@@ -100,8 +100,8 @@
                     <page string="Personal Information" >
                                 <group>
                                     <group string="Citizenship &amp; Other Info">
-<!--                                         <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
- -->                                        <field name="identification_id" />
+<!--                                    <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+-->                                     <field name="identification_id" groups="base.group_hr_manager"/>
                                        <!--  <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="bank_account_id"/>
                                         <field name="otherid" groups="base.group_hr_user"/> -->
