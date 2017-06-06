@@ -296,7 +296,7 @@
         <record id="nantian_erp_recruitment_form_action" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
             <field name="sequence" eval="10"/>
-            <field name="view_id" ref="nantian_erp_recruitment_form" />
+            <field name="view_id" ref="nantian_erp_readonly_recruitment_form" />
             <field name="act_window_id" ref="nantian_erp_recruitment_action" />
         </record>
         <record id="nantian_erp_released_recruitment_action" model="ir.actions.act_window">
