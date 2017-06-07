@@ -49,35 +49,35 @@ class recruitment(models.Model):
     hired_num = fields.Integer(string='已招聘人数')
     work_place = fields.Char(string= '工作地点')
 
-    # def create(self, cr, uid, vals, context=None):
-    #     user = self.pool.get('res.users').browse(cr,uid,uid,context=None)
-    #     if vals['working_team_id1'] and not vals['working_team_id']:
-    #         vals['working_team_id'] = vals['working_team_id1']
-    #     groups_model = self.pool.get('res.groups')
-    #     customer_group_ids = groups_model.search(cr, uid, [('name', '=', u'行业负责人')],limit=1, context=context)
-    #     customer_manager_group = groups_model.browse(cr,uid,customer_group_ids,context=None)
-    #     recruit_group_ids = groups_model.search(cr, uid, [('name', '=', u'招聘组')],limit=1,context=context)
-    #     recruit_group = groups_model.browse(cr,uid,recruit_group_ids,context=None)
-    #     employee_model = self.pool.get('hr.employee')
-    #     employee_ids = employee_model.search(cr,uid,[('user_id','=',uid)],limit=1,context=None)
-    #     employee =employee_model.browse(cr,uid,employee_ids,context=None)
-    #     department = employee[0].department_id
-    #     working_team_model =self.pool.get('nantian_erp.working_team')
-    #     working_team = working_team_model.browse(cr,uid,vals['working_team_id'],context=None)
-    #     print vals['user_id']
-    #     if user in customer_manager_group[0].users:
-    #         if department.level == 2:
-    #             exam_user = department.manager_id.user_id
-    #         else:
-    #             exam_user = department.parent_id.manager_id.user_id
-    #     elif user in recruit_group[0].users:
-    #         exam_user = working_team.partner_id.customer_manager
-    #     else:
-    #         exam_user = employee.working_team_id.partner_id.customer_manager
-    #     vals['examine_user']=exam_user.id
-    #     print user
-    #     self.send_email(cr,uid,user,context=None)
-    #     return super(recruitment,self).create(cr,uid,vals,context=context)
+    def create(self, cr, uid, vals, context=None):
+        user = self.pool.get('res.users').browse(cr,uid,uid,context=None)
+        if vals['working_team_id1'] and not vals['working_team_id']:
+            vals['working_team_id'] = vals['working_team_id1']
+        groups_model = self.pool.get('res.groups')
+        customer_group_ids = groups_model.search(cr, uid, [('name', '=', u'行业负责人')],limit=1, context=context)
+        customer_manager_group = groups_model.browse(cr,uid,customer_group_ids,context=None)
+        recruit_group_ids = groups_model.search(cr, uid, [('name', '=', u'招聘组')],limit=1,context=context)
+        recruit_group = groups_model.browse(cr,uid,recruit_group_ids,context=None)
+        employee_model = self.pool.get('hr.employee')
+        employee_ids = employee_model.search(cr,uid,[('user_id','=',uid)],limit=1,context=None)
+        employee =employee_model.browse(cr,uid,employee_ids,context=None)
+        department = employee[0].department_id
+        working_team_model =self.pool.get('nantian_erp.working_team')
+        working_team = working_team_model.browse(cr,uid,vals['working_team_id'],context=None)
+        print vals['user_id']
+        if user in customer_manager_group[0].users:
+            if department.level == 2:
+                exam_user = department.manager_id.user_id
+            else:
+                exam_user = department.parent_id.manager_id.user_id
+        elif user in recruit_group[0].users:
+            exam_user = working_team.partner_id.customer_manager
+        else:
+            exam_user = employee.working_team_id.partner_id.customer_manager
+        vals['examine_user']=exam_user.id
+        print user
+        self.send_email(cr,uid,user,context=None)
+        return super(recruitment,self).create(cr,uid,vals,context=context)
 
     def send_email(self,cr,uid,users,context=None):
         # template_model = self.pool.get('email.template')
@@ -347,6 +347,7 @@ class interview(models.Model):
     next_user = fields.Many2one('res.users',string='下步处理人')
     rec_user = fields.Char(related = 'recruitment_id.user_id.name',string='招聘发起人')
     customer = fields.Char(related ='recruitment_id.working_team_id.partner_id.customer_manager.name',string='行业负责人')
+
     # @api.onchange('result','interviewer')
     # def _onchange_price(self):
     #     if self.result == 'agree':
@@ -356,28 +357,28 @@ class interview(models.Model):
     #     else:
     #         self.resume_id.states = u'淘汰'
 
-    # def create(self, cr, uid, vals, context=None):
-    #     resume_model = self.pool.get('nantian_erp.resume')
-    #     resume = resume_model.browse(cr,uid,vals['resume_id'],context=None)
-    #     recruitment_model = self.pool.get('nantian_erp.recruitment')
-    #     recruitment = recruitment_model.browse(cr,uid,vals['recruitment_id'],context=None)
-    #     if resume.state == u'简历库中':
-    #         print vals['resume_id']
-    #         print vals['recruitment_id']
-    #         print recruitment.user_id.id
-    #         resume.state = u'面试中'
-    #
-    #         resume.interviewer = vals['next_user']
-    #         self.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'interviewer':vals['next_user']})
-    #         vals['date'] = fields.Date.today()
-    #         print resume.interviewer.name
-    #         print vals['customer']
-    #         if resume.interviewer.name == vals['customer']:
-    #             offer_model = self.pool.get('nantian_erp.offer_information')
-    #             offer_model.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'user_id':vals['next_user']},context=context)
-    #     return super(interview,self).create(cr,uid,vals,context=context)
-    #
-    #
+    def create(self, cr, uid, vals, context=None):
+        resume_model = self.pool.get('nantian_erp.resume')
+        resume = resume_model.browse(cr,uid,vals['resume_id'],context=None)
+        recruitment_model = self.pool.get('nantian_erp.recruitment')
+        recruitment = recruitment_model.browse(cr,uid,vals['recruitment_id'],context=None)
+        if resume.state == u'简历库中':
+            print vals['resume_id']
+            print vals['recruitment_id']
+            print recruitment.user_id.id
+            resume.state = u'面试中'
+
+            resume.interviewer = vals['next_user']
+            self.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'interviewer':vals['next_user']})
+            vals['date'] = fields.Date.today()
+            print resume.interviewer.name
+            print vals['customer']
+            if resume.interviewer.name == vals['customer']:
+                offer_model = self.pool.get('nantian_erp.offer_information')
+                offer_model.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'user_id':vals['next_user']},context=context)
+        return super(interview,self).create(cr,uid,vals,context=context)
+
+
 
 class offer_information(models.Model):
     _name = 'nantian_erp.offer_information'
