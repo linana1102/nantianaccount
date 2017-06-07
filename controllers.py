@@ -273,27 +273,27 @@ class Resume(http.Controller):
                     #     'handletime'] else None, interview['InterStatus']
                     inter_dict = {'review': interview['InterviewResults'].strip(),
                                   'date': interview['handletime'][:10] if interview['handletime'] else None}
-                    if interview['user']:
-                        inter_dict['interviewer'] = interview['user']
+                    # if interview['user']:
+                    #     inter_dict['interviewer'] = interview['user']
                     if interview['InterStatus'] == u'通过':
                         inter_dict['result'] = 'agree'
                     if interview['InterStatus'] ==u'淘汰':
                         inter_dict['result'] = 'disagree'
                     inter_dict['resume_id'] = resume_obj.id
-                    user = http.request.env['res.users'].sudo().search([('name', '=', interview['user'])], limit=1)
-                    print user
-                    if user:
-                        inter_dict['interviewer'] = user.id
+                    if interview['user']:
+                        user = http.request.env['res.users'].sudo().search([('name', '=', interview['user'])], limit=1)
+                        if user:
+                            inter_dict['interviewer'] = user.id
                     interview_obj = http.request.env['nantian_erp.interview'].sudo().create(inter_dict)
-            offers = data['offer']
-            for offer in offers:
+            # offers = data['offer']
+            # for offer in offers:
                 # print '!!' * 80
                 # print offer['Ephone'], offer['Email'].strip(), offer['Eentrytime'], offer['Epost'], offer['Epostgrade'], offer[
                 #     'Ejob'], offer['Ejobin'], offer['Ejobaim']
                 # print offer['Eprimary'], offer['Esecond'], offer['Eproject'], offer['Ecompacttime'], offer[
                 #     'Eapplytime'], offer['handleuser']
-                offer_dict = {'phone':offer['Ephone'],'email':offer['Ecompacttime'].strip(),'contract_time':offer['Email'],'test_time':offer['Eapplytime']}
-                offer_obj = http.request.env['nantian_erp.offer_information'].sudo().create(offer_dict)
+                # offer_dict = {'phone':offer['Ephone'],'email':offer['Ecompacttime'].strip(),'contract_time':offer['Email'],'test_time':offer['Eapplytime']}
+                # offer_obj = http.request.env['nantian_erp.offer_information'].sudo().create(offer_dict)
         return 'success'
 
 class Hr(http.Controller):
