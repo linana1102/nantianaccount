@@ -297,4 +297,27 @@ openerp.nantian_erp=function(instance){
 
     });
 
+    instance.nantian_erp.hiddenIdent = function(record){
+        var identification_id = record.identification_id;
+        record.identification_id = "隐私保护，无权限查看！";
+        var id = record.id;
+        $.get("/identification_show?id="+id,function(txt){
+            if(txt == "show"){
+                $(".hidden_ident .oe_form_char_content").html(identification_id);
+            }else if(txt == "hidden"){
+                $(".hidden_ident .oe_form_char_content").html("隐私保护，无权限查看！");
+            }
+        });
+    };
+
+    instance.web.FormView.include({
+        load_record:function(record){
+            if(this.dataset && this.dataset.model == "hr.employee"){
+                instance.nantian_erp.hiddenIdent(record);
+            }
+            return this._super.apply(this, arguments);
+        }
+
+    });
+
 }

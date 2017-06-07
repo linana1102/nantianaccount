@@ -297,13 +297,16 @@ class Resume(http.Controller):
         return 'success'
 
 class Hr(http.Controller):
-    @http.route('/identification_show', type='http', auth='public', methods=['POST'])
+    @http.route('/identification_show', type='http', auth='public', methods=['GET'])
     def identification_show(self, **post):
-        uid = post['uid']
-        if uid:
+        hr_id = post['id']
+        if hr_id:
+            hr = http.request.env['hr.employee'].sudo().search([('id', '=', hr_id)],limit=1)
+            uid = http.request.env.uid
+
             res_objs = http.request.env['ir.model.data'].sudo().search([('name','in',['group_hr_assistant','group_hr_manager_assistant','group_nantian_header','group_hr_recruitment','group_nantian_server_sale_before','group_hr_manager'])])
             groups_ids = [res.res_id for res in res_objs]
-            result = http.request.env['res.users'].sudo().search([('groups_id.id', 'in', groups_ids),('id','=',uid)])
-            print result
-            return 'show'
-        return 'invisible'
+            result = http.request.env['res.users'].sudo().search(['|',('id','=',hr.user_id.id),('groups_id.id', 'in', groups_ids),('id','=',uid)])
+            if result:
+                return 'show'
+        return 'hidden'

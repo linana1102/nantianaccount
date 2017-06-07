@@ -215,7 +215,7 @@
                                         <field name="mobile_phone"/>
                                         <field name="birthday"/>
                                     </group>
-                                    <group string="Citizenship &amp; Other Info" attrs="{'invisible':[('user_id','!=','uid')]}">
+                                    <group string="Citizenship &amp; Other Info" class="hidden_ident">
 <!--                                         <field name="country_id" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
  -->                                        <field name="identification_id" />
 <!--                                         <field name="passport_id" />
