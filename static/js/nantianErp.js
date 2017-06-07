@@ -296,16 +296,14 @@ openerp.nantian_erp=function(instance){
         }
 
     });
-
+    //实现身份证号根据不同权限显示
     instance.nantian_erp.hiddenIdent = function(record){
-        var identification_id = record.identification_id;
-        record.identification_id = "隐私保护，无权限查看！";
-        var id = record.id;
-        $.get("/identification_show?id="+id,function(txt){
+        $(".hidden_ident").addClass("hidden");
+        $.get("/identification_show?id="+record.id,function(txt){
             if(txt == "show"){
-                $(".hidden_ident .oe_form_char_content").html(identification_id);
+                $(".hidden_ident").removeClass("hidden");
             }else if(txt == "hidden"){
-                $(".hidden_ident .oe_form_char_content").html("隐私保护，无权限查看！");
+                $(".hidden_ident").addClass("hidden");
             }
         });
     };
