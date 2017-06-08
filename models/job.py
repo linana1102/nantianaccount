@@ -4,7 +4,7 @@ from openerp import models, fields, api,exceptions
 from email.utils import formataddr
 import email
 from email.header import Header
-
+import StringIO
 
 class categroy(models.Model):
     _name = 'nantian_erp.categroy'
@@ -184,8 +184,25 @@ class recruitment(models.Model):
                 datas.append((r.id, (str(r.job_id.name) + '(' + (str(r.user_id.name))+ ')')))
         return datas
 
-
-
+    @api.multi
+    def export_recruitment(self):
+        # 定义文件流
+        f = StringIO()
+        resume_dict = {'user': self.user_id.name or '',
+                       'first_department': self.department_id.name or '',
+                       'second_department':self.department_id.parent_id.name or '',
+                       'working_team': self.working_team_id.name or '',
+                       'job_name': self.job_name or '',
+                       'current_employee_num': self.current_employee_num or '',
+                       'need_people_num': self.need_people_num or '',
+                       'salary': self.salary or '',
+                       'work_place': self.work_place  or '',
+                       'cycle': self.cycle or '',
+                       'reason': self.reason or '',
+                       'channel': self.channel or '',
+                       'requirements':self.requirements or '',
+                       'duties':self.duties or '',
+                       }
 
 class job_examine(models.Model):
     _name = 'nantian_erp.job_examine'
