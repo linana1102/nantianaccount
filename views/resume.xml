@@ -358,7 +358,7 @@
         <menuitem id="nantian_erp_processing_resume_menu" parent="nantian_erp_resume_root_menu" name="待面试的简历" action="nantian_erp_processing_resume_action" sequence="2" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager"/>
         <!--<menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="简历" action="nantian_erp_resume_action" sequence="2"/>-->
         <menuitem id="nantian_erp_entryed_resume_menu" parent="nantian_erp_resume_root_menu" name="已入职的简历" action="nantian_erp_entryed_resume_action" sequence="2" />
-        <menuitem id="nantian_erp_rejected_resume_menu" parent="nantian_erp_resume_root_menu" name="发offer的简历" action="nantian_erp_rejected_resume_action" sequence="2"/>
+        <menuitem id="nantian_erp_rejected_resume_menu" parent="nantian_erp_resume_root_menu" name="不来的简历" action="nantian_erp_rejected_resume_action" sequence="2"/>
 
         <record model="ir.ui.view" id="nantian_erp_offer_information_form">
             <field name="name">nantian_offer_information.form</field>
