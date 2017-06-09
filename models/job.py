@@ -5,7 +5,8 @@ from email.utils import formataddr
 import email
 from email.header import Header
 import StringIO
-
+from docxtpl import DocxTemplate,InlineImage
+import os,sys
 class categroy(models.Model):
     _name = 'nantian_erp.categroy'
     name = fields.Char()
@@ -48,7 +49,7 @@ class recruitment(models.Model):
     examine_ids = fields.One2many('nantian_erp.job_examine','recruitment_id')
     hired_num = fields.Integer(string='已招聘人数')
     work_place = fields.Char(string= '工作地点')
-
+    phone = fields.Char(string='联系电话')
     def create(self, cr, uid, vals, context=None):
         user = self.pool.get('res.users').browse(cr,uid,uid,context=None)
         if vals['working_team_id1'] and not vals['working_team_id']:
@@ -188,12 +189,14 @@ class recruitment(models.Model):
     def export_recruitment(self):
         # 定义文件流
         f = StringIO()
-        resume_dict = {'user': self.user_id.name or '',
+        path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        tpl = DocxTemplate(path.replace('\\', '/') + '/myaddons/nantian_erp/resume_template.docx')
+        recruitment_dict = {'user': self.user_id.name or '',
                        'first_department': self.department_id.name or '',
                        'second_department':self.department_id.parent_id.name or '',
                        'working_team': self.working_team_id.name or '',
                        'job_name': self.job_name or '',
-                       'current_employee_num': self.current_employee_num or '',
+                       'current_num': self.current_employee_num or '',
                        'need_people_num': self.need_people_num or '',
                        'salary': self.salary or '',
                        'work_place': self.work_place  or '',
@@ -202,7 +205,13 @@ class recruitment(models.Model):
                        'channel': self.channel or '',
                        'requirements':self.requirements or '',
                        'duties':self.duties or '',
+                       'phone':self.phone or '',
                        }
+        tpl.render(recruitment_dict)
+        tpl.save(f)
+        f.seek(0)
+        f.close()
+        return f
 
 class job_examine(models.Model):
     _name = 'nantian_erp.job_examine'
