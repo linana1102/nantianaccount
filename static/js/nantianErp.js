@@ -6,6 +6,7 @@ openerp.nantian_erp=function(instance){
     var _t=instance.web._t,
         _lt=instance.web._lt,
         QWeb=instance.web.qweb;
+
     instance.nantian_erp.ModifyColor = instance.web.Widget.extend({
         color:null,
         init:function(){
@@ -181,6 +182,7 @@ openerp.nantian_erp=function(instance){
         }
     });
 
+    //简历上传和拖拽上传
     instance.nantian_erp.UploadResume = instance.web.Widget.extend({
         template:"nantian_erp.uploadResume",
         events: {
@@ -240,6 +242,7 @@ openerp.nantian_erp=function(instance){
         }
     });
 
+    //简历批量导出
     instance.nantian_erp.ExportResume = instance.web.Widget.extend({
 
         init: function(parent) {
@@ -295,6 +298,61 @@ openerp.nantian_erp=function(instance){
             return this._super.apply(this, arguments);
         }
 
+    });
+
+    //实现身份证号根据不同权限显示
+    instance.nantian_erp.hiddenIdent = function(record){
+        $(".hidden_ident").addClass("hidden");
+        $.get("/identification_show?id="+record.id,function(txt){
+            if(txt == "show"){
+                $(".hidden_ident").removeClass("hidden");
+            }else if(txt == "hidden"){
+                $(".hidden_ident").addClass("hidden");
+            }
+        });
+    };
+
+    instance.web.FormView.include({
+        load_record:function(record){
+            if(this.dataset && this.dataset.model == "hr.employee"){
+                instance.nantian_erp.hiddenIdent(record);
+            }
+            return this._super.apply(this, arguments);
+        }
+
+    });
+
+    //证书扫描件
+    instance.web.list.Binary.include({
+        _format:function(row_data, options){
+            if(this.string == "证书扫描件"){
+                var text = _t("Preview"), filename=_t('Binary file');
+                var value = row_data[this.id].value;
+                if (!value) {
+                    return options.value_if_empty || '';
+                }
+                var download_url;
+                if (value.substr(0, 10).indexOf(' ') == -1) {
+                    download_url = "data:application/octet-stream;base64," + value;
+                } else {
+                    download_url = instance.session.url('/web/binary/image', {model: options.model, field: this.id, id: options.id});
+                    if (this.filename) {
+                        download_url += '&filename_field=' + this.filename;
+                    }
+                }
+                if (this.filename && row_data[this.filename]) {
+                    text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
+                        row_data[this.filename].value, {type: 'char'}));
+                    filename = row_data[this.filename].value;
+                }
+                return _.template('<a target="_blank" href="<%-href%>"><%-text%></a>', {
+                    text: text,
+                    href: download_url
+                });
+            }else{
+                return this._super.apply(this, arguments);
+            }
+        }
     });
 
 }

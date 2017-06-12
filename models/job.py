@@ -4,8 +4,9 @@ from openerp import models, fields, api,exceptions
 from email.utils import formataddr
 import email
 from email.header import Header
-
-
+import StringIO
+from docxtpl import DocxTemplate,InlineImage
+import os,sys
 class categroy(models.Model):
     _name = 'nantian_erp.categroy'
     name = fields.Char()
@@ -48,11 +49,11 @@ class recruitment(models.Model):
     examine_ids = fields.One2many('nantian_erp.job_examine','recruitment_id')
     hired_num = fields.Integer(string='已招聘人数')
     work_place = fields.Char(string= '工作地点')
-
+    phone = fields.Char(string='联系电话')
     def create(self, cr, uid, vals, context=None):
         user = self.pool.get('res.users').browse(cr,uid,uid,context=None)
         if vals['working_team_id1'] and not vals['working_team_id']:
-            vals['working_team_id']=vals['working_team_id1']
+            vals['working_team_id'] = vals['working_team_id1']
         groups_model = self.pool.get('res.groups')
         customer_group_ids = groups_model.search(cr, uid, [('name', '=', u'行业负责人')],limit=1, context=context)
         customer_manager_group = groups_model.browse(cr,uid,customer_group_ids,context=None)
@@ -64,16 +65,18 @@ class recruitment(models.Model):
         department = employee[0].department_id
         working_team_model =self.pool.get('nantian_erp.working_team')
         working_team = working_team_model.browse(cr,uid,vals['working_team_id'],context=None)
+        print vals['user_id']
         if user in customer_manager_group[0].users:
             if department.level == 2:
-                vals['examine_user'] = department.manager_id.user_id
+                exam_user = department.manager_id.user_id
             else:
-                vals['examine_user'] = department.parent_id.manager_id.user_id
+                exam_user = department.parent_id.manager_id.user_id
         elif user in recruit_group[0].users:
-            vals['examine_user'] = working_team.partner_id.customer_manager
+            exam_user = working_team.partner_id.customer_manager
         else:
-            vals['examine_user'] = employee.working_team_id.partner_id.customer_manager
-        user = self.pool.get('res.groups').browse(cr,uid,vals['examine_user'],context=None)
+            exam_user = employee.working_team_id.partner_id.customer_manager
+        vals['examine_user']=exam_user.id
+        print user
         self.send_email(cr,uid,user,context=None)
         return super(recruitment,self).create(cr,uid,vals,context=context)
 
@@ -110,23 +113,23 @@ class recruitment(models.Model):
         employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
         return employee.working_team_id
 
-    # @api.multi
-    # def compute_examine_user(self):
-    #     customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')],limit=1)
-    #     recruit_group = self.env['res.groups'].search([('name', '=', u'招聘组')],limit=1)
-    #     employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
-    #     department = employee.department_id
-    #     if self.env.user in customer_manager_group.users:
-    #         if department.level == 2:
-    #             user = department.manager_id.user_id
-    #         else:
-    #             user = department.parent_id.manager_id.user_id
-    #     elif self.env.user in recruit_group.users:
-    #         user = self.working_team_id.partner_id.customer_manager
-    #     else:
-    #         user = employee.working_team_id.partner_id.customer_manager
-    #     self.send_email(user)
-    #     return user
+    @api.multi
+    def compute_examine_user(self):
+        customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')],limit=1)
+        recruit_group = self.env['res.groups'].search([('name', '=', u'招聘组')],limit=1)
+        employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
+        department = employee.department_id
+        if self.env.user in customer_manager_group.users:
+            if department.level == 2:
+                user = department.manager_id.user_id
+            else:
+                user = department.parent_id.manager_id.user_id
+        elif self.env.user in recruit_group.users:
+            user = self.working_team_id.partner_id.customer_manager
+        else:
+            user = employee.working_team_id.partner_id.customer_manager
+        self.send_email(user)
+        return user
 
 
     @api.multi
@@ -167,7 +170,7 @@ class recruitment(models.Model):
 
     @api.multi
     def archive(self):
-        self.state = 'archive'
+        self.state = 'archived'
         self.examine_user = None
 
     # 修改作为外键时的显示
@@ -182,8 +185,33 @@ class recruitment(models.Model):
                 datas.append((r.id, (str(r.job_id.name) + '(' + (str(r.user_id.name))+ ')')))
         return datas
 
-
-
+    @api.multi
+    def export_recruitment(self):
+        # 定义文件流
+        f = StringIO()
+        path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        tpl = DocxTemplate(path.replace('\\', '/') + '/myaddons/nantian_erp/resume_template.docx')
+        recruitment_dict = {'user': self.user_id.name or '',
+                       'first_department': self.department_id.name or '',
+                       'second_department':self.department_id.parent_id.name or '',
+                       'working_team': self.working_team_id.name or '',
+                       'job_name': self.job_name or '',
+                       'current_num': self.current_employee_num or '',
+                       'need_people_num': self.need_people_num or '',
+                       'salary': self.salary or '',
+                       'work_place': self.work_place  or '',
+                       'cycle': self.cycle or '',
+                       'reason': self.reason or '',
+                       'channel': self.channel or '',
+                       'requirements':self.requirements or '',
+                       'duties':self.duties or '',
+                       'phone':self.phone or '',
+                       }
+        tpl.render(recruitment_dict)
+        tpl.save(f)
+        f.seek(0)
+        f.close()
+        return f
 
 class job_examine(models.Model):
     _name = 'nantian_erp.job_examine'
@@ -345,6 +373,7 @@ class interview(models.Model):
     next_user = fields.Many2one('res.users',string='下步处理人')
     rec_user = fields.Char(related = 'recruitment_id.user_id.name',string='招聘发起人')
     customer = fields.Char(related ='recruitment_id.working_team_id.partner_id.customer_manager.name',string='行业负责人')
+
     # @api.onchange('result','interviewer')
     # def _onchange_price(self):
     #     if self.result == 'agree':

@@ -6,8 +6,10 @@ from openerp.http import request
 import base64
 from docxtpl import DocxTemplate,InlineImage
 from docx.shared import Mm, Inches, Pt
+
 import openerp
 
+import re
 from cStringIO import StringIO
 from openerp.tools import ustr
 import urllib2
@@ -223,6 +225,8 @@ class SynchronousResume(http.Controller):
 
                 examine_dict = {'user_id':ex_user,'result':result,'recruitment_id': recruit,'date':examine['Time']}
                 examine_model.create(examine_dict)
+        return 'success'
+
 
 class Resume(http.Controller):
     @http.route('/resume_import', type='http', auth='public', methods=['POST','GET'])
@@ -269,22 +273,42 @@ class Resume(http.Controller):
                     #     'handletime'] else None, interview['InterStatus']
                     inter_dict = {'review': interview['InterviewResults'].strip(),
                                   'date': interview['handletime'][:10] if interview['handletime'] else None}
+                    # if interview['user']:
+                    #     inter_dict['interviewer'] = interview['user']
+                    if interview['InterStatus'] == u'通过':
+                        inter_dict['result'] = 'agree'
+                    if interview['InterStatus'] ==u'淘汰':
+                        inter_dict['result'] = 'disagree'
+                    inter_dict['resume_id'] = resume_obj.id
                     if interview['user']:
-                        inter_dict['interviewer'] = interview['user']
-                    if interview['InterStatus'] in [u'通过', u'淘汰']:
-                        inter_dict['result'] = interview['InterStatus']
-                    inter_dict['resume_id'] = resume_obj
-                    user = http.request.env['res.users'].sudo().search([('name', '=', interview['user'])], limit=1)
-                    if user:
-                        inter_dict['interviewer'] = user
+                        user = http.request.env['res.users'].sudo().search([('name', '=', interview['user'])], limit=1)
+                        if user:
+                            inter_dict['interviewer'] = user.id
                     interview_obj = http.request.env['nantian_erp.interview'].sudo().create(inter_dict)
-            offers = data['offer']
-            for offer in offers:
+            # offers = data['offer']
+            # for offer in offers:
                 # print '!!' * 80
                 # print offer['Ephone'], offer['Email'].strip(), offer['Eentrytime'], offer['Epost'], offer['Epostgrade'], offer[
                 #     'Ejob'], offer['Ejobin'], offer['Ejobaim']
                 # print offer['Eprimary'], offer['Esecond'], offer['Eproject'], offer['Ecompacttime'], offer[
                 #     'Eapplytime'], offer['handleuser']
-                offer_dict = {'phone':offer['Ephone'],'email':offer['Ecompacttime'].strip(),'contract_time':offer['Email'],'test_time':offer['Eapplytime']}
-                offer_obj = http.request.env['nantian_erp.offer_information'].sudo().create(offer_dict)
+                # offer_dict = {'phone':offer['Ephone'],'email':offer['Ecompacttime'].strip(),'contract_time':offer['Email'],'test_time':offer['Eapplytime']}
+                # offer_obj = http.request.env['nantian_erp.offer_information'].sudo().create(offer_dict)
         return 'success'
+
+class Hr(http.Controller):
+    @http.route('/identification_show', type='http', auth='public', methods=['GET'])
+    def identification_show(self, **post):
+        hr_id = post['id']
+        if hr_id:
+            hr = http.request.env['hr.employee'].sudo().search([('id', '=', hr_id)],limit=1)
+            uid = http.request.env.uid
+
+            res_objs = http.request.env['ir.model.data'].sudo().search([('name','in',['group_hr_assistant','group_hr_manager_assistant','group_nantian_header','group_hr_recruitment','group_nantian_server_sale_before','group_hr_manager'])])
+            groups_ids = [res.res_id for res in res_objs]
+            result = http.request.env['res.users'].sudo().search(['|',('id','=',hr.user_id.id),('groups_id.id', 'in', groups_ids),('id','=',uid)])
+            if result:
+                return 'show'
+        return 'hidden'
+
+
