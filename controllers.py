@@ -310,3 +310,5 @@ class Hr(http.Controller):
             if result:
                 return 'show'
         return 'hidden'
+
+
