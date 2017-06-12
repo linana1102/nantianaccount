@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="nantian_erp_company_info_attachment_form">
+            <field name="name">nantian_erp.company_info_attachment.form</field>
+            <field name="model">nantian_erp.company_info_attachment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                         <field name="text_binary" filename="title"/>
+                        <field name="title"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form">
             <field name="name">company_info_deplay.form</field>
             <field name="model">nantian_erp.company_info_deplay</field>
@@ -17,10 +30,10 @@
                                             <field name="text1_1_4" />
                                          </group>
                                          <group>
-                                             <field name="attachment1_id" >
-                                                 <tree>
-                                                     <field name="title" />
-                                                     <field name="text_binary" />
+                                             <field name="attachment1_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
                                                  </tree>
                                              </field>
                                          </group>
@@ -60,10 +73,10 @@
                                             <field name="text2_1_4" />
                                          </group>
                                          <group>
-                                             <field name="attachment2_id" >
-                                                 <tree>
-                                                     <field name="title" />
-                                                     <field name="text_binary" />
+                                             <field name="attachment2_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
                                                  </tree>
                                              </field>
                                          </group>
@@ -92,10 +105,10 @@
                                                     <field name="text3_1_4" />
                                          </group>
                                         <group>
-                                             <field name="attachment3_id" >
-                                                 <tree>
-                                                     <field name="title" />
-                                                     <field name="text_binary" />
+                                            <field name="attachment3_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
                                                  </tree>
                                              </field>
                                          </group>
@@ -141,10 +154,10 @@
                                          </group>
                                     </group>
                                     <group>
-                                             <field name="attachment4_id" >
-                                                 <tree>
-                                                     <field name="title" />
-                                                     <field name="text_binary" />
+                                        <field name="attachment4_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
                                                  </tree>
                                              </field>
                                     </group>
@@ -166,10 +179,10 @@
                                          </group>
                                     </group>
                                         <group>
-                                             <field name="attachment5_id" >
-                                                 <tree>
-                                                     <field name="title" />
-                                                     <field name="text_binary" />
+                                                <field name="attachment5_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
                                                  </tree>
                                              </field>
                                          </group>
@@ -211,7 +224,7 @@
                                  <field name="attachment_ids" >
                                      <tree>
                                          <field name="title" />
-                                         <field name="text_binary" />
+                                         <field name="text_binary"  filename="title"/>
                                      </tree>
                                  </field>
                         <field name="kind" attrs="{'invisible': [('kind','=', True)]}"/>

@@ -3,6 +3,7 @@ from openerp import tools
 from openerp import models, fields, api,exceptions
 
 
+
 class company_info_deplay(models.Model):
     _name = 'nantian_erp.company_info_deplay'
 
@@ -32,7 +33,7 @@ class company_info_deplay(models.Model):
     text1_5_2 = fields.Char(string=u"频次")
     text1_5_3 = fields.Text(string=u"具体内容")
     text1_5_4 = fields.Text(string=u"注意事项")
-    attachment1_id = fields.One2many("nantian_erp.company_info_attachment","deplay1_id",string=u"所需表格")
+    attachment1_id = fields.One2many("nantian_erp.company_info_attachment","deplay1_id",string=u"表格")
 
 
     text2_1_1 = fields.Char(string=u"责任人")
@@ -49,7 +50,7 @@ class company_info_deplay(models.Model):
     text2_3_2 = fields.Char(string=u"频次")
     text2_3_3 = fields.Text(string=u"具体内容")
     text2_3_4 = fields.Text(string=u"注意事项")
-    attachment2_id = fields.One2many("nantian_erp.company_info_attachment","deplay2_id",string=u"所需表格")
+    attachment2_id = fields.One2many("nantian_erp.company_info_attachment","deplay2_id",string=u"表格")
 
 
     text3_1_1 = fields.Char(string=u"责任人")
@@ -76,7 +77,7 @@ class company_info_deplay(models.Model):
     text3_5_2 = fields.Char(string=u"频次")
     text3_5_3 = fields.Text(string=u"具体内容")
     text3_5_4 = fields.Text(string=u"注意事项")
-    attachment3_id = fields.One2many("nantian_erp.company_info_attachment","deplay3_id",string=u"所需表格")
+    attachment3_id = fields.One2many("nantian_erp.company_info_attachment","deplay3_id",string=u"表格")
 
 
     text4_1_1 = fields.Char(string=u"责任人")
@@ -88,7 +89,7 @@ class company_info_deplay(models.Model):
     text4_2_2 = fields.Char(string=u"频次")
     text4_2_3 = fields.Text(string=u"具体内容")
     text4_2_4 = fields.Text(string=u"注意事项")
-    attachment4_id = fields.One2many("nantian_erp.company_info_attachment","deplay4_id",string=u"所需表格")
+    attachment4_id = fields.One2many("nantian_erp.company_info_attachment","deplay4_id",string=u"表格")
 
 
     text5_1_1 = fields.Char(string=u"责任人")
@@ -100,7 +101,7 @@ class company_info_deplay(models.Model):
     text5_2_2 = fields.Char(string=u"频次")
     text5_2_3 = fields.Char(string=u"具体内容")
     text5_2_4 = fields.Char(string=u"注意事项")
-    attachment5_id = fields.One2many("nantian_erp.company_info_attachment","deplay5_id",string=u"所需表格")
+    attachment5_id = fields.One2many("nantian_erp.company_info_attachment","deplay5_id",string=u"表格")
 
 class company_info_kind(models.Model):
     _name = 'nantian_erp.company_info_kind'
@@ -131,11 +132,11 @@ class company_info_attachment(models.Model):
 
     title = fields.Char(string=u"附件名称")
     text_binary = fields.Binary(string=u"表格下载区")
-    kind_id = fields.Many2one("nantian_erp.company_info_kind")
     deplay1_id = fields.Many2one("nantian_erp.company_info_deplay")
     deplay2_id = fields.Many2one("nantian_erp.company_info_deplay")
     deplay3_id = fields.Many2one("nantian_erp.company_info_deplay")
     deplay4_id = fields.Many2one("nantian_erp.company_info_deplay")
     deplay5_id = fields.Many2one("nantian_erp.company_info_deplay")
+    kind_id = fields.Many2one("nantian_erp.company_info_kind")
 
 
