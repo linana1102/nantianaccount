@@ -122,7 +122,9 @@ class Binary(http.Controller):
                         f = StringIO(base64.b64decode(str(cer['image'])))
                         image = InlineImage(tpl,f,height=Mm(30))
                         f.close()
-                    certificate = {'name':cer['name'].replace('&','&amp;') or '','image': image or '',}
+                    if cer['name']:
+                        name = cer['name'].replace('&','&amp;')
+                    certificate = {'name':name or '','image': image or '',}
 
                     certifications_dict.append(certificate)
             gender = ''
