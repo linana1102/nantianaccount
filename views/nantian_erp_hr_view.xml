@@ -117,9 +117,9 @@
                                 </group>
                                 <group string="简历信息">
                                         <field name="work_time" string="工作时间" />
-                                        <field name="graduation" />
-                                        <field name="major" />
-                                        <field name="education" string="学历"/>
+                                        <!--<field name="graduation" />-->
+                                        <!--<field name="major" />-->
+                                        <!--<field name="education" string="学历"/>-->
                                         <field name="education_experience_ids" string="教育经历">
                                             <tree string="教育经历" editable="bottom">
                                                 <field name="school" string="学校"/>
@@ -238,9 +238,9 @@
                                 </group>
                                 <group string="简历信息">
                                         <field name="work_time" string="工作时间" />
-                                        <field name="graduation" />
-                                        <field name="major" />
-                                        <field name="education" string="学历"/>
+                                        <!--<field name="graduation" />-->
+                                        <!--<field name="major" />-->
+                                        <!--<field name="education" string="学历"/>-->
                                         <field name="education_experience_ids" string="教育经历">
                                             <tree string="教育经历" editable="bottom">
                                                 <field name="school" string="学校"/>
