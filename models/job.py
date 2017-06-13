@@ -50,6 +50,7 @@ class recruitment(models.Model):
     hired_num = fields.Integer(string='已招聘人数')
     work_place = fields.Char(string= '工作地点')
     phone = fields.Char(string='联系电话')
+
     def create(self, cr, uid, vals, context=None):
         user = self.pool.get('res.users').browse(cr,uid,uid,context=None)
         if vals['working_team_id1'] and not vals['working_team_id']:
@@ -151,6 +152,7 @@ class recruitment(models.Model):
             else:
                 examine_user = department.parent_id.manager_id.user_id
             self.send_email(self.examine_user)
+            self.export_recruitment()
             self.examine_user = examine_user
         elif self.env.user in nagmaer_group.users:
             self.state = 'released'
@@ -190,7 +192,7 @@ class recruitment(models.Model):
         # 定义文件流
         f = StringIO()
         path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        tpl = DocxTemplate(path.replace('\\', '/') + '/myaddons/nantian_erp/resume_template.docx')
+        tpl = DocxTemplate(path.replace('\\', '/') + '/myaddons/nantian_erp/position_form.docx')
         recruitment_dict = {'user': self.user_id.name or '',
                        'first_department': self.department_id.name or '',
                        'second_department':self.department_id.parent_id.name or '',
@@ -211,6 +213,7 @@ class recruitment(models.Model):
         tpl.save(f)
         f.seek(0)
         f.close()
+        # self.env['ir.attachment'].create({'res_model':,'data_fname':,'name':,'':})
         return f
 
 class job_examine(models.Model):
@@ -265,7 +268,7 @@ class resume(models.Model):
                         'body_html': '<div><p>您好:</p>'
                             '<p>有个面试需要您处理,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a></p></div>',
                         # 'subject': 'Re: %s+%s+%s' %(str(data[0]).decode('utf-8').encode('gbk'),str(data[1]).decode('utf-8').encode('gbk'),str(data[2]).decode('utf-8').encode('gbk')),
-                        'subject':'岗位申请',
+                        'subject':'面试',
                         'email_to': to_list,
                         'auto_delete': True,
                     }, context=context)
@@ -567,3 +570,5 @@ class entry(models.Model):
     reason = fields.Char(string='原因')
     user_id = fields.Many2one('res.users')
     type = fields.Char(string='类别')
+
+

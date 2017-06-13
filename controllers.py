@@ -122,7 +122,9 @@ class Binary(http.Controller):
                         f = StringIO(base64.b64decode(str(cer['image'])))
                         image = InlineImage(tpl,f,height=Mm(30))
                         f.close()
-                    certificate = {'name':cer['name'] or '','image': image or '',}
+                    if cer['name']:
+                        name = cer['name'].replace('&','&amp;')
+                    certificate = {'name':name or '','image': image or '',}
 
                     certifications_dict.append(certificate)
             gender = ''
@@ -140,10 +142,13 @@ class Binary(http.Controller):
                            'job':job or '',
                            'work_time':employee['work_time']or '',
                            'specialty':employee['specialty']or '',
-                           'work_experiences':experiences_list or '',
-                           'certifications':certifications_dict or '',
-
+                           'work_experiences':experiences_list or [],
+                           'certifications':certifications_dict or [],
                            }
+            # encode_json = json.dumps(resume_dict)
+            # rep_resume_dict = encode_json.replace('&','&amp;')
+            # resume_dict = json.loads(rep_resume_dict)
+            # print resume_dict
             tpl.render(resume_dict)
             tpl.save(fp)
             fp.seek(0)

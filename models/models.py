@@ -123,6 +123,7 @@ class hr_employee(models.Model):
     work_experience_ids = fields.One2many('nantian_erp.work_experience','employee_id')
     resume_id = fields.Many2one('nantian_erp.resume',string='简历')
     position_id = fields.Many2one('nantian_erp.job',string= '职位')
+    education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
 
     @api.multi
     @api.depends('department_id')
@@ -1584,3 +1585,12 @@ class department(models.Model):
                 record.level = 2
 
 
+class education_experience(models.Model):
+
+    _name = 'nantian_erp.education_experience'
+
+    school =fields.Char(string='学校')
+    major = fields.Char(string='专业')
+    education = fields.Selection([(u'中专及以下',u'中专及以下'),(u'高中',u'高中'),(u'大专',u'大专'),(u'本科',u'本科'),(u'硕士',u'硕士'),(u'博士',u'博士')],string='学历')
+    date_time = fields.Char(string='时间段')
+    employee_id = fields.Many2one('hr.employee',string='员工')

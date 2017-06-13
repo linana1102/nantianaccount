@@ -121,9 +121,17 @@
                                 </group>
                                 <group string="简历信息">
                                         <field name="work_time" string="工作时间" />
-                                        <field name="graduation" />
-                                        <field name="major" />
-                                        <field name="education" string="学历"/>
+                                        <!--<field name="graduation" />-->
+                                        <!--<field name="major" />-->
+                                        <!--<field name="education" string="学历"/>-->
+                                        <field name="education_experience_ids" string="教育经历">
+                                            <tree string="教育经历" editable="bottom">
+                                                <field name="school" string="学校"/>
+                                                <field name="major" string="专业"/>
+                                                <field name="education" string="学历"/>
+                                                <field name="date_time" string="时间段"/>
+                                            </tree>
+                                        </field>
                                         <field name="certificate_ids"  string = "证书"  >
                                             <tree string="Registered feedback" editable="bottom">
                                                 <field name="certificate_category_id" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
@@ -238,9 +246,17 @@
                                 </group>
                                 <group string="简历信息">
                                         <field name="work_time" string="工作时间" />
-                                        <field name="graduation" />
-                                        <field name="major" />
-                                        <field name="education" string="学历"/>
+                                        <!--<field name="graduation" />-->
+                                        <!--<field name="major" />-->
+                                        <!--<field name="education" string="学历"/>-->
+                                        <field name="education_experience_ids" string="教育经历">
+                                            <tree string="教育经历" editable="bottom">
+                                                <field name="school" string="学校"/>
+                                                <field name="major" string="专业"/>
+                                                <field name="education" string="学历"/>
+                                                <field name="date_time" string="时间段"/>
+                                            </tree>
+                                        </field>
                                         <field name="certificate_ids"  string = "证书"  >
                                             <tree string="Registered feedback" editable="bottom">
                                                 <field name="certificate_category_id" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
