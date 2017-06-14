@@ -19,7 +19,8 @@ class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
     count = fields.Integer(string='签订次数')
-    contract_make_ids = fields.One2many('nantian_erp.employee_contract_signing_date','employee_id',ondelete = 'set null')
+    contract_sign_first = fields.Char(string = "第一阶段")
+    contract_sign_second = fields.Char(string = "第二阶段")
     SN = fields.Char(string="财务序列号") #序列号
     project_cost_month_ids = fields.Many2many('nantian_erp.project_cost_month',"project_cost_month_employee_ref",string='工作组成本表')
     performance_year_ids = fields.One2many('nantian_erp.performance_year','employee_id',ondelete = 'set null')
@@ -591,13 +592,6 @@ class certificate(models.Model):
         #     print("%s send failed users(email is empty): %s items. [%s]" %(log_line_head, len(failed_users),
         #         ", ".join(["%s(%s)" %(user.name_related, user.id) for user in failed_users])))
         # print(dai_fa_song)
-
-# 员工合同签订时段
-class employee_contract_signing_date(models.Model):
-    _name = 'nantian_erp.employee_contract_signing_date'
-
-    moment = fields.Char(string="时段")
-    employee_id = fields.Many2one("hr.employee",string="employee")
 
 
 #证书--认证类型

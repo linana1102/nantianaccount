@@ -84,17 +84,14 @@
                                         <field name="entry_len" string="在司年限" />
                                         <field name="contract_len" string="合同期限" attrs="{'invisible':[('is_forever','=',True)]}" />
                                         <field name="contract_endtime" string="合同终止时间" />
-                                        <field name="is_forever" string="是否无期限" />
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
                                         <field name="user_id" on_change="onchange_user(user_id)" string="Related User" context="{'default_groups_ref': ['base.group_user']}"/>
                                     </group>
                                     <group>
                                         <field name = "count"></field>
-                                        <field name="contract_make_ids" string="签订时段">
-                                            <tree>
-                                                <field name="moment"></field>
-                                            </tree>
-                                        </field>
+                                        <field name = "contract_sign_first"></field>
+                                        <field name = "contract_sign_second"></field>
+                                        <field name="is_forever" string="是否无期限" />
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -209,17 +206,14 @@
                                         <field name="entry_time" string="入职时间"  readonly="True"/>
                                         <field name="contract_len" string="合同期限" readonly="True" attrs="{'invisible':[('is_forever','=',True)]}" />
                                         <field name="contract_endtime" string="合同终止时间"  readonly="True"/>
-                                        <field name="is_forever" string="是否无期限" readonly="True"/>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)" readonly="True"/>
                                         <field name="user_id" on_change="onchange_user(user_id)" string="Related User" context="{'default_groups_ref': ['base.group_user']}" readonly="True"/>
                                     </group>
                                     <group>
                                         <field name = "count"></field>
-                                        <field name="contract_make_ids" string="签订时段">
-                                            <tree>
-                                                <field name="moment"></field>
-                                            </tree>
-                                        </field>
+                                        <field name = "contract_sign_first"></field>
+                                        <field name = "contract_sign_second"></field>
+                                        <field name="is_forever" string="是否无期限" />
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4" readonly="True"/>
