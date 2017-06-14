@@ -34,7 +34,7 @@ class hr_employee(models.Model):
     work_time = fields.Date(track_visibility='onchange')
     entry_time = fields.Date(track_visibility='onchange')
     contract_starttime = fields.Date(track_visibility='onchange')
-    contract_endtime = fields.Date(store=True,compute='_get_end_date',track_visibility='onchange')
+    contract_endtime = fields.Date(string='合同终止时间')
     contract_len = fields.Integer(track_visibility='onchange')
     is_forever = fields.Boolean(string='无期限？',track_visibility='onchange')
     education = fields.Selection(
@@ -595,7 +595,6 @@ class certificate(models.Model):
 # 员工合同签订时段
 class employee_contract_signing_date(models.Model):
     _name = 'nantian_erp.employee_contract_signing_date'
-
 
     moment = fields.Char(string="时段")
     employee_id = fields.Many2one("hr.employee",string="employee")
