@@ -37,9 +37,9 @@
             <field name="res_model">nantian_erp.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+            <field name ="domain">[('categroy_id.name','!=','原系统')]</field>
          </record>
-        <menuitem id="nantian_erp_job_menu" parent="nantian_recruitment_2_level_menu"  name="岗位" action="nantian_erp_job_action" sequence="2" groups="nantian_erp.group_hr_recruitment"/>
+        <menuitem id="nantian_erp_job_menu" parent="nantian_recruitment_2_level_menu"  name="岗位" action="nantian_erp_job_action" sequence="2" />
 
         <record id="nantian_erp_interview_default_action" model="ir.actions.act_window">
             <field name="name">招聘页面面试</field>
@@ -407,7 +407,7 @@
             <field name="res_model">nantian_erp.recruitment</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name ="domain">[('examine_user','=',uid)]</field>
+            <field name ="domain">[('examine_user','=',uid),('state','=','examineing')]</field>
          </record>
         <record id="nantian_erp_examineing_recruitment_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>

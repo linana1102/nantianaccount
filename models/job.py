@@ -4,9 +4,10 @@ from openerp import models, fields, api,exceptions
 from email.utils import formataddr
 import email
 from email.header import Header
-import StringIO
+from cStringIO import StringIO
 from docxtpl import DocxTemplate,InlineImage
 import os,sys
+import base64
 class categroy(models.Model):
     _name = 'nantian_erp.categroy'
     name = fields.Char()
@@ -81,7 +82,7 @@ class recruitment(models.Model):
         self.send_email(cr,uid,user,context=None)
         return super(recruitment,self).create(cr,uid,vals,context=context)
 
-    def send_email(self,cr,uid,users,context=None):
+    def send_email(self,cr,uid,users,attach_ids=[],context=None):
         # template_model = self.pool.get('email.template')
         # ids = template_model.search(cr,uid,[('name','=','case邮件提醒')],context=None)
         # template = template_model.browse(cr,uid,ids,context=None)
@@ -92,13 +93,16 @@ class recruitment(models.Model):
         # for i in range(len(data)):
         #     if not data[i]:
         #         data[i] = ''
+        print attach_ids
         mail_id = mail_mail.create(cr, uid, {
                         'body_html': '<div><p>您好:</p>'
-                            '<p>有个岗位申请需要您处理,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a></p></div>',
+                            '<p>招聘申请需要您处理,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a></p></div>',
                         # 'subject': 'Re: %s+%s+%s' %(str(data[0]).decode('utf-8').encode('gbk'),str(data[1]).decode('utf-8').encode('gbk'),str(data[2]).decode('utf-8').encode('gbk')),
                         'subject':'岗位申请',
-                        'email_to': to_list,
+                        # 'email_to': to_list,
+                        'email_to':to_list,
                         'auto_delete': True,
+                        'attachment_ids':[[6,0,attach_ids]] or ''
                     }, context=context)
         mail_mail.send(cr, uid, [mail_id], context=context)
 
@@ -145,6 +149,7 @@ class recruitment(models.Model):
         nagmaer_group = self.env['res.groups'].search([('name', '=', u'总经理')],limit=1)
         employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
         department = employee.department_id
+        recruitment_group = self.env['res.groups'].search([('name', '=', u'招聘组')],limit=1)
         if self.env.user in customer_manager_group.users:
 
             if department.level == 2:
@@ -152,9 +157,16 @@ class recruitment(models.Model):
             else:
                 examine_user = department.parent_id.manager_id.user_id
             self.send_email(self.examine_user)
-            self.export_recruitment()
             self.examine_user = examine_user
         elif self.env.user in nagmaer_group.users:
+            self.export_recruitment()
+            attachment_ids = self.env['ir.attachment'].search(
+                    [('res_id', '=', self.id), ('res_model', '=', 'nantian_erp.recruitment')])
+            attach_ids = []
+            for attach in attachment_ids:
+                attach_ids.append(attach.id)
+            print attach_ids
+            self.send_email(recruitment_group.users,attach_ids)
             self.state = 'released'
             self.examine_user = None
 
@@ -192,7 +204,18 @@ class recruitment(models.Model):
         # 定义文件流
         f = StringIO()
         path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        print path
         tpl = DocxTemplate(path.replace('\\', '/') + '/myaddons/nantian_erp/position_form.docx')
+        reason1=''
+        reason2=''
+        reason3=''
+        if self.reason == '1':
+            reason1 = True
+        elif self.reason == '1':
+            reason2 = True
+        else:
+            reason3 =True
+
         recruitment_dict = {'user': self.user_id.name or '',
                        'first_department': self.department_id.name or '',
                        'second_department':self.department_id.parent_id.name or '',
@@ -203,7 +226,10 @@ class recruitment(models.Model):
                        'salary': self.salary or '',
                        'work_place': self.work_place  or '',
                        'cycle': self.cycle or '',
-                       'reason': self.reason or '',
+                       'reason':self.reason or '',
+                       'reason1': reason1 or '',
+                       'reason2': reason2 or '',
+                       'reason3': reason3  or '',
                        'channel': self.channel or '',
                        'requirements':self.requirements or '',
                        'duties':self.duties or '',
@@ -212,9 +238,8 @@ class recruitment(models.Model):
         tpl.render(recruitment_dict)
         tpl.save(f)
         f.seek(0)
+        self.env['ir.attachment'].create({'res_model':'nantian_erp.recruitment','res_id':self.id,'datas_fname':self.job_name+u'岗位申请.docx','name':self.job_name+u'岗位申请','mimetype':'application/msword','datas':base64.encodestring(f.read()),})
         f.close()
-        # self.env['ir.attachment'].create({'res_model':,'data_fname':,'name':,'':})
-        return f
 
 class job_examine(models.Model):
     _name = 'nantian_erp.job_examine'
