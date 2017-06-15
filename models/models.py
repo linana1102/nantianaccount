@@ -50,6 +50,7 @@ class hr_employee(models.Model):
         ],
             track_visibility='onchange'
     )
+
     level = fields.Selection(
         [
             (u'1',1),
@@ -125,6 +126,36 @@ class hr_employee(models.Model):
     resume_id = fields.Many2one('nantian_erp.resume',string='简历')
     position_id = fields.Many2one('nantian_erp.job',string= '职位')
     education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
+
+    # 自动导入教育经历
+    @api.multi
+    def import_education_experience(self):
+        records = self.env['hr.employee'].search([])
+        for rec in records:
+            if rec.education_experience_ids:
+                pass
+            else:
+                if rec.education == u"专科":
+                    education_t = u'大专'
+                elif rec.education == u"本科":
+                    education_t = u"本科"
+                elif rec.education == u"硕士":
+                    education_t = u"硕士"
+                elif rec.education == u"博士":
+                    education_t = u"博士"
+                elif rec.education == u"专升本":
+                    education_t = u"本科"
+                elif rec.education == u"高中":
+                    education_t = u"高中"
+                elif rec.education == u"高级技工":
+                    education_t = u'大专'
+                else:
+                    education_t = None
+                id = self.env['nantian_erp.education_experience'].create(
+                    {'school': rec.graduation, 'major': rec.major, 'education': education_t, 'employee_id': rec.id})
+
+
+
 
     @api.multi
     @api.depends('department_id')
@@ -1193,6 +1224,9 @@ class contract(models.Model):
         string="合同类别", default=u'服务合同'
     )
     employee_ids = fields.One2many('hr.employee', 'nantian_erp_contract_id', "Employees")
+
+
+
     #自动计算下次收款提醒邮件--距离收款时间一个月内 频率--每周
     @api.multi
     def email_contract_next_collection_date(self):
