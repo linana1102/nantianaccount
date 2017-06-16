@@ -341,7 +341,7 @@
     <record id="contract_header_rule" model="ir.rule">
         <field name="name">contract访问控制1</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_contract"/>
-        <field name="domain_force">[('header_id','=',user.id)]</field>
+        <field name="domain_force">['|',('header_id','=',user.id),('other_header_id','=',user.id)]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_read" eval="1"/>
