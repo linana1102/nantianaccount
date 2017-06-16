@@ -8,9 +8,8 @@ from cStringIO import StringIO
 from docxtpl import DocxTemplate,InlineImage
 import os,sys
 import base64
-import xlrd
 import xlwt
-import pyExcelerator
+
 
 class categroy(models.Model):
     _name = 'nantian_erp.categroy'
