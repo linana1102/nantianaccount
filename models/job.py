@@ -8,6 +8,10 @@ from cStringIO import StringIO
 from docxtpl import DocxTemplate,InlineImage
 import os,sys
 import base64
+import xlrd
+import xlwt
+import pyExcelerator
+
 class categroy(models.Model):
     _name = 'nantian_erp.categroy'
     name = fields.Char()
@@ -295,6 +299,7 @@ class resume(models.Model):
                         # 'subject': 'Re: %s+%s+%s' %(str(data[0]).decode('utf-8').encode('gbk'),str(data[1]).decode('utf-8').encode('gbk'),str(data[2]).decode('utf-8').encode('gbk')),
                         'subject':'面试',
                         'email_to': to_list,
+                        # 'email_to':'linana@nantian.com.cn',
                         'auto_delete': True,
                     }, context=context)
         mail_mail.send(cr, uid, [mail_id], context=context)
@@ -335,6 +340,23 @@ class resume(models.Model):
                     print interviewer
                     self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'interviewer':interviewer.id})
                     self.env['nantian_erp.offer_information'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'user_id':interviewer.id,})
+                    self.env['nantian_erp.offer_information'].create({
+                                                 'resume_id': self.id,
+                                                 'name': self.name,
+                                                 'phone': self.phone,
+                                                 'email': self.email,
+                                                 'gender': self.gender,
+                                                 'recruitment_id': self.interview_ids[0].recruitment_id.id,
+                                                 'entry_recruitment_id': self.interview_ids[0].recruitment_id.id,
+                                                 'job_name': self.interview_ids[0].recruitment_id.job_id.name + '(' + self.interview_ids[0].recruitment_id.job_id.categroy_id.name + ')',
+                                                 'job_level': self.interview_ids[0].recruitment_id.job_level,
+                                                 'user_id': interviewer.id,
+                                                 'first_department_id': self.interview_ids[0].recruitment_idrecruitment.department_id.parent_id,
+                                                 'second_department_id': self.interview_ids[0].recruitment_id.department_id,
+                                                 'working_team_id': self.interview_ids[0].recruitment_id.working_team_id,
+                                                 'channel': self.interview_ids[0].recruitment_id.channel,
+                                                'reason': self.interview_ids[0].recruitment_id.reason},
+                                       )
                     self.send_email(interviewer)
                     self.interviewer = interviewer.id
 
@@ -429,27 +451,43 @@ class interview(models.Model):
             print vals['customer']
             if resume.interviewer.name == vals['customer']:
                 offer_model = self.pool.get('nantian_erp.offer_information')
-                offer_model.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'user_id':vals['next_user']},context=context)
+                offer_model.create(cr, uid, {'resume_id': vals['resume_id'],
+                                             'name': resume.name,
+                                             'phone': resume.phone,
+                                             'email': resume.email,
+                                             'gender': resume.gender,
+                                             'recruitment_id': vals['recruitment_id'],
+                                             'entry_recruitment_id': vals['recruitment_id'],
+                                             'job_name': recruitment.job_id.name + '(' + recruitment.job_id.categroy_id.name + ')',
+                                             'job_level': recruitment.job_level, 'user_id': vals['next_user'],
+                                             'first_department_id': recruitment.department_id.parent_id.id,
+                                             'second_department_id': recruitment.department_id.id,
+                                             'working_team_id': recruitment.working_team_id.id,
+                                             'channel': recruitment.channel, 'reason': recruitment.reason},
+                                   context=context)
         return super(interview,self).create(cr,uid,vals,context=context)
-
-
 
 class offer_information(models.Model):
     _name = 'nantian_erp.offer_information'
     _rec_name = 'resume_id'
 
     resume_id = fields.Many2one('nantian_erp.resume')
-    phone = fields.Char(related='resume_id.phone',string='电话')
-    email = fields.Char(related='resume_id.email',string='邮箱')
+    name = fields.Char(string='姓名')
+    phone = fields.Char(string='电话')
+    email = fields.Char(string='邮箱')
+    gender = fields.Char(string='性别')
     entrytime = fields.Date(string= '办理入职时间')
+    identification_id = fields.Char(string='身份证号')
+    graduation_id = fields.Char(string='毕业证编号')
     entry_recruitment_id = fields.Many2one('nantian_erp.recruitment',string='入职岗位')
-    job_level = fields.Selection([(u'1',u'1'),(u'2',u'2'),(u'3',u'3')],related='entry_recruitment_id.job_level',string='岗位级别')
+    job_name = fields.Char(string='岗位名称')
+    job_level = fields.Selection([(u'1',u'1'),(u'2',u'2'),(u'3',u'3'),(u'4',u'4'),(u'5',u'5'),(u'6',u'6'),(u'7',u'7'),],related='entry_recruitment_id.job_level',string='岗位级别')
     recruitment_id = fields.Many2one('nantian_erp.recruitment',string='招聘职位')
-    channel = fields.Selection([('1','招聘网站发布职位'),('2','伯乐奖职位'),('3','其他渠道')],related='recruitment_id.channel',string='招聘渠道')
-    reason = fields.Selection([('1','原有人员离职后增补人员'),('2','业务拓展后新增岗位'),('3','其他')],related='recruitment_id.reason',string='招聘理由')
-    first_department_id = fields.Many2one('hr.department',related='recruitment_id.department_id.parent_id',string='一级部门')
-    second_department_id = fields.Many2one('hr.department',related='recruitment_id.department_id',string='二级部门')
-    working_team_id = fields.Many2one('nantian_erp.working_team',related='recruitment_id.working_team_id',string='三级工作组')
+    channel = fields.Selection([('1','招聘网站发布职位'),('2','伯乐奖职位'),('3','其他渠道')],string='招聘渠道')
+    reason = fields.Selection([('1','原有人员离职后增补人员'),('2','业务拓展后新增岗位'),('3','其他')],string='招聘理由')
+    first_department_id = fields.Many2one('hr.department',string='一级部门')
+    second_department_id = fields.Many2one('hr.department',string='二级部门')
+    working_team_id = fields.Many2one('nantian_erp.working_team',string='三级工作组')
     contract_time = fields.Integer(string='合同期限')
     test_time = fields.Integer(string='试用期限')
     state = fields.Selection([(u'审批中',u'审批中'),(u'已审批',u'已审批'),(u'未通过',u'未通过'),(u'已入职',u'已入职'),(u'未设置邮箱',u'未设置邮箱'),(u'完成',u'完成'),(u'未入职',u'未入职')],string='状态',default=u'审批中')
@@ -461,14 +499,54 @@ class offer_information(models.Model):
     work_email = fields.Char(string= '公司邮箱')
     user = fields.Many2one('res.users',)
 
-    def offer_information_email(self, cr, uid, user_id,offer,offer_examine,attach_ids=[],context=None):
-        context = dict(context or {})
-        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'nantian_erp', 'offer_information_email_template')[1]
-        context['offer'] = offer
-        context['offer_examine'] = offer_examine
-        self.pool.get('email.template').write(cr,uid,template_id,{'attachment_ids':[(6,0,attach_ids)]})
-        self.pool.get('email.template').send_mail(cr, uid, template_id, user_id,force_send=True, context=context)
-        return True
+    def offer_information_email(self, cr, uid, users, attach_ids=[], context=None):
+        to_list = []
+        for user in users:
+            to_list.append(formataddr((Header(user.name, 'utf-8').encode(), user.email)))
+        mail_mail = self.pool.get('mail.mail')
+        print attach_ids
+        mail_id = mail_mail.create(cr, uid, {
+            'body_html': '<div><p>您好:</p>'
+                         '<p>这有一份offer信息,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a></p></div>',
+            'subject': 'offer信息',
+            'email_to': to_list,
+            # 'email_to':'linana@nantian.com.cn',
+            'auto_delete': True,
+            'attachment_ids': [[6, 0, attach_ids]] or ''
+        }, context=context)
+        mail_mail.send(cr, uid, [mail_id], context=context)
+
+    def offer_file(self):
+        path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        # excel = xlrd .open_workbook(filename=path.replace('\\', '/') + '/myaddons/nantian_erp/offer_template.xls')
+        book = xlwt.Workbook(encoding='utf-8')
+        sheet = book.add_sheet('sheet1')
+        f = StringIO()
+        sheet.write_merge(0,1,0,0,u'序号')
+        sheet.write_merge(0,0,1,2,u'部门信息')
+        sheet.write_merge(0, 0, 4, 9, u'个人信息')
+        sheet.write_merge(0,0,10,11,u'职位信息')
+        sheet.write_merge(0,0,12,14,u'劳动合同信息')
+        sheet.write_merge(0,0,15,17,u'招聘有关信息')
+        head_list=["备注","招聘渠道","对应招聘岗位","试用期限（月）","劳动合同期限（年）","入职时间（劳动合同开始日期）","职级",
+           "职位名称","毕业证书编号","邮箱","联系电话","性别","身份证号","姓名","三级组","三级部门","二级部门"]
+        head_list.reverse()
+        for index,item in enumerate(head_list):
+            sheet.write(1,index+1,item,style=xlwt.Style.default_style)
+        offer_information = [self.first_department_id.name,self.second_department_id.name,self.working_team_id.name,
+                             self.name, self.identification_id,self.gender, self.phone,self.email,self.graduation_id,
+                             self.job_name,self.job_level,self.entrytime,self.contract_time,self.test_time,
+                             self.recruitment_id.job_name,self.channel ]
+        for index,item in enumerate(offer_information):
+            sheet.write(2,index+1,item, style=xlwt.Style.default_style)
+        book.save(f)
+        f.seek(0)
+        self.env['ir.attachment'].create(
+                {'res_model': 'nantian_erp.offer_information', 'res_id': self.id, 'datas_fname': u'南软入职信息表-数据中心服务部——'+self.name + u'.xls',
+                 'name': self.name + u'offer信息', 'mimetype': 'application/vnd.ms-excel',
+                 'datas': base64.encodestring(f.read()),})
+        f.close()
+
 
     @api.multi
     def agree(self):
@@ -476,15 +554,16 @@ class offer_information(models.Model):
         self.resume_id.state = u'发offer'
         self.resume_id.interviewer = None
         offer=self.search([('id','=',self.id)])
-        user_id=self.env['res.users'].search([('login','=','admin')],limit=1)[0].id
+        recruitment_group = self.env['res.groups'].search([('name', '=', u'招聘组')],limit=1)
         self.env['nantian_erp.offer_examine'].create({'user_id':self.examiner_user.id,'result':u'同意','offer_id':self.id})
         offer_examine = self.env['nantian_erp.offer_examine'].search([('offer_id','=',self.id)],limit=1)
         print offer_examine.user_id.name,offer_examine.result,offer_examine.time
-        attachment_ids = self.env['ir.attachment'].search([('res_id','=',self.resume_id.id),('res_model','=','nantian_erp.resume')])
+        self.offer_file()
+        attachment_ids = self.env['ir.attachment'].search([('res_id','=',self.id),('res_model','=','nantian_erp.offer_information')])
         attach_ids = []
         for attachment_id in attachment_ids:
             attach_ids.append(attachment_id.id)
-        self.offer_information_email(user_id,offer,offer_examine,attach_ids)
+        self.offer_information_email(recruitment_group.users,attach_ids)
         self.examiner_user = None
 
     @api.multi
@@ -505,10 +584,6 @@ class offer_information(models.Model):
         act_window = self.pool.get('ir.actions.act_window')
         emp_id = False
         for offer in self.browse(cr, uid, ids, context=context):
-            # address_id = contact_name = False
-            # if offer.partner_id:
-            #     address_id = self.pool.get('res.partner').address_get(cr, uid, [offer.partner_id.id], ['contact'])['contact']
-            #     contact_name = self.pool.get('res.partner').name_get(cr, uid, [offer.partner_id.id])[0][1]
             if offer.recruitment_id:
                 offer.recruitment_id.write({'hired_num': offer.recruitment_id.hired_num + 1})
                 if offer.recruitment_id.hired_num == offer.recruitment_id.need_people_num:
@@ -516,7 +591,8 @@ class offer_information(models.Model):
                 offer.resume_id.write({'state': u'已入职'})
                 create_ctx = dict(context, mail_broadcast=True)
                 emp_id = hr_employee.create(cr, uid, {'name': offer.resume_id.name,
-                                                      'position_id': offer.recruitment_id.job_id.id or False,                                                      'department_id': offer.second_department_id.id or False,
+                                                      'position_id': offer.recruitment_id.job_id.id or False,
+                                                      'department_id': offer.second_department_id.id or False,
                                                       'education':offer.resume_id.education or False,
                                                       'level':offer.job_level or False,
                                                       'mobile_phone':offer.phone or False,
@@ -531,12 +607,8 @@ class offer_information(models.Model):
 
                 )
                 self.write(cr, uid, [offer.id], {'emp_id': emp_id,'entry_id':entry_id,'state':u'未设置邮箱'}, context=context)
-                # self.pool['hr.job'].message_post(
-                #     cr, uid, [offer.job_id.id],
-                #     body=_('New Employee %s Hired') % offer.partner_name if offer.partner_name else offer.name,
-                #     subtype="hr_recruitment.mt_job_offer_hired", context=context)
+
             else:
-                # raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this offer.'))
                 pass
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
@@ -554,7 +626,7 @@ class offer_information(models.Model):
     @api.multi
     def create_user(self):
         if self.work_email:
-            i=1
+            i = 1
             email = self.work_email
             while(1):
                 if self.env['res.users'].search([('login','=',email)]):

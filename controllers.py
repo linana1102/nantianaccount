@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
-from models import models
-from openerp import http
 
-from openerp.http import request
-import base64
+import openerp
 from docxtpl import DocxTemplate,InlineImage
 from docx.shared import Mm, Inches, Pt
 
-import openerp
-
 import re
 from cStringIO import StringIO
-from openerp.tools import ustr
+
 import urllib2
 import json
 import base64
@@ -19,6 +14,12 @@ import zipfile,os
 import sys
 
 import requests
+
+from openerp import http
+from openerp.tools import ustr
+from openerp.http import request
+
+
 
 def content_disposition(filename):
     filename = ustr(filename)
