@@ -19,7 +19,8 @@ class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
     count = fields.Integer(string='签订次数')
-    contract_make_ids = fields.One2many('nantian_erp.employee_contract_signing_date','employee_id',ondelete = 'set null')
+    contract_sign_first = fields.Char(string = "第一阶段")
+    contract_sign_second = fields.Char(string = "第二阶段")
     SN = fields.Char(string="财务序列号") #序列号
     project_cost_month_ids = fields.Many2many('nantian_erp.project_cost_month',"project_cost_month_employee_ref",string='工作组成本表')
     performance_year_ids = fields.One2many('nantian_erp.performance_year','employee_id',ondelete = 'set null')
@@ -34,7 +35,7 @@ class hr_employee(models.Model):
     work_time = fields.Date(track_visibility='onchange')
     entry_time = fields.Date(track_visibility='onchange')
     contract_starttime = fields.Date(track_visibility='onchange')
-    contract_endtime = fields.Date(store=True,compute='_get_end_date',track_visibility='onchange')
+    contract_endtime = fields.Date(string='合同终止时间')
     contract_len = fields.Integer(track_visibility='onchange')
     is_forever = fields.Boolean(string='无期限？',track_visibility='onchange')
     education = fields.Selection(
@@ -49,6 +50,7 @@ class hr_employee(models.Model):
         ],
             track_visibility='onchange'
     )
+
     level = fields.Selection(
         [
             (u'1',1),
@@ -124,6 +126,36 @@ class hr_employee(models.Model):
     resume_id = fields.Many2one('nantian_erp.resume',string='简历')
     position_id = fields.Many2one('nantian_erp.job',string= '职位')
     education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
+
+    # 自动导入教育经历
+    @api.multi
+    def import_education_experience(self):
+        records = self.env['hr.employee'].search([])
+        for rec in records:
+            if rec.education_experience_ids:
+                pass
+            else:
+                if rec.education == u"专科":
+                    education_t = u'大专'
+                elif rec.education == u"本科":
+                    education_t = u"本科"
+                elif rec.education == u"硕士":
+                    education_t = u"硕士"
+                elif rec.education == u"博士":
+                    education_t = u"博士"
+                elif rec.education == u"专升本":
+                    education_t = u"本科"
+                elif rec.education == u"高中":
+                    education_t = u"高中"
+                elif rec.education == u"高级技工":
+                    education_t = u'大专'
+                else:
+                    education_t = None
+                id = self.env['nantian_erp.education_experience'].create(
+                    {'school': rec.graduation, 'major': rec.major, 'education': education_t, 'employee_id': rec.id})
+
+
+
 
     @api.multi
     @api.depends('department_id')
@@ -591,14 +623,6 @@ class certificate(models.Model):
         #     print("%s send failed users(email is empty): %s items. [%s]" %(log_line_head, len(failed_users),
         #         ", ".join(["%s(%s)" %(user.name_related, user.id) for user in failed_users])))
         # print(dai_fa_song)
-
-# 员工合同签订时段
-class employee_contract_signing_date(models.Model):
-    _name = 'nantian_erp.employee_contract_signing_date'
-
-
-    moment = fields.Char(string="时段")
-    employee_id = fields.Many2one("hr.employee",string="employee")
 
 
 #证书--认证类型
@@ -1157,11 +1181,12 @@ class collection(models.Model):
                 record.time = fields.datetime.now()
 
 
-# 南天合同
+#南天合同
 class contract(models.Model):
     _name = 'nantian_erp.contract'
     name = fields.Char(string='合同名称',required=True)
     header_id = fields.Many2one('res.users', string="合同负责人",default=lambda self: self.env.user)
+    other_header_id = fields.Many2one('res.users', string="合同共同负责人")
     customer_id = fields.Many2one('res.partner', string="客户",domain="[('category','=',u'服务客户')]")
     date_start = fields.Date(string="开始日期")
     date_end = fields.Date(string="结束日期")
