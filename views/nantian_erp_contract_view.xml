@@ -127,7 +127,7 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="name" />
-                        <filter string="自己的合同" name="my" domain="[('header_id', '=',uid)]"/>
+                        <filter string="自己的合同" name="my" domain="['|',('header_id', '=',uid),('other_header_id', '=',uid)]"/>
                         <filter string="进行中" name="going" domain="[('state', '=','going')]"/>
                         <filter string="待续签" name="renew" domain="[('state', '=','renew')]"/>
                         <filter string="已关闭" name="off" domain="[('state', '=','off')]"/>
