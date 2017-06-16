@@ -475,7 +475,7 @@ class offer_information(models.Model):
     name = fields.Char(string='姓名')
     phone = fields.Char(string='电话')
     email = fields.Char(string='邮箱')
-    gender = fields.Char(string='性别')
+    gender = fields.Selection([('male','男'),('female','女')],string='性别',)
     entrytime = fields.Date(string= '办理入职时间')
     identification_id = fields.Char(string='身份证号')
     graduation_id = fields.Char(string='毕业证编号')
@@ -560,9 +560,12 @@ class offer_information(models.Model):
         print offer_examine.user_id.name,offer_examine.result,offer_examine.time
         self.offer_file()
         attachment_ids = self.env['ir.attachment'].search([('res_id','=',self.id),('res_model','=','nantian_erp.offer_information')])
+        resume_attachment_ids  = self.env['ir.attachment'].search([('res_id','=',self.resume_id.id),('res_model','=','nantian_erp.resume')])
         attach_ids = []
         for attachment_id in attachment_ids:
             attach_ids.append(attachment_id.id)
+        for resume  in resume_attachment_ids:
+            attach_ids.append(resume.id)
         self.offer_information_email(recruitment_group.users,attach_ids)
         self.examiner_user = None
 
