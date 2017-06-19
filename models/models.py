@@ -492,13 +492,13 @@ class hr_employee(models.Model):
         customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')])
         working_teams = self.env['nantian_erp.working_team'].search([])
         work_team_managers = []
+        for working_team in working_teams:
+            work_team_managers.append(working_team.user_id)
         for record in self:
-            for working_team in working_teams:
-                work_team_managers.append(working_team.user_id)
             if record.user_id not in customer_manager_group.users:
                 if record.customer_id:
                     record.leader = record.customer_id.customer_manager
-                elif record.user_id not in work_team_managers:
+                elif record.user_id not in work_team_managers and record.working_team_id:
                     record.leader = record.working_team_id.user_id
                 else:
                     record.leader = record.department_id.parent_id.manager_id.user_id
