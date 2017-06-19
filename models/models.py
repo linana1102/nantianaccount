@@ -1447,8 +1447,8 @@ class res_partner(models.Model):
 
     )
     customer_manager = fields.Many2one('res.users', ondelete='set null',default=lambda self: self.env.user)
-    full_name =fields.Char(string = '全称')
-
+    full_name =fields.Char(string='全称')
+    other_customer_manager = fields.Many2one('res.users',string="其他行业负责人")
 
     @api.multi
     def _onchange_to_service_customer(self,name):
@@ -1621,3 +1621,5 @@ class education_experience(models.Model):
     education = fields.Selection([(u'中专及以下',u'中专及以下'),(u'高中',u'高中'),(u'大专',u'大专'),(u'本科',u'本科'),(u'硕士',u'硕士'),(u'博士',u'博士')],string='学历')
     date_time = fields.Char(string='时间段')
     employee_id = fields.Many2one('hr.employee',string='员工')
+
+
