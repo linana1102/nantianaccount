@@ -69,11 +69,11 @@ class pres_sale(models.Model):
     contract_name = fields.Char(string='合同名称')
     partner = fields.Char(string='客户名称')
     process_scrib = fields.Text(string='本周主要进展说明')
-    before_bid_amount = fields.Integer(string='投标金额')
+    before_bid_amount = fields.Float(string='投标金额')
     bid_commpany = fields.Char(string='中标单位')
     pre_bid_date = fields.Date(string='预计投标日期')
     competitors = fields.Char(string='竞争对手')
-    rate_of_success = fields.Integer(string='预计成功率（%）')
+    rate_of_success = fields.Char(string='预计成功率（%）')
     salesman_id = fields.Many2one('res.users', string='销售负责人')
     # 合同编号、项目名称、合同名称、客户名称、进展、
     # 标书编写、标书复核人、讲标人、投标金额、投标日期、中标单位、
@@ -84,7 +84,7 @@ class pres_sale(models.Model):
     bid_write = fields.Many2one('res.users',string='标书编写人')
     bid_checkman_id = fields.Many2one('res.users',string='标书复核人',)
     bid_readman_id = fields.Many2one('res.users',string='讲标人',)
-    after_bid_amount = fields.Integer(string='合同/中标金额',)
+    after_bid_amount = fields.Float(string='合同/中标金额',)
     term = fields.Char(string='检索词',)
     firm_platform = fields.Char(string='涉及厂商或平台',)
     context = fields.Text(string='合同主要内容',)
