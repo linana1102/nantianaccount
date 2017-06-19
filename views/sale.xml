@@ -79,7 +79,7 @@
                             </field>
                     </page>
                      <page string="人员离职">
-                             <field name="demission_ids" >
+                          <field name="demission_ids" >
                                     <tree string="Registered feedback" edit="true">
                                         <field name="employee_id" string="离职申请人"/>
                                         <field name="contract_name" string="合同名称" />
@@ -92,7 +92,11 @@
                                     </tree>
                             </field>
                     </page>
-
+                     <page string="招聘缺口">
+                         <field name="job" />
+                         <field name="count" />
+                         <field name="reason" />
+                     </page>
                     <page string="项目进度">
                              <field name="project_progress_ids">
                                     <tree string="Registered feedback" edit="true">

@@ -20,7 +20,9 @@ class weekly_reports(models.Model):
     customer_adjust_ids = fields.One2many('nantian_erp.customer_adjust','weekly_reports_id',string='客户动态或人事变动')
     project_progress_ids = fields.One2many('nantian_erp.project_progress','weekly_reports_id',string='项目进度')
 
-    test_field = fields.Char(string='测试字段')
+    job = fields.Char(string='岗位')
+    count = fields.Char(string='人数')
+    reason = fields.Char(string='原因')
 
     # 自动化动作每周创建一个周报，内容是copy上一周周报的所有内容
     @api.multi
@@ -69,7 +71,7 @@ class pres_sale(models.Model):
     contract_name = fields.Char(string='合同名称')
     partner = fields.Char(string='客户名称')
     process_scrib = fields.Text(string='本周主要进展说明')
-    before_bid_amount = fields.Float(string='投标金额')
+    before_bid_amount = fields.Float(string='投标金额(万)')
     bid_commpany = fields.Char(string='中标单位')
     pre_bid_date = fields.Date(string='预计投标日期')
     competitors = fields.Char(string='竞争对手')
@@ -84,7 +86,7 @@ class pres_sale(models.Model):
     bid_write = fields.Many2one('res.users',string='标书编写人')
     bid_checkman_id = fields.Many2one('res.users',string='标书复核人',)
     bid_readman_id = fields.Many2one('res.users',string='讲标人',)
-    after_bid_amount = fields.Float(string='合同/中标金额',)
+    after_bid_amount = fields.Float(string='合同/中标金额(万)',)
     term = fields.Char(string='检索词',)
     firm_platform = fields.Char(string='涉及厂商或平台',)
     context = fields.Text(string='合同主要内容',)
