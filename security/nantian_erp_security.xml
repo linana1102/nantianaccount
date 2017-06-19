@@ -116,7 +116,7 @@
     <record id="hr_employee_header_write_rule" model="ir.rule">
         <field name="name">employee人力行业负责人-写</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">['|','|',('customer_id.customer_manager','=',user.id),('customer_id','=',None),('customer_id.other_customer_manager','=',user.id)]</field>
+        <field name="domain_force">['|','|',('customer_id.customer_manager','=',user.id),('customer_id','=',None),('customer_id.other_customer_managers','like',user.id)]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_read" eval="0"/>
