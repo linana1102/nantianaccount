@@ -126,6 +126,7 @@ class hr_employee(models.Model):
     resume_id = fields.Many2one('nantian_erp.resume',string='简历')
     position_id = fields.Many2one('nantian_erp.job',string= '职位')
     education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
+    other_partner_id = fields.Many2one('res.partner',string='行业负责人')
 
     # 自动导入教育经历
     @api.multi
@@ -1447,9 +1448,8 @@ class res_partner(models.Model):
 
     )
     customer_manager = fields.Many2one('res.users', ondelete='set null',default=lambda self: self.env.user)
-    full_name =fields.Char(string = '全称')
-
-
+    full_name =fields.Char(string='全称')
+    other_customer_managers = fields.Many2many('res.users','partner_to_user',string="其他行业负责人")
     @api.multi
     def _onchange_to_service_customer(self,name):
         value = {}
@@ -1621,3 +1621,5 @@ class education_experience(models.Model):
     education = fields.Selection([(u'中专及以下',u'中专及以下'),(u'高中',u'高中'),(u'大专',u'大专'),(u'本科',u'本科'),(u'硕士',u'硕士'),(u'博士',u'博士')],string='学历')
     date_time = fields.Char(string='时间段')
     employee_id = fields.Many2one('hr.employee',string='员工')
+
+
