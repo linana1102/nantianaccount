@@ -93,9 +93,14 @@
                             </field>
                     </page>
                      <page string="招聘缺口">
-                         <field name="job" />
-                         <field name="count" />
-                         <field name="reason" />
+                          <group>
+                                <field name="job" string="岗位"/>
+                                 <field name="count" string="人数"/>
+                                 <field name="reason" string="原因"/>
+                          </group>
+                         <group>
+                             
+                         </group>
                      </page>
                     <page string="项目进度">
                              <field name="project_progress_ids">
