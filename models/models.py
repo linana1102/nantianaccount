@@ -126,7 +126,7 @@ class hr_employee(models.Model):
     resume_id = fields.Many2one('nantian_erp.resume',string='简历')
     position_id = fields.Many2one('nantian_erp.job',string= '职位')
     education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
-    other_partner_id = fields.Many2one('res.partner',string='行业负责人')
+    leader = fields.Many2one('res.users',compute='compute_leader')
 
     # 自动导入教育经历
     @api.multi
@@ -485,21 +485,26 @@ class hr_employee(models.Model):
         other_employees = self.env['res.users'].search([('id','in',other_employees_ids)])
         employee_group.users |= other_employees
         print '#'*80
-        # for user in users:
-        #     if user.employee_ids:
-        #         print user
-        #         if user.employee_ids[0].department_id.name == u'数据中心服务部' or user.employee_ids[0].department_id.parent_id.name == u'数据中心服务部':
-        #             data_center_employee_group.users |= user
-        #         else:
-        #             employee_group.users |= user
-        #         if user.employee_ids[0].department_id.name == u'数据中心服务部' or user.employee_ids[0].department_id.parent_id.name == u'数据中心服务部' and user in customer_managers:
-        #             customer_manager_group.users |= user
-        #         if user.employee_ids[0] in bm_managers:
-        #             bm_managers_group.users |= user
-        #         if user.employee_ids[0] in managers:
-        #             manager_group.users |= user
-        #         if user.employee_ids[0] in presidents:
-        #             president_group.users |= user
+
+    @api.multi
+    @api.depends('customer_id','working_team_id','department_first')
+    def compute_leader(self):
+        customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')])
+        working_teams = self.env['nantian_erp.working_team'].search([])
+        work_team_managers = []
+        for working_team in working_teams:
+            work_team_managers.append(working_team.user_id)
+        for record in self:
+            if record.user_id not in customer_manager_group.users:
+                if record.customer_id:
+                    record.leader = record.customer_id.customer_manager
+                elif record.user_id not in work_team_managers and record.working_team_id:
+                    record.leader = record.working_team_id.user_id
+                else:
+                    record.leader = record.department_id.parent_id.manager_id.user_id
+            else:
+                record.leader = record.department_id.manager_id.user_id
+
 
 #证书
 class certificate(models.Model):

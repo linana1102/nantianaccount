@@ -64,7 +64,8 @@
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
                                         <field name="job_id" string="职位" />
-                                        <field name="parent_id" string="上一级" />
+                                        <!--<field name="parent_id" string="上一级" />-->
+                                        <field name="leader" string="上一级" />
                                         <field name="coach_id" invisible="True"/>
                                         <field name="level" string="级别"/>
                                         <field name="phone_money" string="话费额度" />
@@ -187,7 +188,8 @@
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)" readonly="True"/>
                                         <field name="job_id" string="职位"  readonly="True"/>
-                                        <field name="parent_id" string="上一级"  readonly="True"/>
+                                        <!--<field name="parent_id" string="上一级"  readonly="True"/>-->
+                                        <field name="leader" string="上一级"  readonly="True"/>
                                         <field name="coach_id" readonly="True" invisible="True"/>
                                         <field name="level" string="级别" readonly="True"/>
                                         <field name="phone_money" string="话费额度" />
@@ -296,7 +298,8 @@
                         <field name="name"/>
                         <field name="department_id"/>
                         <field name="working_team_id" string="工作组"/>
-                        <field name="parent_id" string="上级领导"/>
+                        <!--<field name="parent_id" string="上级领导"/>-->
+                         <field name="leader" string="上级领导"/>
                          <field name="states" string="状态" />
                     </tree>
                 </xpath>
