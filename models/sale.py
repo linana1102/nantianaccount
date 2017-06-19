@@ -67,13 +67,13 @@ class pres_sale(models.Model):
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports',string='周报')
     project_name = fields.Char(string='项目名称')
     contract_name = fields.Char(string='合同名称')
-    partner = fields.Many2one('res.partner', string='客户名称', domain="[('category','=',u'服务客户')]")
+    partner = fields.Char(string='客户名称')
     process_scrib = fields.Text(string='本周主要进展说明')
-    before_bid_amount = fields.Integer(string='投标金额')
-    bid_commpany = fields.Char(string='中标单位',)
+    before_bid_amount = fields.Float(string='投标金额')
+    bid_commpany = fields.Char(string='中标单位')
     pre_bid_date = fields.Date(string='预计投标日期')
     competitors = fields.Char(string='竞争对手')
-    rate_of_success = fields.Integer(string='预计成功率（%）')
+    rate_of_success = fields.Char(string='预计成功率（%）')
     salesman_id = fields.Many2one('res.users', string='销售负责人')
     # 合同编号、项目名称、合同名称、客户名称、进展、
     # 标书编写、标书复核人、讲标人、投标金额、投标日期、中标单位、
@@ -81,10 +81,10 @@ class pres_sale(models.Model):
     # 合同主要内容、销售人员、签字人、签订日
     # 项目名称、合同名称、进展、投标金额、投标日期、中标单位、主要竞对、成功率、
     contract_number = fields.Char(string='合同编号')
-    bid_write = fields.Char(string='标书编写',)
+    bid_write = fields.Many2one('res.users',string='标书编写人')
     bid_checkman_id = fields.Many2one('res.users',string='标书复核人',)
     bid_readman_id = fields.Many2one('res.users',string='讲标人',)
-    after_bid_amount = fields.Integer(string='合同/中标金额',)
+    after_bid_amount = fields.Float(string='合同/中标金额',)
     term = fields.Char(string='检索词',)
     firm_platform = fields.Char(string='涉及厂商或平台',)
     context = fields.Text(string='合同主要内容',)
@@ -165,9 +165,9 @@ class pers_transfer(models.Model):#
     # weekly_reports_id = fields.Many2many('nantian_erp.weekly_reports','emp_weekly_transfer_ref', string='周报')
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
     employee_id = fields.Many2one('hr.employee',string='调动人',ondelete='set null')
-    res_contract_name = fields.Many2one(related='employee_id.nantian_erp_contract_id',string='合同名称')
-    res_contract_job = fields.Many2one(related='employee_id.contract_jobs_id',string='合同岗位')
-    sour_team = fields.Many2one(related='employee_id.working_team_id',string='原项目组')
+    res_contract_name = fields.Many2one("nantian_erp.contract",compute = "store_transfer_message",store = True,string='合同名称')
+    res_contract_job = fields.Many2one("nantian_erp.jobs",compute = "store_transfer_message",store = True,string='合同岗位')
+    sour_team = fields.Many2one("nantian_erp.working_team",compute = "store_transfer_message",store = True,string='原项目组')
     move_reason = fields.Char(string='调动原因')
     move_date = fields.Date(string='调动时间')
     is_recruit = fields.Boolean(string='是否招聘')
@@ -181,8 +181,16 @@ class pers_transfer(models.Model):#
                               (u'修改', u"修改")
                               ],string = '调整状态',store = True)
 
-    # @api.one
-    # @api.depends('after_leader')# button实现 创建一个新调动纪录
+    @api.multi
+    @api.depends('employee_id')
+    def store_transfer_message(self):
+        for x in self:
+            if x.employee_id:
+                x.res_contract_name = x.employee_id.nantian_erp_contract_id
+                x.res_contract_job = x.employee_id.contract_jobs_id
+                x.sour_team = x.employee_id.working_team_id
+
+
     @api.multi
     def send_to_after_leader(self):
         if self.touch == u'未转交':
@@ -199,7 +207,8 @@ class pers_transfer(models.Model):#
                          "res_contract_name": self.res_contract_name.id,
                          "res_contract_job": self.res_contract_job.id,
                          "sour_team": self.sour_team.id,
-                         "move_reason": self.move_reason,"move_date": self.move_date,
+                         "move_reason": self.move_reason,
+                         "move_date": self.move_date,
                          "after_leader": self.after_leader.id,
                          "before_leader": self.before_leader.id,
                          })
@@ -230,14 +239,23 @@ class pers_transfer(models.Model):#
 class demission(models.Model):#
     _name = 'nantian_erp.demission'
 
-    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')#项目组即工作组
-    employee_id = fields.Many2one('hr.employee',string='离职申请人')#这个人的调动人是他项目组的负责人
-    contract_name = fields.Many2one(related='employee_id.nantian_erp_contract_id',string='合同名称')
-    contract_post = fields.Many2one(related='employee_id.contract_jobs_id',string='合同岗位')
-    sro_project = fields.Many2one(related='employee_id.working_team_id',string='项目组')
+    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')# 项目组即工作组
+    employee_id = fields.Many2one('hr.employee',string='离职申请人')# 这个人的调动人是他项目组的负责人
+    contract_name = fields.Many2one("nantian_erp.contract",compute = "store_demission_message",store = True,string='合同名称' )
+    contract_post = fields.Many2one("nantian_erp.jobs",compute = "store_demission_message",store = True,string='合同岗位')
+    sro_project = fields.Many2one("nantian_erp.working_team",compute = "store_demission_message",store = True,string='项目组')
     demission_reason = fields.Char(string='离职原因')
     demission_date = fields.Datetime(string='离职时间',require = True)
     is_recruit = fields.Boolean(string='是否招聘')
+
+    @api.multi
+    @api.depends('employee_id')
+    def store_demission_message(self):
+        for x in self:
+            if x.employee_id:
+                x.contract_name = x.employee_id.nantian_erp_contract_id
+                x.contract_post = x.employee_id.contract_jobs_id
+                x.sro_project = x.employee_id.working_team_id
 
 
     def create(self, cr, uid, vals, context=None):

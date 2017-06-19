@@ -1187,7 +1187,7 @@ class collection(models.Model):
                 record.time = fields.datetime.now()
 
 
-#南天合同
+# 南天合同
 class contract(models.Model):
     _name = 'nantian_erp.contract'
     name = fields.Char(string='合同名称',required=True)
