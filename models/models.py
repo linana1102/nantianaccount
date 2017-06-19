@@ -1157,7 +1157,7 @@ class collection(models.Model):
                 record.time = fields.datetime.now()
 
 
-#南天合同
+# 南天合同
 class contract(models.Model):
     _name = 'nantian_erp.contract'
     name = fields.Char(string='合同名称',required=True)
@@ -1200,7 +1200,8 @@ class contract(models.Model):
         string="合同类别", default=u'服务合同'
     )
     employee_ids = fields.One2many('hr.employee', 'nantian_erp_contract_id', "Employees")
-    #自动计算下次收款提醒邮件--距离收款时间一个月内 频率--每周
+
+    # 自动计算下次收款提醒邮件--距离收款时间一个月内 频率--每周
     @api.multi
     def email_contract_next_collection_date(self):
         subject = '您有合同即将收款，请及时处理！'
@@ -1565,6 +1566,7 @@ class work_experience(models.Model):
     description = fields.Text()
     date = fields.Char()
     employee_id = fields.Many2one('hr.employee')
+
 
 class department(models.Model):
     _inherit = 'hr.department'

@@ -165,9 +165,9 @@ class pers_transfer(models.Model):#
     # weekly_reports_id = fields.Many2many('nantian_erp.weekly_reports','emp_weekly_transfer_ref', string='周报')
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
     employee_id = fields.Many2one('hr.employee',string='调动人',ondelete='set null')
-    res_contract_name = fields.Many2one(related='employee_id.nantian_erp_contract_id',string='合同名称')
-    res_contract_job = fields.Many2one(related='employee_id.contract_jobs_id',string='合同岗位')
-    sour_team = fields.Many2one(related='employee_id.working_team_id',string='原项目组')
+    res_contract_name = fields.Many2one("nantian_erp.contract",compute = "store_transfer_message",store = True,string='合同名称')
+    res_contract_job = fields.Many2one("nantian_erp.jobs",compute = "store_transfer_message",store = True,string='合同岗位')
+    sour_team = fields.Many2one("nantian_erp.working_team",compute = "store_transfer_message",store = True,string='原项目组')
     move_reason = fields.Char(string='调动原因')
     move_date = fields.Date(string='调动时间')
     is_recruit = fields.Boolean(string='是否招聘')
@@ -181,8 +181,16 @@ class pers_transfer(models.Model):#
                               (u'修改', u"修改")
                               ],string = '调整状态',store = True)
 
-    # @api.one
-    # @api.depends('after_leader')# button实现 创建一个新调动纪录
+    @api.multi
+    @api.depends('employee_id')
+    def store_transfer_message(self):
+        for x in self:
+            if x.employee_id:
+                x.res_contract_name = x.employee_id.nantian_erp_contract_id
+                x.res_contract_job = x.employee_id.contract_jobs_id
+                x.sour_team = x.employee_id.working_team_id
+
+
     @api.multi
     def send_to_after_leader(self):
         if self.touch == u'未转交':
@@ -199,7 +207,8 @@ class pers_transfer(models.Model):#
                          "res_contract_name": self.res_contract_name.id,
                          "res_contract_job": self.res_contract_job.id,
                          "sour_team": self.sour_team.id,
-                         "move_reason": self.move_reason,"move_date": self.move_date,
+                         "move_reason": self.move_reason,
+                         "move_date": self.move_date,
                          "after_leader": self.after_leader.id,
                          "before_leader": self.before_leader.id,
                          })
@@ -230,14 +239,23 @@ class pers_transfer(models.Model):#
 class demission(models.Model):#
     _name = 'nantian_erp.demission'
 
-    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')#项目组即工作组
-    employee_id = fields.Many2one('hr.employee',string='离职申请人')#这个人的调动人是他项目组的负责人
-    contract_name = fields.Many2one(related='employee_id.nantian_erp_contract_id',string='合同名称')
-    contract_post = fields.Many2one(related='employee_id.contract_jobs_id',string='合同岗位')
-    sro_project = fields.Many2one(related='employee_id.working_team_id',string='项目组')
+    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')# 项目组即工作组
+    employee_id = fields.Many2one('hr.employee',string='离职申请人')# 这个人的调动人是他项目组的负责人
+    contract_name = fields.Many2one("nantian_erp.contract",compute = "store_demission_message",store = True,string='合同名称' )
+    contract_post = fields.Many2one("nantian_erp.jobs",compute = "store_demission_message",store = True,string='合同岗位')
+    sro_project = fields.Many2one("nantian_erp.working_team",compute = "store_demission_message",store = True,string='项目组')
     demission_reason = fields.Char(string='离职原因')
     demission_date = fields.Datetime(string='离职时间',require = True)
     is_recruit = fields.Boolean(string='是否招聘')
+
+    @api.multi
+    @api.depends('employee_id')
+    def store_demission_message(self):
+        for x in self:
+            if x.employee_id:
+                x.contract_name = x.employee_id.nantian_erp_contract_id
+                x.contract_post = x.employee_id.contract_jobs_id
+                x.sro_project = x.employee_id.working_team_id
 
 
     def create(self, cr, uid, vals, context=None):
