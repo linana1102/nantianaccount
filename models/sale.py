@@ -67,7 +67,7 @@ class pres_sale(models.Model):
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports',string='周报')
     project_name = fields.Char(string='项目名称')
     contract_name = fields.Char(string='合同名称')
-    partner = fields.Many2one('res.partner', string='客户名称', domain="[('category','=',u'服务客户')]")
+    partner = fields.Char(string='客户名称')
     process_scrib = fields.Text(string='本周主要进展说明')
     before_bid_amount = fields.Integer(string='投标金额')
     bid_commpany = fields.Char(string='中标单位',)
