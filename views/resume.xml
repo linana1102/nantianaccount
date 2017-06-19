@@ -376,6 +376,9 @@
                                 <field name="resume_id" string="姓名"/>
                                 <field name="phone" string="电话"/>
                                 <field name="email" string="邮箱"/>
+                                <field name="gender" string="性别"/>
+                                <field name="identification_id" string="身份证号"/>
+                                <field name="graduation_id" string="毕业证号"/>
                                 <field name="entrytime" string="办理入职时间"/>
                                 <field name="entry_recruitment_id" string="入职岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
                                 <field name="job_level" string="岗位级别"/>
@@ -384,8 +387,8 @@
                             <group>
                                 <field name="channel" string="渠道"/>
                                 <field name="reason" string="招聘理由"/>
-                                <field name="first_department_id" string="一级部门"/>
-                                <field name="second_department_id" string="二级部门"/>
+                                <field name="first_department_id" string="一级部门" domain="[('level','=','2')]"/>
+                                <field name="second_department_id" string="二级部门" domain="[('level','=','3')]"/>
                                 <field name="working_team_id" string="工作组"/>
                                  <label for="contract_time"/>
                                 <div>
@@ -393,7 +396,9 @@
                                 </div>
                                 <label for="test_time"/>
                                 <div>
+                                    <p>
                                 <field name="test_time" string="试用期限"/><label string="月" class="oe_inline"/>
+                                    如果是离职人员又重新回公司的试用期为0</p>
                                 </div>
                                 <!--<field name="state"/>-->
                             </group>
@@ -422,9 +427,12 @@
                          </div>
                         <group>
                             <group >
-                                <!--<field name="resume_id" string="姓名"/>-->
+                                <field name="resume_id" string="姓名"/>
                                 <field name="phone" string="电话"/>
                                 <field name="email" string="邮箱"/>
+                                <field name="gender" string="性别"/>
+                                <field name="identification_id" string="身份证号"/>
+                                <field name="graduation_id" string="毕业证号"/>
                                 <field name="entrytime" string="办理入职时间"/>
                                 <field name="entry_recruitment_id" string="入职岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
                                 <field name="job_level" string="岗位级别"/>
@@ -433,18 +441,18 @@
                             <group>
                                 <field name="channel" string="渠道"/>
                                 <field name="reason" string="招聘理由"/>
-                                <field name="first_department_id" string="一级部门"/>
-                                <field name="second_department_id" string="二级部门"/>
+                                <field name="first_department_id" string="一级部门" domain="[('level','=','2')]"/>
+                                <field name="second_department_id" string="二级部门" domain="[('level','=','3')]"/>
                                 <field name="working_team_id" string="工作组"/>
-                                <field name="emp_id" readonly="1"></field>
-                                <field name="entry_id" readonly="1"/>
                                  <label for="contract_time"/>
                                 <div>
                                 <field name="contract_time" string="合同期限"/><label string="年" class="oe_inline"/>
                                 </div>
                                 <label for="test_time"/>
                                 <div>
+                                    <p>
                                 <field name="test_time" string="试用期限"/><label string="月" class="oe_inline"/>
+                                    如果是离职人员又重新回公司的试用期为0</p>
                                 </div>
                                 <!--<field name="state"/>-->
                             </group>
@@ -574,8 +582,8 @@
 
 
         <menuitem id="nantian_erp_pending_offer_menu" parent="nantian_erp_resume_root_menu" name="待审批的offer信息" action="nantian_erp_offer_pending_information_action" sequence="5" groups="nantian_erp.group_hr_manager"/>
-        <menuitem id="nantian_erp_pended_offer_menu" parent="nantian_erp_resume_root_menu" name="待入职人员" action="nantian_erp_offer_pended_information_action" sequence="6" groups="nantian_erp.group_hr_manager"/>
-        <menuitem id="nantian_erp_wait_set_email_menu" parent="nantian_erp_resume_root_menu" name="未设置邮箱人员" action="nantian_erp_wait_set_email_action" sequence="7" groups="nantian_erp.group_hr_manager,nantian_erp.group_hr_assistant"/>
+        <menuitem id="nantian_erp_pended_offer_menu" parent="nantian_erp_resume_root_menu" name="待入职人员" action="nantian_erp_offer_pended_information_action" sequence="7" />
+        <menuitem id="nantian_erp_wait_set_email_menu" parent="nantian_erp_resume_root_menu" name="未设置邮箱人员" action="nantian_erp_wait_set_email_action" sequence="8" groups="nantian_erp.group_hr_manager,nantian_erp.group_hr_assistant"/>
 
     </data>
 </openerp>

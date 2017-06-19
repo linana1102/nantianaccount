@@ -8,7 +8,8 @@ from cStringIO import StringIO
 from docxtpl import DocxTemplate,InlineImage
 import os,sys
 import base64
-import xlrd
+import xlwt
+
 
 class categroy(models.Model):
     _name = 'nantian_erp.categroy'
@@ -297,6 +298,7 @@ class resume(models.Model):
                         # 'subject': 'Re: %s+%s+%s' %(str(data[0]).decode('utf-8').encode('gbk'),str(data[1]).decode('utf-8').encode('gbk'),str(data[2]).decode('utf-8').encode('gbk')),
                         'subject':'面试',
                         'email_to': to_list,
+                        # 'email_to':'linana@nantian.com.cn',
                         'auto_delete': True,
                     }, context=context)
         mail_mail.send(cr, uid, [mail_id], context=context)
@@ -457,9 +459,9 @@ class interview(models.Model):
                                              'entry_recruitment_id': vals['recruitment_id'],
                                              'job_name': recruitment.job_id.name + '(' + recruitment.job_id.categroy_id.name + ')',
                                              'job_level': recruitment.job_level, 'user_id': vals['next_user'],
-                                             'first_department_id': recruitment.department_id.parent_id,
-                                             'second_department_id': recruitment.department_id,
-                                             'working_team_id': recruitment.working_team_id,
+                                             'first_department_id': recruitment.department_id.parent_id.id,
+                                             'second_department_id': recruitment.department_id.id,
+                                             'working_team_id': recruitment.working_team_id.id,
                                              'channel': recruitment.channel, 'reason': recruitment.reason},
                                    context=context)
         return super(interview,self).create(cr,uid,vals,context=context)
@@ -472,7 +474,7 @@ class offer_information(models.Model):
     name = fields.Char(string='姓名')
     phone = fields.Char(string='电话')
     email = fields.Char(string='邮箱')
-    gender = fields.Char(string='性别')
+    gender = fields.Selection([('male','男'),('female','女')],string='性别',)
     entrytime = fields.Date(string= '办理入职时间')
     identification_id = fields.Char(string='身份证号')
     graduation_id = fields.Char(string='毕业证编号')
@@ -506,8 +508,8 @@ class offer_information(models.Model):
             'body_html': '<div><p>您好:</p>'
                          '<p>这有一份offer信息,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a></p></div>',
             'subject': 'offer信息',
-            # 'email_to': to_list,
-            'email_to':'linana@nantian.com.cn',
+            'email_to': to_list,
+            # 'email_to':'linana@nantian.com.cn',
             'auto_delete': True,
             'attachment_ids': [[6, 0, attach_ids]] or ''
         }, context=context)
@@ -515,19 +517,35 @@ class offer_information(models.Model):
 
     def offer_file(self):
         path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        excel = xlrd.open_workbook(file=path.replace('\\', '/') + '/myaddons/nantian_erp/offer_template.xls')
+        # excel = xlrd .open_workbook(filename=path.replace('\\', '/') + '/myaddons/nantian_erp/offer_template.xls')
+        book = xlwt.Workbook(encoding='utf-8')
+        sheet = book.add_sheet('sheet1')
         f = StringIO()
-        table = excel.sheets()[0]
-        offer_information = [self.first_department_id.name,self.second_department_id.name,self.working_team_id.name,self.name, self.identification_id,self.gender, self.phone,self.email,self.graduation_id,self.job_name,self.job_level,self.entrytime,self.contract_time,self.test_time,self.recruitment_id.name,self.channel ]
+        sheet.write_merge(0,1,0,0,u'序号')
+        sheet.write_merge(0,0,1,2,u'部门信息')
+        sheet.write_merge(0, 0, 4, 9, u'个人信息')
+        sheet.write_merge(0,0,10,11,u'职位信息')
+        sheet.write_merge(0,0,12,14,u'劳动合同信息')
+        sheet.write_merge(0,0,15,17,u'招聘有关信息')
+        head_list=["备注","招聘渠道","对应招聘岗位","试用期限（月）","劳动合同期限（年）","入职时间（劳动合同开始日期）","职级",
+           "职位名称","毕业证书编号","邮箱","联系电话","性别","身份证号","姓名","三级组","三级部门","二级部门"]
+        head_list.reverse()
+        for index,item in enumerate(head_list):
+            sheet.write(1,index+1,item,style=xlwt.Style.default_style)
+        offer_information = [self.first_department_id.name,self.second_department_id.name,self.working_team_id.name,
+                             self.name, self.identification_id,self.gender, self.phone,self.email,self.graduation_id,
+                             self.job_name,self.job_level,self.entrytime,self.contract_time,self.test_time,
+                             self.recruitment_id.job_name,self.channel ]
         for index,item in enumerate(offer_information):
-            table[3][index+2] = item
-        excel.save(f)
+            sheet.write(2,index+1,item, style=xlwt.Style.default_style)
+        book.save(f)
         f.seek(0)
         self.env['ir.attachment'].create(
                 {'res_model': 'nantian_erp.offer_information', 'res_id': self.id, 'datas_fname': u'南软入职信息表-数据中心服务部——'+self.name + u'.xls',
                  'name': self.name + u'offer信息', 'mimetype': 'application/vnd.ms-excel',
                  'datas': base64.encodestring(f.read()),})
         f.close()
+
 
     @api.multi
     def agree(self):
@@ -541,9 +559,12 @@ class offer_information(models.Model):
         print offer_examine.user_id.name,offer_examine.result,offer_examine.time
         self.offer_file()
         attachment_ids = self.env['ir.attachment'].search([('res_id','=',self.id),('res_model','=','nantian_erp.offer_information')])
+        resume_attachment_ids  = self.env['ir.attachment'].search([('res_id','=',self.resume_id.id),('res_model','=','nantian_erp.resume')])
         attach_ids = []
         for attachment_id in attachment_ids:
             attach_ids.append(attachment_id.id)
+        for resume  in resume_attachment_ids:
+            attach_ids.append(resume.id)
         self.offer_information_email(recruitment_group.users,attach_ids)
         self.examiner_user = None
 

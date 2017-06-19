@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
+import openerp
 from docxtpl import DocxTemplate,InlineImage
 from docx.shared import Mm, Inches, Pt
 
