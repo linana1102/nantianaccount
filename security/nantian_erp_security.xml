@@ -243,7 +243,7 @@
     <record id="work_header_read_rule" model="ir.rule">
         <field name="name">工作组行业负责人-读</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
-        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_assistant')),(4,ref('nantian_erp.group_nantian_header'))]"/>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_create" eval="0"/>
