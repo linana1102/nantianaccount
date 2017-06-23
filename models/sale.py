@@ -19,10 +19,8 @@ class weekly_reports(models.Model):
     demission_ids = fields.One2many('nantian_erp.demission','weekly_reports_id',string='人员离职')
     customer_adjust_ids = fields.One2many('nantian_erp.customer_adjust','weekly_reports_id',string='客户动态或人事变动')
     project_progress_ids = fields.One2many('nantian_erp.project_progress','weekly_reports_id',string='项目进度')
+    recruit_gap_ids = fields.One2many('nantian_erp.recruit_gap','weekly_reports_id',string='现有招聘缺口')
 
-    job = fields.Char(string='岗位')
-    count = fields.Char(string='人数')
-    reason = fields.Char(string='原因')
 
     # 自动化动作每周创建一个周报，内容是copy上一周周报的所有内容
     @api.multi
@@ -61,7 +59,6 @@ class weekly_reports(models.Model):
                                     objects = self.env['nantian_erp.project_gathering'].create(
                                         {"contract_id": collection.contract_id.id, "gather_reminder": collection.name,
                                          "weekly_reports_id": record.id})
-
 
 class pres_sale(models.Model):
     _name = 'nantian_erp.pres_sale'
@@ -303,3 +300,12 @@ class project_progress(models.Model):
     special_detail = fields.Char(string='详情叙述')
     possible_risk = fields.Boolean(string='本周预计可能风险')
     possible_risk_detail = fields.Char(string='详情叙述')
+
+
+class recruit_gap(models.Model):
+    _name = 'nantian_erp.recruit_gap'
+
+    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
+    job = fields.Char(string='岗位')
+    count = fields.Char(string='人数')
+    reason = fields.Char(string='原因')

@@ -92,15 +92,14 @@
                                     </tree>
                             </field>
                     </page>
-                     <page string="招聘缺口">
-                          <group>
-                                <field name="job" string="岗位"/>
+                     <page string="现有招聘缺口">
+                              <field name = "recruit_gap_ids">
+                                  <tree>
+                                  <field name="job" string="岗位"/>
                                  <field name="count" string="人数"/>
                                  <field name="reason" string="原因"/>
-                          </group>
-                         <group>
-
-                         </group>
+                                  </tree>
+                              </field>
                      </page>
                     <page string="项目进度">
                              <field name="project_progress_ids">
@@ -138,6 +137,7 @@
                     <field name="gathering_ids" string="项目收款" />
                     <field name="pers_transfer_ids" string="人员调动"/>
                     <field name="demission_ids" string="人员离职"/>
+                    <field name="recruit_gap_ids" string="现有招聘缺口"/>
                     <field name="customer_adjust_ids" string="客户动态或人事变动" />
                     <field name="project_progress_ids" string="项目进度"/>
                      <field name="user_id" string="创建者"/>

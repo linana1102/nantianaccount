@@ -654,6 +654,7 @@ class certificate_level(models.Model):
     _rec_name = 'name'
     name = fields.Char(string='级别')
     direction_id = fields.Many2one('nantian_erp.certificate_direction',string='方向', ondelete='set null', select=True)
+
 #员工离职
 class hr_dimission(models.Model):
     _name = 'nantian_erp.hr_dimission'
