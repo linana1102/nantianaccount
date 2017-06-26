@@ -66,12 +66,12 @@
                                 </page>
                                 <page string="二.工资，公积金，费用报销类">
                                      <group>
-                                         <group string = "住房公积金提取">
-                                            <field name="text2_1_1" />
-                                            <field name="text2_1_3" />
-                                            <field name="text2_1_2" />
-                                            <field name="text2_1_4" />
-                                         </group>
+                                          <group string = "费用报销">
+                                                 <field name="text2_3_1" />
+                                                <field name="text2_3_3" />
+                                                 <field name="text2_3_2" />
+                                                <field name="text2_3_4" />
+                                             </group>
                                          <group>
                                              <field name="attachment2_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
                                                  <tree >
@@ -88,12 +88,12 @@
                                              <field name="text2_2_2" />
                                              <field name="text2_2_4" />
                                          </group>
-                                             <group string = "费用报销">
-                                                 <field name="text2_3_1" />
-                                                <field name="text2_3_3" />
-                                                 <field name="text2_3_2" />
-                                                <field name="text2_3_4" />
-                                             </group>
+                                             <group string = "住房公积金提取">
+                                            <field name="text2_1_1" />
+                                            <field name="text2_1_3" />
+                                            <field name="text2_1_2" />
+                                            <field name="text2_1_4" />
+                                         </group>
                                          </group>
                                 </page>
                          <page string="三.入，离职，合同类">
