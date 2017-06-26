@@ -343,7 +343,14 @@
                 </tree>
             </field>
         </record>
-        <record id="nantian_erp_pers_transfer_action" model="ir.actions.act_window">
+        <record id="nantian_erp_pers_transfer_pending_action" model="ir.actions.act_window">
+            <field name="name">人员调动</field>
+            <field name="res_model">nantian_erp.pers_transfer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name ="domain">[('dis_states','!=',u'调整完成')]</field>
+         </record>
+         <record id="nantian_erp_pers_transfer_action" model="ir.actions.act_window">
             <field name="name">人员调动</field>
             <field name="res_model">nantian_erp.pers_transfer</field>
             <field name="view_type">form</field>
@@ -357,7 +364,7 @@
                 <form >
                     <sheet>
                     <heard>
-                        <button name="send_to_after_leader" type="object" string="转交新的负责人"  attrs="{'invisible':[('before_leader','=','uid')]}" class="oe_highlight" />
+                        <!--<button name="send_to_after_leader" type="object" string="转交新的负责人"  attrs="{'invisible':[('before_leader','=','uid')]}" class="oe_highlight" />-->
                         <!--<button name="email_to_sys" type="object" string="发送邮件"  attrs="{'invisible':[()]}" class="oe_highlight" />-->
                     </heard>
                     <group >
@@ -400,11 +407,19 @@
                             <field name="des_team" string="新项目组"/>
                             <field name="des_contract_name" string="合同名称"/>
                             <field name="des_contract_job" string="合同岗位"/>
+                            <field name="dis_states" string="调整状态"/>
                 </tree>
             </field>
         </record>
+        <record id="nantian_erp_demission_pending_action" model="ir.actions.act_window">
+            <field name="name">人员离职待完成</field>
+            <field name="res_model">nantian_erp.demission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name ="domain">[('state','!=','done')]</field>
+         </record>
         <record id="nantian_erp_demission_action" model="ir.actions.act_window">
-            <field name="name">人员离职</field>
+            <field name="name">人员离职全记录</field>
             <field name="res_model">nantian_erp.demission</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -439,13 +454,14 @@
             <field name="name">demission.tree</field>
             <field name="model">nantian_erp.demission</field>
             <field name="arch" type="xml">
-                <tree >
+                <tree editable="top">
                     <field name="employee_id" string="离职申请人"/>
                     <field name="contract_name" string="合同名称" />
                     <field name="contract_post" string="合同岗位"/>
                     <field name="sro_project" string="项目组"/>
                     <field name="demission_reason" string="离职原因"/>
                     <field name="demission_date" string="离职时间"/>
+                    <field name="state" string="离职申请状态"/>
                     <field name="is_recruit" string="是否招聘"/>
                 </tree>
             </field>
@@ -559,8 +575,10 @@
         <menuitem id="nantian_erp_ongoing_sale_menu" parent="nantian_erp_weekly_reports_menu" name="进行中的项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
 
         <menuitem id="nantian_erp_project_gathering_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_project_gathering_action" name="项目收款" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
+        <menuitem id="nantian_erp_pers_transfer_pending_menu" parent="hr.menu_hr_main" action="nantian_erp_pers_transfer_pending_action" name="人员调动" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
         <menuitem id="nantian_erp_pers_transfer_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_pers_transfer_action" name="人员调动" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
         <menuitem id="nantian_erp_project_progress_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_project_progress_action" name="项目进程" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
+        <menuitem id="nantian_erp_demission_pending_menu" parent="hr.menu_hr_main" action="nantian_erp_demission_pending_action" name="人员离职" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
         <menuitem id="nantian_erp_demission_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_demission_action" name="人员离职" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
         <menuitem id="nantian_erp_customer_adjust_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_customer_adjust_action" name="客户变动" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
     </data>

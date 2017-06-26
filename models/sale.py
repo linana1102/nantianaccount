@@ -179,6 +179,16 @@ class pers_transfer(models.Model):#
     touch = fields.Selection([(u'调整',u"调整"),
                               (u'修改', u"修改")
                               ],string = '调整状态',store = True)
+    dis_states = fields.Selection([
+        (u'正常', u'正常'),
+        (u'待调整', u"待调整"),
+        (u'可调用', u"可调用"),
+        (u'申请离职', u"申请离职"),
+        (u'已离职', u"已离职"),
+        (u'借调中', u"借调中"),
+        (u'调整完成', u"调整完成"),
+
+    ], default=u'正常', string="调整状态")
 
     @api.multi
     @api.depends('employee_id')
@@ -246,6 +256,12 @@ class demission(models.Model):#
     demission_reason = fields.Char(string='离职原因')
     demission_date = fields.Datetime(string='离职时间',require = True)
     is_recruit = fields.Boolean(string='是否招聘')
+    state = fields.Selection(
+        [
+            ('done', u'完成'),
+            ('no', u'拒绝'),
+        ],
+        default='application', string="离职申请状态")
 
     @api.multi
     @api.depends('employee_id')
