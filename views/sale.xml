@@ -32,8 +32,9 @@
                 <form>
                     <sheet>
                  <group>
-                     <group>
-                         <field name="create_date" string = "创建日期" readonly = "True"/>
+                     <group string="周报时间段">
+                         <field name="date_from" string = "From"/>
+                         <field name="date_to" string = "To"/>
                      </group>
                      <group>
                          <field name="user_id" string="创建者" readonly="True"/>
@@ -92,7 +93,7 @@
                                     </tree>
                             </field>
                     </page>
-                     <page string="现有招聘缺口">
+                     <page string="现有招聘缺口" context="{'form_view_ref': 'nantian_erp_recruit_gap_form'}">
                               <field name = "recruit_gap_ids">
                                   <tree>
                                   <field name="job" string="岗位"/>
@@ -123,6 +124,18 @@
                                     </tree>
                             </field>
                     </page>
+                     <page string="项目阶段数目统计" context="{'form_view_ref': 'nantian_erp_project_stage_count_form'}">
+                             <field name="project_stage_count_ids" >
+                                    <tree string="Registered feedback" edit="true">
+                                        <field name="lixiang"/>
+                                        <field name="todo" />
+                                        <field name="juys" />
+                                        <field name="ywfw" />
+                                        <field name="zhongyan" />
+                                        <field name="djx" />
+                                    </tree>
+                            </field>
+                    </page>
                      </notebook>
                     </sheet>
                 </form>
@@ -140,6 +153,7 @@
                     <field name="recruit_gap_ids" string="现有招聘缺口"/>
                     <field name="customer_adjust_ids" string="客户动态或人事变动" />
                     <field name="project_progress_ids" string="项目进度"/>
+                    <field name="project_stage_count_ids" string="项目阶段数目统计"/>
                      <field name="user_id" string="创建者"/>
                     <field name="create_date" string = "创建日期" readonly = "True"/>
                 </tree>
@@ -557,6 +571,61 @@
                     <field name="major_adjust" string="近一月客户是否有重大动态或人事变动"/>
                   <field name="major_adjust_detail" string="详情叙述"/>
                 </tree>
+            </field>
+        </record>
+        <record id="nantian_erp_recruit_gap_action" model="ir.actions.act_window">
+            <field name="name">现有招聘缺口</field>
+            <field name="res_model">nantian_erp.recruit_gap</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+         </record>
+        <record model="ir.ui.view" id="nantian_erp_recruit_gap_form">
+            <field name="name">nantian_erp.recruit_gap.form</field>
+            <field name="model">nantian_erp.recruit_gap</field>
+            <field name="arch" type="xml">
+                <form  >
+                    <sheet>
+                    <group >
+                        <group >
+                            <field name="job" />
+                            <field name="count" />
+                            <field name="reason" />
+                        </group>
+                        <group >
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="nantian_erp_project_stage_count_action" model="ir.actions.act_window">
+            <field name="name">项目阶段数目统计</field>
+            <field name="res_model">nantian_erp.project_stage_count</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+         </record>
+        <record model="ir.ui.view" id="nantian_erp_project_stage_count_form">
+            <field name="name">nantian_erp.project_stage_count.form</field>
+            <field name="model">nantian_erp.project_stage_count</field>
+            <field name="arch" type="xml">
+                <form  >
+                    <sheet>
+                    <group >
+                        <group string = "所处阶段">
+                            <field name="lixiang" placeholder="项目数量"/>
+                            <field name="todo" placeholder="项目数量"/>
+                            <field name="juys" placeholder="项目数量"/>
+                            <field name="ywfw" placeholder="项目数量"/>
+                            <field name="zhongyan" placeholder="项目数量"/>
+                            <field name="djx" placeholder="项目数量"/>
+                        </group>
+                        <group >
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 

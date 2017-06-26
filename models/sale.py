@@ -12,6 +12,8 @@ class weekly_reports(models.Model):
 
     user_id = fields.Many2one('res.users',string='创建者',required=True,default=lambda self: self.env.user)#
     date = fields.Date(string='创建日期',default=lambda self:fields.datetime.now(),readonly = True)
+    date_from = fields.Date(string='From')
+    date_to = fields.Date(string='To')
     pres_sale_ids = fields.One2many('nantian_erp.pres_sale','weekly_reports_id',string='售前项目进展')
     gathering_ids = fields.One2many('nantian_erp.project_gathering','weekly_reports_id',string='项目收款')
     # pers_transfer_ids = fields.Many2many('nantian_erp.pers_transfer','weekly_reports_idemp_weekly_transfer_ref',string='人员调动')
@@ -20,6 +22,8 @@ class weekly_reports(models.Model):
     customer_adjust_ids = fields.One2many('nantian_erp.customer_adjust','weekly_reports_id',string='客户动态或人事变动')
     project_progress_ids = fields.One2many('nantian_erp.project_progress','weekly_reports_id',string='项目进度')
     recruit_gap_ids = fields.One2many('nantian_erp.recruit_gap','weekly_reports_id',string='现有招聘缺口')
+    project_stage_count_ids = fields.One2many('nantian_erp.project_stage_count','weekly_reports_id',string='项目阶段数目统计')
+
 
 
     # 自动化动作每周创建一个周报，内容是copy上一周周报的所有内容
@@ -325,3 +329,14 @@ class recruit_gap(models.Model):
     job = fields.Char(string='岗位')
     count = fields.Char(string='人数')
     reason = fields.Char(string='原因')
+
+class project_stage_count(models.Model):
+    _name = 'nantian_erp.project_stage_count'
+
+    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
+    lixiang = fields.Char(string='立项，计划')
+    todo = fields.Char(string='实施')
+    juys= fields.Char(string='阶段验收')
+    ywfw = fields.Char(string='运维服务期')
+    zhongyan= fields.Char(string='终验')
+    djx = fields.Char(string='待结项')
