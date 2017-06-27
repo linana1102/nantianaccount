@@ -253,6 +253,7 @@ class demission(models.Model):#
     _name = 'nantian_erp.demission'
 
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')# 项目组即工作组
+    user_id = fields.Many2one('res.users',string='创建者',required=True,default=lambda self: self.env.user)#
     employee_id = fields.Many2one('hr.employee',string='离职申请人')# 这个人的调动人是他项目组的负责人
     contract_name = fields.Many2one("nantian_erp.contract",compute = "store_demission_message",store = True,string='合同名称' )
     contract_post = fields.Many2one("nantian_erp.jobs",compute = "store_demission_message",store = True,string='合同岗位')
@@ -262,6 +263,7 @@ class demission(models.Model):#
     is_recruit = fields.Boolean(string='是否招聘')
     state = fields.Selection(
         [
+            ('application', u'待确认'),
             ('done', u'完成'),
             ('no', u'拒绝'),
         ],

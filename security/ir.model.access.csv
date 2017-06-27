@@ -69,6 +69,7 @@ nantian_erp_demission_dd,nantian_erp_demission_ddd,model_nantian_erp_demission,,
 nantian_erp_customer_adjust_dd,nantian_erp_customer_adjust_ddd,model_nantian_erp_customer_adjust,,1,1,1,1
 nantian_erp_project_progress_dd,nantian_erp_project_progress_ddd,model_nantian_erp_project_progress,,1,1,1,1
 nantian_erp_recruit_gap_dd,nantian_erp_recruit_gap_ddd,model_nantian_erp_recruit_gap,,1,1,1,1
+nantian_erp_project_stage_count_dd,nantian_erp_project_stage_count_ddd,model_nantian_erp_project_stage_count,,1,1,1,1
 
 nantian_erp_job,nantian_erp_job,model_nantian_erp_job,,1,1,1,1
 nantian_erp_recruitment,nantian_erp_recruitment,model_nantian_erp_recruitment,,1,1,1,1

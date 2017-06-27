@@ -477,6 +477,8 @@
                     <field name="demission_date" string="离职时间"/>
                     <field name="state" string="离职申请状态"/>
                     <field name="is_recruit" string="是否招聘"/>
+                    <field name="user_id" string="创建者"/>
+
                 </tree>
             </field>
         </record>
