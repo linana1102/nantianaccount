@@ -64,7 +64,6 @@
                         <field name="department_second" />
                     <filter string="数据中心服务部"  name="department_first" domain="[('department_first','=','数据中心服务部')]"/>
                     <!--<filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>-->
-                    <filter string="绩效月份"  name="date" domain="[('date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>
                     <group expand="0" string="分组"><!--提示不让计算字段或者relate的字段-->
                         <filter string="一级部门" name="department_first" context="{'group_by':'department_first'}"/>
                         <filter string="三级工作组" name="department_third_name" context="{'group_by':'department_third_name'}"/>

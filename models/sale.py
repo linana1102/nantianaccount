@@ -12,6 +12,8 @@ class weekly_reports(models.Model):
 
     user_id = fields.Many2one('res.users',string='创建者',required=True,default=lambda self: self.env.user)#
     date = fields.Date(string='创建日期',default=lambda self:fields.datetime.now(),readonly = True)
+    date_from = fields.Date(string='From')
+    date_to = fields.Date(string='To')
     pres_sale_ids = fields.One2many('nantian_erp.pres_sale','weekly_reports_id',string='售前项目进展')
     gathering_ids = fields.One2many('nantian_erp.project_gathering','weekly_reports_id',string='项目收款')
     # pers_transfer_ids = fields.Many2many('nantian_erp.pers_transfer','weekly_reports_idemp_weekly_transfer_ref',string='人员调动')
@@ -19,8 +21,10 @@ class weekly_reports(models.Model):
     demission_ids = fields.One2many('nantian_erp.demission','weekly_reports_id',string='人员离职')
     customer_adjust_ids = fields.One2many('nantian_erp.customer_adjust','weekly_reports_id',string='客户动态或人事变动')
     project_progress_ids = fields.One2many('nantian_erp.project_progress','weekly_reports_id',string='项目进度')
+    recruit_gap_ids = fields.One2many('nantian_erp.recruit_gap','weekly_reports_id',string='现有招聘缺口')
+    project_stage_count_ids = fields.One2many('nantian_erp.project_stage_count','weekly_reports_id',string='项目阶段数目统计')
 
-    test_field = fields.Char(string='测试字段')
+
 
     # 自动化动作每周创建一个周报，内容是copy上一周周报的所有内容
     @api.multi
@@ -60,7 +64,6 @@ class weekly_reports(models.Model):
                                         {"contract_id": collection.contract_id.id, "gather_reminder": collection.name,
                                          "weekly_reports_id": record.id})
 
-
 class pres_sale(models.Model):
     _name = 'nantian_erp.pres_sale'
 
@@ -69,7 +72,7 @@ class pres_sale(models.Model):
     contract_name = fields.Char(string='合同名称')
     partner = fields.Char(string='客户名称')
     process_scrib = fields.Text(string='本周主要进展说明')
-    before_bid_amount = fields.Float(string='投标金额')
+    before_bid_amount = fields.Float(string='投标金额(万)')
     bid_commpany = fields.Char(string='中标单位')
     pre_bid_date = fields.Date(string='预计投标日期')
     competitors = fields.Char(string='竞争对手')
@@ -84,7 +87,7 @@ class pres_sale(models.Model):
     bid_write = fields.Many2one('res.users',string='标书编写人')
     bid_checkman_id = fields.Many2one('res.users',string='标书复核人',)
     bid_readman_id = fields.Many2one('res.users',string='讲标人',)
-    after_bid_amount = fields.Float(string='合同/中标金额',)
+    after_bid_amount = fields.Float(string='合同/中标金额(万)',)
     term = fields.Char(string='检索词',)
     firm_platform = fields.Char(string='涉及厂商或平台',)
     context = fields.Text(string='合同主要内容',)
@@ -180,6 +183,16 @@ class pers_transfer(models.Model):#
     touch = fields.Selection([(u'调整',u"调整"),
                               (u'修改', u"修改")
                               ],string = '调整状态',store = True)
+    dis_states = fields.Selection([
+        (u'正常', u'正常'),
+        (u'待调整', u"待调整"),
+        (u'可调用', u"可调用"),
+        (u'申请离职', u"申请离职"),
+        (u'已离职', u"已离职"),
+        (u'借调中', u"借调中"),
+        (u'调整完成', u"调整完成"),
+
+    ], default=u'正常', string="调整状态")
 
     @api.multi
     @api.depends('employee_id')
@@ -240,6 +253,7 @@ class demission(models.Model):#
     _name = 'nantian_erp.demission'
 
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')# 项目组即工作组
+    user_id = fields.Many2one('res.users',string='创建者',required=True,default=lambda self: self.env.user)#
     employee_id = fields.Many2one('hr.employee',string='离职申请人')# 这个人的调动人是他项目组的负责人
     contract_name = fields.Many2one("nantian_erp.contract",compute = "store_demission_message",store = True,string='合同名称' )
     contract_post = fields.Many2one("nantian_erp.jobs",compute = "store_demission_message",store = True,string='合同岗位')
@@ -247,6 +261,13 @@ class demission(models.Model):#
     demission_reason = fields.Char(string='离职原因')
     demission_date = fields.Datetime(string='离职时间',require = True)
     is_recruit = fields.Boolean(string='是否招聘')
+    state = fields.Selection(
+        [
+            ('application', u'待确认'),
+            ('done', u'完成'),
+            ('no', u'拒绝'),
+        ],
+        default='application', string="离职申请状态")
 
     @api.multi
     @api.depends('employee_id')
@@ -301,3 +322,23 @@ class project_progress(models.Model):
     special_detail = fields.Char(string='详情叙述')
     possible_risk = fields.Boolean(string='本周预计可能风险')
     possible_risk_detail = fields.Char(string='详情叙述')
+
+
+class recruit_gap(models.Model):
+    _name = 'nantian_erp.recruit_gap'
+
+    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
+    job = fields.Char(string='岗位')
+    count = fields.Char(string='人数')
+    reason = fields.Char(string='原因')
+
+class project_stage_count(models.Model):
+    _name = 'nantian_erp.project_stage_count'
+
+    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
+    lixiang = fields.Char(string='立项，计划')
+    todo = fields.Char(string='实施')
+    juys= fields.Char(string='阶段验收')
+    ywfw = fields.Char(string='运维服务期')
+    zhongyan= fields.Char(string='终验')
+    djx = fields.Char(string='待结项')

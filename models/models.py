@@ -654,6 +654,7 @@ class certificate_level(models.Model):
     _rec_name = 'name'
     name = fields.Char(string='级别')
     direction_id = fields.Many2one('nantian_erp.certificate_direction',string='方向', ondelete='set null', select=True)
+
 #员工离职
 class hr_dimission(models.Model):
     _name = 'nantian_erp.hr_dimission'
@@ -1152,7 +1153,7 @@ class collection(models.Model):
         string="税率", default='0.00'
     )
     rated_moneys = fields.Float(compute='_count_rated_moneys', store=True, string="税金")
-    money_total = fields.Float(compute='_count_money_total', store=True, string="税前收款金额")
+    money_total = fields.Float(compute='_count_money_total', store=True, string="不含税收款金额")
     state = fields.Selection(
         [
             (u'创建中', u'创建中'),
@@ -1206,7 +1207,7 @@ class contract(models.Model):
     money_total = fields.Float(string="税后总计金额" ,compute='_count_money_total',store=True)
     collection_money = fields.Float(string="收款金额", compute='_count_collection_money', store=True)
     collection_money_tax = fields.Float(string="收款税金", compute='_count_collection_money_tax', store=True)
-    collection_money_total = fields.Float(string="税前总计收款金额", compute='_count_collection_money_total', store=True)
+    collection_money_total = fields.Float(string="不含税总计收款金额", compute='_count_collection_money_total', store=True)
     collection_ids = fields.One2many('nantian_erp.collection', 'contract_id',string="收款")
     detail_ids = fields.One2many('nantian_erp.detail', 'contract_id', string="维保明细")
     hr_requirements = fields.Text(string="人员要求")
