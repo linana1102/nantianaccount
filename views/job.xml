@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <menuitem id="nantian_recruitment_root_menu"  name="招聘" sequence="4" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager,nantian_erp.group_hr_recruitment,nantian_erp.group_hr_manager,nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,base.group_erp_manager"/>
-        <menuitem id="nantian_recruitment_2_level_menu" parent="nantian_recruitment_root_menu" name="招聘" sequence="100" />
+        <menuitem id="nantian_recruitment_2_level_menu" parent="nantian_recruitment_root_menu" name="招聘" sequence="2" />
 
 
         <record model="ir.ui.view" id="nantian_erp_job_form">

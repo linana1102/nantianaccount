@@ -28,8 +28,15 @@ class job_categroy(models.Model):
     job_id = fields.Many2one('nantian_erp.job',string='职位')
 
 class recruitment(models.Model):
+
+
     _name = 'nantian_erp.recruitment'
     _rec_name = 'job_id'
+    _inherit = ['ir.needaction_mixin']
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('examine_user.id', '=', self.env.uid)]
 
     user_id = fields.Many2one('res.users',default=lambda self: self.env.user,string='申请人')
     department_id = fields.Many2one('hr.department',string='部门',default=lambda self: self.compute_department(),store=True)
@@ -256,6 +263,11 @@ class job_examine(models.Model):
 class resume(models.Model):
     _name = 'nantian_erp.resume'
     _rec_name ='name'
+    _inherit = ['ir.needaction_mixin']
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('interviewer.id', '=', self.env.uid)]
 
     name = fields.Char(string='姓名')
     gender = fields.Selection([('male','男'),('female','女')],string='性别')
@@ -330,7 +342,7 @@ class resume(models.Model):
                         interviewer = department.parent_id.manager_id.user_id
                     self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)]).write({'examiner_user':interviewer.id})
                     self.send_email(interviewer)
-                    self.interviewer = interviewer.id
+                    self.interviewer = None
             elif self.env.user == self.interview_ids[0].recruitment_id.user_id:
                 if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review:
                     raise exceptions.ValidationError("请填面试评价")
@@ -338,7 +350,7 @@ class resume(models.Model):
                     interviewer = self.interview_ids[0].recruitment_id.working_team_id.partner_id.customer_manager
                     print interviewer
                     self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'interviewer':interviewer.id})
-                    self.env['nantian_erp.offer_information'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'user_id':interviewer.id,})
+
                     self.env['nantian_erp.offer_information'].create({
                                                  'resume_id': self.id,
                                                  'name': self.name,
@@ -350,11 +362,12 @@ class resume(models.Model):
                                                  'job_name': self.interview_ids[0].recruitment_id.job_id.name + '(' + self.interview_ids[0].recruitment_id.job_id.categroy_id.name + ')',
                                                  'job_level': self.interview_ids[0].recruitment_id.job_level,
                                                  'user_id': interviewer.id,
-                                                 'first_department_id': self.interview_ids[0].recruitment_idrecruitment.department_id.parent_id,
-                                                 'second_department_id': self.interview_ids[0].recruitment_id.department_id,
-                                                 'working_team_id': self.interview_ids[0].recruitment_id.working_team_id,
-                                                 'channel': self.interview_ids[0].recruitment_id.channel,
-                                                'reason': self.interview_ids[0].recruitment_id.reason},
+                                                 'first_department_id': self.interview_ids[0].recruitment_id.department_id.parent_id.id or None,
+                                                 'second_department_id': self.interview_ids[0].recruitment_id.department_id.id or None,
+                                                 'working_team_id': self.interview_ids[0].recruitment_id.working_team_id.id or None,
+                                                 'channel': self.interview_ids[0].recruitment_id.channel or None,
+                                                 'reason': self.interview_ids[0].recruitment_id.reason or None,
+                    },
                                        )
                     self.send_email(interviewer)
                     self.interviewer = interviewer.id
@@ -442,13 +455,13 @@ class interview(models.Model):
             print vals['recruitment_id']
             print recruitment.user_id.id
             resume.state = u'面试中'
-
             resume.interviewer = vals['next_user']
             self.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'interviewer':vals['next_user']})
             vals['date'] = fields.Date.today()
             print resume.interviewer.name
             print vals['customer']
             if resume.interviewer.name == vals['customer']:
+                print 'aaaaaaaaaaaaaa'
                 offer_model = self.pool.get('nantian_erp.offer_information')
                 offer_model.create(cr, uid, {'resume_id': vals['resume_id'],
                                              'name': resume.name,
@@ -469,6 +482,11 @@ class interview(models.Model):
 class offer_information(models.Model):
     _name = 'nantian_erp.offer_information'
     _rec_name = 'resume_id'
+    _inherit = ['ir.needaction_mixin']
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('examiner_user.id', '=', self.env.uid)]
 
     resume_id = fields.Many2one('nantian_erp.resume')
     name = fields.Char(string='姓名')

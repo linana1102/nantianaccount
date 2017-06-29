@@ -9,7 +9,7 @@
             <field name="context">{'search_default_resume_id': [active_id], 'default_resume_id': active_id}</field>
         </record>
 
-        <menuitem id="nantian_erp_resume_root_menu" parent="nantian_recruitment_root_menu" name="简历" />
+        <menuitem id="nantian_erp_resume_root_menu" parent="nantian_recruitment_root_menu" name="简历" sequence="3"/>
 
         <record model="ir.ui.view" id="nantian_erp_resume_form">
             <field name="name">nantian_resume.form</field>
