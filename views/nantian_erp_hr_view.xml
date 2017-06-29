@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="nantian_erp_pers_transfer_by_hr" model="ir.actions.act_window">
-            <field name="name">待调整人员</field>
-            <field name="res_model">nantian_erp.pers_transfer</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{"active_id":active_id}</field>
-            <field name="view_id" ref="nantian_erp_pers_transfer_hr_form"/>
-        </record>
-        <record id="nantian_erp_demission_by_hr" model="ir.actions.act_window">
-            <field name="name">人员离职</field>
-            <field name="res_model">nantian_erp.demission</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{"active_id":active_id}</field>
-            <field name="view_id" ref="nantian_erp_demission_hr_form"/>
-        </record>
          <record model="ir.ui.view" id="nantian_erp_pers_transfer_hr_form">
             <field name="name">pers_transfer.form</field>
             <field name="model">nantian_erp.pers_transfer</field>
@@ -86,6 +68,24 @@
                     </sheet>
                 </form>
             </field>
+        </record>
+        <record id="nantian_erp_pers_transfer_by_hr" model="ir.actions.act_window">
+            <field name="name">待调整人员</field>
+            <field name="res_model">nantian_erp.pers_transfer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{"active_id":active_id}</field>
+            <field name="view_id" ref="nantian_erp_pers_transfer_hr_form"/>
+        </record>
+        <record id="nantian_erp_demission_by_hr" model="ir.actions.act_window">
+            <field name="name">人员离职</field>
+            <field name="res_model">nantian_erp.demission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{"active_id":active_id}</field>
+            <field name="view_id" ref="nantian_erp_demission_hr_form"/>
         </record>
         <record model="ir.ui.view" id="nantian_erp_hr_adjusting_form">
             <field name="name">人员调整</field>
