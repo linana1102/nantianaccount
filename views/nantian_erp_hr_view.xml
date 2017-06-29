@@ -129,10 +129,11 @@
                                         <!--<field name="education" string="学历"/>-->
                                         <field name="education_experience_ids" string="教育经历">
                                             <tree string="教育经历" editable="bottom">
+                                                <field name="date_time" string="时间段"/>
                                                 <field name="school" string="学校"/>
                                                 <field name="major" string="专业"/>
                                                 <field name="education" string="学历"/>
-                                                <field name="date_time" string="时间段"/>
+
                                             </tree>
                                         </field>
                                         <field name="certificate_ids"  string = "证书"  >
@@ -250,10 +251,11 @@
                                         <!--<field name="education" string="学历"/>-->
                                         <field name="education_experience_ids" string="教育经历">
                                             <tree string="教育经历" editable="bottom">
+                                                <field name="date_time" string="时间段"/>
                                                 <field name="school" string="学校"/>
                                                 <field name="major" string="专业"/>
                                                 <field name="education" string="学历"/>
-                                                <field name="date_time" string="时间段"/>
+
                                             </tree>
                                         </field>
                                         <field name="certificate_ids"  string = "证书"  >

@@ -9,7 +9,7 @@
             <field name="context">{'search_default_resume_id': [active_id], 'default_resume_id': active_id}</field>
         </record>
 
-        <menuitem id="nantian_erp_resume_root_menu" parent="nantian_recruitment_2_level_menu" name="简历" />
+        <menuitem id="nantian_erp_resume_root_menu" parent="nantian_recruitment_root_menu" name="简历" sequence="3"/>
 
         <record model="ir.ui.view" id="nantian_erp_resume_form">
             <field name="name">nantian_resume.form</field>
@@ -355,7 +355,7 @@
         <menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="未处理的简历" action="nantian_erp_resume_action" sequence="1" groups="nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_interviewing_resume_menu" parent="nantian_erp_resume_root_menu" name="面试中的简历" action="nantian_erp_interviewing_resume_action" sequence="4" groups="nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_processed_resume_menu" parent="nantian_erp_resume_root_menu" name="面试过的简历" action="nantian_erp_processed_resume_action" sequence="3" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager,nantian_erp.group_hr_recruitment"/>
-        <menuitem id="nantian_erp_processing_resume_menu" parent="nantian_erp_resume_root_menu" name="待面试的简历" action="nantian_erp_processing_resume_action" sequence="2" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager"/>
+
         <!--<menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="简历" action="nantian_erp_resume_action" sequence="2"/>-->
         <menuitem id="nantian_erp_entryed_resume_menu" parent="nantian_erp_resume_root_menu" name="已入职的简历" action="nantian_erp_entryed_resume_action" sequence="4" />
         <menuitem id="nantian_erp_rejected_resume_menu" parent="nantian_erp_resume_root_menu" name="不来的简历" action="nantian_erp_rejected_resume_action" sequence="5"/>
@@ -422,8 +422,8 @@
                                 <h1><field name="resume_id" class="oe_inline" readonly="True"/></h1>
                          </div>
                          <div class="oe_right" name="buttons">
-                             <button  type='object' name="create_employee_from_resume" class="oe_stat_button" icon="fa-book" string="入职" attrs="{'invisible': ['|',('emp_id', '!=', False),('entry_id', '!=', False)]}"/>
-                             <button  type='object' name="create_entry" class="oe_stat_button" icon="fa-book" string="不入职" attrs="{'invisible': ['|',('emp_id', '!=', False),('entry_id', '!=', False)]}"/>
+                             <button  type='object' name="create_employee_from_resume" class="oe_stat_button" icon="fa-book" string="入职" />
+                             <button  type='object' name="create_entry" class="oe_stat_button" icon="fa-book" string="不入职" />
                          </div>
                         <group>
                             <group >
