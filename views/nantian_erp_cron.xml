@@ -75,7 +75,7 @@
             <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="True"/>
-            <field name="active" eval="True"/>
+            <field name="active" eval="False"/>
             <field name="model" eval="'nantian_erp.weekly_reports'"/>
             <field name="function" eval="'copy_weekly_reports'"/>
             <field name="args" eval="'(False,)'" />
@@ -123,6 +123,17 @@
             <field name="active" eval="True"/>
             <field name="model" eval="'nantian_erp.project_cost'"/>
             <field name="function" eval="'create_project_cost_month'"/>
+            <field name="args" eval="'(False,)'" />
+         </record>
+        <record model="ir.cron" id="nantian_erp_project_allkindsof_info_change">
+            <field name="name">每小时检查离职信息或者工作组，岗位，合同de更新</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'hr.employee'"/>
+            <field name="function" eval="'change_emp_keys'"/>
             <field name="args" eval="'(False,)'" />
          </record>
     </data>

@@ -165,9 +165,32 @@ class project_gathering(models.Model):#
 class pers_transfer(models.Model):#
     _name = 'nantian_erp.pers_transfer'
 
+    @api.multi
+    def _default_employee_id(self):
+        return self.env['hr.employee'].browse(self._context.get('active_id'))
+
+
+    @api.multi
+    def subscribe(self):
+        if self.employee_id.dis_states == u"待调整":
+            raise exceptions.ValidationError("人员正在调整中,请取消提单，先处理他(她)的人员调动")
+            return None
+        elif self.employee_id.dis_states == u"可调用":
+            raise exceptions.ValidationError("人员正在调整中,请取消提单，先处理他(她)的人员调动")
+            return None
+        elif self.employee_id.dis_states == u"借调中":
+            raise exceptions.ValidationError("人员正在借调中,请取消提单，先处理他(她)的人员调动")
+            return None
+        elif self.employee_id.dis_states == u"申请离职":
+            raise exceptions.ValidationError("人员正在离职中,请取消提单，重新处理")
+            return None
+        self.employee_id.dis_states = self.dis_states
+        return {'aaaaaaaaaaaaaa'}
+
     # weekly_reports_id = fields.Many2many('nantian_erp.weekly_reports','emp_weekly_transfer_ref', string='周报')
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
-    employee_id = fields.Many2one('hr.employee',string='调动人',ondelete='set null')
+    # employee_id_hr = fields.Many2one('hr.employee',string='调动人',ondelete='set null')#
+    employee_id = fields.Many2one('hr.employee',string='调动人',required=True,default=_default_employee_id)
     res_contract_name = fields.Many2one("nantian_erp.contract",compute = "store_transfer_message",store = True,string='合同名称')
     res_contract_job = fields.Many2one("nantian_erp.jobs",compute = "store_transfer_message",store = True,string='合同岗位')
     sour_team = fields.Many2one("nantian_erp.working_team",compute = "store_transfer_message",store = True,string='原项目组')
@@ -175,24 +198,20 @@ class pers_transfer(models.Model):#
     move_date = fields.Date(string='调动时间')
     is_recruit = fields.Boolean(string='是否招聘')
     after_leader = fields.Many2one('hr.employee',string='调动后负责人',domain="['|',('job_id','=',u'部门经理'),('job_id','=',u'副总经理')]")
-    before_leader = fields.Many2one('res.users',string='调动前负责人',default=lambda self: self.env.user,readonly = True)
+    before_leader = fields.Many2one('res.users',string='调动前负责人')
     # default=lambda self: self.env.user.employee_ids[0] 用户可能不是员工就不能适合default
-    des_team = fields.Char(string='新项目组')
-    des_contract_name = fields.Char(string='合同名称')
-    des_contract_job = fields.Char(string='合同岗位')
-    touch = fields.Selection([(u'调整',u"调整"),
-                              (u'修改', u"修改")
-                              ],string = '调整状态',store = True)
+    des_team = fields.Many2one("nantian_erp.working_team",string='新项目组')
+    des_contract_name = fields.Many2one("nantian_erp.contract",string='新合同名称')
+    des_contract_job = fields.Many2one("nantian_erp.jobs",string='新合同岗位')
     dis_states = fields.Selection([
-        (u'正常', u'正常'),
         (u'待调整', u"待调整"),
         (u'可调用', u"可调用"),
-        (u'申请离职', u"申请离职"),
-        (u'已离职', u"已离职"),
         (u'借调中', u"借调中"),
         (u'调整完成', u"调整完成"),
 
-    ], default=u'正常', string="调整状态")
+    ], default=u'待调整', string="调整状态")
+
+
 
     @api.multi
     @api.depends('employee_id')
@@ -252,14 +271,26 @@ class pers_transfer(models.Model):#
 class demission(models.Model):#
     _name = 'nantian_erp.demission'
 
+    @api.multi
+    def _default_employee_id(self):
+        return self.env['hr.employee'].browse(self._context.get('active_id'))
+
+    @api.multi
+    def subscribe(self):
+        if self.employee_id.dis_states == u'申请离职':
+            raise exceptions.ValidationError("人员正在申请离职,请取消提单，先处理他(她)的人员离职")
+            return None
+        elif self.employee_id.dis_states == u'已离职':
+            raise exceptions.ValidationError("已离职,请取消提单")
+            return None
+        return {'aaaaaaaaaaaaaa'}
+
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')# 项目组即工作组
     user_id = fields.Many2one('res.users',string='创建者',required=True,default=lambda self: self.env.user)#
-    employee_id = fields.Many2one('hr.employee',string='离职申请人')# 这个人的调动人是他项目组的负责人
-    contract_name = fields.Many2one("nantian_erp.contract",compute = "store_demission_message",store = True,string='合同名称' )
-    contract_post = fields.Many2one("nantian_erp.jobs",compute = "store_demission_message",store = True,string='合同岗位')
-    sro_project = fields.Many2one("nantian_erp.working_team",compute = "store_demission_message",store = True,string='项目组')
-    demission_reason = fields.Char(string='离职原因')
-    demission_date = fields.Datetime(string='离职时间',require = True)
+    employee_id = fields.Many2one('hr.employee',string='离职申请人',default=_default_employee_id)# 这个人的调动人是他项目组的负责人
+    contract_name = fields.Char(compute = "store_demission_message",store = True,string='合同名称' )
+    contract_post = fields.Char(compute = "store_demission_message",store = True,string='合同岗位')
+    sro_project = fields.Char(compute = "store_demission_message",store = True,string='项目组')
     is_recruit = fields.Boolean(string='是否招聘')
     state = fields.Selection(
         [
@@ -268,16 +299,35 @@ class demission(models.Model):#
             ('no', u'拒绝'),
         ],
         default='application', string="离职申请状态")
+    dealer = fields.Many2one('res.users',compute = "confirm_dealer",string="处理人",store = True)
+    demission_reason = fields.Selection(
+        [
+            (u'薪资待遇不满意', u"薪资待遇不满意"),
+            (u'工作环境不满意', u"工作环境不满意"),
+            (u'工作发展方向不满意', u"工作发展方向不满意"),
+            (u'有更好的公司选择', u"有更好的公司选择"),
+            (u'家庭原因', u"家庭原因"),
+            (u'身体原因', u'身体原因'),
+            (u'其他', u'其他'),
+        ],
+        string="离职原因")
+    demission_goto = fields.Text(string="离职去向")
+    demission_date = fields.Date(string="离职时间")
+    demission_why_add = fields.Text(string="其他原因")
 
-    @api.multi
+    @api.depends('state')
+    def confirm_dealer(self):
+        for x in self:
+            if x.state == 'done' or x.state == 'no':
+                x.dealer = self.env.user
+
     @api.depends('employee_id')
     def store_demission_message(self):
         for x in self:
             if x.employee_id:
-                x.contract_name = x.employee_id.nantian_erp_contract_id
-                x.contract_post = x.employee_id.contract_jobs_id
-                x.sro_project = x.employee_id.working_team_id
-
+                x.contract_name = x.employee_id.nantian_erp_contract_id.name
+                x.contract_post = x.employee_id.contract_jobs_id.name
+                x.sro_project = x.employee_id.working_team_id.name
 
     def create(self, cr, uid, vals, context=None):
         if vals['employee_id']:
@@ -286,8 +336,9 @@ class demission(models.Model):#
             ids = template_model.search(cr, uid, [('id', '=', id)], context=None)
             objects = template_model.browse(cr, uid, ids, context=None)
             for object in objects:
-                object.dis_states = u'申请离职'
-                print object.dis_states
+                if vals['state'] == 'application':
+                    object.dis_states = u'申请离职'
+                    print object.dis_states
         return super(demission, self).create(cr, uid, vals, context=context)
 
 

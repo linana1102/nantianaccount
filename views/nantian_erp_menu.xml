@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <menuitem name="合同" id="nantian_contract_menu_5"   sequence="5" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_boss" />
         <record id="nantian_erp_adjusting" model="ir.actions.act_window">
             <field name="name">待调整的人员</field>
             <field name="res_model">hr.employee</field>
@@ -273,8 +274,7 @@
 
 
 
-        <menuitem name="nantian_working_team" id="nantian_working_team"   sequence="5" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_boss" />
-        <menuitem name="nantian_working_teams" id="nantian_working_teams" sequence="5" parent="nantian_working_team" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss" />
+        <menuitem name="nantian_working_teams" id="nantian_working_teams" parent="nantian_contract_menu_5" sequence="3" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss" />
 
         <!--<record id="nantian_erp_contract_view" model="ir.actions.act_window">-->
             <!--<field name="name">合同</field>-->
@@ -282,7 +282,7 @@
             <!--<field name="view_type">form</field>-->
             <!--<field name="view_mode">tree,form</field>-->
         <!--</record>-->
-        <menuitem name="nantian_contract" id="nantian_contract" sequence="10"  parent="nantian_working_team"   groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
+        <menuitem name="nantian_contract" id="nantian_contract" parent="nantian_contract_menu_5" sequence="2"   groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
         <record id="closed_nantian_erp_contract_view" model="ir.actions.act_window">
             <field name="name">关闭的合同</field>
             <field name="res_model">nantian_erp.contract</field>
@@ -390,7 +390,7 @@
             <field name="view_id" ref="nantian_work_team_form_view_manager" />
             <field name="act_window_id" ref="nantian_works_manager_action" />
         </record>
-        <menuitem name="nantian_config" id="nantian_config" sequence="10" parent="nantian_working_team" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss" />
+        <menuitem name="nantian_config" id="nantian_config" parent="nantian_contract_menu_5" sequence="4" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss" />
         <menuitem id="nantian_works_manager"  sequence="5" parent="nantian_config" action="nantian_works_manager_action" name="works" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
 
 

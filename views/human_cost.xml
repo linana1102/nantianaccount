@@ -505,7 +505,7 @@
 
 
         <!--<menuitem id="nantian_erp_human_cost_menu" name="人力成本管理" groups="nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>-->
-        <menuitem id="nantian_erp_performance_menu" parent="nantian_erp_weekly_reports_menu" name="成本管理" sequence="2"  groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
+        <menuitem id="nantian_erp_performance_menu" parent="hr.menu_hr_root" name="成本管理" sequence="2"  groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/>
         <menuitem id="nantian_erp_human_cost_menu" parent="nantian_erp_performance_menu" name="人力成本"  sequence="1"/>
         <menuitem id="nantian_erp_project_cost_menu" parent="nantian_erp_performance_menu" name="项目成本"  sequence="2"/>
         <menuitem id="nantian_erp_back_manager_menu" parent="nantian_erp_performance_menu" name="后台管理"  sequence="3"/>

@@ -38,6 +38,7 @@
             <field name="context">{"active_id":active_id}</field>
             <field name="view_id" ref="nantian_erp_hr_adjusting_form"/>
         </record>
+
         <record model="ir.ui.view" id="nantian_erp_employee_form_view">
             <field name="name">employee.form</field>
             <field name="model">hr.employee</field>
@@ -46,7 +47,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="%(nantian_erp_start_adjusting)d" type="action" class="oe_stat_button" icon="fa-clock-o">
-                        <field name="dis_states" string="点击按钮填写内容" widget="statinfo"/>
+                        <field name="dis_states" string="人员调整" widget="statinfo"/>
+                    </button>
+                    <button name="%(nantian_erp_pers_transfer_by_hr)d" type="action" string="人员调整" class="oe_stat_button" icon="fa-tasks">
+                    </button>
+                    <button name="%(nantian_erp_demission_by_hr)d" type="action" string="人员离职" class="oe_stat_button" icon="fa-tasks">
                     </button>
                 </xpath>
                 <xpath expr="//page[@string='HR Settings']" position="replace">
@@ -72,11 +77,11 @@
                                         <field name="states" string="状态" />
                                     </group>
                                     <group string="项目信息">
-                                        <field name="working_team_id" string="所在工作组" options='{"limit": 20,"no_create":1,"no_create_edit":1}' domain="[('category','=',u'工作组')]"/>
-                                        <field name="customer_id" string="服务客户" />
-                                        <field name="category" string="人员状态" on_change="onchange_category(category)"/>
-                                        <field name="nantian_erp_contract_id" string="服务合同" domain="[('customer_id','=',customer_id),('category','!=',u'维保合同'),('state','!=','off')]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_create":1,"no_create_edit":1}'/>
-                                        <field name="contract_jobs_id" string="合同岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                            <field name="working_team_id" string="所在工作组" options='{"limit": 20,"no_create":1,"no_create_edit":1}' domain="[('category','=',u'工作组')]"/>
+                                            <field name="customer_id" string="服务客户" />
+                                            <field name="category" string="人员状态" on_change="onchange_category(category)"/>
+                                            <field name="nantian_erp_contract_id" string="服务合同" domain="[('customer_id','=',customer_id),('category','!=',u'维保合同'),('state','!=','off')]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_create":1,"no_create_edit":1}'/>
+                                            <field name="contract_jobs_id" string="合同岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                                     </group>
                                 </group>
                                 <group string="合同信息">
@@ -148,9 +153,7 @@
                                                 <field name="job" string="项目职务"/>
                                                 <field name="description" string="工作描述"/>
                                             </tree>
-
                                         </field>
-
                                         <field name="specialty" string="技术特长" />
                                 </group>
                             </page>
@@ -282,6 +285,7 @@
                             <group string="Active" name="active_group">
                                 <field name="active" />
                                 <field name="SN" />
+                                <field name="dis_states" string="人员调整"/>
                              </group>
                         </group>
                     </page>

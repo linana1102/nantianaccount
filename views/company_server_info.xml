@@ -202,7 +202,7 @@
 
          </record>
 
-        <menuitem id="nantian_erp_company_info_deplay_menu" name="行政" sequence="1"/>
+        <menuitem id="nantian_erp_company_info_deplay_menu" name="行政" sequence="2"/>
         <menuitem id="nantian_erp_company_info_deplay" parent="nantian_erp_company_info_deplay_menu" name="行政"/>
         <menuitem id="nantian_erp_company_info_deplay_1" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay1_action" name="行政"/>
 
