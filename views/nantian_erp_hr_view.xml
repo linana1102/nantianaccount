@@ -1,6 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+         <record model="ir.ui.view" id="nantian_erp_pers_transfer_hr_form">
+            <field name="name">pers_transfer.form</field>
+            <field name="model">nantian_erp.pers_transfer</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <heard>
+                        <!--<button name="send_to_after_leader" type="object" string="转交新的负责人"  attrs="{'invisible':[('before_leader','=','uid')]}" class="oe_highlight" />-->
+                        <!--<button name="email_to_sys" type="object" string="发送邮件"  attrs="{'invisible':[()]}" class="oe_highlight" />-->
+                    </heard>
+                    <group >
+                        <group >
+                            <field name="employee_id" string="调动人" placeholder="仅限本行业下的人员"/>
+                            <field name="dis_states" />
+                         </group>
+                        <group >
+                            <field name="after_leader" string="调动后负责人"/>
+                            <field name="des_team" string="新项目组" domain="[('category','=',u'工作组')]"/>
+                            <field name="des_contract_name" string="合同名称" domain="[('category','!=',u'维保合同'),('state','!=','off')]"/>
+                            <field name="des_contract_job" string="合同岗位" domain="[('contract_id','=',des_contract_name)]"/>
+                        </group>
+                    </group>
+                         <footer>
+                        <button name="subscribe" type="object"
+                                string="保存" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="取消调整"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_demission_hr_form">
+            <field name="name">demission.form</field>
+            <field name="model">nantian_erp.demission</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <group >
+                        <group >
+                            <field name="employee_id" string="离职申请人" placeholder="注意权限"/>
+                            <field name="demission_reason" string="离职原因"/>
+                            <field name="demission_date" string="离职时间"/>
+                        </group>
+                        <group >
+                            <field name="contract_name" string="合同名称" />
+                            <field name="contract_post" string="合同岗位"/>
+                            <field name="sro_project" string="项目组"/>
+                        </group>
+                        <group>
+                            <field name="state" />
+                            <field name="dealer" />
+                        </group>
+                        <group>
+
+                        </group>
+                    </group>
+
+                          <footer>
+                        <button name="subscribe" type="object"
+                                string="保存" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="取消离职"/>
+                    </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
         <record model="ir.ui.view" id="nantian_erp_hr_adjusting_form">
             <field name="name">人员调整</field>
             <field name="model">nantian_erp.hr_adjusting</field>
@@ -49,10 +117,10 @@
                     <button name="%(nantian_erp_start_adjusting)d" type="action" class="oe_stat_button" icon="fa-clock-o">
                         <field name="dis_states" string="人员调整" widget="statinfo"/>
                     </button>
-                    <button name="%(nantian_erp_pers_transfer_by_hr)d" type="action" string="人员调整" class="oe_stat_button" icon="fa-tasks">
-                    </button>
-                    <button name="%(nantian_erp_demission_by_hr)d" type="action" string="人员离职" class="oe_stat_button" icon="fa-tasks">
-                    </button>
+                    <!--<button name="%(nantian_erp_pers_transfer_by_hr)d" type="action" string="人员调整" class="oe_stat_button" icon="fa-tasks">-->
+                    <!--</button>-->
+                    <!--<button name="%(nantian_erp_demission_by_hr)d" type="action" string="人员离职" class="oe_stat_button" icon="fa-tasks">-->
+                    <!--</button>-->
                 </xpath>
                 <xpath expr="//page[@string='HR Settings']" position="replace">
                   <page string="HR Settings" >
