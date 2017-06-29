@@ -675,24 +675,7 @@
                 </form>
             </field>
         </record>
-        <record id="nantian_erp_pers_transfer_by_hr" model="ir.actions.act_window">
-            <field name="name">待调整人员</field>
-            <field name="res_model">nantian_erp.pers_transfer</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{"active_id":active_id}</field>
-            <field name="view_id" ref="nantian_erp_pers_transfer_hr_form"/>
-        </record>
-        <record id="nantian_erp_demission_by_hr" model="ir.actions.act_window">
-            <field name="name">人员离职</field>
-            <field name="res_model">nantian_erp.demission</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{"active_id":active_id}</field>
-            <field name="view_id" ref="nantian_erp_demission_hr_form"/>
-        </record>
+
 
         <menuitem id="nantian_erp_weekly_reports_menu" name="周报" sequence="4" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
         <menuitem id="nantian_erp_weekly_plan_menu" parent="nantian_erp_weekly_reports_menu" name="周报" sequence="1" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>

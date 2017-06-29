@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="nantian_erp_pers_transfer_by_hr" model="ir.actions.act_window">
+            <field name="name">待调整人员</field>
+            <field name="res_model">nantian_erp.pers_transfer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{"active_id":active_id}</field>
+            <field name="view_id" ref="nantian_erp_pers_transfer_hr_form"/>
+        </record>
+        <record id="nantian_erp_demission_by_hr" model="ir.actions.act_window">
+            <field name="name">人员离职</field>
+            <field name="res_model">nantian_erp.demission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{"active_id":active_id}</field>
+            <field name="view_id" ref="nantian_erp_demission_hr_form"/>
+        </record>
          <record model="ir.ui.view" id="nantian_erp_pers_transfer_hr_form">
             <field name="name">pers_transfer.form</field>
             <field name="model">nantian_erp.pers_transfer</field>
@@ -117,10 +135,10 @@
                     <button name="%(nantian_erp_start_adjusting)d" type="action" class="oe_stat_button" icon="fa-clock-o">
                         <field name="dis_states" string="人员调整" widget="statinfo"/>
                     </button>
-                    <!--<button name="%(nantian_erp_pers_transfer_by_hr)d" type="action" string="人员调整" class="oe_stat_button" icon="fa-tasks">-->
-                    <!--</button>-->
-                    <!--<button name="%(nantian_erp_demission_by_hr)d" type="action" string="人员离职" class="oe_stat_button" icon="fa-tasks">-->
-                    <!--</button>-->
+                    <button name="%(nantian_erp_pers_transfer_by_hr)d" type="action" string="人员调整" class="oe_stat_button" icon="fa-tasks">
+                    </button>
+                    <button name="%(nantian_erp_demission_by_hr)d" type="action" string="人员离职" class="oe_stat_button" icon="fa-tasks">
+                    </button>
                 </xpath>
                 <xpath expr="//page[@string='HR Settings']" position="replace">
                   <page string="HR Settings" >
