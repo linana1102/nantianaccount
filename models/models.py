@@ -1114,7 +1114,7 @@ class jobs(models.Model):
             else:
                 raise exceptions.ValidationError("人员数量不能小于1,时间数量不能为0")
             if record.rate:
-                record.rated_moneys = record.price * record.amount * record.unit_amount * string.atof(record.rate)
+                record.rated_moneys = record.price * record.amount * record.unit_amount / (string.atof(record.rate) + 1) * string.atof(record.rate)
     #修改作为外键时的显示
     @api.multi
     @api.depends('name', 'instruction')
