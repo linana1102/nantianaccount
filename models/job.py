@@ -449,33 +449,54 @@ class interview(models.Model):
         resume_model = self.pool.get('nantian_erp.resume')
         resume = resume_model.browse(cr,uid,vals['resume_id'],context=None)
         recruitment_model = self.pool.get('nantian_erp.recruitment')
-        recruitment = recruitment_model.browse(cr,uid,vals['recruitment_id'],context=None)
+        # recruitment = recruitment_model.browse(cr,uid,vals['recruitment_id'],context=None)
+        groups_model = self.pool.get('res.groups')
+        customer_group_ids = groups_model.search(cr, uid, [('name', '=', u'行业负责人')], limit=1, context=context)
+        customer_manager_group = groups_model.browse(cr, uid, customer_group_ids, context=None)
+
         if resume.state == u'简历库中':
-            print vals['resume_id']
-            print vals['recruitment_id']
-            print recruitment.user_id.id
+            # print vals['resume_id']
+            # print vals['recruitment_id']
+            # print recruitment.user_id.id
             resume.state = u'面试中'
             resume.interviewer = vals['next_user']
-            self.create(cr,uid,{'resume_id':vals['resume_id'],'recruitment_id':vals['recruitment_id'],'interviewer':vals['next_user']})
             vals['date'] = fields.Date.today()
-            print resume.interviewer.name
-            print vals['customer']
-            if resume.interviewer.name == vals['customer']:
-                print 'aaaaaaaaaaaaaa'
+            # print resume.interviewer.name
+            # print vals['customer']
+            if vals.has_key('recruitment_id'):
+                self.create(cr, uid, {'resume_id': vals['resume_id'], 'recruitment_id': vals['recruitment_id'],
+                                      'interviewer': vals['next_user']})
+
+                if resume.interviewer.name == vals['customer']:
+                    recruitment = recruitment_model.browse(cr, uid, vals['recruitment_id'], context=None)
+                    print 'aaaaaaaaaaaaaa'
+                    offer_model = self.pool.get('nantian_erp.offer_information')
+                    offer_model.create(cr, uid, {'resume_id': vals['resume_id'],
+                                                 'name': resume.name,
+                                                 'phone': resume.phone,
+                                                 'email': resume.email,
+                                                 'gender': resume.gender,
+                                                 'recruitment_id': vals['recruitment_id'],
+                                                 'entry_recruitment_id': vals['recruitment_id'],
+                                                 'job_name': recruitment.job_id.name + '(' + recruitment.job_id.categroy_id.name + ')',
+                                                 'job_level': recruitment.job_level, 'user_id': vals['next_user'],
+                                                 'first_department_id': recruitment.department_id.parent_id.id,
+                                                 'second_department_id': recruitment.department_id.id,
+                                                 'working_team_id': recruitment.working_team_id.id,
+                                                 'channel': recruitment.channel, 'reason': recruitment.reason},
+                                       context=context)
+            elif resume.interviewer in customer_manager_group.users:
+                self.create(cr, uid, {'resume_id': vals['resume_id'],
+                                      'interviewer': vals['next_user']})
+
                 offer_model = self.pool.get('nantian_erp.offer_information')
                 offer_model.create(cr, uid, {'resume_id': vals['resume_id'],
                                              'name': resume.name,
                                              'phone': resume.phone,
                                              'email': resume.email,
                                              'gender': resume.gender,
-                                             'recruitment_id': vals['recruitment_id'],
-                                             'entry_recruitment_id': vals['recruitment_id'],
-                                             'job_name': recruitment.job_id.name + '(' + recruitment.job_id.categroy_id.name + ')',
-                                             'job_level': recruitment.job_level, 'user_id': vals['next_user'],
-                                             'first_department_id': recruitment.department_id.parent_id.id,
-                                             'second_department_id': recruitment.department_id.id,
-                                             'working_team_id': recruitment.working_team_id.id,
-                                             'channel': recruitment.channel, 'reason': recruitment.reason},
+                                             'user_id': vals['next_user'],
+                                            },
                                    context=context)
         return super(interview,self).create(cr,uid,vals,context=context)
 

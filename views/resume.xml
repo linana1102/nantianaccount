@@ -388,7 +388,7 @@
                                 <field name="channel" string="渠道"/>
                                 <field name="reason" string="招聘理由"/>
                                 <field name="first_department_id" string="一级部门" domain="[('level','=','2')]"/>
-                                <field name="second_department_id" string="二级部门" domain="[('level','=','3')]"/>
+                                <field name="second_department_id" string="二级部门" domain="[('parent_id','=',first_department_id)]"/>
                                 <field name="working_team_id" string="工作组"/>
                                  <label for="contract_time"/>
                                 <div>
@@ -442,7 +442,7 @@
                                 <field name="channel" string="渠道"/>
                                 <field name="reason" string="招聘理由"/>
                                 <field name="first_department_id" string="一级部门" domain="[('level','=','2')]"/>
-                                <field name="second_department_id" string="二级部门" domain="[('level','=','3')]"/>
+                                <field name="second_department_id" string="二级部门" domain="[('parent_id','=',first_department_id)]"/>
                                 <field name="working_team_id" string="工作组"/>
                                  <label for="contract_time"/>
                                 <div>
@@ -536,7 +536,7 @@
                                 <field name="channel" string="渠道"/>
                                 <field name="reason" string="招聘理由"/>
                                 <field name="first_department_id" string="一级部门"/>
-                                <field name="second_department_id" string="二级部门"/>
+                                <field name="second_department_id" string="二级部门" domain="[('parent_id','=',first_department_id)]"/>
                                 <field name="working_team_id" string="工作组"/>
                                 <field name="emp_id" readonly="1"></field>
                                 <field name="entry_id" readonly="1"/>
@@ -578,8 +578,6 @@
             <field name="view_id" ref="nantian_erp_set_work_email_form" />
             <field name="act_window_id" ref="nantian_erp_wait_set_email_action" />
         </record>
-
-
 
         <menuitem id="nantian_erp_pending_offer_menu" parent="nantian_erp_resume_root_menu" name="待审批的offer信息" action="nantian_erp_offer_pending_information_action" sequence="5" groups="nantian_erp.group_hr_manager"/>
         <menuitem id="nantian_erp_pended_offer_menu" parent="nantian_erp_resume_root_menu" name="待入职人员" action="nantian_erp_offer_pended_information_action" sequence="7" />
