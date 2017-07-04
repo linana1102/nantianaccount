@@ -1170,7 +1170,7 @@ class detail(models.Model):
             else:
                 raise exceptions.ValidationError("数量不能小于1")
             if record.rate:
-                record.rated_moneys = record.price * record.amount*string.atof(record.rate)
+                record.rated_moneys = record.price * record.amount / (string.atof(record.rate) + 1) * string.atof(record.rate)
     #修改作为外键时的显示
     @api.multi
     @api.depends('name', 'instruction')
