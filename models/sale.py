@@ -22,7 +22,7 @@ class weekly_reports(models.Model):
     customer_adjust_ids = fields.One2many('nantian_erp.customer_adjust','weekly_reports_id',string='客户动态或人事变动')
     project_progress_ids = fields.One2many('nantian_erp.project_progress','weekly_reports_id',string='项目进度')
     recruit_gap_ids = fields.One2many('nantian_erp.recruit_gap','weekly_reports_id',string='现有招聘缺口')
-    project_stage_count_ids = fields.One2many('nantian_erp.project_stage_count','weekly_reports_id',string='项目阶段数目统计')
+    project_stage_count_ids = fields.One2many('nantian_erp.project_stage_count','weekly_reports_id',string='项目阶段数目统计',required=True)
 
 
 
@@ -63,6 +63,14 @@ class weekly_reports(models.Model):
                                     objects = self.env['nantian_erp.project_gathering'].create(
                                         {"contract_id": collection.contract_id.id, "gather_reminder": collection.name,
                                          "weekly_reports_id": record.id})
+
+    def create(self, cr, uid, vals, context=None):
+        if vals['project_stage_count_ids']:
+            return super(weekly_reports, self).create(cr, uid, vals, context=context)
+        else:
+            raise exceptions.ValidationError('您没有填写项目阶段数目统计')
+            return None
+
 
 class pres_sale(models.Model):
     _name = 'nantian_erp.pres_sale'
