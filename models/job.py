@@ -110,7 +110,7 @@ class recruitment(models.Model):
                         # 'subject': 'Re: %s+%s+%s' %(str(data[0]).decode('utf-8').encode('gbk'),str(data[1]).decode('utf-8').encode('gbk'),str(data[2]).decode('utf-8').encode('gbk')),
                         'subject':'岗位申请',
                         # 'email_to': to_list,
-                        'email_to':to_list,
+                        'email_to':'linana@nantian.com.cn',
                         'auto_delete': True,
                         'attachment_ids':[[6,0,attach_ids]] or ''
                     }, context=context)
@@ -160,13 +160,12 @@ class recruitment(models.Model):
         employee = self.env['hr.employee'].search([('user_id','=',self.env.uid)],limit=1)
         department = employee.department_id
         recruitment_group = self.env['res.groups'].search([('name', '=', u'招聘组')],limit=1)
-        if self.env.user in customer_manager_group.users:
-
+        if self.env.user in customer_manager_group.users and self.env.user not in nagmaer_group.users:
             if department.level == 2:
                 examine_user = department.manager_id.user_id
             else:
                 examine_user = department.parent_id.manager_id.user_id
-            self.send_email(self.examine_user)
+            self.send_email(examine_user)
             self.examine_user = examine_user
         elif self.env.user in nagmaer_group.users:
             self.export_recruitment()
