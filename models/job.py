@@ -38,22 +38,22 @@ class recruitment(models.Model):
     def _needaction_domain_get(self):
         return [('examine_user.id', '=', self.env.uid)]
 
-    user_id = fields.Many2one('res.users',default=lambda self: self.env.user,string='申请人')
-    department_id = fields.Many2one('hr.department',string='部门',default=lambda self: self.compute_department(),store=True)
-    working_team_id = fields.Many2one('nantian_erp.working_team',string='工作组',)
-    working_team_id1 = fields.Many2one('nantian_erp.working_team',string='工作组',)
-    position_categroy_1 = fields.Many2one('nantian_erp.categroy',string='岗位类别')
-    job_id =fields.Many2one('nantian_erp.job',string='职位',)
+    user_id = fields.Many2one('res.users',default=lambda self: self.env.user,string='申请人',required='True')
+    department_id = fields.Many2one('hr.department',string='部门',default=lambda self: self.compute_department(),store=True,required='True')
+    working_team_id = fields.Many2one('nantian_erp.working_team',string='工作组')
+    working_team_id1 = fields.Many2one('nantian_erp.working_team',string='工作组')
+    position_categroy_1 = fields.Many2one('nantian_erp.categroy',string='岗位类别',required='True')
+    job_id =fields.Many2one('nantian_erp.job',string='职位',required='True')
     job_name = fields.Char(related='job_id.name')
     position_categroy_2 = fields.Many2one('nantian_erp.job_categroy')
-    job_level = fields.Selection([(u'1',u'1'),(u'2',u'2'),(u'3',u'3'),(u'4',u'4'),(u'5',u'5')],string='职级')
-    duties = fields.Text(string= '职责')
-    requirements = fields.Text(string='要求')
-    salary = fields.Char(string='薪资')
+    job_level = fields.Selection([(u'1',u'1'),(u'2',u'2'),(u'3',u'3'),(u'4',u'4'),(u'5',u'5')],string='职级',required='True')
+    duties = fields.Text(string= '职责',required='True')
+    requirements = fields.Text(string='要求',required='True')
+    salary = fields.Char(string='薪资',required='True')
     current_employee_num = fields.Integer(string='现有人数')
-    need_people_num = fields.Integer(string='招聘人数')
-    reason = fields.Selection([('1','原有人员离职后增补人员'),('2','业务拓展后新增岗位'),('3','其他')],string='招聘理由')
-    channel = fields.Selection([('1','招聘网站发布职位'),('2','伯乐奖职位'),('3','其他渠道')],string='招聘渠道')
+    need_people_num = fields.Integer(string='招聘人数',required='True')
+    reason = fields.Selection([('1','原有人员离职后增补人员'),('2','业务拓展后新增岗位'),('3','其他')],string='招聘理由',required='True')
+    channel = fields.Selection([('1','招聘网站发布职位'),('2','伯乐奖职位'),('3','其他渠道')],string='招聘渠道',required='True')
     cycle = fields.Char(string='招聘周期')
     state = fields.Selection([(u'examineing', u'审批中'), (u'released',u'已发布'),(u'refused',u'被退回') ,(u'backed',u'被追回'),(u'archived',u'已归档')],default='examineing')
     examine_user = fields.Many2one('res.users',string='审批人',)
@@ -183,6 +183,7 @@ class recruitment(models.Model):
     def disagree(self):
         self.env['nantian_erp.job_examine'].create({'user_id': self.env.user.id,'result':u'不同意','recruitment_id':self.id,'date':fields.Date.today()})
         self.state = 'refused'
+        self.send_email(self.user_id)
         self.examine_user = self.user_id
 
     @api.multi
@@ -527,7 +528,7 @@ class offer_information(models.Model):
     working_team_id = fields.Many2one('nantian_erp.working_team',string='三级工作组')
     contract_time = fields.Integer(string='合同期限')
     test_time = fields.Integer(string='试用期限')
-    state = fields.Selection([(u'审批中',u'审批中'),(u'已审批',u'已审批'),(u'未通过',u'未通过'),(u'已入职',u'已入职'),(u'未设置邮箱',u'未设置邮箱'),(u'完成',u'完成'),(u'未入职',u'未入职')],string='状态',default=u'审批中')
+    state = fields.Selection([(u'审批中',u'审批中'),(u'待入职',u'已审批'),(u'已入职',u'已入职'),(u'未设置邮箱',u'未设置邮箱'),(u'完成',u'完成'),(u'未入职',u'未入职'),(u'未通过',u'未通过')],string='状态',default=u'审批中')
     user_id = fields.Many2one('res.users',string='offer填写人')
     examiner_user = fields.Many2one('res.users',string='offer审批人')
     offer_examine_id = fields.One2many('nantian_erp.offer_examine','offer_id')

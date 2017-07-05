@@ -254,7 +254,7 @@
                      <header>
                          <button name="action_to_confirm" type="object" states='refused,backed' string="提交"  class="oe_highlight" />
                          <button name="back" type="object" states='examineing' string="追回"  class="oe_highlight" />
-                         <button name="archive" type="object" states='examineing,backed' string="归档"  class="oe_highlight" />
+                         <button name="archive" type="object" states='examineing,backed，refused' string="归档"  class="oe_highlight" />
                          <field name="state" widget="statusbar"/>
                     </header>
                    <sheet>
