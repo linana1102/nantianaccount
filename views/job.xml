@@ -501,8 +501,22 @@
             <field name="view_mode">tree,form</field>
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
          </record>
-        <menuitem id="nantian_erp_job_categroy_menu" parent="nantian_recruitment_2_level_menu"  name="岗位级别" action="nantian_erp_job_categroy_action" sequence="3"/>
-
-
+        <record id="nantian_erp_job_action" model="ir.actions.act_window">
+            <field name="name">岗位</field>
+            <field name="res_model">nantian_erp.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+         </record>
+        <record id="nantian_erp_job_type_action" model="ir.actions.act_window">
+            <field name="name">岗位类别</field>
+            <field name="res_model">nantian_erp.categroy</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+         </record>
+        <menuitem id="nantian_erp_job_categroy_menu" parent="nantian_recruitment_2_level_menu"  name="岗位级别" action="nantian_erp_job_categroy_action" sequence="3" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
+        <menuitem id="nantian_erp_job_menu" parent="nantian_recruitment_2_level_menu"  name="岗位" action="nantian_erp_job_action" sequence="3" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
+        <menuitem id="nantian_erp_job_type_menu" parent="nantian_recruitment_2_level_menu"  name="岗位类别" action="nantian_erp_job_type_action" sequence="3" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
     </data>
 </openerp>

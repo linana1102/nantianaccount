@@ -109,8 +109,8 @@ class recruitment(models.Model):
                             '<p>招聘申请需要您处理,您可登录：<a href="http://123.56.147.94:8000">http://123.56.147.94:8000</a></p></div>',
                         # 'subject': 'Re: %s+%s+%s' %(str(data[0]).decode('utf-8').encode('gbk'),str(data[1]).decode('utf-8').encode('gbk'),str(data[2]).decode('utf-8').encode('gbk')),
                         'subject':'岗位申请',
-                        # 'email_to': to_list,
-                        'email_to':'linana@nantian.com.cn',
+                        'email_to': to_list,
+                        # 'email_to':'linana@nantian.com.cn',
                         'auto_delete': True,
                         'attachment_ids':[[6,0,attach_ids]] or ''
                     }, context=context)
