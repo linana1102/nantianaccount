@@ -528,7 +528,7 @@ class offer_information(models.Model):
     working_team_id = fields.Many2one('nantian_erp.working_team',string='三级工作组')
     contract_time = fields.Integer(string='合同期限')
     test_time = fields.Integer(string='试用期限')
-    state = fields.Selection([(u'审批中',u'审批中'),(u'待入职',u'已审批'),(u'已入职',u'已入职'),(u'未设置邮箱',u'未设置邮箱'),(u'完成',u'完成'),(u'未入职',u'未入职'),(u'未通过',u'未通过')],string='状态',default=u'审批中')
+    state = fields.Selection([(u'审批中',u'审批中'),(u'已审批',u'已审批'),(u'已入职',u'已入职'),(u'未设置邮箱',u'未设置邮箱'),(u'完成',u'完成'),(u'未入职',u'未入职'),(u'未通过',u'未通过')],string='状态',default=u'审批中')
     user_id = fields.Many2one('res.users',string='offer填写人')
     examiner_user = fields.Many2one('res.users',string='offer审批人')
     offer_examine_id = fields.One2many('nantian_erp.offer_examine','offer_id')
