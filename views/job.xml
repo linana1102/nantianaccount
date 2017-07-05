@@ -250,11 +250,11 @@
             <field name="name">nantian_recruitment_other_readonly_form</field>
             <field name="model">nantian_erp.recruitment</field>
             <field name="arch" type="xml" >
-                <form string="recruitment" edit="false">
+                <form string="recruitment">
                      <header>
                          <button name="action_to_confirm" type="object" states='refused,backed' string="提交"  class="oe_highlight" />
                          <button name="back" type="object" states='examineing' string="追回"  class="oe_highlight" />
-                         <button name="archive" type="object" states='examineing,backed，refused' string="归档"  class="oe_highlight" />
+                         <button name="archive" type="object" states='examineing,backed,refused' string="归档"  class="oe_highlight" />
                          <field name="state" widget="statusbar"/>
                     </header>
                    <sheet>
