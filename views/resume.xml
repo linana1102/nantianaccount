@@ -141,11 +141,10 @@
             <field name="arch" type="xml">
                 <form string="reusme" create="false" edit="false">
                     <header>
-                        <button name="back" type="object" states='面试中' string="追回"  class="oe_highlight" attrs="{'invisible':[('interviewer','=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
-                        <button name="agree" type="object" states='面试中' string="通过"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
-                         <button name="disagree" type="object" states='面试中' string="淘汰"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
-                         <button name="consider" type="object" states='面试中' string="暂存"  class="oe_highlight" attrs="{'invisible':[('interviewer','!=','uid')]}" groups="nantian_erp.group_hr_recruitment"/>
-                        <field name="interviewer" invisible="True"></field>
+                        <button name="back" type="object" states='面试中' string="追回"  class="oe_highlight"  groups="nantian_erp.group_hr_recruitment"/>
+                        <button name="agree" type="object" states='面试中' string="通过"  class="oe_highlight"  groups="nantian_erp.group_hr_recruitment"/>
+                         <button name="disagree" type="object" states='面试中' string="淘汰"  class="oe_highlight"  groups="nantian_erp.group_hr_recruitment"/>
+                         <button name="consider" type="object" states='面试中' string="暂存"  class="oe_highlight"  groups="nantian_erp.group_hr_recruitment"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
