@@ -494,6 +494,18 @@
             <field name="domain">[('examiner_user','=',uid)]</field>
             <field name="view_id" ref="nantian_erp_offer_information_tree" />
         </record>
+        <record id="nantian_erp_offer_pending_information_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+             <field name="sequence" eval="1"/>
+            <field name="view_id" ref="nantian_erp_offer_information_tree" />
+            <field name="act_window_id" ref="nantian_erp_offer_pending_information_action" />
+        </record>
+        <record id="nantian_erp_offer_pending_information_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="nantian_erp_pended_offer_information_form" />
+            <field name="act_window_id" ref="nantian_erp_offer_pending_information_action" />
+        </record>
         <record id="nantian_erp_offer_pended_information_action" model="ir.actions.act_window">
             <field name="name">已审批的offer信息</field>
             <field name="res_model">nantian_erp.offer_information</field>
