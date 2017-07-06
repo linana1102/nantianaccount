@@ -411,7 +411,7 @@
                                 <!--<field name="state"/>-->
                             </group>
                         </group>
-
+                        <field name="interview_ids" string="面试记录"></field>
                     </sheet>
                 </form>
             </field>
@@ -464,7 +464,9 @@
                                 </div>
                                 <!--<field name="state"/>-->
                             </group>
+
                         </group>
+                        <field name="interview_ids" string="面试记录"></field>
                     </sheet>
                 </form>
             </field>

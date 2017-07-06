@@ -628,6 +628,8 @@ class offer_information(models.Model):
     entry_id = fields.Many2one('nantian_erp.entry',string='入职办理')
     work_email = fields.Char(string= '公司邮箱')
     user = fields.Many2one('res.users',)
+    interview_ids = fields.One2many(related='resume_id.interview_ids')
+
 
     # 定义发邮件函数
     def offer_information_email(self, cr, uid, users, attach_ids=[], context=None):
@@ -759,6 +761,7 @@ class offer_information(models.Model):
             dict_act_window['res_id'] = emp_id
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
+
     # 发offer不入职
     @api.multi
     def create_entry(self):
