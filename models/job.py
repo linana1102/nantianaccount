@@ -385,7 +385,7 @@ class resume(models.Model):
             # 招聘组
             recruit_group = self.env['res.groups'].search([('name','=',u'招聘组')],limit=1)
             # 当前面试官是行业负责人但不是总经理
-            if self.env.user in customer_manager_group.users and self.env.user not in manager_group.users:
+            if (self.env.user in customer_manager_group.users and self.env.user not in manager_group.users) or (not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].working_team_id.partner_id):
                 # 看是否填写offer信息
                 if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review or not self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)])[-1].contract_time:
                     raise exceptions.ValidationError("请填面试评价和offer信息 ")
@@ -558,8 +558,8 @@ class interview(models.Model):
                 #生成下步面试记录
                 self.create(cr, uid, {'resume_id': vals['resume_id'], 'recruitment_id': vals['recruitment_id'],
                                       'interviewer': vals['next_user']})
-                # 下步处理人是否是行业负责人，如果是生成offer信息
-                if resume.interviewer.name == vals['customer']:
+                # 下步处理人是否是行业负责人，如果是生成offer信息 或者对应的招聘需求没有行业
+                if resume.interviewer.name == vals['customer'] or not self.recruitment_id.partner_id:
                     recruitment = recruitment_model.browse(cr, uid, vals['recruitment_id'], context=None)
                     offer_model = self.pool.get('nantian_erp.offer_information')
                     offer_model.create(cr, uid, {'resume_id': vals['resume_id'],
