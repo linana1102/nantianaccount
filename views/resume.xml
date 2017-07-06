@@ -421,9 +421,13 @@
             <field name="model">nantian_erp.offer_information</field>
             <field name="arch" type="xml">
                 <form string="offer" create="false" edit="false">
+
                     <header>
+                         <button name="agree" type="object" states='审批中' string="通过"  class="oe_highlight" groups="nantian_erp.group_hr_manager"/>
+                         <button name="disagree" type="object" states='审批中' string="淘汰"  class="oe_highlight" groups="nantian_erp.group_hr_manager"/>
                          <field name="state" widget="statusbar"/>
                     </header>
+
                     <sheet>
                          <div class="oe_title">
                                 <label for="resume_id" class="oe_edit_only"/>
