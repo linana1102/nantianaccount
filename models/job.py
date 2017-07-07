@@ -162,7 +162,8 @@ class recruitment(models.Model):
             if department.level == 2 and self.env.user != department.manager_id.user_id:
                 user = department.manager_id.user_id
             else:
-                user = department.parent_id.manager_id.user_id
+                user = self.env['res.users'].search([('employee_ids','like',department.parent_id.manager_id.id)],limit=1)
+                # user = department.parent_id.manager_id.user_id
         elif self.env.user in recruit_group.users:
             user = self.working_team_id.partner_id.customer_manager
         else:
@@ -393,9 +394,12 @@ class resume(models.Model):
                     # 修改状态及当前审批人
                     self.state = u'offer审批'
                     if department.level == 2:
+
                         interviewer = department.manager_id.user_id
                     else:
-                        interviewer = department.parent_id.manager_id.user_id
+                        interviewer = self.env['res.users'].search([('employee_ids', 'ilike', department.parent_id.manager_id.id)],limit=1)
+                        # print department.parent_id.manager_id
+                        # interviewer = department.parent_id.manager_id.user_id
                     self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)]).write({'examiner_user':interviewer.id})
                     self.send_email(interviewer)
                     self.interviewer = None
