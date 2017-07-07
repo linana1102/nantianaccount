@@ -125,7 +125,7 @@ class hr_employee(models.Model):
     resume_id = fields.Many2one('nantian_erp.resume',string='简历')
     position_id = fields.Many2one('nantian_erp.job',string= '职位')
     education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
-    leader = fields.Many2one('res.users',compute='compute_leader')
+    leader = fields.Many2one('hr.employee',compute='compute_leader')
     demission_ids = fields.One2many('nantian_erp.demission','employee_id', ondelete='set null', string="离职记录之一",track_visibility='onchange')
     pers_transfer_ids = fields.One2many('nantian_erp.pers_transfer','employee_id', ondelete='set null', string="调动记录之一",track_visibility='onchange')
 
@@ -549,13 +549,15 @@ class hr_employee(models.Model):
         for record in self:
             if record.user_id not in customer_manager_group.users:
                 if record.customer_id:
-                    record.leader = record.customer_id.customer_manager
-                elif record.user_id not in work_team_managers and record.working_team_id:
-                    record.leader = record.working_team_id.user_id
+                    if record.customer_id.customer_manager.employee_ids:
+                        record.leader = record.customer_id.customer_manager.employee_ids[0]
+                elif (record.user_id not in work_team_managers) and record.working_team_id:
+                    if record.working_team_id.user_id and record.working_team_id.user_id.employee_ids:
+                        record.leader = record.working_team_id.user_id.employee_ids[0]
                 else:
-                    record.leader = record.department_id.parent_id.manager_id.user_id
+                    record.leader = record.department_id.parent_id.manager_id
             else:
-                record.leader = record.department_id.manager_id.user_id
+                record.leader = record.department_id.manager_id
 
 
 #证书

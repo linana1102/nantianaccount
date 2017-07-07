@@ -285,7 +285,7 @@
     <record id="work_user_read_rule" model="ir.rule">
         <field name="name">工作组项目员工访问控制</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
-        <field name="domain_force">[('employee_ids','like',user.employee_ids.id)]</field>
+        <!--<field name="domain_force">[('employee_ids','like',user.employee_ids.id)]</field>-->
         <field name="groups" eval="[(4,ref('nantian_erp.group_work_team_user'))]"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_read" eval="1"/>
