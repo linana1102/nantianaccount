@@ -211,7 +211,7 @@
      <record id="hr_employee_data_center_user_read_rule" model="ir.rule">
         <field name="name">employee数据中心人力员工_读</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">['&amp;',('department_id','in',[x.department_id.id for x in user.employee_ids]),'|',('customer_id','=',None),'&amp;',('customer_id','in',[x.customer_id.id for x in user.employee_ids]),'&amp;',('customer_id','!=',None),'|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')]</field>
+        <field name="domain_force">['|',('department_id','in',[x.department_id.id for x in user.employee_ids]),'&amp;',('customer_id','in',[x.customer_id.id for x in user.employee_ids]),'&amp;',('customer_id','!=',None),'|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.data_center_group_hr_user'))]"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_read" eval="1"/>
@@ -285,7 +285,7 @@
     <record id="work_user_read_rule" model="ir.rule">
         <field name="name">工作组项目员工访问控制</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
-        <field name="domain_force">[('employee_ids','like',user.employee_ids.id)]</field>
+        <!--<field name="domain_force">[('employee_ids','like',user.employee_ids.id)]</field>-->
         <field name="groups" eval="[(4,ref('nantian_erp.group_work_team_user'))]"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_read" eval="1"/>
@@ -366,16 +366,16 @@
         <field name="perm_unlink" eval="1"/>
     </record>
 
-    <record id="resume_header_rule" model="ir.rule">
-        <field name="name">行业负责人或工作组经理对简历的权限控制</field>
-        <field name="model_id" ref="nantian_erp.model_nantian_erp_resume"/>
-        <field name="domain_force">[('interviewer','=',user.id)]</field>
-        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header')),(4,ref('nantian_erp.group_nantian_manager'))]"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_read" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
+    <!--<record id="resume_header_rule" model="ir.rule">-->
+        <!--<field name="name">行业负责人或工作组经理对简历的权限控制</field>-->
+        <!--<field name="model_id" ref="nantian_erp.model_nantian_erp_resume"/>-->
+        <!--<field name="domain_force">[('interviewer','=',user.id)]</field>-->
+        <!--<field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header')),(4,ref('nantian_erp.group_nantian_manager'))]"/>-->
+        <!--<field name="perm_write" eval="1"/>-->
+        <!--<field name="perm_read" eval="0"/>-->
+        <!--<field name="perm_create" eval="0"/>-->
+        <!--<field name="perm_unlink" eval="0"/>-->
+    <!--</record>-->
     <record id="recruitment_header_rule" model="ir.rule">
         <field name="name">行业负责人或工作组经理对招聘需求的权限控制</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_recruitment"/>

@@ -66,8 +66,8 @@
                             <group>
                                 <field name="department_id" string="部门" class="oe_inline" />
                                 <field name="working_team_id" string="工作组" class="oe_inline" domain="['|',('partner_id.customer_manager.id','=',uid),('user_id.id','=',uid)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' />
-                                <field name="position_categroy_1" string="岗位类别" class="oe_inline" />
-                                <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' />
+                                <field name="position_categroy_1" string="岗位类别" class="oe_inline" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                                <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
                                 <field name="job_name" invisible="True" class="oe_inline" />
                                  <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' />
                                 <label for="job_level"/>
@@ -136,8 +136,8 @@
                                 <field name="department_id" string="部门" class="oe_inline"/>
                                 <field name="working_team_id1" string="工作组" class="oe_inline"  options='{"no_open":True,"no_create":1,"no_create_edit":1}' groups="nantian_erp.group_hr_recruitment"/>
                                 <field name="working_team_id" string="工作组" class="oe_inline" domain="['|',('partner_id.customer_manager.id','=',uid),('user_id.id','=',uid)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager"/>
-                                <field name="position_categroy_1" string="岗位类别" class="oe_inline" domain="[('name','!=','原系统')]"/>
-                                <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                <field name="position_categroy_1" string="岗位类别" class="oe_inline" domain="[('name','!=','原系统')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                                <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
                                 <field name="job_name" invisible="True" class="oe_inline"/>
                                 <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])]}"/>
                                 <label for="job_level"/>
@@ -197,8 +197,8 @@
                             <group>
                                 <field name="department_id" string="部门" class="oe_inline" attrs="{'readonly':['|',('state','=','backed'),('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
                                 <field name="working_team_id" string="工作组" class="oe_inline" domain="['|',('partner_id.customer_manager.id','=',uid),('user_id.id','=',uid)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
-                                <field name="position_categroy_1" string="岗位类别" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
-                                <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
+                                <field name="position_categroy_1" string="岗位类别" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                                <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}" required="True"/>
                                 <field name="job_name" invisible="True" class="oe_inline" attrs="{'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
                                  <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])],'readonly':[('user_id','!=','uid'),('examine_user','!=','uid')]}"/>
                                 <label for="job_level"/>
@@ -250,11 +250,11 @@
             <field name="name">nantian_recruitment_other_readonly_form</field>
             <field name="model">nantian_erp.recruitment</field>
             <field name="arch" type="xml" >
-                <form string="recruitment" edit="false">
+                <form string="recruitment">
                      <header>
                          <button name="action_to_confirm" type="object" states='refused,backed' string="提交"  class="oe_highlight" />
                          <button name="back" type="object" states='examineing' string="追回"  class="oe_highlight" />
-                         <button name="archive" type="object" states='examineing,backed' string="归档"  class="oe_highlight" />
+                         <button name="archive" type="object" states='examineing,backed,refused' string="归档"  class="oe_highlight" />
                          <field name="state" widget="statusbar"/>
                     </header>
                    <sheet>
@@ -267,11 +267,11 @@
                             <group>
                                 <field name="department_id" string="部门" class="oe_inline" attrs="{'editable':[('examine_user','=','uid')]}"/>
                                 <field name="working_team_id1" string="工作组" class="oe_inline"  options='{"no_open":True,"no_create":1,"no_create_edit":1}' groups="nantian_erp.group_hr_recruitment"/>
-                                <field name="working_team_id" string="工作组" class="oe_inline" domain="['|',('partner_id.customer_manager.id','=',uid),('user_id.id','=',uid)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'editable':[('examine_user','=','uid')]}"/>
-                                <field name="position_categroy_1" string="岗位类别" class="oe_inline" domain="[('name','!=','原系统')]" attrs="{'editable':[('examine_user','=','uid')]}"/>
-                                <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'editable':[('examine_user','=','uid')]}"/>
+                                <field name="working_team_id" string="工作组" class="oe_inline" domain="['|',('partner_id.customer_manager.id','=',uid),('user_id.id','=',uid)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'editable':[('examine_user','=','uid')]}" groups="nantian_erp.group_nantian_header,nantian_erp.group_hr_manager,nantian_erp.group_nantian_manager"/>
+                                <field name="position_categroy_1" string="岗位类别" class="oe_inline" domain="[('name','!=','原系统')]" attrs="{'editable':[('examine_user','=','uid')]}" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                                <field name="job_id" string="岗位名称" class="oe_inline" domain="[('categroy_id.id','=',position_categroy_1)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'editable':[('examine_user','=','uid')]}" required="True"/>
                                 <field name="job_name" invisible="True" class="oe_inline" attrs="{'editable':[('examine_user','=','uid')]}"/>
-                                <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['python工程师','助理','java','网络工程师'])]}" />
+                                <field name="position_categroy_2" string="岗位级别" class="oe_inline" domain="[('job_id.id','=',job_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' attrs="{'invisible':[('job_name','not in',['java工程师'])]}" />
                                 <label for="job_level" attrs="{'editable':[('examine_user','=','uid')]}"/>
                                 <div>
                                 <field name="job_level" string="职级" class="oe_inline"/><label string="级" class="oe_inline" attrs="{'editable':[('examine_user','=','uid')]}"/>
@@ -501,8 +501,22 @@
             <field name="view_mode">tree,form</field>
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
          </record>
-        <menuitem id="nantian_erp_job_categroy_menu" parent="nantian_recruitment_2_level_menu"  name="岗位级别" action="nantian_erp_job_categroy_action" sequence="3"/>
-
-
+        <record id="nantian_erp_job_action" model="ir.actions.act_window">
+            <field name="name">岗位</field>
+            <field name="res_model">nantian_erp.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+         </record>
+        <record id="nantian_erp_job_type_action" model="ir.actions.act_window">
+            <field name="name">岗位类别</field>
+            <field name="res_model">nantian_erp.categroy</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name ="domain">[('category','=','服务客户')]</field>-->
+         </record>
+        <menuitem id="nantian_erp_job_categroy_menu" parent="nantian_recruitment_2_level_menu"  name="岗位级别" action="nantian_erp_job_categroy_action" sequence="3" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
+        <menuitem id="nantian_erp_job_menu" parent="nantian_recruitment_2_level_menu"  name="岗位" action="nantian_erp_job_action" sequence="3" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
+        <menuitem id="nantian_erp_job_type_menu" parent="nantian_recruitment_2_level_menu"  name="岗位类别" action="nantian_erp_job_type_action" sequence="3" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
     </data>
 </openerp>

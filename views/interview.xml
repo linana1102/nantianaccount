@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="nantian_erp_interview_root_menu" parent="nantian_recruitment_2_level_menu" name="面试" sequence="80"/>
+        <menuitem id="nantian_erp_interview_root_menu" parent="nantian_recruitment_root_menu" name="面试" sequence="80"/>
         <record model="ir.ui.view" id="nantian_erp_interview_form">
             <field name="name">nantian_interview.form</field>
             <field name="model">nantian_erp.interview</field>
@@ -19,6 +19,27 @@
                             <field name="interviewer" required="True"/>
                             <field name="customer" invisible="True"></field>
                             <field name="next_user" domain="['|',('name','=',rec_user),('name','=',customer)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'></field>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_special_interview_form">
+            <field name="name">nantian_interview_special.form</field>
+            <field name="model">nantian_erp.interview</field>
+            <field name="arch" type="xml">
+                <form string="interview" >
+                    <group>
+                        <group>
+                            <field name="resume_id" domain="[('state','=','简历库中')]" required="True"/>
+
+                            <field name="review" required="True"/>
+                            <field name="rec_user" invisible="True"></field>
+                        </group>
+                        <group>
+                            <field name="result" required="True"/>
+                            <field name="customer" invisible="True"></field>
+                            <field name="next_user" domain="[('groups_id.name','like','行业负责人')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'></field>
                         </group>
                     </group>
                 </form>
@@ -58,7 +79,27 @@
             <field name="view_mode">tree,form</field>
             <!--<field name="view_id" ref="nantian_erp_interview_tree" />-->
         </record>
-        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="面试" action="nantian_erp_interview_action" sequence="2" groups="nantian_erp.group_hr_recruitment"/>
+        <record id="nantian_erp_interview_special_action" model="ir.actions.act_window">
+            <field name="name">特殊的面试</field>
+            <field name="res_model">nantian_erp.interview</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="view_id" ref="nantian_erp_interview_tree" />-->
+        </record>
+        <record id="nantian_erp_interview_special_action_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+             <field name="sequence" eval="1"/>
+            <field name="view_id" ref="nantian_erp_interview_tree" />
+            <field name="act_window_id" ref="nantian_erp_interview_special_action" />
+        </record>
+        <record id="nantian_erp_interview_special_action_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="nantian_erp_special_interview_form" />
+            <field name="act_window_id" ref="nantian_erp_interview_special_action" />
+        </record>
+        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="面试" action="nantian_erp_interview_action" sequence="1" groups="nantian_erp.group_hr_recruitment"/>
+        <menuitem id="nantian_erp_special_interview_menu" parent="nantian_erp_interview_root_menu"  name="无招聘需求的面试" action="nantian_erp_interview_special_action" sequence="2" groups="nantian_erp.group_hr_recruitment"/>
 
 
 
