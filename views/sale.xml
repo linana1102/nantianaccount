@@ -443,6 +443,8 @@
                             <field name="des_contract_name" string="合同名称"/>
                             <field name="des_contract_job" string="合同岗位"/>
                             <field name="dis_states" string="调整状态"/>
+                    <button name="over_pers_transfer" type="object" string="调整结束" class="oe_highlight">
+                    </button>
                 </tree>
             </field>
         </record>
@@ -524,6 +526,8 @@
                     <field name="user_id" string="创建者"/>
                     <field name="dealer" />
                     <field name="state" string="离职申请状态"/>
+                    <button name="confirm_demission_dealer" type="object" string="离职确认" class="oe_highlight">
+                    </button>
                 </tree>
             </field>
         </record>

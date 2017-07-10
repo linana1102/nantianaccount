@@ -28,8 +28,6 @@ class job_categroy(models.Model):
     job_id = fields.Many2one('nantian_erp.job',string='职位')
 
 class recruitment(models.Model):
-
-
     _name = 'nantian_erp.recruitment'
     _rec_name = 'job_id'
     _inherit = ['ir.needaction_mixin']
