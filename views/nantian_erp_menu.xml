@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem name="合同" id="nantian_contract_menu_5"   sequence="5" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_boss" />
+        <menuitem name="合同" id="nantian_contract_menu_5"   sequence="5" groups="nantian_erp.group_work_team_user,nantian_erp.group_nantian_boss,nantian_erp.group_hr_president_assistant" />
         <record id="nantian_erp_adjusting" model="ir.actions.act_window">
             <field name="name">待调整的人员</field>
             <field name="res_model">hr.employee</field>

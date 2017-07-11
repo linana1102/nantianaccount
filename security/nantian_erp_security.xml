@@ -39,6 +39,12 @@
         <field name="implied_ids" eval="[(4, ref('nantian_erp.group_hr_manager'))]"/>
         <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
     </record>
+    <record model="res.groups" id="nantian_erp.group_hr_president_assistant">
+        <field name="name">总裁—助理</field>
+        <field name="category_id" ref="base.module_category_nantianerp"/>
+        <field name="implied_ids" eval="[(4, ref('nantian_erp.group_hr_manager'))]"/>
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
 
     <record model="res.groups" id="nantian_erp.group_hr_recruitment">
         <field name="name">招聘组</field>
