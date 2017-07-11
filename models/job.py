@@ -105,7 +105,12 @@ class recruitment(models.Model):
                 self.send_email(cr, uid, recruit_group[0].users, context=None)
             # 是行业负责人但部门不是二级部门，审批人为上级部门领导
             else:
-                exam_user = department.parent_id.manager_id.user_id
+                user_model = self.pool.get('res.users')
+                user_ids = user_model.search(cr, uid, [('employee_ids', 'like', department.parent_id.manager_id.id)], limit=1, context=None)
+
+                exam_user = user_model.browse(cr, uid,user_ids, context=None)
+                print exam_user
+                # exam_user = department.parent_id.manager_id.user_id
         # 如果当前登录人（创建人）不是行业负责人是招聘负责人（比如王慧）,审批人为所选工作组的行业负责人
         elif user in recruit_group[0].users:
             exam_user = working_team.partner_id.customer_manager
