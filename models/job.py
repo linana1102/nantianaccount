@@ -32,8 +32,6 @@ class job_categroy(models.Model):
     name = fields.Char(string='类别')
     job_id = fields.Many2one('nantian_erp.job',string='职位')
 
-
-# 招聘需求表
 class recruitment(models.Model):
     _name = 'nantian_erp.recruitment'
     _rec_name = 'job_id'

@@ -118,7 +118,7 @@ class hr_employee(models.Model):
         (u'已离职', u"已离职"),
         (u'借调中', u"借调中"),
 
-    ], compute = "change_emp_dis_states",store = True,default=u'正常', string="调整状态",track_visibility='onchange')
+    ], default=u'正常', string="调整状态",track_visibility='onchange')
     adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids",track_visibility='onchange')
     adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True,track_visibility='onchange')
     work_experience_ids = fields.One2many('nantian_erp.work_experience','employee_id')
@@ -173,57 +173,6 @@ class hr_employee(models.Model):
                 record.department_second = record.department_id.name
             else:
                 pass
-
-
-    @api.depends('demission_ids.state','pers_transfer_ids.dis_states')
-    def change_emp_dis_states(self):
-        for record in self:
-            if record.demission_ids:
-                x = record.demission_ids[-1]
-                if x.state == "done":
-                    record.dis_states = u'已离职'
-                elif x.state == 'application':
-                    record.dis_states = u'申请离职'
-                else:
-                    pass
-            if record.pers_transfer_ids:
-                x = record.pers_transfer_ids[-1]
-                if x.dis_states == u'调整完成':
-                    record.dis_states = u'正常'
-                elif x.dis_states == u'待调整':
-                    record.dis_states = u'待调整'
-                elif x.dis_states == u'可调用':
-                    record.dis_states = u'可调用'
-                elif x.dis_states == u'借调中':
-                    record.dis_states = u'借调中'
-                else:
-                    pass
-
-
-    #安排的动作每小时都要执行检查离职人员，合同进行断开
-    @api.multi
-    def change_emp_keys(self):
-        records = self.env['hr.employee'].search([])
-        for x in records:
-            if x.states == u'离职' or x.dis_states == u'已离职':
-                x.nantian_erp_contract_id = None
-                #x.working_team_id = None
-                #x.contract_jobs_id = None
-                x.active = 0
-                x.user_id.active = 0
-                if x.demission_ids:
-                    x.leave_time = x.demission_ids[0].dimission_date
-            if x.pers_transfer_ids:
-                if x.pers_transfer_ids[-1].dis_states == u'调整完成':
-                    if x.pers_transfer_ids[-1].des_team and x.pers_transfer_ids[-1].des_team !=x.working_team_id:
-                        x.working_team_id = x.pers_transfer_ids[-1].des_team
-                    if x.pers_transfer_ids[-1].des_contract_job and x.pers_transfer_ids[-1].des_contract_job != x.contract_jobs_id:
-                        x.contract_jobs_id = x.pers_transfer_ids[-1].des_contract_job
-                    if x.pers_transfer_ids[-1].des_contract_name and x.pers_transfer_ids[-1].des_contract_name != x.nantian_erp_contract_id:
-                        x.nantian_erp_contract_id = x.pers_transfer_ids[-1].des_contract_name
-
-
-
 
     @api.depends('adjust_ids.states')
     def get_adjust_dst(self):
@@ -1419,7 +1368,13 @@ class contract(models.Model):
     @api.depends('employee_ids')
     def _count_employees(self):
         for record in self:
-            record.employee_count = len(record.employee_ids)
+            # 加个人员有效的过滤
+            liSt = []
+            for employee_id in record.employee_ids:
+                if employee_id.active:
+                    liSt.append(employee_id)
+            record.employee_count = len(liSt)
+
     #计算岗位现有人数
     @api.depends('jobs_ids.employee_count')
     def _count_employees_jobs(self):

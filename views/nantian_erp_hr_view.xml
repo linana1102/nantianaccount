@@ -15,6 +15,9 @@
                         <group >
                             <field name="employee_id" string="调动人" placeholder="仅限本行业下的人员"/>
                             <field name="dis_states" />
+                            <field name="res_contract_name" string="合同名称" attrs="{'invisible':True}"/>
+                            <field name="res_contract_job" string="合同岗位" attrs="{'invisible':True}"/>
+                            <field name="sour_team" string="原项目组" attrs="{'invisible':True}"/>
                          </group>
                         <group >
                             <field name="after_leader" string="调动后负责人"/>
@@ -24,7 +27,7 @@
                         </group>
                     </group>
                          <footer>
-                        <button name="subscribe" type="object"
+                        <button name="subscribe_new" type="object"
                                 string="保存" class="oe_highlight"/>
                         or
                         <button special="cancel" string="取消调整"/>
@@ -58,7 +61,6 @@
 
                         </group>
                     </group>
-
                           <footer>
                         <button name="subscribe" type="object"
                                 string="保存" class="oe_highlight"/>
@@ -83,7 +85,7 @@
             <field name="res_model">nantian_erp.demission</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="target">new</field>
+             <field name="target">new</field>
             <field name="context">{"active_id":active_id}</field>
             <field name="view_id" ref="nantian_erp_demission_hr_form"/>
         </record>
@@ -132,12 +134,12 @@
             <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager'),ref('nantian_erp.group_nantian_assistant_manager'),ref('nantian_erp.group_hr_bm_manager'),ref('nantian_erp.group_hr_assistant'),ref('nantian_erp.group_hr_manager_assistant'),ref('nantian_erp.group_nantian_header')])]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="%(nantian_erp_start_adjusting)d" type="action" class="oe_stat_button" icon="fa-clock-o">
+                    <button name="%(nantian_erp_start_adjusting)d" type="action" class="oe_stat_button" icon="fa-print">
                         <field name="dis_states" string="人员调整" widget="statinfo"/>
                     </button>
                     <button name="%(nantian_erp_pers_transfer_by_hr)d" type="action" string="人员调整" class="oe_stat_button" icon="fa-tasks">
                     </button>
-                    <button name="%(nantian_erp_demission_by_hr)d" type="action" string="人员离职" class="oe_stat_button" icon="fa-tasks">
+                    <button name="%(nantian_erp_demission_by_hr)d" type="action" string="人员离职" class="oe_stat_button"  icon="fa-user">
                     </button>
                 </xpath>
                 <xpath expr="//page[@string='HR Settings']" position="replace">

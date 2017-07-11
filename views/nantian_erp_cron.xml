@@ -125,15 +125,26 @@
             <field name="function" eval="'create_project_cost_month'"/>
             <field name="args" eval="'(False,)'" />
          </record>
-        <record model="ir.cron" id="nantian_erp_project_allkindsof_info_change">
-            <field name="name">每小时检查离职信息或者工作组，岗位，合同de更新</field>
+        <record model="ir.cron" id="nantian_erp_worktime_in_project_change">
+            <field name="name">每月初录入每个工作组成员的ID</field>
             <field name="interval_number">1</field>
-            <field name="interval_type">hours</field>
+            <field name="interval_type">months</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="True"/>
             <field name="active" eval="True"/>
-            <field name="model" eval="'hr.employee'"/>
-            <field name="function" eval="'change_emp_keys'"/>
+            <field name="model" eval="'nantian_erp.worktime_in_project'"/>
+            <field name="function" eval="'record_workteam_employees'"/>
+            <field name="args" eval="'(False,)'" />
+         </record>
+        <record model="ir.cron" id="nantian_erp_compute_work_team_cost_month">
+            <field name="name">每月末检测工作组人员变动，由此计算每个工作组的人员成本</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+            <field name="active" eval="True"/>
+            <field name="model" eval="'nantian_erp.project_cost_month'"/>
+            <field name="function" eval="'compute_workteam_cost_month'"/>
             <field name="args" eval="'(False,)'" />
          </record>
     </data>
