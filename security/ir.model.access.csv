@@ -19,6 +19,7 @@ nantian_erp_hr_bm_manager_all,nantian_erp_hr_bm_manager all,model_hr_employee,na
 nantian_erp_hr_assistant_all,nantian_erp_hr_assistant all,model_hr_employee,nantian_erp.group_hr_assistant,1,1,1,0
 nantian_erp_hr_user_all,nantian_erp_hr_user all,model_hr_employee,nantian_erp.group_hr_user,1,1,0,0
 nantian_erp_hr_manager_all,nantian_erp_hr_manager all,model_hr_employee,nantian_erp.group_hr_manager,1,1,0,0
+nantian_erp_hr_manager_all_as,nantian_erp_hr_manager all_as,model_hr_employee,nantian_erp.group_hr_president_assistant,1,1,0,0
 nantian_erp_hr_president_all,nantian_erp_hr_president all,model_hr_employee,nantian_erp.group_hr_president,1,1,0,0
 nantian_erp_hr_recruitment_all,nantian_erp_hr_recruitment all,model_hr_employee,nantian_erp.group_hr_recruitment,1,1,0,0
 

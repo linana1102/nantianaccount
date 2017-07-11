@@ -687,10 +687,10 @@
         <menuitem id="nantian_erp_weekly_plan_current_for_boss" parent="nantian_erp_weekly_plan_menu" name="本期周报" action = "nantian_erp_weekly_boss_current_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/><!--只有魏总看到本周，action加时间过滤-->
         <menuitem id="nantian_erp_weekly_plan_history" parent="nantian_erp_weekly_plan_menu" name="历史周报" action = "nantian_erp_weekly_boss_history_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/><!--只有魏总看到全部-->
         <!--#权限设置，菜单加组，-->
-        <menuitem id="nantian_erp_pres_sale_menu" parent="nantian_contract_menu_5" sequence="1" name="售前项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before" />
+        <menuitem id="nantian_erp_pres_sale_menu" parent="nantian_contract_menu_5" sequence="1" name="售前项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before,nantian_erp.group_hr_president_assistant" />
         <menuitem id="nantian_erp_pres_sale1" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale1_action" name="未投标" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
         <menuitem id="nantian_erp_pres_sale2" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale2_action" name="已投标" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
-        <menuitem id="nantian_erp_pres_sale_header" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="售前项目" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header"/>
+        <menuitem id="nantian_erp_pres_sale_header" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="售前项目" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header,nantian_erp.group_hr_president_assistant"/>
 
 
         <menuitem id="nantian_erp_ongoing_sale_menu" parent="nantian_erp_weekly_reports_menu" name="周报历史全纪录" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
