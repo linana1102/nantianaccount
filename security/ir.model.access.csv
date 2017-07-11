@@ -106,3 +106,5 @@ nantian_erp_education_experience,nantian_erp_education_experience,model_nantian_
 
 nantian_erp_hr_assistant_users,nantian_erp_hr_assistant_users,base.model_res_users,nantian_erp.group_hr_assistant,1,1,1,0
 nantian_erp_hr_assistant_res_partner,nantian_erp_hr_assistant_res_partner,base.model_res_partner,nantian_erp.group_hr_assistant,1,1,1,0
+
+nantian_erp_working_team_for_all_user,nantian_erp_working_team for all_user,model_nantian_erp_working_team,,1,0,0,0
