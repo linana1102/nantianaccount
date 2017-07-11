@@ -422,5 +422,16 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+     <record id="hr_employeer_hr_president_assistant_read_rule" model="ir.rule">
+        <field name="name">总裁-助理-读,写</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <!--<field name="domain_force">[('user_id','=',user.id)]</field>-->
+        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_president_assistant'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
     </data>
 </openerp>
