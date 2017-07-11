@@ -16,7 +16,7 @@ nantian_erp_hr_manager_assistant_all,nantian_erp_hr_manager_assistant all,model_
 nantian_erp_resource_manager_assistant_all,nantian_erp_resource_manager_assistant all,resource.model_resource_resource,nantian_erp.group_hr_manager_assistant,1,1,1,1
 nantian_erp_hr_header_all,nantian_erp_hr_header all,model_hr_employee,nantian_erp.group_nantian_header,1,1,0,0
 nantian_erp_hr_bm_manager_all,nantian_erp_hr_bm_manager all,model_hr_employee,nantian_erp.group_hr_bm_manager,1,1,0,0
-nantian_erp_hr_assistant_all,nantian_erp_hr_assistant all,model_hr_employee,nantian_erp.group_hr_assistant,1,1,0,0
+nantian_erp_hr_assistant_all,nantian_erp_hr_assistant all,model_hr_employee,nantian_erp.group_hr_assistant,1,1,1,0
 nantian_erp_hr_user_all,nantian_erp_hr_user all,model_hr_employee,nantian_erp.group_hr_user,1,1,0,0
 nantian_erp_hr_manager_all,nantian_erp_hr_manager all,model_hr_employee,nantian_erp.group_hr_manager,1,1,0,0
 nantian_erp_hr_president_all,nantian_erp_hr_president all,model_hr_employee,nantian_erp.group_hr_president,1,1,0,0
@@ -104,3 +104,5 @@ nantian_erp_company_info_attachment_1,nantian_erp_company_info_attachment_1,mode
 
 nantian_erp_education_experience,nantian_erp_education_experience,model_nantian_erp_education_experience,,1,1,1,1
 
+nantian_erp_hr_assistant_users,nantian_erp_hr_assistant_users,base.model_res_users,nantian_erp.group_hr_assistant,1,1,1,0
+nantian_erp_hr_assistant_res_partner,nantian_erp_hr_assistant_res_partner,base.model_res_partner,nantian_erp.group_hr_assistant,1,1,1,0
