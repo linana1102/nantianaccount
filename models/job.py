@@ -740,7 +740,7 @@ class offer_information(models.Model):
                 # 建立状态改为已入职
                 offer.resume_id.write({'state': u'已入职'})
                 # 创建员工
-                create_ctx = dict(context, mail_broadcast=True)
+                create_ctx = dict(context, mail_broadcast=False)
                 emp_id = hr_employee.create(cr, uid, {'name': offer.resume_id.name,
                                                       'position_id': offer.recruitment_id.job_id.id or False,
                                                       'department_id': offer.second_department_id.id or False,
@@ -748,7 +748,8 @@ class offer_information(models.Model):
                                                       'level':offer.job_level or False,
                                                       'mobile_phone':offer.phone or False,
                                                       'gender':offer.resume_id.gender or False,
-                                                      'working_team_id':offer.recruitment_id.working_team_id.id or False
+                                                      'working_team_id':offer.recruitment_id.working_team_id.id or False,
+                                                      'identification_id':offer.identification_id or False,
                                                      }, context=create_ctx)
                # 创建入职记录
                 entry_id = nantian_entry.create(cr,uid,{
