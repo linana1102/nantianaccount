@@ -748,7 +748,8 @@ class offer_information(models.Model):
                                                       'level':offer.job_level or False,
                                                       'mobile_phone':offer.phone or False,
                                                       'gender':offer.resume_id.gender or False,
-                                                      'working_team_id':offer.recruitment_id.working_team_id.id or False
+                                                      'working_team_id':offer.recruitment_id.working_team_id.id or False,
+                                                      'identification_id':offer.identification_id or False,
                                                      }, context=create_ctx)
                # 创建入职记录
                 entry_id = nantian_entry.create(cr,uid,{
