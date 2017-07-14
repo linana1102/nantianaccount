@@ -165,7 +165,7 @@
                                         <field name="states" string="状态" />
                                     </group>
                                     <group string="项目信息">
-                                            <field name="working_team_id" string="所在工作组" options='{"limit": 20,"no_create":1,"no_create_edit":1}' domain="[('category','=',u'工作组')]" readonly="True"/>
+                                            <field name="working_team_id" string="所在工作组" options='{"limit": 20,"no_create":1,"no_create_edit":1}' domain="[('category','=',u'工作组')]"/>
                                             <field name="customer_id" string="服务客户" />
                                             <field name="category" string="人员状态" on_change="onchange_category(category)"/>
                                             <field name="nantian_erp_contract_id" string="服务合同" domain="[('customer_id','=',customer_id),('category','!=',u'维保合同'),('state','!=','off')]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_create":1,"no_create_edit":1}'/>
@@ -897,5 +897,66 @@
             </xpath>
         </field>
      </record>
+         <record id="view_users_search_hr" model="ir.ui.view">
+            <field name="name">res.users.search-hr</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <search string="Users">
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('login','ilike',self), ('email','ilike',self)]" string="User"/>
+                    <field name="company_ids" string="Company" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_users_tree_hr_assistant" model="ir.ui.view">
+            <field name="name">res.users.tree-hr</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <tree string="Users">
+                    <field name="name"/>
+                    <field name="login"/>
+                    <field name="lang"/>
+                    <field name="login_date"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_users_form_hr_assistant" model="ir.ui.view">
+            <field name="name">res.users.form-hr</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <form string="Users">
+                    <sheet>
+                        <field name="id" invisible="1"/>
+                        <div class="oe_right oe_button_box">
+                            <button string="Change Password" type="action" name="%(base.change_password_wizard_action)d"
+                                class="oe_link" help="Change the user password."/>
+                        </div>
+                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                            <field name="email" invisible="1"/>
+                            <label for="login" class="oe_edit_only" string="Email Address"/>
+                            <h2><field name="login" on_change="on_change_login(login)"/></h2>
+                            <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
+                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                            <group>
+                                <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"
+                                        attrs="{'invisible': [('id', '=', False)]}"/>
+                                <field name="active"/>
+                            </group>
+                        </div>
+                        <notebook colspan="4">
+                            <page string="Access Rights">
+                                <group col="4">
+                                    <separator colspan="4" string="nantianerp"/>
+                                    <separator colspan="4" string="服务台"/>
+                                    <separator colspan="4" string="人力资源"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
     </data>
 </openerp>

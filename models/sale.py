@@ -16,7 +16,7 @@ class weekly_reports(models.Model):
     date_to = fields.Date(string='To')
     pres_sale_ids = fields.One2many('nantian_erp.pres_sale','weekly_reports_id',string='售前项目进展')
     gathering_ids = fields.One2many('nantian_erp.project_gathering','weekly_reports_id',string='项目收款')
-    # pers_transfer_ids = fields.Many2many('nantian_erp.pers_transfer','weekly_reports_idemp_weekly_transfer_ref',string='人员调动')
+    #pers_transfer_ids = fields.Many2many('nantian_erp.pers_transfer','emp_weekly_transfer_ref',string='人员调动')
     pers_transfer_ids = fields.One2many('nantian_erp.pers_transfer','weekly_reports_id',string='人员调动')
     demission_ids = fields.One2many('nantian_erp.demission','weekly_reports_id',string='人员离职')
     customer_adjust_ids = fields.One2many('nantian_erp.customer_adjust','weekly_reports_id',string='客户动态或人事变动')
@@ -65,6 +65,8 @@ class weekly_reports(models.Model):
                                          "weekly_reports_id": record.id})
 
     def create(self, cr, uid, vals, context=None):
+        print "nantian_erp.weekly_reports"
+        print vals
         if vals['project_stage_count_ids']:
             return super(weekly_reports, self).create(cr, uid, vals, context=context)
         else:
@@ -172,6 +174,11 @@ class project_gathering(models.Model):#
 # 人员的调动
 class pers_transfer(models.Model):#
     _name = 'nantian_erp.pers_transfer'
+    _inherit = ['ir.needaction_mixin']
+
+    @api.model
+    def _needaction_domain_get(self):
+        return [('dis_states', '!=', u'调整完成'),('after_leader', '=', self.env.user.employee_ids[0].id)]
 
     @api.multi
     def _default_employee_id(self):
@@ -179,7 +186,7 @@ class pers_transfer(models.Model):#
 
 
     # weekly_reports_id = fields.Many2many('nantian_erp.weekly_reports','emp_weekly_transfer_ref', string='周报')
-    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
+    weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports',string='周报')
     # employee_id_hr = fields.Many2one('hr.employee',string='调动人',ondelete='set null')#
     employee_id = fields.Many2one('hr.employee',string='调动人',required=True,default=_default_employee_id)
     res_contract_name = fields.Many2one("nantian_erp.contract",compute = "store_transfer_message",store = True,string='合同名称')
@@ -195,13 +202,12 @@ class pers_transfer(models.Model):#
     des_contract_name = fields.Many2one("nantian_erp.contract",string='新合同名称')
     des_contract_job = fields.Many2one("nantian_erp.jobs",string='新合同岗位')
     dis_states = fields.Selection([
-        (u'正常', u"正常"),
         (u'待调整', u"待调整"),
         (u'可调用', u"可调用"),
         (u'借调中', u"借调中"),
         (u'调整完成', u"调整完成"),
 
-    ], default=u'正常',string="调整状态")
+    ], default=u'待调整',string="调整状态",store = "True")
 
     def create(self, cr, uid, vals, context=None):
         if vals['employee_id']:
@@ -216,6 +222,8 @@ class pers_transfer(models.Model):#
                     print object.dis_states
                 else:
                     raise exceptions.ValidationError("人员的调整状态修改未成功，请手动修改！")
+            else:
+                object.dis_states = u"待调整"
         return super(pers_transfer, self).create(cr, uid, vals, context=context)
 
     @api.multi
@@ -319,18 +327,19 @@ class demission(models.Model):#
     def confirm_demission_dealer(self):
         object = self.env['hr.employee'].search([("id", "=", self.employee_id.id)], limit=1)
         if object:
-            self.state = "done"
-            self.dealer = self.env.user
-            object.dis_states = u'已离职'
-            object.states = u'离职'
-            print object.dis_states
-            # x.nantian_erp_contract_id = None
-            # x.working_team_id = None
-            # x.contract_jobs_id = None
-            object.active = 0
-            object.user_id.active = 0
-            if self.demission_date:
-                object.leave_time = self.demission_date
+            if self.state == "done":
+                self.state = "done"
+                self.dealer = self.env.user
+                object.dis_states = u'已离职'
+                object.states = u'离职'
+                print object.dis_states
+                # x.nantian_erp_contract_id = None
+                # x.working_team_id = None
+                # x.contract_jobs_id = None
+                object.active = 0
+                object.user_id.active = 0
+                if self.demission_date:
+                    object.leave_time = self.demission_date
 
     @api.depends('employee_id')
     def store_demission_message(self):
