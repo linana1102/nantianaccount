@@ -420,9 +420,9 @@
         <menuitem name="nantian_dashboard" id="nantian_dashboard" sequence="9"  parent="mail.mail_feeds_main" />
         <menuitem name="nantian_my_dashboard" id="nantian_my_dashboard" sequence="9"  parent="nantian_dashboard" action="board.open_board_my_dash_action"/>
 
-        <menuitem name="用户" id="nantian_login_user" sequence="6" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_president_assistant" />
-        <menuitem name="用户" id="nantian_login_2_user" parent="nantian_login_user" sequence="1"  />
-        <menuitem name="用户" id="nantian_login_3_user" parent="nantian_login_2_user" sequence="1" action="base.action_res_users"/>
+        <!--<menuitem name="用户" id="nantian_login_user" sequence="6" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_president_assistant" />-->
+        <!--<menuitem name="用户" id="nantian_login_2_user" parent="nantian_login_user" sequence="1"  />-->
+        <!--<menuitem name="用户" id="nantian_login_3_user" parent="nantian_login_2_user" sequence="1" action="base.action_res_users"/>-->
 
     </data>
 </openerp>
