@@ -740,7 +740,7 @@ class offer_information(models.Model):
                 # 建立状态改为已入职
                 offer.resume_id.write({'state': u'已入职'})
                 # 创建员工
-                create_ctx = dict(context, mail_broadcast=True)
+                create_ctx = dict(context, mail_broadcast=False)
                 emp_id = hr_employee.create(cr, uid, {'name': offer.resume_id.name,
                                                       'position_id': offer.recruitment_id.job_id.id or False,
                                                       'department_id': offer.second_department_id.id or False,
