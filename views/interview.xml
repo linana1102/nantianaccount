@@ -16,9 +16,12 @@
                         <group>
                             <field name="result" required="True"/>
                             <field name="interviewer" required="True"/>
-                            <field name="customer" readonly = "True"></field>
-                            <field name="rec_user" readonly ="True"></field>
+                            <field name="customer" groups="base.group_system"></field>
+                            <field name="rec_user" groups="base.group_system"></field>
                             <field name="next_user" domain="['|',('name','=',rec_user),('name','=',customer)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'></field>
+                        </group>
+                        <group>
+
                         </group>
                     </group>
                 </form>
