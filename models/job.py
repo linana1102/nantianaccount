@@ -32,6 +32,7 @@ class job_categroy(models.Model):
     name = fields.Char(string='类别')
     job_id = fields.Many2one('nantian_erp.job',string='职位')
 
+# 招聘
 class recruitment(models.Model):
     _name = 'nantian_erp.recruitment'
     _rec_name = 'job_id'
@@ -346,7 +347,7 @@ class resume(models.Model):
     email = fields.Char(string='邮箱')
     job = fields.Char(string='求职职位')
     state = fields.Selection([(u'简历库中',u'简历库中'),(u'面试中',u'面试中'),(u'offer审批',u'offer审批'),(u'发offer',u'发offer'),(u'已入职',u'已入职'),(u'发offer未入职',u'发offer未入职'),(u'淘汰',u'淘汰'),(u'暂存',u'暂存')],default=u'简历库中')
-    interviewer = fields.Many2one('res.users',string='面试官')
+    interviewer = fields.Many2one('res.users',default=lambda self: self.env.user,string='面试官')
     interview_ids = fields.One2many('nantian_erp.interview','resume_id')
     offer_information_id = fields.One2many('nantian_erp.offer_information','resume_id',string='offer信息')
 
@@ -598,6 +599,8 @@ class interview(models.Model):
                                              'user_id': vals['next_user'],
                                             },
                                    context=context)
+        # if resume.state == u'暂存':
+        #     pass
         return super(interview,self).create(cr,uid,vals,context=context)
 
 # offer 信息表

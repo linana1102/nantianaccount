@@ -2,10 +2,11 @@
 <openerp>
     <data>
         <record id="nantian_erp_resume_interview_default_action" model="ir.actions.act_window">
-            <field name="name">简历页面面试</field>
+            <field name="name">简历中发起面试</field>
             <field name="res_model">nantian_erp.interview</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="nantian_erp_interview_form"/>
             <field name="context">{'search_default_resume_id': [active_id], 'default_resume_id': active_id}</field>
         </record>
 
@@ -17,7 +18,6 @@
             <field name="arch" type="xml">
                 <form string="reusme" >
                     <header>
-                         <button name="disagree" type="object" states='简历库中' string="淘汰"  class="oe_highlight" />
                          <button name="consider" type="object" states='简历库中' string="暂存"  class="oe_highlight"/>
                          <field name="state" widget="statusbar"/>
                     </header>
@@ -206,6 +206,67 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="nantian_erp_all_resume_form">
+            <field name="name">nantian_all_resume.form</field>
+            <field name="model">nantian_erp.resume</field>
+            <field name="arch" type="xml">
+                <form string="reusme_all">
+                    <sheet>
+                         <div class="oe_title">
+                                <label for="name" class="oe_edit_only"/>
+                                <h1><field name="name" class="oe_inline" readonly="True"/></h1>
+                         </div>
+                         <div class="oe_right" name="buttons">
+                            <button  class="oe_stat_button" icon="fa-book" string="简历"/>
+                         </div>
+                         <group>
+                             <group>
+                                 <field name="gender" readonly="True"/>
+                                  <label for="age"/>
+                                 <div>
+                                 <field name="age" readonly="True"/><label string="岁" class="oe_inline"/>
+                                 </div>
+                                 <label for="work_age"/>
+                                 <div>
+                                 <field name="work_age" readonly="True"/><label string="年" class="oe_inline"/>
+                                 </div>
+                                 <field name="education" readonly="True"/>
+                                 <field name="phone" readonly="True"/>
+                             </group>
+                             <group>
+                                 <field name="email" readonly="True"/>
+                                 <field name="job" readonly="True"/>
+                                 <field name="state"/>
+                             </group>
+                         </group>
+                         <group>
+                             <field name="interview_ids" string="面试记录">
+                                 <tree string="interview" editable="bottom" create="false">
+                                     <field name="recruitment_id" string="招聘岗位" />
+                                     <field name="interviewer" string="面试官" readonly="True"/>
+                                     <field name="review" string="面试评价" />
+                                     <field name="result" string="面试结果" readonly="True"/>
+                                     <field name="date" string="面试时间" readonly="True"/>
+                                 </tree>
+                             </field>
+                         </group>
+                         <group>
+                             <field name="offer_information_id" string="offer 信息" >
+                                 <tree create="false">
+                                    <field name="resume_id" string="姓名"/>
+                                    <field name="phone" string="电话"/>
+                                    <field name="email" string="邮箱"/>
+                                    <field name="entrytime" string="办理入职时间"/>
+                                    <field name="entry_recruitment_id" string="入职岗位"/>
+                                    <field name="job_level" string="岗位级别"/>
+                                    <field name="recruitment_id" string="招聘岗位"/>
+                                 </tree>
+                             </field>
+                         </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="nantian_erp_pending_resume_tree">
             <field name="name">nantian_resume</field>
@@ -224,7 +285,7 @@
         </record>
 
         <record id="nantian_erp_resume_action" model="ir.actions.act_window">
-            <field name="name">简历</field>
+            <field name="name">未处理的简历</field>
             <field name="res_model">nantian_erp.resume</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -358,6 +419,44 @@
             <field name="view_id" ref="nantian_erp_pending_resume_form" />
             <field name="act_window_id" ref="nantian_erp_offered_resume_action" />
         </record>
+        <record id="nantian_erp_zancun_resume_action" model="ir.actions.act_window">
+            <field name="name">暂存的简历</field>
+            <field name="res_model">nantian_erp.resume</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=',u'暂存')]</field>
+        </record>
+        <record id="nantian_erp_zancun_resume_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+             <field name="sequence" eval="1"/>
+            <field name="view_id" ref="nantian_erp_pending_resume_tree" />
+            <field name="act_window_id" ref="nantian_erp_zancun_resume_action" />
+        </record>
+        <record id="nantian_erp_zancun_resume_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="nantian_erp_pending_resume_form" />
+            <field name="act_window_id" ref="nantian_erp_zancun_resume_action" />
+        </record>
+        <record id="nantian_erp_all_resume_action" model="ir.actions.act_window">
+            <field name="name">全部的简历</field>
+            <field name="res_model">nantian_erp.resume</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="nantian_erp_all_resume_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+             <field name="sequence" eval="1"/>
+            <field name="view_id" ref="nantian_erp_resume_tree" />
+            <field name="act_window_id" ref="nantian_erp_all_resume_action" />
+        </record>
+        <record id="nantian_erp_all_resume_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="nantian_erp_all_resume_form" />
+            <field name="act_window_id" ref="nantian_erp_all_resume_action" />
+        </record>
+        <menuitem id="nantian_erp_all_resume_menu" parent="nantian_erp_resume_root_menu" name="全部简历" action="nantian_erp_all_resume_action" sequence="6" groups="base.group_system"/>
         <menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="未处理的简历" action="nantian_erp_resume_action" sequence="1" groups="nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_offered_resume_menu" parent="nantian_erp_resume_root_menu" name="已发offer的简历" action="nantian_erp_offered_resume_action" sequence="4" />
 
@@ -490,6 +589,26 @@
                 </tree>
             </field>
         </record>
+        <record id="nantian_erp_offer_all_information_action" model="ir.actions.act_window">
+            <field name="name">全部的offer信息</field>
+            <field name="res_model">nantian_erp.offer_information</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain"></field>
+            <field name="view_id" ref="nantian_erp_offer_information_tree" />
+        </record>
+        <record id="nantian_erp_offer_all_information_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+             <field name="sequence" eval="1"/>
+            <field name="view_id" ref="nantian_erp_offer_information_tree" />
+            <field name="act_window_id" ref="nantian_erp_offer_all_information_action" />
+        </record>
+        <record id="nantian_erp_offer_all_information_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="nantian_erp_pended_offer_information_form" />
+            <field name="act_window_id" ref="nantian_erp_offer_all_information_action" />
+        </record>
         <record id="nantian_erp_offer_pending_information_action" model="ir.actions.act_window">
             <field name="name">待审批的offer信息</field>
             <field name="res_model">nantian_erp.offer_information</field>
@@ -498,6 +617,7 @@
             <field name="domain">[('examiner_user','=',uid)]</field>
             <field name="view_id" ref="nantian_erp_offer_information_tree" />
         </record>
+
         <record id="nantian_erp_offer_pending_information_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
              <field name="sequence" eval="1"/>
@@ -605,6 +725,7 @@
             <field name="act_window_id" ref="nantian_erp_wait_set_email_action" />
         </record>
 
+        <menuitem id="nantian_erp_all_offer_menu" parent="nantian_erp_resume_root_menu" name="全部的offer信息" action="nantian_erp_offer_all_information_action" sequence="6" groups="base.group_system"/>
         <menuitem id="nantian_erp_pending_offer_menu" parent="nantian_erp_resume_root_menu" name="待审批的offer信息" action="nantian_erp_offer_pending_information_action" sequence="5" groups="nantian_erp.group_hr_manager"/>
         <menuitem id="nantian_erp_pended_offer_menu" parent="nantian_erp_resume_root_menu" name="待入职人员" action="nantian_erp_offer_pended_information_action" sequence="7" />
         <menuitem id="nantian_erp_wait_set_email_menu" parent="nantian_erp_resume_root_menu" name="未设置邮箱人员" action="nantian_erp_wait_set_email_action" sequence="8" groups="nantian_erp.group_hr_manager,nantian_erp.group_hr_assistant"/>

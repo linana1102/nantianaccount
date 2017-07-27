@@ -124,7 +124,8 @@ class pres_sale(models.Model):
         'views_type': 'form',
         "domain": [[]],
         'view_mode': 'tree,form',
-    }# 这个可以在确定合同内容后把东西填进去
+    }
+    # 这个可以在确定合同内容后把东西填进去
     # return {
     #     'name': _('Distribution Model Saved'),
     #     'view_type': 'form',
@@ -150,7 +151,7 @@ class pres_sale(models.Model):
         return {'aa'}
 
 # 项目收款
-class project_gathering(models.Model):#
+class project_gathering(models.Model):
     _name = 'nantian_erp.project_gathering'
 
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
