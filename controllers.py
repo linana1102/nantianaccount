@@ -176,7 +176,7 @@ class SynchronousResume(http.Controller):
     def get_data(self,):
         r = requests.get('http://123.56.147.94/talents/get_all_position_and_examine')
         positions = r.json()
-        print positions
+        #print positions
         cate_model = request.session.model('nantian_erp.categroy')
         categroy = cate_model.create({'name':'原系统'})
         for position in positions:

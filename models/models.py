@@ -1546,7 +1546,7 @@ class working_team(models.Model):
         group_user_id = self.env['res.groups'].search([('id', '=', work_team_user_id)])
         group_manager_id = self.env['res.groups'].search([('id', '=', work_team_manager_id)])
         for work in works:
-            _logger.info(work)
+            #_logger.info(work)
             if work.user_id not in group_manager_id.users:
                 group_manager_id.users |= work.user_id
             for hr in  work.employee_ids:

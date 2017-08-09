@@ -28,7 +28,6 @@
                          </div>
                         <div class="oe_right" name="buttons">
                             <button class="oe_inline oe_stat_button" type="action" name="%(nantian_erp_resume_interview_default_action)d" icon="fa-star" string="面试"/>
-                            <!--<button  class="oe_stat_button" icon="fa-book" string="简历"/>-->
                         </div>
                         <group>
                             <group>
@@ -47,6 +46,9 @@
                             <group>
                                 <field name="email" />
                                 <field name="job" />
+                            </group>
+                            <group>
+                                <field name="interviewer" string="简历创建者" readonly="True"/>
                             </group>
                         </group>
                     </sheet>
@@ -96,12 +98,13 @@
                          </group>
                          <group>
                              <field name="interview_ids" string="面试记录">
-                                 <tree string="interview" editable="bottom" create="false">
+                                 <tree string="interview" editable="bottom" create="false" default_order="id desc">
                                      <field name="recruitment_id" string="招聘岗位" readonly="True"/>
                                      <field name="interviewer" string="面试官" readonly="True"/>
-                                     <field name="review" string="面试评价" />
-                                     <field name="result" string="面试结果" readonly="True"/>
                                      <field name="date" string="面试时间" readonly="True"/>
+                                     <field name="result" string="面试结果" readonly="True"/>
+                                     <field name="review" string="面试评价" />
+
                                  </tree>
                              </field>
                          </group>
@@ -111,10 +114,12 @@
                                     <field name="resume_id" string="姓名"/>
                                     <field name="phone" string="电话"/>
                                     <field name="email" string="邮箱"/>
-                                    <field name="entrytime" string="办理入职时间"/>
+                                     <field name="recruitment_id" string="招聘岗位"/>
                                     <field name="entry_recruitment_id" string="入职岗位"/>
+                                     <field name="entrytime" string="办理入职时间"/>
                                     <field name="job_level" string="岗位级别"/>
-                                    <field name="recruitment_id" string="招聘岗位"/>
+                                     <field name="contract_time" string="合同期限(年)"/>
+                                     <field name="test_time" string="试用期限(月)"/>
                                  </tree>
                              </field>
                          </group>
@@ -145,10 +150,10 @@
                          </div>
                          <group>
                              <group>
-                                 <field name="gender" readonly="True"/>
+                                 <field name="gender"/>
                                   <label for="age"/>
                                  <div>
-                                 <field name="age" readonly="True"/><label string="岁" class="oe_inline"/>
+                                 <field name="age" /><label string="岁" class="oe_inline"/>
                                  </div>
                                  <label for="work_age"/>
                                  <div>
@@ -165,12 +170,12 @@
                          </group>
                          <group>
                              <field name="interview_ids" string="面试记录">
-                                 <tree string="interview" editable="bottom" create="false">
+                                 <tree string="interview" editable="bottom" create="false" default_order="id desc">
                                      <field name="recruitment_id" string="招聘岗位" />
                                      <field name="interviewer" string="面试官" readonly="True"/>
-                                     <field name="review" string="面试评价" />
-                                     <field name="result" string="面试结果" readonly="True"/>
                                      <field name="date" string="面试时间" readonly="True"/>
+                                     <field name="result" string="面试结果" readonly="True"/>
+                                     <field name="review" string="面试评价" />
                                  </tree>
                              </field>
                          </group>
@@ -180,10 +185,12 @@
                                     <field name="resume_id" string="姓名"/>
                                     <field name="phone" string="电话"/>
                                     <field name="email" string="邮箱"/>
+                                     <field name="recruitment_id" string="招聘岗位"/>
+                                     <field name="entry_recruitment_id" string="入职岗位"/>
                                     <field name="entrytime" string="办理入职时间"/>
-                                    <field name="entry_recruitment_id" string="入职岗位"/>
                                     <field name="job_level" string="岗位级别"/>
-                                    <field name="recruitment_id" string="招聘岗位"/>
+                                    <field name="contract_time" string="合同期限(年)"/>
+                                     <field name="test_time" string="试用期限(月)"/>
                                  </tree>
                              </field>
                          </group>
@@ -221,22 +228,23 @@
                          </div>
                          <group>
                              <group>
-                                 <field name="gender" readonly="True"/>
+                                 <field name="gender" />
                                   <label for="age"/>
                                  <div>
-                                 <field name="age" readonly="True"/><label string="岁" class="oe_inline"/>
+                                 <field name="age" /><label string="岁" class="oe_inline"/>
                                  </div>
                                  <label for="work_age"/>
                                  <div>
-                                 <field name="work_age" readonly="True"/><label string="年" class="oe_inline"/>
+                                 <field name="work_age" /><label string="年" class="oe_inline"/>
                                  </div>
-                                 <field name="education" readonly="True"/>
-                                 <field name="phone" readonly="True"/>
+                                 <field name="education"/>
+                                 <field name="phone" />
                              </group>
                              <group>
-                                 <field name="email" readonly="True"/>
-                                 <field name="job" readonly="True"/>
+                                 <field name="email" />
+                                 <field name="job" />
                                  <field name="state"/>
+                                 <field name="interviewer" string="当前处理人"/>
                              </group>
                          </group>
                          <group>
@@ -252,7 +260,7 @@
                          </group>
                          <group>
                              <field name="offer_information_id" string="offer 信息" >
-                                 <tree create="false">
+                                 <tree create="false" editable="bottom">
                                     <field name="resume_id" string="姓名"/>
                                     <field name="phone" string="电话"/>
                                     <field name="email" string="邮箱"/>
@@ -329,7 +337,7 @@
             <field name="res_model">nantian_erp.resume</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('interview_ids.interviewer','ilike',uid)]</field>
+            <field name="domain">[('interview_ids.interviewer','ilike',uid),('state','!=','已入职')]</field>
         </record>
         <record id="nantian_erp_processed_resume_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -439,10 +447,11 @@
             <field name="act_window_id" ref="nantian_erp_zancun_resume_action" />
         </record>
         <record id="nantian_erp_all_resume_action" model="ir.actions.act_window">
-            <field name="name">全部的简历</field>
+            <field name="name">简历(可调整)</field>
             <field name="res_model">nantian_erp.resume</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('create_uid','=',uid)]</field>
         </record>
         <record id="nantian_erp_all_resume_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -456,16 +465,13 @@
             <field name="view_id" ref="nantian_erp_all_resume_form" />
             <field name="act_window_id" ref="nantian_erp_all_resume_action" />
         </record>
-        <menuitem id="nantian_erp_all_resume_menu" parent="nantian_erp_resume_root_menu" name="全部简历" action="nantian_erp_all_resume_action" sequence="6" groups="base.group_system"/>
+        <menuitem id="nantian_erp_all_resume_menu" parent="nantian_erp_resume_root_menu" name="全部简历" action="nantian_erp_all_resume_action" sequence="7" groups="base.group_system,nantian_erp.group_hr_recruitment" />
         <menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="未处理的简历" action="nantian_erp_resume_action" sequence="1" groups="nantian_erp.group_hr_recruitment"/>
-        <menuitem id="nantian_erp_offered_resume_menu" parent="nantian_erp_resume_root_menu" name="已发offer的简历" action="nantian_erp_offered_resume_action" sequence="4" />
-
-        <menuitem id="nantian_erp_interviewing_resume_menu" parent="nantian_erp_resume_root_menu" name="面试中的简历" action="nantian_erp_interviewing_resume_action" sequence="4" groups="nantian_erp.group_hr_recruitment"/>
+        <menuitem id="nantian_erp_interviewing_resume_menu" parent="nantian_erp_resume_root_menu" name="面试中的简历" action="nantian_erp_interviewing_resume_action" sequence="2" groups="nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_processed_resume_menu" parent="nantian_erp_resume_root_menu" name="面试过的简历" action="nantian_erp_processed_resume_action" sequence="3" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager,nantian_erp.group_hr_recruitment"/>
-
-        <!--<menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="简历" action="nantian_erp_resume_action" sequence="2"/>-->
-        <menuitem id="nantian_erp_entryed_resume_menu" parent="nantian_erp_resume_root_menu" name="已入职的简历" action="nantian_erp_entryed_resume_action" sequence="4" />
-        <menuitem id="nantian_erp_rejected_resume_menu" parent="nantian_erp_resume_root_menu" name="不来的简历" action="nantian_erp_rejected_resume_action" sequence="5"/>
+        <menuitem id="nantian_erp_offered_resume_menu" parent="nantian_erp_resume_root_menu" name="已发offer的简历" action="nantian_erp_offered_resume_action" sequence="4" />
+        <menuitem id="nantian_erp_entryed_resume_menu" parent="nantian_erp_resume_root_menu" name="已入职的简历" action="nantian_erp_entryed_resume_action" sequence="5" />
+        <menuitem id="nantian_erp_rejected_resume_menu" parent="nantian_erp_resume_root_menu" name="发offer未入职" action="nantian_erp_rejected_resume_action" sequence="6"/>
 
         <record model="ir.ui.view" id="nantian_erp_offer_information_form">
             <field name="name">nantian_offer_information.form</field>

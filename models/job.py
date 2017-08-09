@@ -389,11 +389,15 @@ class resume(models.Model):
             department = employee.department_id
             # 招聘组
             recruit_group = self.env['res.groups'].search([('name','=',u'招聘组')],limit=1)
+            ############################
+            #第一条面试记录已经由简历表的简历按钮创建，并且指定了下一个面试官
             # 当前面试官是行业负责人但不是总经理
             if (self.env.user in customer_manager_group.users and self.env.user not in manager_group.users) or (not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].recruitment_id.working_team_id.partner_id):
                 # 看是否填写offer信息
-                if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review or not self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)])[-1].contract_time:
-                    raise exceptions.ValidationError("请填面试评价和offer信息 ")
+                if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review or \
+                        not self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)])[-1].contract_time or\
+                        not self.env['nantian_erp.offer_information'].search([('resume_id', '=', self.id), ('user_id', '=', self.env.uid)])[-1].test_time:
+                    raise exceptions.ValidationError("请填您的面试评价和offer信息里的合同期限，试用期限，三项内容")
                 else:
                     # 修改状态及当前审批人
                     self.state = u'offer审批'
@@ -488,7 +492,7 @@ class resume(models.Model):
     # 面试不同意对应的按钮
     @api.multi
     def disagree(self):
-        if self.env.uid == self.interviewer:
+        if self.env.user == self.interviewer:
             # 如果是简历库中的简历，直接淘汰
             if self.state == u'简历库中':
                 self.state = u'淘汰'
@@ -508,7 +512,7 @@ class resume(models.Model):
     # 暂存对应的按钮，将简历状态改为暂存
     @api.multi
     def consider(self):
-        if self.env.uid == self.interviewer:
+        if self.env.user == self.interviewer:
             if self.state == u'简历库中':
                 self.state = u'暂存'
             else:
@@ -525,7 +529,7 @@ class resume(models.Model):
     @api.multi
     def back(self):
         if self.state != u'offer审批':
-            self.interviewer = self.env.uid
+            self.interviewer = self.env.user
             self.env['nantian_erp.interview'].create({'resume_id':self.id,'recruitment_id':self.interview_ids[0].recruitment_id.id,'interviewer':self.env.uid})
             self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('review','=',None)]).delete()
         else:
@@ -558,17 +562,18 @@ class interview(models.Model):
 
         if resume.state == u'简历库中':
             resume.state = u'面试中'
-            # 获取下步面试官
+            # 获取下步面试官，面试官已经在页面上选出
             resume.interviewer = vals['next_user']
             vals['date'] = fields.Date.today()
             # 查看是否有选择对应的招聘需求，如果有
             print resume.interviewer
             if vals.has_key('recruitment_id'):
-                #生成下步面试记录
+                #生成下步面试记录（这就是为什么新的纪录在上边）
                 self.create(cr, uid, {'resume_id': vals['resume_id'], 'recruitment_id': vals['recruitment_id'],
                                       'interviewer': vals['next_user']})
                 # 下步处理人是否是行业负责人，如果是生成offer信息 或者对应的招聘需求没有行业
-                recruitment=recruitment_model.browse(cr, uid,vals['recruitment_id'] ,context=None)
+                recruitment=recruitment_model.browse(cr, uid,vals['recruitment_id'],context=None)
+                # 这个位置以后会报错的，因为有的面试创建没有招聘需求
                 if resume.interviewer.name == vals['customer'] or not recruitment[0].working_team_id.partner_id:
                     recruitment = recruitment_model.browse(cr, uid, vals['recruitment_id'], context=None)
                     offer_model = self.pool.get('nantian_erp.offer_information')

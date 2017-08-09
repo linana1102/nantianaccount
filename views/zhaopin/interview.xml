@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="nantian_erp_interview_root_menu" parent="nantian_recruitment_root_menu" name="面试" sequence="80"/>
+        <menuitem id="nantian_erp_interview_root_menu" parent="nantian_recruitment_root_menu" name="管理" sequence="80"/>
         <record model="ir.ui.view" id="nantian_erp_interview_form">
             <field name="name">nantian_interview.form</field>
             <field name="model">nantian_erp.interview</field>
@@ -23,6 +23,7 @@
                         <group>
 
                         </group>
+
                     </group>
                 </form>
             </field>
@@ -35,7 +36,6 @@
                     <group>
                         <group>
                             <field name="resume_id" domain="[('state','=','简历库中')]" required="True"/>
-
                             <field name="review" required="True"/>
                             <field name="rec_user" invisible="True"></field>
                         </group>
@@ -76,14 +76,14 @@
          </record>
 
         <record id="nantian_erp_interview_action" model="ir.actions.act_window">
-            <field name="name">面试</field>
+            <field name="name">全部的面试记录</field>
             <field name="res_model">nantian_erp.interview</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <!--<field name="view_id" ref="nantian_erp_interview_tree" />-->
         </record>
         <record id="nantian_erp_interview_special_action" model="ir.actions.act_window">
-            <field name="name">特殊的面试</field>
+            <field name="name">无招聘需求的面试</field>
             <field name="res_model">nantian_erp.interview</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -101,8 +101,8 @@
             <field name="view_id" ref="nantian_erp_special_interview_form" />
             <field name="act_window_id" ref="nantian_erp_interview_special_action" />
         </record>
-        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="面试" action="nantian_erp_interview_action" sequence="1" groups="nantian_erp.group_hr_recruitment"/>
-        <menuitem id="nantian_erp_special_interview_menu" parent="nantian_erp_interview_root_menu"  name="无招聘需求的面试" action="nantian_erp_interview_special_action" sequence="2" groups="nantian_erp.group_hr_recruitment"/>
+        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="全部的面试记录" action="nantian_erp_interview_action" sequence="1" groups="nantian_erp.group_hr_recruitment,base.group_system"/>
+        <menuitem id="nantian_erp_special_interview_menu" parent="nantian_erp_interview_root_menu"  name="特殊面试(无招聘需求)" action="nantian_erp_interview_special_action" sequence="2" groups="nantian_erp.group_hr_recruitment,base.group_system"/>
 
 
 

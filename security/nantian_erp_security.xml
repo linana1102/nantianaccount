@@ -237,7 +237,7 @@
     </record>
 
     <record id="work_header_rule" model="ir.rule">
-        <field name="name">工作组行业负责人访问控制</field>
+        <field name="name">工作组行业负责人-读-写</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
         <field name="domain_force">['|',('partner_id.customer_manager','=',user.id),('partner_id','=',None)]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
@@ -247,16 +247,16 @@
         <field name="perm_unlink" eval="0"/>
     </record>
     <record id="work_header_read_rule" model="ir.rule">
-        <field name="name">工作组行业负责人-读</field>
+        <field name="name">工作组行业负责人, 数据中心员工-读</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
-        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header')),(4,ref('nantian_erp.data_center_group_hr_user'))]"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
     <record id="work_manager_rule" model="ir.rule">
-        <field name="name">工作组项目经理访问控制—读</field>
+        <field name="name">工作组项目经理-读</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
         <field name="domain_force">['|',('partner_id','in',[x.customer_id.id for x in user.employee_ids]),('partner_id','=',None)]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_manager'))]"/>
@@ -267,7 +267,7 @@
     </record>
 
     <record id="work_manager_write_rule" model="ir.rule">
-        <field name="name">工作组项目经理访问控制—读写</field>
+        <field name="name">工作组项目经理-读-写</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
         <field name="domain_force">[('user_id','=',user.id)]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_manager'))]"/>
@@ -278,7 +278,7 @@
     </record>
 
     <record id="work_assistant_manager_rule" model="ir.rule">
-        <field name="name">工作组项目助理访问控制—读写</field>
+        <field name="name">工作组项目助理访问控制—读-写</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
         <field name="domain_force">['|',('partner_id','in',[x.customer_id.id for x in user.employee_ids]),('partner_id','=',None)]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_assistant_manager'))]"/>
@@ -298,8 +298,26 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+    <record id="work_assiistant_rule" model="ir.rule">
+            <field name="name">工作组项目总助访问控制</field>
+            <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
+            <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_assistant'))]"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+    </record>
+    <record id="work_big_manager_rule" model="ir.rule">
+            <field name="name">工作组项目总经理访问控制</field>
+            <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
+            <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_boss'))]"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+    </record>
      <record id="nantian_erp.group_nantian_server_sale_before" model="res.groups">
-        <field name="name">服务拓展部__售前组</field>
+        <field name="name">服务拓展部_售前组</field>
          <field name="implied_ids" eval="[(4, ref('nantian_erp.group_work_team_user'))]"/>
         <field name="category_id" ref="base.module_category_nantianerp"/>
     </record>
@@ -326,24 +344,6 @@
 
     <!--base.group_partner_manager是人力总经理组-->
     <!--nantian_erp.group_nantian_boss是任务和项目总经理组-->
-    <record id="work_assiistant_rule" model="ir.rule">
-            <field name="name">工作组项目总助访问控制</field>
-            <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
-            <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_assistant'))]"/>
-            <field name="perm_write" eval="1"/>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_create" eval="1"/>
-            <field name="perm_unlink" eval="1"/>
-    </record>
-    <record id="work_big_manager_rule" model="ir.rule">
-            <field name="name">工作组项目总经理访问控制</field>
-            <field name="model_id" ref="nantian_erp.model_nantian_erp_working_team"/>
-            <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_boss'))]"/>
-            <field name="perm_write" eval="1"/>
-            <field name="perm_read" eval="1"/>
-            <field name="perm_create" eval="0"/>
-            <field name="perm_unlink" eval="0"/>
-    </record>
     <record id="contract_header_rule" model="ir.rule">
         <field name="name">contract访问控制1</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_contract"/>
