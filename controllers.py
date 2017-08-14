@@ -91,8 +91,6 @@ class Binary(http.Controller):
         # 获取要到处简历的员工
         Model = request.session.model('hr.employee')
         employees = Model.search_read([('id','in',id_list)])
-
-
         job=''
 
         for i,employee in enumerate(employees):
