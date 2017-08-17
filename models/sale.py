@@ -342,6 +342,7 @@ class demission(models.Model):#
                 if self.demission_date:
                     object.leave_time = self.demission_date
 
+
     @api.depends('employee_id')
     def store_demission_message(self):
         for x in self:
