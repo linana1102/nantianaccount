@@ -533,7 +533,8 @@
             <field name="res_model">nantian_erp.demission</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name ="domain">[('state','!=','done')]</field>
+            <field name="view_id" ref="nantian_erp_demission_tree" />
+            <field name ="domain">['|',('employee_id.states','!=',u'离职'),('employee_id.dis_states','!=',u'已离职')]</field>
          </record>
          <record id="nantian_erp_demission_pending_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -551,6 +552,7 @@
             <field name="res_model">nantian_erp.demission</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="nantian_erp_demission_tree" />
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
          </record>
         <record id="nantian_erp_demission_tree_action" model="ir.actions.act_window.view">

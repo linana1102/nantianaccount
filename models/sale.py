@@ -326,21 +326,30 @@ class demission(models.Model):#
 
     @api.multi
     def confirm_demission_dealer(self):
-        object = self.env['hr.employee'].search([("id", "=", self.employee_id.id)], limit=1)
+        object = self.env['hr.employee'].search([("id", "=", self.employee_id.id)],limit=1)
+        print object
         if object:
+            print object[0]
             if self.state == "done":
-                self.state = "done"
                 self.dealer = self.env.user
                 object.dis_states = u'已离职'
                 object.states = u'离职'
-                print object.dis_states
                 # x.nantian_erp_contract_id = None
                 # x.working_team_id = None
                 # x.contract_jobs_id = None
                 object.active = 0
-                object.user_id.active = 0
+                if object.user_id:
+                    object.user_id.active = 0
                 if self.demission_date:
                     object.leave_time = self.demission_date
+            elif self.state == "no":
+                object.dis_states = u'正常'
+                object.states = u'正常在岗'
+            else:
+                raise exceptions.ValidationError('请将<待确认>设置成<完成>')
+        else:
+            raise exceptions.ValidationError('员工已设置无效，或者不存在')
+            return "false"
 
 
     @api.depends('employee_id')

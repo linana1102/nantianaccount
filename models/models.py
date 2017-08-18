@@ -181,12 +181,7 @@ class hr_employee(models.Model):
                 self.adjust_dst = record.dst
             else:
                 self.adjust_dst = ''
-    @api.multi
-    def over_adjust(self):
-        if self.dis_states == u'申请离职':
-            self.dis_states = u'已离职'
-        else:
-            self.dis_states = u'正常'
+
 
     @api.onchange('phone_money','level','job_id')
     def _check_phone_money(self):

@@ -873,7 +873,6 @@
                                     <li t-if="record.adjust_dst.raw_value"><sapn>调整至：</sapn><field name="adjust_dst"/></li>
                                 </ul>
                                 <button t-if="record.certificate_ids.raw_value" name="%(nantian_erp_certificate_tree)d" type="action" ><sapn>证书：</sapn><field name="certificate_ids"/></button>
-                                <button t-if="record.dis_states.raw_value" name="over_adjust" type="object" groups="nantian_erp.group_hr_manager_assistant"><sapn>结束调整</sapn></button>
 
 
                             </div>
