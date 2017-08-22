@@ -85,10 +85,10 @@ class Binary(http.Controller):
         # 定义压缩文件流
         zip_stream = StringIO()
         resume_zip = zipfile.ZipFile(zip_stream,'w')
-
+        print "参数是什么格式?" ,type(ids)
         # 将参数转为列表
         id_list = json.loads(ids)
-
+        print type(id_list)
         # 获取要到处简历的员工
         Model = request.session.model('hr.employee')
         employees = Model.search_read([('id','in',id_list)])
@@ -158,8 +158,7 @@ class Binary(http.Controller):
         zip_stream.seek(0)
         # 返回压缩文件
         return request.make_response(zip_stream.getvalue() ,
-            headers=[('Content-Disposition',
-                            content_disposition(u'简历'+'.zip')),
+            headers=[('Content-Disposition',content_disposition(u'简历'+'.zip')),
                      ('Content-Type', 'application/zip')],
             )
 
