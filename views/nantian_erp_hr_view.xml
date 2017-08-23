@@ -118,7 +118,7 @@
         </record>
 
         <record id="nantian_erp_start_adjusting" model="ir.actions.act_window">
-            <field name="name">待调整的人员</field>
+            <field name="name">待调整的人员(弃用)</field>
             <field name="res_model">nantian_erp.hr_adjusting</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
