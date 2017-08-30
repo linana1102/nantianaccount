@@ -327,10 +327,10 @@ class resume(models.Model):
     def _needaction_domain_get(self):
         return [('interviewer.id', '=', self.env.uid)]
 
-    name = fields.Char(string='姓名')
-    gender = fields.Selection([('male','男'),('female','女')],string='性别')
-    age = fields.Char(string='年龄')
-    work_age = fields.Char(string='工作年限')
+    name = fields.Char(string='姓名',required='True')
+    gender = fields.Selection([('male','男'),('female','女')],string='性别',required='True')
+    age = fields.Char(string='年龄',required='True')
+    work_age = fields.Char(string='工作年限',required='True')
     education = fields.Selection(
         [
             (u'专科', u"专科"),
@@ -341,10 +341,10 @@ class resume(models.Model):
             (u'高级技工', u"高级技工"),
             (u'高中', u"高中"),
         ],
-         string='学历'
+         string='学历',required='True'
     )
-    phone = fields.Char(string='电话')
-    email = fields.Char(string='邮箱')
+    phone = fields.Char(string='电话',required='True')
+    email = fields.Char(string='邮箱',required='True')
     job = fields.Char(string='求职职位')
     state = fields.Selection([(u'简历库中',u'简历库中'),(u'面试中',u'面试中'),(u'offer审批',u'offer审批'),(u'发offer',u'发offer'),(u'已入职',u'已入职'),(u'发offer未入职',u'发offer未入职'),(u'淘汰',u'淘汰'),(u'暂存',u'暂存')],default=u'简历库中')
     interviewer = fields.Many2one('res.users',default=lambda self: self.env.user,string='面试官')
@@ -635,8 +635,8 @@ class offer_information(models.Model):
     first_department_id = fields.Many2one('hr.department',string='一级部门')
     second_department_id = fields.Many2one('hr.department',string='二级部门')
     working_team_id = fields.Many2one('nantian_erp.working_team',string='三级工作组')
-    contract_time = fields.Integer(string='合同期限')
-    test_time = fields.Integer(string='试用期限')
+    contract_time = fields.Integer(default = 3,string='合同期限')
+    test_time = fields.Integer(default = 3,string='试用期限')
     state = fields.Selection([(u'审批中',u'审批中'),(u'已审批',u'已审批'),(u'已入职',u'已入职'),(u'未设置邮箱',u'未设置邮箱'),(u'完成',u'完成'),(u'未入职',u'未入职'),(u'未通过',u'未通过')],string='状态',default=u'审批中')
     user_id = fields.Many2one('res.users',string='offer填写人')
     examiner_user = fields.Many2one('res.users',string='offer审批人')

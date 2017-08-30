@@ -462,12 +462,12 @@ class hr_employee(models.Model):
             print '总裁',presidents.manager_id.user_id
         data_center_employees_ids = []
         data_employees = self.env['hr.employee'].search(['|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')])
-        print data_employees
+        #print data_employees
         for i in data_employees:
             if i.user_id:
                 # print i.user_id
                 data_center_employees_ids.append(i.user_id.id)
-        print '数据中心员工',data_center_employees_ids
+        #print '数据中心员工',data_center_employees_ids
         data_center_employees = self.env['res.users'].search([('id','in',data_center_employees_ids)])
         data_center_employee_group.users |= data_center_employees
         other_employees_ids = []
@@ -477,7 +477,7 @@ class hr_employee(models.Model):
             if i.user_id:
                 # print i.user_id
                 other_employees_ids.append(i.user_id.id)
-        print '其他部门员工',other_employees_ids
+        #print '其他部门员工',other_employees_ids
         other_employees = self.env['res.users'].search([('id','in',other_employees_ids)])
         employee_group.users |= other_employees
         print '#'*80
