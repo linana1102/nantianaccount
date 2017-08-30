@@ -721,7 +721,7 @@ class offer_information(models.Model):
 
     # 不同意按钮
     @api.multi
-    def diagree(self):
+    def disagree(self):
         self.state = u'未通过'
         self.resume_id.states = u'淘汰'
         self.env['nantian_erp.offer_examine'].create({'user_id':self.examiner_user.id,'result':u'不同意','offer_id':self.id})
