@@ -115,6 +115,7 @@ class Binary(http.Controller):
                 certificates = Model.search_read([('id','in',employee['certificate_ids'])])
                 for cer in certificates:
                     image = ''
+                    name = ''
                     if cer['image']:
                         # 将base64 转为图片
                         f = StringIO(base64.b64decode(str(cer['image'])))
