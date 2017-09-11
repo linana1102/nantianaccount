@@ -538,11 +538,13 @@
          </record>
          <record id="nantian_erp_demission_pending_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+             <field name="sequence" eval="11"/>
             <field name="view_id" ref="nantian_erp_demission_tree" />
             <field name="act_window_id" ref="nantian_erp_demission_pending_action" />
         </record>
         <record id="nantian_erp_demission_pending_from_action" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence" eval="12"/>
             <field name="view_id" ref="nantian_erp_demission_form" />
             <field name="act_window_id" ref="nantian_erp_demission_pending_action" />
         </record>
@@ -557,11 +559,13 @@
          </record>
         <record id="nantian_erp_demission_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
             <field name="view_id" ref="nantian_erp_demission_tree" />
             <field name="act_window_id" ref="nantian_erp_demission_action" />
         </record>
         <record id="nantian_erp_demission_from_action" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
+            <field name="sequence" eval="13"/>
             <field name="view_id" ref="nantian_erp_demission_form" />
             <field name="act_window_id" ref="nantian_erp_demission_action" />
         </record>
