@@ -392,7 +392,7 @@ class resume(models.Model):
             ############################
             #第一条面试记录已经由简历表的简历按钮创建，并且指定了下一个面试官
             # 当前面试官是行业负责人但不是总经理
-            if (self.env.user in customer_manager_group.users and self.env.user not in manager_group.users) or (not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].recruitment_id.working_team_id.partner_id):
+            if (self.interview_ids[0].recruitment_id.working_team_id.partner_id.customer_manager== self.env.user  and self.env.user not in manager_group.users) or (not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].recruitment_id.working_team_id.partner_id):
                 # 看是否填写offer信息
                 if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review or \
                         not self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)])[-1].contract_time or\
