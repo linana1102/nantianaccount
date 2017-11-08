@@ -279,11 +279,13 @@ class recruitment(models.Model):
             reason2 = True
         else:
             reason3 =True
+        working_team = ''
+        if self.working_team_id:
+            working_team = self.working_team_id.name.replace('&','&amp;')
         recruitment_dict = {'user': self.user_id.name or '',
                        'first_department': self.department_id.name or '',
                        'second_department':self.department_id.parent_id.name or '',
-                            # self.working_team_id.name
-                       'working_team': self.working_team_id.name.replace('&', '&amp;') or '',
+                       'working_team': working_team,
                        'job_name': self.job_name or '',
                        'current_num': self.current_employee_num or '',
                        'need_people_num': self.need_people_num or '',
@@ -393,7 +395,7 @@ class resume(models.Model):
             ############################
             #第一条面试记录已经由简历表的简历按钮创建，并且指定了下一个面试官
             # 当前面试官是行业负责人但不是总经理
-            if (self.env.user in customer_manager_group.users and self.env.user not in manager_group.users) or (not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].recruitment_id.working_team_id.partner_id):
+            if (self.interview_ids[0].recruitment_id.working_team_id.partner_id.customer_manager== self.env.user  and self.env.user not in manager_group.users) or (not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].recruitment_id.working_team_id.partner_id):
                 # 看是否填写offer信息
                 if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review or \
                         not self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)])[-1].contract_time or\
@@ -575,7 +577,25 @@ class interview(models.Model):
                 # 下步处理人是否是行业负责人，如果是生成offer信息 或者对应的招聘需求没有行业
                 recruitment=recruitment_model.browse(cr, uid,vals['recruitment_id'],context=None)
                 # 这个位置以后会报错的，因为有的面试创建没有招聘需求
-                if resume.interviewer.name == vals['customer'] or not recruitment[0].working_team_id.partner_id:
+                if recruitment[0].working_team_id:
+                    if resume.interviewer.name == vals['customer'] or not recruitment[0].working_team_id.partner_id:
+                        recruitment = recruitment_model.browse(cr, uid, vals['recruitment_id'], context=None)
+                        offer_model = self.pool.get('nantian_erp.offer_information')
+                        offer_model.create(cr, uid, {'resume_id': vals['resume_id'],
+                                                     'name': resume.name,
+                                                     'phone': resume.phone,
+                                                     'email': resume.email,
+                                                     'gender': resume.gender,
+                                                     'recruitment_id': vals['recruitment_id'],
+                                                     'entry_recruitment_id': vals['recruitment_id'],
+                                                     'job_name': recruitment.job_id.name + '(' + recruitment.job_id.categroy_id.name + ')',
+                                                     'job_level': recruitment.job_level, 'user_id': vals['next_user'],
+                                                     'first_department_id': recruitment.department_id.parent_id.id,
+                                                     'second_department_id': recruitment.department_id.id,
+                                                     'working_team_id': recruitment.working_team_id.id,
+                                                     'channel': recruitment.channel, 'reason': recruitment.reason},
+                                           context=context)
+                else:
                     recruitment = recruitment_model.browse(cr, uid, vals['recruitment_id'], context=None)
                     offer_model = self.pool.get('nantian_erp.offer_information')
                     offer_model.create(cr, uid, {'resume_id': vals['resume_id'],
@@ -589,9 +609,9 @@ class interview(models.Model):
                                                  'job_level': recruitment.job_level, 'user_id': vals['next_user'],
                                                  'first_department_id': recruitment.department_id.parent_id.id,
                                                  'second_department_id': recruitment.department_id.id,
-                                                 'working_team_id': recruitment.working_team_id.id,
                                                  'channel': recruitment.channel, 'reason': recruitment.reason},
                                        context=context)
+
             # 如果没有选招聘需求，并且下步处理人为行业负责人
             elif resume.interviewer in customer_manager_group.users:
                 self.create(cr, uid, {'resume_id': vals['resume_id'],
