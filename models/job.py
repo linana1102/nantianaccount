@@ -282,7 +282,8 @@ class recruitment(models.Model):
         recruitment_dict = {'user': self.user_id.name or '',
                        'first_department': self.department_id.name or '',
                        'second_department':self.department_id.parent_id.name or '',
-                       'working_team': self.working_team_id.name or '',
+                            # self.working_team_id.name
+                       'working_team': self.working_team_id.name.replace('&', '&amp;') or '',
                        'job_name': self.job_name or '',
                        'current_num': self.current_employee_num or '',
                        'need_people_num': self.need_people_num or '',

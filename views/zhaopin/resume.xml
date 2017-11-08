@@ -12,6 +12,7 @@
 
         <menuitem id="nantian_erp_resume_root_menu" parent="nantian_recruitment_root_menu" name="简历" sequence="3"/>
 
+
         <record model="ir.ui.view" id="nantian_erp_resume_form">
             <field name="name">nantian_resume.form</field>
             <field name="model">nantian_erp.resume</field>
@@ -210,6 +211,8 @@
                     <field name="education" string="学历"/>
                     <field name="phone" string="电话"/>
                     <field name="interviewer" string="当前处理人"/>
+                     <field name="state" string="简历状态"/>
+                     <field name="create_uid" string="简历创建者"/>
                 </tree>
             </field>
         </record>
@@ -288,6 +291,7 @@
                     <field name="education" string="学历"/>
                     <field name="phone" string="电话"/>
                     <field name="interviewer" string="当前处理人"/>
+                    <field name="state" string="简历状态"/>
                 </tree>
             </field>
         </record>
@@ -446,12 +450,30 @@
             <field name="view_id" ref="nantian_erp_pending_resume_form" />
             <field name="act_window_id" ref="nantian_erp_zancun_resume_action" />
         </record>
-        <record id="nantian_erp_all_resume_action" model="ir.actions.act_window">
+        <record id="nantian_erp_all_my_resume_action" model="ir.actions.act_window">
             <field name="name">简历(可调整)</field>
             <field name="res_model">nantian_erp.resume</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('create_uid','=',uid)]</field>
+        </record>
+        <record id="nantian_erp_all_my_resume_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+             <field name="sequence" eval="1"/>
+            <field name="view_id" ref="nantian_erp_resume_tree" />
+            <field name="act_window_id" ref="nantian_erp_all_my_resume_action" />
+        </record>
+        <record id="nantian_erp_all_my_resume_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="10"/>
+            <field name="view_id" ref="nantian_erp_all_resume_form" />
+            <field name="act_window_id" ref="nantian_erp_all_my_resume_action" />
+        </record>
+        <record id="nantian_erp_all_resume_action" model="ir.actions.act_window">
+            <field name="name">全部简历</field>
+            <field name="res_model">nantian_erp.resume</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
         <record id="nantian_erp_all_resume_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -465,7 +487,8 @@
             <field name="view_id" ref="nantian_erp_all_resume_form" />
             <field name="act_window_id" ref="nantian_erp_all_resume_action" />
         </record>
-        <menuitem id="nantian_erp_all_resume_menu" parent="nantian_erp_resume_root_menu" name="全部简历" action="nantian_erp_all_resume_action" sequence="7" groups="base.group_system,nantian_erp.group_hr_recruitment" />
+        <menuitem id="nantian_erp_all_my_resume_menu" parent="nantian_erp_resume_root_menu" name="全部简历my" action="nantian_erp_all_my_resume_action" sequence="7" groups="base.group_system,nantian_erp.group_hr_recruitment"/>
+        <menuitem id="nantian_erp_all_resume_menu" parent="nantian_erp_resume_root_menu" name="全部简历all" action="nantian_erp_all_resume_action" sequence="8" groups="base.group_system"/>
         <menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="未处理的简历" action="nantian_erp_resume_action" sequence="1" groups="nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_interviewing_resume_menu" parent="nantian_erp_resume_root_menu" name="面试中的简历" action="nantian_erp_interviewing_resume_action" sequence="2" groups="nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_processed_resume_menu" parent="nantian_erp_resume_root_menu" name="面试过的简历" action="nantian_erp_processed_resume_action" sequence="3" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager,nantian_erp.group_hr_recruitment"/>

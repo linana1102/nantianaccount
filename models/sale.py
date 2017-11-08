@@ -179,7 +179,11 @@ class pers_transfer(models.Model):#
 
     @api.model
     def _needaction_domain_get(self):
-        return [('dis_states', '!=', u'调整完成'),('after_leader', '=', self.env.user.employee_ids[0].id)]
+        if self.env.user.employee_ids:
+            employee_id = self.env.user.employee_ids[0].id
+            return [('dis_states', '!=', u'调整完成'), ('after_leader', '=', employee_id)]
+        else:
+            return [('dis_states', '!=', u'调整完成')]
 
     @api.multi
     def _default_employee_id(self):

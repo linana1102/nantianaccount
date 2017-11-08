@@ -434,7 +434,7 @@
         <record id="action_res_users_hr_assistant_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
             <field name="sequence" eval="10" />
-            <field name="view_id" ref="view_users_form_hr_assistant" />
+            <field name="view_id" ref="base.view_users_form" />
             <field name="act_window_id" ref="action_res_users_hr_assistant" />
         </record>
         <menuitem name="nantian_detail" id="nantian_detail" sequence="20"  parent="nantian_config"  action="nantian_erp_detail_view" groups="nantian_erp.group_nantian_assistant,nantian_erp.group_nantian_boss"/>
@@ -443,7 +443,8 @@
 
         <menuitem name="用户" id="nantian_login_user" sequence="6" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_president_assistant" />
         <menuitem name="用户" id="nantian_login_2_user" parent="nantian_login_user" sequence="1"  />
-        <menuitem name="用户" id="nantian_login_3_user" parent="nantian_login_2_user" sequence="1" action="action_res_users_hr_assistant"/>
+        <menuitem name="用户" id="nantian_login_3_1_user" parent="nantian_login_2_user" sequence="1" action="action_res_users_hr_assistant"/>
+        <menuitem name="用户(视图待调整)" id="nantian_login_3_2_user" parent="nantian_login_2_user" sequence="2" action="action_res_users_hr_assistant" groups="base.group_system"/>
 
     </data>
 </openerp>

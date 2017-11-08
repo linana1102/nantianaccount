@@ -13,8 +13,19 @@
                 </form>
             </field>
         </record>
-
-        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form">
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_tree">
+            <field name="name">company_info_deplay.tree</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="text1_1_1" />
+                    <field name="text1_1_3" />
+                    <field name="text1_1_2" />
+                    <field name="text1_1_4" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form0">
             <field name="name">company_info_deplay.form</field>
             <field name="model">nantian_erp.company_info_deplay</field>
             <field name="arch" type="xml">
@@ -192,19 +203,520 @@
                 </form>
             </field>
         </record>
-        <record id="nantian_erp_company_info_deplay1_action" model="ir.actions.act_window">
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form1">
+            <field name="name">company_info_deplay.form</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <notebook >
+                                <page string="一">
+                                     <group>
+                                    </group>
+                                </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form2">
+            <field name="name">company_info_deplay.form</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <notebook >
+                                <page string="费用报销">
+                                     <group>
+                                          <group string = "费用报销">
+                                                 <field name="text2_3_1" />
+                                                <field name="text2_3_3" />
+                                                 <field name="text2_3_2" />
+                                                <field name="text2_3_4" />
+                                             </group>
+                                         <group>
+                                             <field name="attachment2_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
+                                                 </tree>
+                                             </field>
+                                         </group>
+                                    </group>
+                                    <group >
+                                             <group string = "住房公积金提取">
+                                            <field name="text2_1_1" />
+                                            <field name="text2_1_3" />
+                                            <field name="text2_1_2" />
+                                            <field name="text2_1_4" />
+                                         </group>
+                                         </group>
+                                </page>
+                         <page string="三.入，离职，合同类">
+                             <group>
+                                         <group string = "员工入职">
+                                                 <field name="text3_1_1" />
+                                                <field name="text3_1_3" />
+                                                 <field name="text3_1_2" />
+                                                    <field name="text3_1_4" />
+                                         </group>
+                                        <group>
+                                            <field name="attachment3_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
+                                                 </tree>
+                                             </field>
+                                         </group>
+                                         <group string = "员工转正">
+                                            <field name="text3_2_1" />
+                                            <field name="text3_2_3" />
+                                            <field name="text3_2_2" />
+                                            <field name="text3_2_4" />
+                                         </group>
+                                          <group string = "员工合同续签">
+                                             <field name="text3_3_1" />
+                                             <field name="text3_3_3" />
+                                             <field name="text3_3_2" />
+                                             <field name="text3_3_4" />
+                                          </group>
+                                           <group string = "员工离职">
+                                              <field name="text3_4_1" />
+                                              <field name="text3_4_3" />
+                                              <field name="text3_4_2" />
+                                              <field name="text3_4_4" />
+                                           </group>
+                                         <group string = "员工询问年假天数">
+                                            <field name="text3_5_1" />
+                                            <field name="text3_5_3" />
+                                            <field name="text3_5_2" />
+                                            <field name="text3_5_4" />
+                                         </group>
+                             </group>
+                                </page>
+                         <page string="四.用章申请类">
+                                     <group>
+                                         <group string = "开取社保证明">
+                                                <field name="text4_1_1" />
+                                                <field name="text4_1_3" />
+                                                <field name="text4_1_2" />
+                                                <field name="text4_1_4" />
+                                         </group>
+                                         <group string = "协助办理各类用章申请">
+                                                <field name="text4_2_1" />
+                                                <field name="text4_2_3" />
+                                                <field name="text4_2_2" />
+                                                <field name="text4_2_4" />
+                                         </group>
+                                    </group>
+                                    <group>
+                                        <field name="attachment4_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
+                                                 </tree>
+                                             </field>
+                                    </group>
+                                </page>
+                         <page string="五.福利类">
+                                     <group>
+                                         <group string = "发放生日券、慰问卡、工服、年节贺卡等">
+                                             <field name="text5_1_1" />
+                                             <field name="text5_1_3" />
+                                             <field name="text5_1_2" />
+                                             <field name="text5_1_4" />
+                                         </group>
+                                         <group string = "办公电脑领取/验机">
+                                             <field name="text5_2_1" />
+                                             <field name="text5_2_3" />
+                                             <field name="text5_2_2" />
+                                             <field name="text5_2_4" />
+
+                                         </group>
+                                    </group>
+                                        <group>
+                                                <field name="attachment5_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
+                                                 </tree>
+                                             </field>
+                                         </group>
+                                </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form3">
+            <field name="name">company_info_deplay.form</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <notebook >
+                         <page string="用章申请类">
+                                     <group>
+                                         <group string = "开取社保证明">
+                                                <field name="text4_1_1" />
+                                                <field name="text4_1_3" />
+                                                <field name="text4_1_2" />
+                                                <field name="text4_1_4" />
+                                         </group>
+                                         <group string = "协助办理各类用章申请">
+                                                <field name="text4_2_1" />
+                                                <field name="text4_2_3" />
+                                                <field name="text4_2_2" />
+                                                <field name="text4_2_4" />
+                                         </group>
+                                    </group>
+                                    <group>
+                                        <field name="attachment4_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
+                                                 </tree>
+                                             </field>
+                                    </group>
+                                </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form4">
+            <field name="name">company_info_deplay.form</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <notebook >
+                                <page string="一.社保，医疗报销类">
+                                     <group>
+                                         <group>
+                                             <field name="attachment1_id" placeholder="Other Information ..." context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
+                                                 </tree>
+                                             </field>
+                                         </group>
+                                         <group string = "修改社保医院" >
+                                            <field name="text1_2_1" />
+                                            <field name="text1_2_3" />
+                                            <field name="text1_2_2" />
+                                            <field name="text1_2_4" />
+                                         </group>
+                                         <group string = "医疗二次报销" >
+                                               <field name="text1_4_1" />
+                                               <field name="text1_4_3" />
+                                               <field name="text1_4_2" />
+                                               <field name="text1_4_4" />
+                                         </group>
+                                    </group>
+                                </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form5">
+            <field name="name">company_info_deplay.form</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <notebook >
+                         <page string="电脑领取">
+                                     <group>
+                                         <group string = "办公电脑领取/验机">
+                                             <field name="text5_2_1" />
+                                             <field name="text5_2_3" />
+                                             <field name="text5_2_2" />
+                                             <field name="text5_2_4" />
+
+                                         </group>
+                                    </group>
+                                        <group>
+                                                <field name="attachment5_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
+                                                 </tree>
+                                             </field>
+                                         </group>
+                                </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form6">
+            <field name="name">company_info_deplay.form</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <notebook >
+                         <page string="转正">
+                             <group>
+                                         <group string = "员工转正">
+                                            <field name="text3_2_1" />
+                                            <field name="text3_2_3" />
+                                            <field name="text3_2_2" />
+                                            <field name="text3_2_4" />
+                                         </group>
+                                          <group string = "员工合同续签">
+                                             <field name="text3_3_1" />
+                                             <field name="text3_3_3" />
+                                             <field name="text3_3_2" />
+                                             <field name="text3_3_4" />
+                                          </group>
+                             </group>
+                                </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form7">
+            <field name="name">company_info_deplay.form</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <notebook >
+                         <page string="离职">
+                             <group>
+                                           <group string = "员工离职">
+                                              <field name="text3_4_1" />
+                                              <field name="text3_4_3" />
+                                              <field name="text3_4_2" />
+                                              <field name="text3_4_4" />
+                                           </group>
+                                    </group>
+                                </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form8">
+            <field name="name">company_info_deplay.form</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <notebook >
+                                <page string="一.">
+
+                                </page>
+                                <page string="二.">
+                                </page>
+                                 <page string="三.">
+                                </page>
+                                <page string="四.">
+                                </page>
+                                <page string="五.">
+                                </page>
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="nantian_erp_company_info_deplay0_action" model="ir.actions.act_window">
             <field name="name">行政</field>
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
             <field name="domain">[('id','=','1')]</field>
             <field name="res_id">1</field>
-
          </record>
+        <record id="nantian_erp_company_info_deplay0_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_tree" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay0_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay0_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_form0" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay0_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay1_action" model="ir.actions.act_window">
+            <field name="name">常用联系表</field>
+            <field name="res_model">nantian_erp.company_info_deplay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('id','=','1')]</field>
+            <field name="res_id">1</field>
+         </record>
+        <record id="nantian_erp_company_info_deplay1_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_tree" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay1_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay1_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_form1" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay1_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay2_action" model="ir.actions.act_window">
+            <field name="name">常规费用报销</field>
+            <field name="res_model">nantian_erp.company_info_deplay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('id','=','1')]</field>
+            <field name="res_id">1</field>
+         </record>
+        <record id="nantian_erp_company_info_deplay2_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_tree" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay2_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay2_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_form2" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay2_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay3_action" model="ir.actions.act_window">
+            <field name="name">用章申请</field>
+            <field name="res_model">nantian_erp.company_info_deplay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('id','=','1')]</field>
+            <field name="res_id">1</field>
+         </record>
+        <record id="nantian_erp_company_info_deplay3_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_tree" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay3_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay3_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_form3" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay3_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay4_action" model="ir.actions.act_window">
+            <field name="name">修改社保医院</field>
+            <field name="res_model">nantian_erp.company_info_deplay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('id','=','1')]</field>
+            <field name="res_id">1</field>
+         </record>
+        <record id="nantian_erp_company_info_deplay4_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_tree" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay4_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay4_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_form4" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay4_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay5_action" model="ir.actions.act_window">
+            <field name="name">电脑领用</field>
+            <field name="res_model">nantian_erp.company_info_deplay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('id','=','1')]</field>
+            <field name="res_id">1</field>
+         </record>
+        <record id="nantian_erp_company_info_deplay5_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_tree" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay5_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay5_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_form5" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay5_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay6_action" model="ir.actions.act_window">
+            <field name="name">转正</field>
+            <field name="res_model">nantian_erp.company_info_deplay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('id','=','1')]</field>
+            <field name="res_id">1</field>
+         </record>
+        <record id="nantian_erp_company_info_deplay6_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_tree" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay6_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay6_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_form6" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay6_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay7_action" model="ir.actions.act_window">
+            <field name="name">离职</field>
+            <field name="res_model">nantian_erp.company_info_deplay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('id','=','1')]</field>
+            <field name="res_id">1</field>
+         </record>
+        <record id="nantian_erp_company_info_deplay7_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_tree" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay7_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay7_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_form7" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay7_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay8_action" model="ir.actions.act_window">
+            <field name="name">各种资质文件</field>
+            <field name="res_model">nantian_erp.company_info_deplay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('id','=','1')]</field>
+            <field name="res_id">1</field>
+         </record>
+        <record id="nantian_erp_company_info_deplay8_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_tree" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay8_action" />
+        </record>
+        <record id="nantian_erp_company_info_deplay8_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="11"/>
+            <field name="view_id" ref="nantian_erp_company_info_deplay_form8" />
+            <field name="act_window_id" ref="nantian_erp_company_info_deplay8_action" />
+        </record>
 
         <menuitem id="nantian_erp_company_info_deplay_menu" name="行政" sequence="2"/>
         <menuitem id="nantian_erp_company_info_deplay" parent="nantian_erp_company_info_deplay_menu" name="行政"/>
-        <menuitem id="nantian_erp_company_info_deplay_1" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay1_action" name="行政"/>
+        <menuitem id="nantian_erp_company_info_deplay_0" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay0_action" name="行政" sequence="1"/>
+        <menuitem id="nantian_erp_company_info_deplay_1" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay1_action" name="常用联系表"/>
+        <menuitem id="nantian_erp_company_info_deplay_2" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay2_action" name="常规费用报销"/>
+        <menuitem id="nantian_erp_company_info_deplay_3" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay3_action" name="用章申请"/>
+        <menuitem id="nantian_erp_company_info_deplay_4" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay4_action" name="修改社保医院"/>
+        <menuitem id="nantian_erp_company_info_deplay_5" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay5_action" name="电脑领用"/>
+        <menuitem id="nantian_erp_company_info_deplay_6" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay6_action" name="转正"/>
+        <menuitem id="nantian_erp_company_info_deplay_7" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay7_action" name="离职"/>
+        <menuitem id="nantian_erp_company_info_deplay_8" parent="nantian_erp_company_info_deplay" action="nantian_erp_company_info_deplay8_action" name="各种资质文件"/>
 
     </data>
 </openerp>
