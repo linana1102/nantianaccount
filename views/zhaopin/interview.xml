@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="nantian_erp_interview_root_menu" parent="nantian_recruitment_root_menu" name="管理" sequence="80"/>
         <record model="ir.ui.view" id="nantian_erp_interview_form">
             <field name="name">nantian_interview.form</field>
             <field name="model">nantian_erp.interview</field>
@@ -67,10 +66,12 @@
             <field name="model">nantian_erp.interview</field>
             <field name="arch" type="xml">
             <search string="Search Interview">
-                <filter string="My" domain="[('user_id', '=', uid)]"/>
-                <separator/>
-                <field name="recruitment_id"/>
-                <field name="resume_id"/>
+                <filter string="我创建的面试" domain="[('interviewer.id', '=', uid)]"/>
+                <group expand="0" string="分组">
+                    <filter string="招聘岗位" name="recruitment_id" context="{'group_by':'recruitment_id'}"/>
+                    <filter string="求职者" name="resume_id" context="{'group_by':'resume_id'}"/>
+                    <filter string="近一个月的面试"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=30)).strftime('%%Y/%%m/%%d')))]"/>
+                </group>
             </search>
             </field>
          </record>
@@ -83,11 +84,12 @@
             <!--<field name="view_id" ref="nantian_erp_interview_tree" />-->
         </record>
         <record id="nantian_erp_interview_special_action" model="ir.actions.act_window">
-            <field name="name">无招聘需求的面试</field>
+            <field name="name">无招聘需求</field>
             <field name="res_model">nantian_erp.interview</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <!--<field name="view_id" ref="nantian_erp_interview_tree" />-->
+            <field name="context">{'search_default_create_date': 1}</field>
         </record>
         <record id="nantian_erp_interview_special_action_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -101,10 +103,5 @@
             <field name="view_id" ref="nantian_erp_special_interview_form" />
             <field name="act_window_id" ref="nantian_erp_interview_special_action" />
         </record>
-        <menuitem id="nantian_erp_interview_menu" parent="nantian_erp_interview_root_menu"  name="全部的面试记录" action="nantian_erp_interview_action" sequence="1" groups="nantian_erp.group_hr_recruitment,base.group_system"/>
-        <menuitem id="nantian_erp_special_interview_menu" parent="nantian_erp_interview_root_menu"  name="特殊面试(无招聘需求)" action="nantian_erp_interview_special_action" sequence="2" groups="nantian_erp.group_hr_recruitment,base.group_system"/>
-
-
-
     </data>
 </openerp>

@@ -20,6 +20,8 @@ class categroy(models.Model):
 # 岗位表
 class jobs(models.Model):
     _name = 'nantian_erp.job'
+    _rec_name = 'name'
+
 
     name = fields.Char(string='名称')
     categroy_id = fields.Many2one('nantian_erp.categroy',string='岗位类别')
@@ -353,6 +355,12 @@ class resume(models.Model):
     interviewer = fields.Many2one('res.users',default=lambda self: self.env.user,string='面试官')
     interview_ids = fields.One2many('nantian_erp.interview','resume_id')
     offer_information_id = fields.One2many('nantian_erp.offer_information','resume_id',string='offer信息')
+    job_id =fields.Many2one('nantian_erp.job',string='匹配的职位')
+    interviewer_evaluation = fields.Text(string='面试评价')
+    talent_pool = fields.Boolean(string='是否人才储备')
+
+
+
 
     # 发邮件函数
     def send_email(self,cr,uid,user,context=None):
