@@ -234,16 +234,14 @@
                                                  <field name="text2_3_2" />
                                                 <field name="text2_3_4" />
                                              </group>
-                                         <group>
+                                    </group>
+                                    <group>
                                              <field name="attachment2_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
                                                  <tree >
                                                      <field name="text_binary" filename="title"/>
                                                      <field name="title" invisible="1"/>
                                                  </tree>
                                              </field>
-                                         </group>
-                                    </group>
-                                        <group >
                                          </group>
                                 </page>
                      </notebook>
@@ -393,6 +391,10 @@
                                             <field name="text3_2_2" />
                                             <field name="text3_2_4" />
                                          </group>
+                             </group>
+                                </page>
+                         <page string="续签">
+                             <group>
                                           <group string = "员工合同续签">
                                              <field name="text3_3_1" />
                                              <field name="text3_3_3" />

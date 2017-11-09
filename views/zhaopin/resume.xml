@@ -211,7 +211,6 @@
                                 <h1><field name="name" class="oe_inline" readonly="True"/></h1>
                          </div>
                          <div class="oe_right" name="buttons">
-                            <button  class="oe_stat_button" icon="fa-book" string="简历"/>
                          </div>
                          <group>
                              <group>
@@ -291,7 +290,6 @@
                                 <h1><field name="name" class="oe_inline"/></h1>
                          </div>
                          <div class="oe_right" name="buttons">
-                            <button  class="oe_stat_button" icon="fa-book" string="简历"/>
                          </div>
                          <group>
                              <group>
