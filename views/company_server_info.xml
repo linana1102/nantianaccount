@@ -243,65 +243,23 @@
                                              </field>
                                          </group>
                                     </group>
-                                    <group >
-                                             <group string = "住房公积金提取">
-                                            <field name="text2_1_1" />
-                                            <field name="text2_1_3" />
-                                            <field name="text2_1_2" />
-                                            <field name="text2_1_4" />
-                                         </group>
+                                        <group >
                                          </group>
                                 </page>
-                         <page string="三.入，离职，合同类">
-                             <group>
-                                         <group string = "员工入职">
-                                                 <field name="text3_1_1" />
-                                                <field name="text3_1_3" />
-                                                 <field name="text3_1_2" />
-                                                    <field name="text3_1_4" />
-                                         </group>
-                                        <group>
-                                            <field name="attachment3_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
-                                                     <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
-                                                 </tree>
-                                             </field>
-                                         </group>
-                                         <group string = "员工转正">
-                                            <field name="text3_2_1" />
-                                            <field name="text3_2_3" />
-                                            <field name="text3_2_2" />
-                                            <field name="text3_2_4" />
-                                         </group>
-                                          <group string = "员工合同续签">
-                                             <field name="text3_3_1" />
-                                             <field name="text3_3_3" />
-                                             <field name="text3_3_2" />
-                                             <field name="text3_3_4" />
-                                          </group>
-                                           <group string = "员工离职">
-                                              <field name="text3_4_1" />
-                                              <field name="text3_4_3" />
-                                              <field name="text3_4_2" />
-                                              <field name="text3_4_4" />
-                                           </group>
-                                         <group string = "员工询问年假天数">
-                                            <field name="text3_5_1" />
-                                            <field name="text3_5_3" />
-                                            <field name="text3_5_2" />
-                                            <field name="text3_5_4" />
-                                         </group>
-                             </group>
-                                </page>
-                         <page string="四.用章申请类">
+                     </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form3">
+            <field name="name">company_info_deplay.form</field>
+            <field name="model">nantian_erp.company_info_deplay</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                     <notebook >
+                         <page string="协助办理各类用章申请">
                                      <group>
-                                         <group string = "开取社保证明">
-                                                <field name="text4_1_1" />
-                                                <field name="text4_1_3" />
-                                                <field name="text4_1_2" />
-                                                <field name="text4_1_4" />
-                                         </group>
                                          <group string = "协助办理各类用章申请">
                                                 <field name="text4_2_1" />
                                                 <field name="text4_2_3" />
@@ -318,56 +276,13 @@
                                              </field>
                                     </group>
                                 </page>
-                         <page string="五.福利类">
-                                     <group>
-                                         <group string = "发放生日券、慰问卡、工服、年节贺卡等">
-                                             <field name="text5_1_1" />
-                                             <field name="text5_1_3" />
-                                             <field name="text5_1_2" />
-                                             <field name="text5_1_4" />
-                                         </group>
-                                         <group string = "办公电脑领取/验机">
-                                             <field name="text5_2_1" />
-                                             <field name="text5_2_3" />
-                                             <field name="text5_2_2" />
-                                             <field name="text5_2_4" />
-
-                                         </group>
-                                    </group>
-                                        <group>
-                                                <field name="attachment5_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
-                                                     <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
-                                                 </tree>
-                                             </field>
-                                         </group>
-                                </page>
-                     </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="nantian_erp_company_info_deplay_form3">
-            <field name="name">company_info_deplay.form</field>
-            <field name="model">nantian_erp.company_info_deplay</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                     <notebook >
-                         <page string="用章申请类">
+                         <page string="开取社保证明">
                                      <group>
                                          <group string = "开取社保证明">
                                                 <field name="text4_1_1" />
                                                 <field name="text4_1_3" />
                                                 <field name="text4_1_2" />
                                                 <field name="text4_1_4" />
-                                         </group>
-                                         <group string = "协助办理各类用章申请">
-                                                <field name="text4_2_1" />
-                                                <field name="text4_2_3" />
-                                                <field name="text4_2_2" />
-                                                <field name="text4_2_4" />
                                          </group>
                                     </group>
                                     <group>
@@ -391,9 +306,16 @@
                 <form>
                     <sheet>
                      <notebook >
-                                <page string="一.社保，医疗报销类">
+                                <page string="社保">
                                      <group>
-                                         <group>
+                                         <group string = "修改社保医院" >
+                                            <field name="text1_2_1" />
+                                            <field name="text1_2_3" />
+                                            <field name="text1_2_2" />
+                                            <field name="text1_2_4" />
+                                         </group>
+                                    </group>
+                                    <group>
                                              <field name="attachment1_id" placeholder="Other Information ..." context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
                                                  <tree >
                                                      <field name="text_binary" filename="title"/>
@@ -401,12 +323,9 @@
                                                  </tree>
                                              </field>
                                          </group>
-                                         <group string = "修改社保医院" >
-                                            <field name="text1_2_1" />
-                                            <field name="text1_2_3" />
-                                            <field name="text1_2_2" />
-                                            <field name="text1_2_4" />
-                                         </group>
+                                </page>
+                         <page string="医疗报销">
+                                     <group>
                                          <group string = "医疗二次报销" >
                                                <field name="text1_4_1" />
                                                <field name="text1_4_3" />
@@ -414,6 +333,14 @@
                                                <field name="text1_4_4" />
                                          </group>
                                     </group>
+                                    <group>
+                                             <field name="attachment1_id" placeholder="Other Information ..." context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree >
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="title" invisible="1"/>
+                                                 </tree>
+                                             </field>
+                                         </group>
                                 </page>
                      </notebook>
                     </sheet>
