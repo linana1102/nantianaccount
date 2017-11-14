@@ -35,9 +35,9 @@ class hr_employee(models.Model):
     work_time = fields.Date(track_visibility='onchange')
     entry_time = fields.Date(track_visibility='onchange')
     contract_starttime = fields.Date(track_visibility='onchange')
-    contract_endtime = fields.Date(string='合同终止时间')
+    contract_endtime = fields.Date(compute='_get_end_date',store = True,string='合同终止时间')
     contract_len = fields.Integer(track_visibility='onchange')
-    is_forever = fields.Boolean(string='无期限？',track_visibility='onchange')
+    is_forever = fields.Boolean(compute='_get_end_date',store = True,string='无期限？',track_visibility='onchange')
     education = fields.Selection(
         [
             (u'专科', u"专科"),
@@ -62,6 +62,13 @@ class hr_employee(models.Model):
             (u'7',7),
             (u'8',8),
             (u'9',9),
+            (u'10',10),
+            (u'11',11),
+            (u'12',12),
+            (u'13',13),
+            (u'14',14),
+            (u'15',15),
+            (u'16',16)
         ],
             track_visibility='onchange'
     )
@@ -1007,6 +1014,7 @@ class hr_leave(models.Model):
 class hr_leave_type(models.Model):
     _name = 'nantian_erp.hr_leave_type'
     name = fields.Char(string='请假类型')
+
 #南天合同--岗位
 class jobs(models.Model):
     _name = 'nantian_erp.jobs'

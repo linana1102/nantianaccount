@@ -14,6 +14,8 @@ import xlwt
 # 岗位类别表
 class categroy(models.Model):
     _name = 'nantian_erp.categroy'
+    _rec_name = 'name'
+
     name = fields.Char()
 
 
@@ -22,14 +24,15 @@ class jobs(models.Model):
     _name = 'nantian_erp.job'
     _rec_name = 'name'
 
-
     name = fields.Char(string='名称')
     categroy_id = fields.Many2one('nantian_erp.categroy',string='岗位类别')
+    job_categroy_id = fields.One2many('nantian_erp.job_categroy','job_id', string='职位')
 
 
 # 岗位级别表
 class job_categroy(models.Model):
     _name = 'nantian_erp.job_categroy'
+    _rec_name = 'name'
 
     name = fields.Char(string='类别')
     job_id = fields.Many2one('nantian_erp.job',string='职位')
@@ -53,7 +56,24 @@ class recruitment(models.Model):
     job_id =fields.Many2one('nantian_erp.job',string='职位',required='True')
     job_name = fields.Char(related='job_id.name')
     position_categroy_2 = fields.Many2one('nantian_erp.job_categroy')
-    job_level = fields.Selection([(u'1',u'1'),(u'2',u'2'),(u'3',u'3'),(u'4',u'4'),(u'5',u'5')],string='职级',required='True')
+    job_level = fields.Selection([
+        (u'1', 1),
+        (u'2', 2),
+        (u'3', 3),
+        (u'4', 4),
+        (u'5', 5),
+        (u'6', 6),
+        (u'7', 7),
+        (u'8', 8),
+        (u'9', 9),
+        (u'10', 10),
+        (u'11', 11),
+        (u'12', 12),
+        (u'13', 13),
+        (u'14', 14),
+        (u'15', 15),
+        (u'16', 16)
+    ],string='职级',required='True')
     duties = fields.Text(string= '职责',required='True')
     requirements = fields.Text(string='要求',required='True')
     salary = fields.Char(string='薪资',required='True')
@@ -757,7 +777,7 @@ class offer_information(models.Model):
         self.examiner_user = None
         self.resume_id.interviewer = None
 
-    # 通过建立创建员工
+    # 入职按钮 通过建立创建员工
     def create_employee_from_resume(self, cr, uid, ids, context=None):
         """ Create an hr.employee from the nantian_erp.offer """
         if context is None:
@@ -791,10 +811,7 @@ class offer_information(models.Model):
                # 创建入职记录
                 entry_id = nantian_entry.create(cr,uid,{
                     'resume_id':offer.resume_id.id,
-                    'user_id':uid,
-
-                },context=create_ctx
-
+                    'user_id':uid,},context=create_ctx
                 )
                 # 修改offer的状态为未设置邮箱
                 self.write(cr, uid, [offer.id], {'emp_id': emp_id,'entry_id':entry_id,'state':u'未设置邮箱'}, context=context)
@@ -809,7 +826,7 @@ class offer_information(models.Model):
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
 
-    # 发offer不入职
+    #不入职按钮,(已经发了offer)
     @api.multi
     def create_entry(self):
         self.resume_id.states = u'未入职'

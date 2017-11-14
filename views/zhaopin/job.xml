@@ -496,6 +496,35 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="nantian_erp_create_job_form">
+            <field name="name">岗位名称创建</field>
+            <field name="model">nantian_erp.job</field>
+            <field name="arch" type="xml">
+                <form string="create_job" >
+                    <group>
+                        <group>
+                            <field name="name" string="岗位名称"/>
+                            <field name="categroy_id" string="岗位类别"/>
+                            <field name="job_categroy_id" string="岗位级别"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="nantian_erp_create_job_tree">
+            <field name="name">南天岗位名称</field>
+            <field name="model">nantian_erp.job</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="name" string="岗位名称"/>
+                    <field name="categroy_id" string="岗位类别"/>
+                    <field name="job_categroy_id" string="岗位级别"/>
+                </tree>
+            </field>
+        </record>
          <record id="nantian_erp_job_categroy_action" model="ir.actions.act_window">
             <field name="name">岗位级别</field>
             <field name="res_model">nantian_erp.job_categroy</field>
@@ -504,12 +533,24 @@
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
          </record>
         <record id="nantian_erp_job_action" model="ir.actions.act_window">
-            <field name="name">岗位</field>
+            <field name="name">岗位名称</field>
             <field name="res_model">nantian_erp.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
          </record>
+        <record id="nantian_erp_job__tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+             <field name="sequence" eval="1"/>
+            <field name="view_id" ref="nantian_erp_create_job_tree" />
+            <field name="act_window_id" ref="nantian_erp_job_action" />
+        </record>
+        <record id="nantian_erp_job_from_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="2"/>
+            <field name="view_id" ref="nantian_erp_create_job_form" />
+            <field name="act_window_id" ref="nantian_erp_job_action" />
+        </record>
         <record id="nantian_erp_job_type_action" model="ir.actions.act_window">
             <field name="name">岗位类别</field>
             <field name="res_model">nantian_erp.categroy</field>
@@ -517,8 +558,8 @@
             <field name="view_mode">tree,form</field>
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
          </record>
-        <menuitem id="nantian_erp_job_categroy_menu" parent="nantian_set_job_menu"  name="岗位级别" action="nantian_erp_job_categroy_action" sequence="3" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
-        <menuitem id="nantian_erp_job_menu" parent="nantian_set_job_menu"  name="岗位创建" action="nantian_erp_job_action" sequence="3" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
-        <menuitem id="nantian_erp_job_type_menu" parent="nantian_set_job_menu"  name="岗位类别" action="nantian_erp_job_type_action" sequence="3" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
+
+        <menuitem id="nantian_erp_job_menu" parent="nantian_set_job_menu"  name="岗位创建" action="nantian_erp_job_action" sequence="1" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
+        <menuitem id="nantian_erp_job_type_menu" parent="nantian_set_job_menu"  name="岗位类别" action="nantian_erp_job_type_action" sequence="2" groups="base.group_system"/>
     </data>
 </openerp>

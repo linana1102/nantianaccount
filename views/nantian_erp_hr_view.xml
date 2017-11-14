@@ -154,6 +154,7 @@
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
                                         <field name="job_id" string="职位" />
+                                        <field name="position_id" string="匹配岗位" />
                                         <!--<field name="parent_id" string="上一级" />-->
                                         <field name="leader" string="上一级" />
                                         <field name="coach_id" invisible="True"/>
@@ -173,6 +174,7 @@
                                     <group >
                                          <field name="entry_time" string="入职时间" />
                                         <field name="entry_len" string="在司年限" />
+                                        <field name="contract_starttime" string="合同开始时间" />
                                         <field name="contract_len" string="合同期限" attrs="{'invisible':[('is_forever','=',True)]}" />
                                         <field name="contract_endtime" string="合同终止时间" />
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
@@ -277,6 +279,7 @@
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)" readonly="True"/>
                                         <field name="job_id" string="职位"  readonly="True"/>
+                                        <field name="position_id" string="匹配岗位"  readonly="True"/>
                                         <!--<field name="parent_id" string="上一级"  readonly="True"/>-->
                                         <field name="leader" string="上一级"  readonly="True"/>
                                         <field name="coach_id" readonly="True" invisible="True"/>
@@ -295,6 +298,7 @@
                                 <group string="合同信息">
                                     <group >
                                         <field name="entry_time" string="入职时间"  readonly="True"/>
+                                        <field name="contract_starttime" string="合同开始时间" />
                                         <field name="contract_len" string="合同期限" readonly="True" attrs="{'invisible':[('is_forever','=',True)]}" />
                                         <field name="contract_endtime" string="合同终止时间"  readonly="True"/>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)" readonly="True"/>
@@ -424,6 +428,8 @@
                     <filter string="在司年限分布" icon="terp-personal+" domain="[]" context="{'group_by':'entry_age_distribute'}"/>
                     <filter string="离职时间" icon="terp-personal+" domain="[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]" context="{'group_by':'leave_time'}"/>
                     <filter string="入职时间" icon="terp-personal+" domain="[('entry_time','&gt;=',((context_today()-relativedelta(months=12))).strftime('%%Y/%%m/%%d'))]" context="{'group_by':'entry_time'}"/>
+                    <filter string="匹配岗位" icon="terp-personal+" domain="[]" context="{'group_by':'position_id'}"/>
+
                 </xpath>
                 <xpath expr="//filter[@string='Job']" position="replace">
                 </xpath>
