@@ -17,7 +17,7 @@
             <field name="name">company_info_deplay.tree</field>
             <field name="model">nantian_erp.company_info_deplay</field>
             <field name="arch" type="xml">
-                <tree >
+                <tree editable="top">
                     <field name="text1_1_1" />
                     <field name="text1_1_3" />
                     <field name="text1_1_2" />
@@ -42,9 +42,10 @@
                                          </group>
                                          <group>
                                              <field name="attachment1_id" placeholder="Other Information ..." context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
                                                      <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
                                                  </tree>
                                              </field>
                                          </group>
@@ -85,9 +86,10 @@
                                              </group>
                                          <group>
                                              <field name="attachment2_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
                                                      <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
                                                  </tree>
                                              </field>
                                          </group>
@@ -117,9 +119,10 @@
                                          </group>
                                         <group>
                                             <field name="attachment3_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
                                                      <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
                                                  </tree>
                                              </field>
                                          </group>
@@ -166,9 +169,10 @@
                                     </group>
                                     <group>
                                         <field name="attachment4_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
                                                      <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
                                                  </tree>
                                              </field>
                                     </group>
@@ -191,9 +195,10 @@
                                     </group>
                                         <group>
                                                 <field name="attachment5_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
                                                      <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
                                                  </tree>
                                              </field>
                                          </group>
@@ -210,8 +215,15 @@
                 <form>
                     <sheet>
                      <notebook >
-                                <page string="一">
+                                <page string="通讯录">
                                      <group>
+                                          <field name="address_list_ids">
+                                                 <tree editable="top" >
+                                                     <field name="text1" />
+                                                     <field name="text2" />
+                                                     <field name="text3" />
+                                                 </tree>
+                                             </field>
                                     </group>
                                 </page>
                      </notebook>
@@ -235,16 +247,17 @@
                                                 <field name="text2_3_4" />
                                              </group>
                                     </group>
-                                    <group>
-                                             <field name="attachment2_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
-                                                     <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
-                                                 </tree>
-                                             </field>
-                                         </group>
                                 </page>
                      </notebook>
+                        <group>
+                                             <field name="attachment2_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
+                                                 </tree>
+                                             </field>
+                         </group>
                     </sheet>
                 </form>
             </field>
@@ -265,14 +278,6 @@
                                                 <field name="text4_2_4" />
                                          </group>
                                     </group>
-                                    <group>
-                                        <field name="attachment4_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
-                                                     <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
-                                                 </tree>
-                                             </field>
-                                    </group>
                                 </page>
                          <page string="开取社保证明">
                                      <group>
@@ -283,16 +288,17 @@
                                                 <field name="text4_1_4" />
                                          </group>
                                     </group>
-                                    <group>
-                                        <field name="attachment4_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
-                                                     <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
-                                                 </tree>
-                                             </field>
-                                    </group>
                                 </page>
                      </notebook>
+                        <group>
+                                        <field name="attachment3_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
+                                                 </tree>
+                                             </field>
+                            </group>
                     </sheet>
                 </form>
             </field>
@@ -313,14 +319,6 @@
                                             <field name="text1_2_4" />
                                          </group>
                                     </group>
-                                    <group>
-                                             <field name="attachment1_id" placeholder="Other Information ..." context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
-                                                     <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
-                                                 </tree>
-                                             </field>
-                                         </group>
                                 </page>
                          <page string="医疗报销">
                                      <group>
@@ -331,16 +329,17 @@
                                                <field name="text1_4_4" />
                                          </group>
                                     </group>
-                                    <group>
-                                             <field name="attachment1_id" placeholder="Other Information ..." context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
+                                </page>
+                     </notebook>
+                        <group>
+                                             <field name="attachment4_id" placeholder="Other Information ..." context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
                                                      <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
                                                  </tree>
                                              </field>
                                          </group>
-                                </page>
-                     </notebook>
                     </sheet>
                 </form>
             </field>
@@ -362,16 +361,17 @@
 
                                          </group>
                                     </group>
-                                        <group>
+                                </page>
+                     </notebook>
+                        <group>
                                                 <field name="attachment5_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
-                                                 <tree >
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
                                                      <field name="text_binary" filename="title"/>
-                                                     <field name="title" invisible="1"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
                                                  </tree>
                                              </field>
                                          </group>
-                                </page>
-                     </notebook>
                     </sheet>
                 </form>
             </field>
@@ -404,6 +404,15 @@
                              </group>
                                 </page>
                      </notebook>
+                        <group>
+                                                <field name="attachment6_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
+                                                 </tree>
+                                             </field>
+                     </group>
                     </sheet>
                 </form>
             </field>
@@ -426,6 +435,15 @@
                                     </group>
                                 </page>
                      </notebook>
+                        <group>
+                                                <field name="attachment7_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree editable="top" >
+                                                     <field name="title" invisible="True"/>
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="text_binary" string = "表格填写示例" filename="示例可预览"/>
+                                                 </tree>
+                                             </field>
+                         </group>
                     </sheet>
                 </form>
             </field>
@@ -438,17 +456,55 @@
                     <sheet>
                      <notebook >
                                 <page string="一.">
-
+                                    <group>
+                                        <field name="text1_1_1" />
+                                            <field name="text1_1_3" />
+                                            <field name="text1_1_2" />
+                                            <field name="text1_1_4" />
+                                    </group>
                                 </page>
                                 <page string="二.">
+                                    <group>
+                                            <field name="text1_3_1" />
+                                            <field name="text1_3_3" />
+                                            <field name="text1_3_2" />
+                                            <field name="text1_3_4" />
+                                    </group>
                                 </page>
                                  <page string="三.">
+                                     <group>
+                                            <field name="text1_5_1" />
+                                            <field name="text1_5_3" />
+                                            <field name="text1_5_2" />
+                                            <field name="text1_5_4" />
+                                    </group>
                                 </page>
                                 <page string="四.">
+                                    <group>
+                                        <field name="text2_1_1" />
+                                            <field name="text2_1_3" />
+                                            <field name="text2_1_2" />
+                                            <field name="text2_1_4" />
+                                    </group>
                                 </page>
                                 <page string="五.">
+                                    <group>
+                                    <field name="text2_2_1" />
+                                            <field name="text2_2_3" />
+                                            <field name="text2_2_2" />
+                                            <field name="text2_2_4" />
+                                    </group>
                                 </page>
                      </notebook>
+                        <group>
+                            <field name="attachment8_id" context="{'form_view_ref': 'nantian_erp_company_info_attachment_form'}">
+                                                 <tree editable="top">
+                                                     <field name="title" invisible="True"/>
+                                                     <field name="text_binary" filename="title"/>
+                                                     <field name="text_binary_preview" filename="示例预览" string = "表格填写示例"/>
+                                                 </tree>
+                                             </field>
+                             </group>
                     </sheet>
                 </form>
             </field>
@@ -479,8 +535,8 @@
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=','1')]</field>
-            <field name="res_id">1</field>
+            <field name="domain">[('id','=','2')]</field>
+            <field name="res_id">2</field>
          </record>
         <record id="nantian_erp_company_info_deplay1_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -499,8 +555,8 @@
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=','1')]</field>
-            <field name="res_id">1</field>
+            <field name="domain">[('id','=','2')]</field>
+            <field name="res_id">2</field>
          </record>
         <record id="nantian_erp_company_info_deplay2_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -519,8 +575,8 @@
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=','1')]</field>
-            <field name="res_id">1</field>
+            <field name="domain">[('id','=','2')]</field>
+            <field name="res_id">2</field>
          </record>
         <record id="nantian_erp_company_info_deplay3_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -539,8 +595,8 @@
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=','1')]</field>
-            <field name="res_id">1</field>
+            <field name="domain">[('id','=','2')]</field>
+            <field name="res_id">2</field>
          </record>
         <record id="nantian_erp_company_info_deplay4_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -559,8 +615,8 @@
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=','1')]</field>
-            <field name="res_id">1</field>
+            <field name="domain">[('id','=','2')]</field>
+            <field name="res_id">2</field>
          </record>
         <record id="nantian_erp_company_info_deplay5_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -579,8 +635,8 @@
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=','1')]</field>
-            <field name="res_id">1</field>
+            <field name="domain">[('id','=','2')]</field>
+            <field name="res_id">2</field>
          </record>
         <record id="nantian_erp_company_info_deplay6_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -599,8 +655,8 @@
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=','1')]</field>
-            <field name="res_id">1</field>
+            <field name="domain">[('id','=','2')]</field>
+            <field name="res_id">2</field>
          </record>
         <record id="nantian_erp_company_info_deplay7_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -619,8 +675,8 @@
             <field name="res_model">nantian_erp.company_info_deplay</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="domain">[('id','=','1')]</field>
-            <field name="res_id">1</field>
+            <field name="domain">[('id','=','2')]</field>
+            <field name="res_id">2</field>
          </record>
         <record id="nantian_erp_company_info_deplay8_tree_action" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>

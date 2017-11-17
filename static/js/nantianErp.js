@@ -45,7 +45,10 @@ openerp.nantian_erp=function(instance){
         },
 
         init: function(parent) {
+            console.log(this);
             this.parent = parent;
+            console.log("90909090999999999999999999999999");
+
             this.isTrigger = false;
             this.indexObj = {};
         },
@@ -57,6 +60,8 @@ openerp.nantian_erp=function(instance){
                 if (e.preventDefault){
                     e.preventDefault();
                     //IE中阻止函数器默认动作的方式
+                    console.log("IE中阻止函数器默认动作的方式");
+
                 }else{
                     e.returnValue = false;
                 }
@@ -238,6 +243,7 @@ openerp.nantian_erp=function(instance){
         delete_resume:function(e){
             e.preventDefault();
             e.stopPropagation();
+            //给删除键绑定之前原有的删除功能
             this.parent.on_attachment_delete(e);
         }
     });
@@ -281,6 +287,8 @@ openerp.nantian_erp=function(instance){
         }
     });
 
+
+    //实现的是插入导出简历和下载简历的功能
     instance.web.Sidebar.include({
         redraw:function(){
             if(this.dataset && this.model_id && this.dataset.model == "nantian_erp.resume"){
@@ -321,11 +329,12 @@ openerp.nantian_erp=function(instance){
         }
 
     });
-
-    //证书扫描件
+    
+    
+    //证书扫描件,预览
     instance.web.list.Binary.include({
         _format:function(row_data, options){
-            if(this.string == "证书扫描件"){
+            if(this.string == "证书扫描件" || this.string == "表格填写示例"){
                 var text = _t("Preview"), filename=_t('Binary file');
                 var value = row_data[this.id].value;
                 if (!value) {

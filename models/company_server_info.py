@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from openerp import tools
 from openerp import models, fields, api,exceptions
 
 
@@ -102,6 +101,21 @@ class company_info_deplay(models.Model):
     text5_2_3 = fields.Char(string=u"具体内容")
     text5_2_4 = fields.Char(string=u"注意事项")
     attachment5_id = fields.One2many("nantian_erp.company_info_attachment","deplay5_id",string=u"表格")
+    attachment6_id = fields.One2many("nantian_erp.company_info_attachment", "deplay6_id", string=u"表格")
+    attachment7_id = fields.One2many("nantian_erp.company_info_attachment", "deplay7_id", string=u"表格")
+    attachment8_id = fields.One2many("nantian_erp.company_info_attachment", "deplay7_id", string=u"表格")
+
+    address_list_ids = fields.One2many("nantian_erp.company_info_address_list", "deplay_id", string=u"行政人员通讯录")
+
+
+class company_info_address_list(models.Model):
+    _name = 'nantian_erp.company_info_address_list'
+
+    text1 = fields.Char(string=u"姓名")
+    text2 = fields.Char(string=u"移动电话")
+    text3 = fields.Char(string=u"座机电话")
+    deplay_id = fields.Many2one("nantian_erp.company_info_deplay")
+
 
 class company_info_kind(models.Model):
     _name = 'nantian_erp.company_info_kind'
@@ -132,11 +146,15 @@ class company_info_attachment(models.Model):
 
     title = fields.Char(string=u"附件名称")
     text_binary = fields.Binary(string=u"表格下载区")
+    text_binary_preview = fields.Binary(string=u"表格填写示范")
     deplay1_id = fields.Many2one("nantian_erp.company_info_deplay")
     deplay2_id = fields.Many2one("nantian_erp.company_info_deplay")
     deplay3_id = fields.Many2one("nantian_erp.company_info_deplay")
     deplay4_id = fields.Many2one("nantian_erp.company_info_deplay")
     deplay5_id = fields.Many2one("nantian_erp.company_info_deplay")
+    deplay6_id = fields.Many2one("nantian_erp.company_info_deplay")
+    deplay7_id = fields.Many2one("nantian_erp.company_info_deplay")
+    deplay8_id = fields.Many2one("nantian_erp.company_info_deplay")
     kind_id = fields.Many2one("nantian_erp.company_info_kind")
 
 

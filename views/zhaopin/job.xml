@@ -559,7 +559,7 @@
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
          </record>
 
-        <menuitem id="nantian_erp_job_menu" parent="nantian_set_job_menu"  name="岗位创建" action="nantian_erp_job_action" sequence="1" groups="nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
+        <menuitem id="nantian_erp_job_menu" parent="nantian_set_job_menu"  name="岗位创建" action="nantian_erp_job_action" sequence="1" groups="base.group_system,nantian_erp.group_hr_recruitment,base.group_erp_manager"/>
         <menuitem id="nantian_erp_job_type_menu" parent="nantian_set_job_menu"  name="岗位类别" action="nantian_erp_job_type_action" sequence="2" groups="base.group_system"/>
     </data>
 </openerp>
