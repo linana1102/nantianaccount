@@ -38,6 +38,9 @@
             <field name="model">nantian_erp.weekly_reports</field>
             <field name="arch" type="xml">
                 <form>
+                        <heard>
+                                <button name="copy_report" type="object" string="复制此份周报"  class="oe_highlight" />
+                        </heard>
                     <sheet>
                  <group>
                      <group string="周报时间段">
@@ -129,23 +132,21 @@
                     </page>
                      <page string="客户动态或人事变动">
                              <field name="customer_adjust_ids" >
-                                    <tree string="Registered feedback" edit="true">
-                                        <field name="major_adjust" string = "近一月客户是否有重大动态或人事变动" />
-                                        <field name="major_adjust_detail" string = "详情叙述" />
+                                    <tree string="Registered feedback" editable="top">
+                                        <field name="major_adjust" string = "是否" />
+                                        <field name="major_adjust_detail" string = "近一月客户重大动态或人事变动:详情叙述" />
                                     </tree>
                             </field>
                     </page>
-                     <page string="项目阶段数目统计" context="{'form_view_ref': 'nantian_erp_project_stage_count_form'}">
-                             <field name="project_stage_count_ids" >
-                                    <tree string="Registered feedback" edit="true">
-                                        <field name="lixiang"/>
-                                        <field name="todo" />
-                                        <field name="juys" />
-                                        <field name="ywfw" />
-                                        <field name="zhongyan" />
-                                        <field name="djx" />
-                                    </tree>
-                            </field>
+                     <page string="项目阶段数目统计">
+                          <group string = "所处阶段">
+                            <field name="lixiang" placeholder="项目数量"/>
+                            <field name="todo" placeholder="项目数量"/>
+                            <field name="juys" placeholder="项目数量"/>
+                            <field name="ywfw" placeholder="项目数量" required = "True"/>
+                            <field name="zhongyan" placeholder="项目数量"/>
+                            <field name="djx" placeholder="项目数量"/>
+                        </group>
                     </page>
                      </notebook>
                     </sheet>
@@ -164,7 +165,7 @@
                     <field name="recruit_gap_ids" string="现有招聘缺口"/>
                     <field name="customer_adjust_ids" string="客户动态或人事变动" />
                     <field name="project_progress_ids" string="项目进度"/>
-                    <field name="project_stage_count_ids" string="项目阶段数目统计"/>
+                    <field name="project_stage_count" string="项目阶段数目统计"/>
                      <field name="user_id" string="创建者"/>
                     <field name="create_date" string = "创建日期" readonly = "True"/>
                 </tree>
