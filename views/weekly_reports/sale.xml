@@ -38,9 +38,8 @@
             <field name="model">nantian_erp.weekly_reports</field>
             <field name="arch" type="xml">
                 <form>
-                        <heard>
-                                <button name="copy_report" type="object" string="复制此份周报"  class="oe_highlight" />
-                        </heard>
+
+                    <button name="copy_report" type="object" string="复制此份周报"  class="oe_highlight" />
                     <sheet>
                  <group>
                      <group string="周报时间段">
