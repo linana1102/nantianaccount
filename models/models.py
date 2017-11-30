@@ -406,9 +406,9 @@ class hr_employee(models.Model):
                 self.contract_endtime = self.contract_starttime
                 return
             start=fields.Datetime.from_string(self.contract_starttime)
-            self.contract_endtime =datetime(start.year+self.contract_len,start.month,start.day)
-        else:
-            self.contract_endtime='9999-12-31'
+            # self.contract_endtime =datetime(start.year+self.contract_len,start.month,start.day)
+        # else:
+            # self.contract_endtime='9999-12-31'
 
     #与招聘系统对接函数,通过员工创建用户,并关联
     @api.multi
