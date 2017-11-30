@@ -35,7 +35,7 @@ class hr_employee(models.Model):
     work_time = fields.Date(track_visibility='onchange')
     entry_time = fields.Date(track_visibility='onchange')
     contract_starttime = fields.Date(track_visibility='onchange')
-    contract_endtime = fields.Date(compute='_get_end_date',store = True,string='合同终止时间')
+    contract_endtime = fields.Date(string='合同终止时间')
     contract_len = fields.Integer(track_visibility='onchange')
     is_forever = fields.Boolean(compute='_get_end_date',store = True,string='无期限？',track_visibility='onchange')
     education = fields.Selection(
@@ -397,7 +397,7 @@ class hr_employee(models.Model):
                 else:
                     record.entry_age_distribute = u'在司10年以上'
 
-    #计算合同截止日期
+    # # 计算合同截止日期
     @api.one
     @api.depends('contract_starttime', 'contract_len','is_forever')
     def _get_end_date(self):
