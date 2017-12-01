@@ -10,9 +10,22 @@
             <field name="view_id" ref="nantian_erp_hr_kanban_employees"/>
             <field name="domain">['|','|','|',('dis_states','=',u"可调用"),('dis_states','=',u"待调整"),('dis_states','=',u"申请离职"),('dis_states','=',u"借调中")]</field>
         </record>
+        <record id="nantian_erp_employee_Implement_Center" model="ir.actions.act_window">
+            <field name="name">集成实施中心</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"集成实施中心")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center" />
+        </record>
 
 
-        <menuitem id="adjusting" parent="hr.menu_hr_main"  name="adjusting-a" action='nantian_erp_adjusting' groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header" />
+        <menuitem id="nantian_erp_employee_Implement_Center_menue" parent="hr.menu_hr_main"  name="集成实施中心" action='nantian_erp_employee_Implement_Center' groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_manager" />
 
 
 

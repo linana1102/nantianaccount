@@ -168,6 +168,8 @@
                                             <field name="category" string="人员状态" on_change="onchange_category(category)"/>
                                             <field name="nantian_erp_contract_id" string="服务合同" domain="[('customer_id','=',customer_id),('category','!=',u'维保合同'),('state','!=','off')]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_create":1,"no_create_edit":1}'/>
                                             <field name="contract_jobs_id" string="合同岗位" domain="[('contract_id','=',nantian_erp_contract_id)]" attrs="{'invisible':['|',('category','=','公司储备'),('category','=','公司项目')]}" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                            <field name="notes" string="项目详情" placeholder="Other Information ..." colspan="4"/>
+
                                     </group>
                                 </group>
                                 <group string="合同信息">
@@ -187,7 +189,6 @@
                                         <field name="is_forever" string="是否无期限" />
                                     </group>
                                 </group>
-                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
                             </page>
                 </xpath>
 
@@ -398,6 +399,19 @@
                          <field name="states" string="状态" />
                     </tree>
                 </xpath>
+            </field>
+        </record>
+        <record id="nantian_view_employee_Implement_Center_tree" model="ir.ui.view">
+            <field name="name">Implement_Center.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                     <tree string="Employees1">
+                        <field name="name"/>
+                        <field name="department_second"/>
+                         <field name="leader" string="上级领导"/>
+                         <field name="states" string="状态" />
+                         <field name="notes" string="项目情况"/>
+                    </tree>
             </field>
         </record>
         <record model="ir.ui.view" id="nantian_erp_project_search_view">
