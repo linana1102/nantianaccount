@@ -426,8 +426,7 @@ class resume(models.Model):
             if (self.interview_ids[0].recruitment_id.working_team_id.partner_id.customer_manager== self.env.user  and self.env.user not in manager_group.users) or (not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].recruitment_id.working_team_id.partner_id and self.env.user not in manager_group.users):
                 # 看是否填写offer信息
                 if not self.env['nantian_erp.interview'].search([('resume_id','=',self.id),('interviewer','=',self.env.uid)])[-1].review or \
-                        not self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)])[-1].contract_time or\
-                        not self.env['nantian_erp.offer_information'].search([('resume_id', '=', self.id), ('user_id', '=', self.env.uid)])[-1].test_time:
+                        not self.env['nantian_erp.offer_information'].search([('resume_id','=',self.id),('user_id','=',self.env.uid)])[-1].contract_time:
                     raise exceptions.ValidationError("请填您的面试评价和offer信息里的合同期限，试用期限，三项内容")
                 else:
                     # 修改状态及当前审批人
