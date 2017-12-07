@@ -51,7 +51,7 @@
                  </group>
                      <notebook>
                     <page string="售前项目" >
-                            <field name="pres_sale_ids" context="{'form_view_ref': 'nantian_erp.nantian_erp_pres_sale_hearder_form'}">
+                            <field name="pres_sale_1_ids" domain="[('create_uid','=',user_id)]" context="{'form_view_ref': 'nantian_erp.nantian_erp_pres_sale_hearder_form'}">
                                     <tree string="Registered feedback" edit="true">
                                         <field name="project_name" string="项目名称"/>
                                         <field name="partner" string="客户名称" />
@@ -141,9 +141,10 @@
                             <field name="lixiang" placeholder="项目数量"/>
                             <field name="todo" placeholder="项目数量"/>
                             <field name="juys" placeholder="项目数量"/>
-                            <field name="ywfw" placeholder="项目数量" required = "True"/>
+                            <field name="ywfw" placeholder="项目数量"/>
                             <field name="zhongyan" placeholder="项目数量"/>
                             <field name="djx" placeholder="项目数量"/>
+
                         </group>
                     </page>
                      </notebook>
@@ -156,7 +157,7 @@
             <field name="model">nantian_erp.weekly_reports</field>
             <field name="arch" type="xml">
                 <tree >
-                    <field name="pres_sale_ids" string="售前项目"/>
+                    <field name="pres_sale_1_ids_count" string="售前项目"/>
                     <field name="gathering_ids" string="项目收款" />
                     <field name="pers_transfer_ids" string="人员调动"/>
                     <field name="demission_ids" string="人员离职"/>
@@ -175,7 +176,7 @@
             <field name="model">nantian_erp.weekly_reports</field>
             <field name="arch" type="xml">
                 <search string="search_w" >
-                    <filter string="创建日期"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>
+                    <filter string="最近两周"  name="create_date" domain="[('create_date','&gt;=',((context_today()-relativedelta(days=8)).strftime('%%Y/%%m/%%d')))]"/>
                 <group expand="0" string="分组">
                     <filter string="行业负责人" name="user_id" context="{'group_by':'user_id'}"/>
                 </group>
@@ -184,7 +185,7 @@
             </field>
         </record>
         <record id="nantian_erp_pres_sale_action" model="ir.actions.act_window">
-            <field name="name">售前项目</field>
+            <field name="name">本行业售前项目</field>
             <field name="res_model">nantian_erp.pres_sale</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -249,7 +250,7 @@
                     <heard>
                         <field name="state" widget="statusbar" class="oe_right"/>
                     </heard>
-                    <button name="win_the_biding" type="object" string="中标确认"  class="oe_highlight" />
+                    <button name="win_the_bid" type="object" string="中标确认"  class="oe_highlight" />
                         <!--ques1，这个type怎么创建合同的页面-->
                     <button name="lose_a_bid" type="object"  string="未中标" attrs="{'invisible':[('state','=','win')]}" class="oe_highlight"/>
                     <button name="creat_new_contract" type="object" string="创建新合同"  attrs="{'invisible':[('state','!=','win')]}" class="oe_highlight" />
@@ -278,7 +279,7 @@
                     <heard>
                         <field name="state" widget="statusbar" class="oe_right"/>
                     </heard>
-                    <button name="win_the_biding" type="object" string="中标确认"  class="oe_highlight" />
+                    <button name="win_the_bid" type="object" string="中标确认"  class="oe_highlight" />
                         <!--ques1，这个type怎么创建合同的页面-->
                     <button name="lose_a_bid" type="object"  string="未中标" attrs="{'invisible':[('state','=','win')]}" class="oe_highlight"/>
                     <button name="creat_new_contract" type="object" string="创建新合同"  attrs="{'invisible':[('state','!=','win')]}" class="oe_highlight" />
@@ -351,6 +352,8 @@
                         <group string="请做跟进">
                             <field name="gather_progress" string="收款工作进度"/>
                         </group>
+                        <field name="weekly_reports_id" string="来自本条周报" readonly="True"/>
+
                     </group>
                     </sheet>
                 </form>
@@ -780,7 +783,7 @@
         <menuitem id="nantian_erp_pres_sale_menu" parent="nantian_contract_menu_5" sequence="1" name="售前项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before,nantian_erp.group_hr_president_assistant" />
         <menuitem id="nantian_erp_pres_sale1" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale1_action" name="未投标" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
         <menuitem id="nantian_erp_pres_sale2" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale2_action" name="已投标" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
-        <menuitem id="nantian_erp_pres_sale_header" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="售前项目" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header,nantian_erp.group_hr_president_assistant"/>
+        <menuitem id="nantian_erp_pres_sale_header" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="项目" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header,nantian_erp.group_hr_president_assistant"/>
         <menuitem id="nantian_erp_ongoing_sale_menu" parent="nantian_erp_weekly_reports_menu" name="周报历史全纪录" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
         <menuitem id="nantian_erp_project_gathering_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_project_gathering_action" name="项目收款" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
         <menuitem id="nantian_erp_pers_transfer_pending_menu" parent="hr.menu_hr_main" action="nantian_erp_pers_transfer_pending_action" name="人员调动" groups="nantian_erp.group_hr_manager_assistant"/>

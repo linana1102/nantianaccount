@@ -9,20 +9,23 @@ sys.setdefaultencoding('utf-8')
 
 class weekly_reports(models.Model):
     _name = 'nantian_erp.weekly_reports'
+    _rec_name = 'date'
 
     user_id = fields.Many2one('res.users',string='创建者',required=True,default=lambda self: self.env.user)#
     date = fields.Date(string='创建日期',default=lambda self:fields.datetime.now(),readonly = True)
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To')
-    pres_sale_ids = fields.One2many('nantian_erp.pres_sale','weekly_reports_id',string='售前项目进展')
-    gathering_ids = fields.One2many('nantian_erp.project_gathering','weekly_reports_id',string='项目收款')
-    # pers_transfer_ids = fields.Many2many('nantian_erp.pers_transfer','emp_weekly_transfer_ref','weekly_reports_id',string='人员调动')
+    pres_sale_ids = fields.One2many('nantian_erp.pres_sale','weekly_reports_id',string='售前项目进展1')
+    pres_sale_1_ids = fields.Many2many('nantian_erp.pres_sale','i_weekly_reports_pres_sale_ref',string='售前项目进展')
+    pres_sale_1_ids_count = fields.Char(compute='_pres_sale_1_ids_count',string='售前项目')
+    gathering_ids = fields.One2many('nantian_erp.project_gathering','weekly_reports_id',string='项目收款1')
     pers_transfer_ids = fields.One2many('nantian_erp.pers_transfer','weekly_reports_id',string='人员调动')
     demission_ids = fields.One2many('nantian_erp.demission','weekly_reports_id',string='人员离职')
     customer_adjust_ids = fields.One2many('nantian_erp.customer_adjust','weekly_reports_id',string='客户动态或人事变动')
     project_progress_ids = fields.One2many('nantian_erp.project_progress','weekly_reports_id',string='项目进度')
     recruit_gap_ids = fields.One2many('nantian_erp.recruit_gap','weekly_reports_id',string='现有招聘缺口')
     project_stage_count_ids = fields.One2many('nantian_erp.project_stage_count','weekly_reports_id',string='项目阶段数目统计',required=True)
+    # 项目阶段数目统计
     lixiang = fields.Integer(string='立项，计划')
     todo = fields.Integer(string='实施')
     juys = fields.Integer(string='阶段验收')
@@ -31,15 +34,30 @@ class weekly_reports(models.Model):
     djx = fields.Integer(string='待结项')
     project_stage_count = fields.Integer(compute='_compute_project_stage_count',string='项目阶段数目统计',store=True)
 
+
+    def create(self, cr, uid, vals, context=None):
+        if vals.get("lixiang") or vals.get("todo") or vals.get("juys") or vals.get("ywfw") or vals.get("zhongyan"):
+            return super(weekly_reports, self).create(cr, uid, vals, context=context)
+        else:
+            raise exceptions.ValidationError("项目阶段统计项必填!")
+
+    # pres_sale_ids
+    @api.multi
+    @api.depends('pres_sale_1_ids')
+    def _pres_sale_1_ids_count(self):
+        for x in self:
+            if x.pres_sale_1_ids:
+                x.pres_sale_1_ids_count = "(%s条记录)"% str(len(x.pres_sale_1_ids))
+            else:
+                x.pres_sale_1_ids_count = "(0条记录)"
+
+
     @api.multi
     @api.depends('lixiang', 'todo',"juys","ywfw","zhongyan","djx")
     def _compute_project_stage_count(self):
         for x in self:
             x.project_stage_count = x.lixiang +x.todo +x.juys +x.ywfw +x.zhongyan +x.djx
 
-
-
-    # 自动化动作每周创建一个周报，内容是copy上一周周报的所有内容
     # 弃用
     @api.multi
     def copy_weekly_reports(self):
@@ -70,34 +88,10 @@ class weekly_reports(models.Model):
             print "查看"
             print weekly_report_object,weekly_report_object.id
             # 复制售前项目
-            if record.pres_sale_ids:
-                for x in record.pres_sale_ids:
-                    object1 = self.env['nantian_erp.pres_sale'].search([("id", "=", x.id)],limit=1)
-                    if object1:
-                        obt = self.env['nantian_erp.pres_sale'].create(
-                            {"weekly_reports_id": weekly_report_object.id,
-                            "project_name": object1.project_name,
-                            "contract_name": object1.contract_name,
-                            "partner": object1.partner,
-                            "process_scrib": object1.process_scrib,
-                            "before_bid_amount": object1.before_bid_amount,
-                            "bid_commpany": object1.bid_commpany,
-                            "pre_bid_date": object1.pre_bid_date,
-                            "competitors": object1.competitors,
-                            "rate_of_success": object1.rate_of_success,
-                            "salesman_id": object1.salesman_id,
-                            "contract_number": object1.contract_number,
-                            "bid_write": object1.bid_write,
-                            "bid_checkman_id": object1.bid_checkman_id.id,
-                            "bid_readman_id": object1.bid_readman_id.id,
-                            "after_bid_amount": object1.after_bid_amount,
-                            "term": object1.term,
-                            "firm_platform": object1.firm_platform,
-                            "siger": object1.siger.id,
-                            "sign_date": object1.sign_date,
-                            "state": object1.state,
-                            "state_w": object1.state_w},
-                        )
+            if record.pres_sale_1_ids:
+                print record.pres_sale_1_ids.ids
+                weekly_report_object.write({u'pres_sale_1_ids': [[6, False,record.pres_sale_1_ids.ids]]})
+
             # 复制项目收款
             if record.gathering_ids:
                 for y in record.gathering_ids:
@@ -105,11 +99,11 @@ class weekly_reports(models.Model):
                     if object_y:
                         obt_y = self.env['nantian_erp.project_gathering'].create(
                             {"weekly_reports_id": weekly_report_object.id,
-                            "contract_id": object_y.contract_id.id,
-                            "gather_date": object_y.gather_date,
-                            "gather_progress": object_y.gather_progress,
-                            "gather_count": object_y.gather_count,
-                            "gather_reminder": object_y.gather_reminder},
+                             "contract_id": object_y.contract_id.id,
+                             "gather_date": object_y.gather_date,
+                             "gather_progress": object_y.gather_progress,
+                             "gather_count": object_y.gather_count,
+                             "gather_reminder": object_y.gather_reminder},
                         )
             # 复制招聘缺口
             if record.recruit_gap_ids:
@@ -122,6 +116,7 @@ class weekly_reports(models.Model):
                             "count": object_z.count,
                             "reason": object_z.reason},
                         )
+            # 复制项目进度
             if record.project_progress_ids:
                 for a in record.project_progress_ids:
                     object_a = self.env['nantian_erp.project_progress'].search([("id", "=", a.id)], limit=1)
@@ -145,7 +140,7 @@ class weekly_reports(models.Model):
                             "possible_risk": object_a.possible_risk,
                             "possible_risk_detail": object_a.possible_risk_detail},
                         )
-            # 复制招聘缺口
+            # 复制客户动态或者人事变动
             if record.customer_adjust_ids :
                 for b in record.customer_adjust_ids :
                     object_b = self.env['nantian_erp.customer_adjust'].search([("id", "=", b.id)], limit=1)
@@ -177,16 +172,18 @@ class weekly_reports(models.Model):
                                     # print "创建一个项目收款的表"
                                     objects = self.env['nantian_erp.project_gathering'].create(
                                         {"contract_id": collection.contract_id.id, "gather_reminder": collection.name,
-                                         "weekly_reports_id": record.id})
+                                         "weekly_reports_1_id": record.id})
 
 
 
 
 class pres_sale(models.Model):
     _name = 'nantian_erp.pres_sale'
+    _rec_name = "project_name"
 
     flag = fields.Char(string='同一份售前的标识',)
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports',string='周报')
+    weekly_reports_1_id = fields.Many2many('nantian_erp.weekly_reports','i_weekly_reports_pres_sale_ref',string='周报')
     project_name = fields.Char(string='项目名称')
     contract_name = fields.Char(string='合同名称')
     partner = fields.Char(string='客户名称')
@@ -216,7 +213,7 @@ class pres_sale(models.Model):
         [
             (u'lose',u'未中标'),
             (u'win',u'项目开始'),
-        ],default = u'lose',string=u"标书进展")
+        ],string=u"标书进展")
     state_w = fields.Selection(
         [
             (u'will_be', u'未投标'),
@@ -249,11 +246,17 @@ class pres_sale(models.Model):
     def creat_new_contract(self):
         return self.contract_view
 
+    # 已投标
     @api.multi
-    def win_the_biding(self):
+    def have_be_bid(self):
+        self.state = 'have_be'
+        return {'cc'}
+    # 中标 项目开始
+    @api.multi
+    def win_the_bid(self):
         self.state = 'win'
         return {'bb'}
-
+    # 未中标
     @api.multi
     def lose_a_bid(self):
         self.state = 'lose'
@@ -262,6 +265,7 @@ class pres_sale(models.Model):
 # 项目收款
 class project_gathering(models.Model):
     _name = 'nantian_erp.project_gathering'
+
 
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
     contract_id = fields.Many2one('nantian_erp.contract', string='合同')
@@ -299,7 +303,7 @@ class pers_transfer(models.Model):#
         return self.env['hr.employee'].browse(self._context.get('active_id'))
 
 
-    # weekly_reports_id = fields.Many2many('nantian_erp.weekly_reports','emp_weekly_transfer_ref',"pers_transfer_ids", string='周报')
+    weekly_reports_1_id = fields.Many2many('nantian_erp.weekly_reports',"i_weekly_reports_pers_transfer_ref",string='周报1')
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports',string='周报')
     # employee_id_hr = fields.Many2one('hr.employee',string='调动人',ondelete='set null')#
     employee_id = fields.Many2one('hr.employee',string='调动人',required=True,default=_default_employee_id)
