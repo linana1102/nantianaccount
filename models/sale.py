@@ -172,7 +172,7 @@ class weekly_reports(models.Model):
                                     # print "创建一个项目收款的表"
                                     objects = self.env['nantian_erp.project_gathering'].create(
                                         {"contract_id": collection.contract_id.id, "gather_reminder": collection.name,
-                                         "weekly_reports_1_id": record.id})
+                                         "weekly_reports_id": record.id})
 
 
 
