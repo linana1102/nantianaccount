@@ -313,7 +313,7 @@ class pers_transfer(models.Model):#
     move_reason = fields.Char(string='调动原因')
     move_date = fields.Date(string='调动时间')
     is_recruit = fields.Boolean(string='是否招聘')
-    after_leader = fields.Many2one('hr.employee',string='调动后负责人',domain="['|','|',('job_id','=',u'部门经理'),('job_id','=',u'副总经理'),('job_id','=',u'总经理')]")
+    after_leader = fields.Many2one('hr.employee',string='调动后负责人')
     before_leader = fields.Many2one('res.users',string='调动前负责人')
     # default=lambda self: self.env.user.employee_ids[0] 用户可能不是员工就不能适合default
     des_team = fields.Many2one("nantian_erp.working_team",string='新项目组')
