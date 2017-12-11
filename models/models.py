@@ -132,9 +132,52 @@ class hr_employee(models.Model):
     resume_id = fields.Many2one('nantian_erp.resume',string='简历')
     position_id = fields.Many2one('nantian_erp.job',string= '职位')
     education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
-    leader = fields.Many2one('hr.employee',compute='compute_leader')
+    leader = fields.Many2one('hr.employee',compute = "compute_leader",store  = True)
+    # default=lambda self: self._get_state()
     demission_ids = fields.One2many('nantian_erp.demission','employee_id', ondelete='set null', string="离职记录之一",track_visibility='onchange')
     pers_transfer_ids = fields.One2many('nantian_erp.pers_transfer','employee_id', ondelete='set null', string="调动记录之一",track_visibility='onchange')
+
+    # @api.multi
+    # def compute_leader(self):
+    #     customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')])
+    #     working_teams = self.env['nantian_erp.working_team'].search([])
+    #     work_team_managers = []
+    #     for working_team in working_teams:
+    #         work_team_managers.append(working_team.user_id)
+    #     for record in self:
+    #         if record.user_id not in customer_manager_group.users:
+    #             if record.customer_id:
+    #                 if record.customer_id.customer_manager.employee_ids:
+    #                     record.leader = record.customer_id.customer_manager.employee_ids[0]
+    #             elif (record.user_id not in work_team_managers) and record.working_team_id:
+    #                 if record.working_team_id.user_id and record.working_team_id.user_id.employee_ids:
+    #                     record.leader = record.working_team_id.user_id.employee_ids[0]
+    #             else:
+    #                 record.leader = record.department_id.parent_id.manager_id
+    #         else:
+    #             record.leader = record.department_id.manager_id
+    #     if record.leader:
+    #         return record.leader
+
+
+    @api.multi
+    def _get_state(self):
+        pro_manager = []
+        dep_manager = []
+        for work in self.env['nantian_erp.working_team'].search([]):
+            pro_manager.append(work.user_id)
+        for department in self.env['hr.department'].search([]):
+            if department.manager_id:
+                em = department.manager_id
+
+                user = self.env['res.users'].search([('employee_ids', 'ilike', em.id)])
+
+                dep_manager.append(user)
+        if self.env.user not in pro_manager and self.env.user not in dep_manager:
+
+            return 'confirmed'
+        else:
+            return 'done'
 
 
     # 自动导入教育经历
@@ -498,7 +541,10 @@ class hr_employee(models.Model):
         for working_team in working_teams:
             work_team_managers.append(working_team.user_id)
         for record in self:
-            if record.user_id not in customer_manager_group.users:
+            if record.job_id and (record.job_id.name == "副总经理" or \
+                      record.job_id.name == "副总经理" or record.job_id.name == "副总经理"):
+                record.leader = record.department_id.parent_id.manager_id
+            elif record.user_id not in customer_manager_group.users:
                 if record.customer_id:
                     if record.customer_id.customer_manager.employee_ids:
                         record.leader = record.customer_id.customer_manager.employee_ids[0]
