@@ -131,7 +131,7 @@
             <field name="name">employee.form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager'),ref('nantian_erp.group_nantian_assistant_manager'),ref('nantian_erp.group_hr_bm_manager'),ref('nantian_erp.group_hr_assistant'),ref('nantian_erp.group_hr_manager_assistant'),ref('nantian_erp.group_nantian_header'),ref('nantian_erp.group_hr_manager')])]"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_hr_manager'),ref('nantian_erp.group_nantian_assistant_manager'),ref('nantian_erp.group_hr_bm_manager'),ref('nantian_erp.group_hr_assistant'),ref('nantian_erp.group_hr_manager_assistant'),ref('nantian_erp.group_nantian_header'),ref('nantian_erp.group_hr_manager'),ref('nantian_erp.group_hr_recruitment')])]"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="%(nantian_erp_pers_transfer_by_hr)d" type="action" string="人员调整" class="oe_stat_button" icon="fa-tasks">
