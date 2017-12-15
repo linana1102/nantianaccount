@@ -675,7 +675,6 @@
                             <field name="equipment_implementation" string="本周是否设备实施"/>
                             <field name="special" string="本周是否有特殊事项"/>
                             <field name="possible_risk" string="本周预计可能风险"/>
-
                 </tree>
             </field>
         </record>
