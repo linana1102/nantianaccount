@@ -18,7 +18,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('department_first','=',u"集成实施中心")]</field>
         </record>
-        <record id="nantian_view_Implement_Center1_tree" model="ir.actions.act_window.view">
+        <record id="nantian_view_Implement_Center3_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
             <field name="sequence" eval="1" />
             <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
