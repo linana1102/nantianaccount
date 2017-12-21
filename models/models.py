@@ -35,7 +35,7 @@ class hr_employee(models.Model):
     work_time = fields.Date(track_visibility='onchange')
     entry_time = fields.Date(track_visibility='onchange')
     contract_starttime = fields.Date(track_visibility='onchange')
-    contract_endtime = fields.Date(string='合同终止时间')
+    contract_endtime = fields.Date(string='合同终止时间',track_visibility='onchange')
     contract_len = fields.Integer(track_visibility='onchange')
     is_forever = fields.Boolean(compute='_get_end_date',store = True,string='无期限？',track_visibility='onchange')
     education = fields.Selection(
@@ -1684,6 +1684,8 @@ class education_experience(models.Model):
     major = fields.Char(string='专业')
     education = fields.Selection([(u'中专及以下',u'中专及以下'),(u'高中',u'高中'),(u'大专',u'大专'),(u'本科',u'本科'),(u'硕士',u'硕士'),(u'博士',u'博士')],string='学历')
     date_time = fields.Char(string='时间段')
+    date_start = fields.Date(string='开始',required=True)
+    date_end = fields.Date(string='结束',required=True)
     employee_id = fields.Many2one('hr.employee',string='员工')
 
 

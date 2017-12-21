@@ -99,20 +99,9 @@
     </record>
 
      <!--下面是新的权限-->
-    <record id="hr_employee_recruitment_rule" model="ir.rule">
-        <field name="name">employee招聘组-写</field>
-        <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="domain_force">[('user_id','=',user.id)]</field>
-        <field name="groups" eval="[(4,ref('nantian_erp.group_hr_recruitment'))]"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_read" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-        <field name="active" eval="False"/>
 
-    </record>
-    <record id="hr_employee_recruitment_read_rule" model="ir.rule">
-        <field name="name">employee招聘组-读写创建</field>
+    <record id="hr_employee_recruitment_read_write_create_rule" model="ir.rule">
+        <field name="name">employee-招聘组-读，写，创建</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
         <!--<field name="domain_force">[('user_id','=',user.id)]</field>-->
         <field name="groups" eval="[(4,ref('nantian_erp.group_hr_recruitment'))]"/>

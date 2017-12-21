@@ -111,15 +111,19 @@ class Binary(http.Controller):
                     experiences_list.append(exper_dict)
 
             if employee['certificate_ids']:
+                count = 0
                 Model = request.session.model('nantian_erp.certificate')
                 certificates = Model.search_read([('id','in',employee['certificate_ids'])])
                 for cer in certificates:
+                    count = count + 1
                     image = ''
                     name = ''
                     if cer['image']:
                         # 将base64 转为图片
                         f = StringIO(base64.b64decode(str(cer['image'])))
-                        image = InlineImage(tpl,f,height=Mm(30))
+                        print "查看图片名称%d"%count
+                        image = InlineImage(tpl,f)
+                        #image = InlineImage(tpl,f,height=Mm(30))
                         f.close()
                     if cer['name']:
                         name = cer['name'].replace('&','&amp;')

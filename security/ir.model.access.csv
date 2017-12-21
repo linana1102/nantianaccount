@@ -1,6 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-hr_employee_all,hr_employee all,model_hr_employee,nantian_erp.group_hr_user,1,1,0,0
-
+hr_employee_data_center,hr_employee data_center,model_hr_employee,nantian_erp.data_center_group_hr_user,1,1,0,0
 nantian_erp_certificate_all,nantian_erp_certificate all,model_nantian_erp_certificate,,1,1,1,1
 nantian_erp_certificate_category_all,nantian_erp_certificate_category all,model_nantian_erp_certificate_category,,1,1,1,1
 nantian_erp_certificate_institutions_all,nantian_erp_certificate_institutions all,model_nantian_erp_certificate_institutions,,1,1,1,1
@@ -17,7 +16,7 @@ nantian_erp_resource_manager_assistant_all,nantian_erp_resource_manager_assistan
 nantian_erp_hr_header_all,nantian_erp_hr_header all,model_hr_employee,nantian_erp.group_nantian_header,1,1,0,0
 nantian_erp_hr_bm_manager_all,nantian_erp_hr_bm_manager all,model_hr_employee,nantian_erp.group_hr_bm_manager,1,1,0,0
 nantian_erp_hr_assistant_all,nantian_erp_hr_assistant all,model_hr_employee,nantian_erp.group_hr_assistant,1,1,1,0
-nantian_erp_hr_user_all,nantian_erp_hr_user all,model_hr_employee,nantian_erp.group_hr_user,1,1,0,0
+nantian_erp_hr_other_user_all,nantian_erp_hr_other_user all,model_hr_employee,nantian_erp.group_hr_user,1,1,0,0
 nantian_erp_hr_manager_all,nantian_erp_hr_manager all,model_hr_employee,nantian_erp.group_hr_manager,1,1,0,0
 nantian_erp_hr_manager_all_as,nantian_erp_hr_manager all_as,model_hr_employee,nantian_erp.group_hr_president_assistant,1,1,0,0
 nantian_erp_hr_president_all,nantian_erp_hr_president all,model_hr_employee,nantian_erp.group_hr_president,1,1,0,0

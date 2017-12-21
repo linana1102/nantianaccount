@@ -217,7 +217,9 @@
                                         <!--<field name="education" string="学历"/>-->
                                         <field name="education_experience_ids" string="教育经历">
                                             <tree string="教育经历" editable="bottom">
-                                                <field name="date_time" string="时间段"/>
+                                                <field name="date_start" string="开始"/>
+                                                <field name="date_end" string="结束"/>
+                                                <field name="date_time" string="old"/>
                                                 <field name="school" string="学校"/>
                                                 <field name="major" string="专业"/>
                                                 <field name="education" string="学历"/>
@@ -318,7 +320,6 @@
                 <xpath expr="//page[@string='Public Information']" position="replace">
                     <page string="Personal Information" >
                                 <group>
-
                                     <group string="个人信息">
                                         <field name="gender"/>
                                         <field name="birthday"/>
@@ -341,7 +342,8 @@
                                         <!--<field name="education" string="学历"/>-->
                                         <field name="education_experience_ids" string="教育经历">
                                             <tree string="教育经历" editable="bottom">
-                                                <field name="date_time" string="时间段"/>
+                                                <field name="date_start" string="开始时间"/>
+                                                <field name="date_end" string="结束时间"/>
                                                 <field name="school" string="学校"/>
                                                 <field name="major" string="专业"/>
                                                 <field name="education" string="学历"/>
