@@ -217,8 +217,8 @@
                                         <!--<field name="education" string="学历"/>-->
                                         <field name="education_experience_ids" string="教育经历">
                                             <tree string="教育经历" editable="bottom">
-                                                <field name="date_start" string="开始"/>
-                                                <field name="date_end" string="结束"/>
+                                                <field name="date_start" string="开始" required="True"/>
+                                                <field name="date_end" string="结束" required="True"/>
                                                 <field name="date_time" string="old"/>
                                                 <field name="school" string="学校"/>
                                                 <field name="major" string="专业"/>

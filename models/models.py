@@ -1684,8 +1684,8 @@ class education_experience(models.Model):
     major = fields.Char(string='专业')
     education = fields.Selection([(u'中专及以下',u'中专及以下'),(u'高中',u'高中'),(u'大专',u'大专'),(u'本科',u'本科'),(u'硕士',u'硕士'),(u'博士',u'博士')],string='学历')
     date_time = fields.Char(string='时间段')
-    date_start = fields.Date(string='开始',required=True)
-    date_end = fields.Date(string='结束',required=True)
+    date_start = fields.Date(string='开始')
+    date_end = fields.Date(string='结束')
     employee_id = fields.Many2one('hr.employee',string='员工')
 
 
