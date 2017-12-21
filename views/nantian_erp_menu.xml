@@ -11,7 +11,7 @@
             <field name="domain">['|','|','|',('dis_states','=',u"可调用"),('dis_states','=',u"待调整"),('dis_states','=',u"申请离职"),('dis_states','=',u"借调中")]</field>
         </record>
 
-        <record id="nantian_erp_employee_Implement_Center1" model="ir.actions.act_window">
+        <record id="nantian_erp_employee_Implement_Center01" model="ir.actions.act_window">
             <field name="name">集成实施中心</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
