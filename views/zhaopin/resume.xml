@@ -665,8 +665,64 @@
                                 <h1><field name="resume_id" class="oe_inline" readonly="True"/></h1>
                          </div>
                          <div class="oe_right" name="buttons">
-                             <button  type='object' name="create_employee_from_resume" class="oe_stat_button" icon="fa-book" string="入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant"/>
-                             <button  type='object' name="create_entry" class="oe_stat_button" icon="fa-book" string="不入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant"/>
+                             <button  type='object' name="create_employee_from_resume" class="oe_stat_button" icon="fa-book" string="入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
+                             <button  type='object' name="create_entry" class="oe_stat_button" icon="fa-book" string="不入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
+                         </div>
+                        <group>
+                            <group >
+                                <field name="resume_id" string="姓名"/>
+                                <field name="phone" string="电话"/>
+                                <field name="email" string="邮箱"/>
+                                <field name="gender" string="性别"/>
+                                <field name="identification_id" string="身份证号"/>
+                                <field name="graduation_id" string="毕业证号"/>
+                                <field name="entrytime" string="办理入职时间"/>
+                                <field name="entry_recruitment_id" string="入职岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                                <field name="job_level" string="岗位级别"/>
+                                <field name="recruitment_id" string="招聘岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                            </group>
+                            <group>
+                                <field name="channel" string="渠道"/>
+                                <field name="reason" string="招聘理由"/>
+                                <field name="first_department_id" string="一级部门" domain="[('level','=','2')]"/>
+                                <field name="second_department_id" string="二级部门" domain="[('parent_id','=',first_department_id)]"/>
+                                <field name="working_team_id" string="工作组"/>
+                                 <label for="contract_time"/>
+                                <div>
+                                <field name="contract_time" string="合同期限"/><label string="年" class="oe_inline"/>
+                                </div>
+                                <label for="test_time"/>
+                                <div>
+                                    <p>
+                                <field name="test_time" string="试用期限"/><label string="月" class="oe_inline"/>
+                                    如果是离职人员又重新回公司的试用期为0</p>
+                                </div>
+                                <!--<field name="state"/>-->
+                            </group>
+
+                        </group>
+                        <field name="interview_ids" string="面试记录"></field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_pended_offer_information_form_all">
+            <field name="name">nantian_pended_offer_information.form_all</field>
+            <field name="model">nantian_erp.offer_information</field>
+            <field name="arch" type="xml">
+                <form string="offer">
+                    <header>
+                         <field name="state"/>
+                    </header>
+
+                    <sheet>
+                         <div class="oe_title">
+                                <label for="resume_id" class="oe_edit_only"/>
+                                <h1><field name="resume_id" class="oe_inline" readonly="True"/></h1>
+                         </div>
+                         <div class="oe_right" name="buttons">
+                             <button  type='object' name="create_employee_from_resume" class="oe_stat_button" icon="fa-book" string="入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
+                             <button  type='object' name="create_entry" class="oe_stat_button" icon="fa-book" string="不入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
                          </div>
                         <group>
                             <group >
@@ -722,7 +778,7 @@
             </field>
         </record>
         <record id="nantian_erp_offer_all_information_action" model="ir.actions.act_window">
-            <field name="name">全部的offer信息</field>
+            <field name="name">全部的offer信息(可调整)</field>
             <field name="res_model">nantian_erp.offer_information</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -738,7 +794,7 @@
         <record id="nantian_erp_offer_all_information_form_action" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
             <field name="sequence" eval="10"/>
-            <field name="view_id" ref="nantian_erp_pended_offer_information_form" />
+            <field name="view_id" ref="nantian_erp_pended_offer_information_form_all" />
             <field name="act_window_id" ref="nantian_erp_offer_all_information_action" />
         </record>
         <record id="nantian_erp_offer_pending_information_action" model="ir.actions.act_window">
@@ -856,7 +912,7 @@
             <field name="view_id" ref="nantian_erp_set_work_email_form" />
             <field name="act_window_id" ref="nantian_erp_wait_set_email_action" />
         </record>
-
+        nantian_erp.group_hr_recruitment
         <menuitem id="nantian_erp_all_offer_zhaopin_menu" parent="nantian_set_offer_menu" name="已审批的offer信息" action="nantian_erp_offer_pended_information_action" sequence="6" groups="base.group_system,nantian_erp.group_hr_recruitment,nantian_erp.group_hr_manager"/>
         <menuitem id="nantian_erp_all_offer_menu" parent="nantian_set_offer_menu" name="全部的offer信息" action="nantian_erp_offer_all_information_action" sequence="7" groups="base.group_system"/>
         <menuitem id="nantian_erp_pending_offer_menu" parent="nantian_erp_resume_root_menu" name="待审批的offer信息" action="nantian_erp_offer_pending_information_action" sequence="5" groups="nantian_erp.group_hr_manager"/>

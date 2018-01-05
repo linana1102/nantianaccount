@@ -219,7 +219,6 @@
                                             <tree string="教育经历" editable="bottom">
                                                 <field name="date_start" string="开始" required="True"/>
                                                 <field name="date_end" string="结束" required="True"/>
-                                                <field name="date_time" groups="base.group_system"/>
                                                 <field name="school" string="学校"/>
                                                 <field name="major" string="专业"/>
                                                 <field name="education" string="学历"/>

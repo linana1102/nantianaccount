@@ -1689,3 +1689,5 @@ class education_experience(models.Model):
     employee_id = fields.Many2one('hr.employee',string='员工')
 
 
+
+

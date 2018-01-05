@@ -615,7 +615,7 @@ class interview(models.Model):
                                                      'gender': resume.gender,
                                                      'recruitment_id': vals['recruitment_id'],
                                                      'entry_recruitment_id': vals['recruitment_id'],
-                                                     'job_name': recruitment.job_id.name + '(' + recruitment.job_id.categroy_id.name + ')',
+                                                     'job_name': u'%s(%s)'%(recruitment.job_id.name,recruitment.job_id.categroy_id.name),
                                                      'job_level': recruitment.job_level, 'user_id': vals['next_user'],
                                                      'first_department_id': recruitment.department_id.parent_id.id,
                                                      'second_department_id': recruitment.department_id.id,
@@ -836,25 +836,30 @@ class offer_information(models.Model):
     @api.multi
     def create_user(self):
         if self.work_email:
-            i = 1
-            email = self.work_email
+            ##############################################
+            # i = 1
+            # email = self.work_email
             # 防止系统中用户名相同
-            while(1):
-                if self.env['res.users'].search([('login','=',email)]):
-                    email = email+str(i)
-                    i=i+1
-                else:
-                    break
-            if i==1:
-                user = self.env['res.users'].sudo().create({'login':self.work_email,'password':'123456','name':self.resume_id.name,'email':self.work_email,'active':1})
+            # while(1):
+            #     if self.env['res.users'].search([('login','=',email)]):
+            #         email = email+str(i)
+            #         i=i+1
+            #     else:
+            #         break
+            # if i==1:
+            #     user = self.env['res.users'].sudo().create({'login':self.work_email,'password':'123456','name':self.resume_id.name,'email':self.work_email,'active':1})
+            ################################################
+            if self.env['res.users'].search([('login', '=', self.work_email)]):
+                raise exceptions.ValidationError('该邮箱号码已经被注册!请直接去人力资源关联,或检查这个公司邮箱是否有异议！')
+
             else:
-                print email
-                a = self.env['res.users'].sudo().search([('login','=',self.work_email)])
-                print a.sudo().update({'login':email})
+                # print email
+                # a = self.env['res.users'].sudo().search([('login','=',self.work_email)])
+                # print a.sudo().update({'login':email})
                 user = self.env['res.users'].sudo().create({'login':self.work_email,'password':'123456','name':self.resume_id.name,'email':self.work_email,'active':1})
-            self.emp_id.user_id = user
-            self.state = u'完成'
-            self.user = user
+                self.emp_id.user_id = user
+                self.state = u'完成'
+                self.user = user
         else:
             raise exceptions.ValidationError('请填写公司邮箱')
 

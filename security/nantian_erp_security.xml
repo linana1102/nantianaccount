@@ -312,18 +312,8 @@
          <field name="implied_ids" eval="[(4, ref('nantian_erp.group_work_team_user'))]"/>
         <field name="category_id" ref="base.module_category_nantianerp"/>
     </record>
-    <record id="server_sale_before_read_contract_rule" model="ir.rule">
-        <field name="name">contract访问控制2-服务拓展部</field>
-        <field name="model_id" ref="nantian_erp.model_nantian_erp_contract"/>
-        <field name="domain_force">[]</field>
-        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_server_sale_before'))]"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-    <record id="server_sale_before_pres_sale_rule" model="ir.rule">
-        <field name="name">pres_sale访问控制-服务拓展部</field>
+      <record id="server_sale_before_pres_sale_rule" model="ir.rule">
+        <field name="name">pres_sale访问控制-服务拓展部_售前组</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_pres_sale"/>
         <field name="domain_force">[]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_server_sale_before'))]"/>
@@ -332,17 +322,37 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+    <record id="server_sale_before_read_write_create_contract_rule" model="ir.rule">
+        <field name="name">contract访问控制2-服务拓展部</field>
+        <field name="model_id" ref="nantian_erp.model_nantian_erp_contract"/>
+        <field name="domain_force">[('category','=','维保合同')]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_server_sale_before'))]"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="server_sale_before_read_contract_rule" model="ir.rule">
+        <field name="name">contract访问控制3-服务拓展部</field>
+        <field name="model_id" ref="nantian_erp.model_nantian_erp_contract"/>
+        <field name="domain_force">[]</field>
+        <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_server_sale_before'))]"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
 
     <!--base.group_partner_manager是人力总经理组-->
     <!--nantian_erp.group_nantian_boss是任务和项目总经理组-->
     <record id="contract_header_rule" model="ir.rule">
-        <field name="name">contract访问控制1</field>
+        <field name="name">contract访问控制1-行业负责人</field>
         <field name="model_id" ref="nantian_erp.model_nantian_erp_contract"/>
         <field name="domain_force">['|',('header_id','=',user.id),('other_header_id','=',user.id)]</field>
         <field name="groups" eval="[(4,ref('nantian_erp.group_nantian_header'))]"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_read" eval="1"/>
-        <field name="perm_create" eval="0"/>
+        <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
     <record id="nantian_erp_hr_adjusting_rule1" model="ir.rule">
