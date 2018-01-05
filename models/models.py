@@ -22,9 +22,9 @@ class hr_employee(models.Model):
     contract_sign_first = fields.Char(string = "第一阶段")
     contract_sign_second = fields.Char(string = "第二阶段")
     SN = fields.Char(string="财务序列号") #序列号
-    project_cost_month_ids = fields.Many2many('nantian_erp.project_cost_month',"project_cost_month_employee_ref",string='工作组成本表')
-    performance_year_ids = fields.One2many('nantian_erp.performance_year','employee_id',ondelete = 'set null')
-    working_team_id = fields.Many2one('nantian_erp.working_team', ondelete='set null',track_visibility='onchange' )
+    project_cost_month_ids = fields.Many2many('nantian_erp.project_cost_month',"project_cost_month_employee_ref",string='工作组月成本表')
+    performance_year_ids = fields.One2many('nantian_erp.performance_year','employee_id',string="年成本表",ondelete = 'set null')
+    working_team_id = fields.Many2one('nantian_erp.working_team',string="工作组",ondelete='set null',track_visibility='onchange' )
     department_first = fields.Char(string='一级部门',compute='get_department_first',store= True)
     department_second = fields.Char(string='二级部门',compute='get_department_first',store= True)
     contract_jobs_id = fields.Many2one('nantian_erp.jobs',ondelete='set null',string='合同岗位',track_visibility='onchange',)
@@ -32,8 +32,8 @@ class hr_employee(models.Model):
     certificate_ids = fields.One2many('nantian_erp.certificate','employee_ids',ondelete = 'set null',string="证书",track_visibility='onchange')
     graduation = fields.Char(string="毕业学校",track_visibility='onchange')
     major = fields.Char(string='专业',track_visibility='onchange')
-    work_time = fields.Date(track_visibility='onchange')
-    entry_time = fields.Date(track_visibility='onchange')
+    work_time = fields.Date(string="首次工作时间",track_visibility='onchange')
+    entry_time = fields.Date(string="入职时间",track_visibility='onchange')
     contract_starttime = fields.Date(string='合同开始时间',track_visibility='onchange')
     contract_endtime = fields.Date(string='合同终止时间',track_visibility='onchange')
     contract_len = fields.Integer(string='合同期限',track_visibility='onchange')
@@ -48,7 +48,7 @@ class hr_employee(models.Model):
             (u'高级技工', u"高级技工"),
             (u'高中', u"高中"),
         ],
-            track_visibility='onchange'
+        string='学历(弃用)', track_visibility='onchange'
     )
 
     level = fields.Selection(
@@ -126,8 +126,8 @@ class hr_employee(models.Model):
         (u'借调中', u"借调中"),
 
     ], default=u'正常', string="调整状态",track_visibility='onchange')
-    adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids",track_visibility='onchange')
-    adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True,track_visibility='onchange')
+    adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref',string="调整表(弃用)",ondelete='set null',track_visibility='onchange')
+    adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至(弃用)", store=True,track_visibility='onchange')
     work_experience_ids = fields.One2many('nantian_erp.work_experience','employee_id',string="项目经验")
     resume_id = fields.Many2one('nantian_erp.resume',string='入职简历')
     position_id = fields.Many2one('nantian_erp.job',string= '南天招聘职位')
