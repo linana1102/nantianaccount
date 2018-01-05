@@ -34,9 +34,9 @@ class hr_employee(models.Model):
     major = fields.Char(string='专业',track_visibility='onchange')
     work_time = fields.Date(track_visibility='onchange')
     entry_time = fields.Date(track_visibility='onchange')
-    contract_starttime = fields.Date(track_visibility='onchange')
+    contract_starttime = fields.Date(string='合同开始时间',track_visibility='onchange')
     contract_endtime = fields.Date(string='合同终止时间',track_visibility='onchange')
-    contract_len = fields.Integer(track_visibility='onchange')
+    contract_len = fields.Integer(string='合同期限',track_visibility='onchange')
     is_forever = fields.Boolean(compute='_get_end_date',store = True,string='无期限？',track_visibility='onchange')
     education = fields.Selection(
         [
@@ -70,7 +70,7 @@ class hr_employee(models.Model):
             (u'15',15),
             (u'16',16)
         ],
-            track_visibility='onchange'
+        string='级别',track_visibility='onchange'
     )
     category = fields.Selection(
         [
@@ -87,12 +87,12 @@ class hr_employee(models.Model):
     default = u'公司储备', string = "人员状态",track_visibility='onchange'
     )
     specialty = fields.Text(string="特长",track_visibility='onchange')
-    certificate_direction_id = fields.Many2one(related='certificate_ids.certificate_direction_id', string='certificate_direction',track_visibility='onchange')
-    certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='certificate_category',track_visibility='onchange')
-    certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='certificate_institutions',track_visibility='onchange')
-    certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='certificate_level',track_visibility='onchange')
-    work_age = fields.Integer(compute='_compute_work_age',store=True,track_visibility='onchange')
-    api_res = fields.Char(default="sys",track_visibility='onchange')
+    certificate_direction_id = fields.Many2one(related='certificate_ids.certificate_direction_id', string='证书方向',track_visibility='onchange')
+    certificate_category_id = fields.Many2one(related='certificate_ids.certificate_category_id', string='证书类型',track_visibility='onchange')
+    certificate_institutions_id = fields.Many2one(related='certificate_ids.certificate_institutions_id', string='证书颁发机构或者行业',track_visibility='onchange')
+    certificate_level_id = fields.Many2one(related='certificate_ids.certificate_level_id', string='证书级别',track_visibility='onchange')
+    work_age = fields.Integer(compute='_compute_work_age',store=True,string="工作年限",track_visibility='onchange')
+    api_res = fields.Char(default="sys",string="数据来源",track_visibility='onchange')
     customer_id = fields.Many2one('res.partner', compute='_get_customer',string="客户",store=True,track_visibility='onchange')
     leave_time = fields.Date(string="离职时间",track_visibility='onchange')
     entry_age_distribute = fields.Selection(
@@ -128,11 +128,11 @@ class hr_employee(models.Model):
     ], default=u'正常', string="调整状态",track_visibility='onchange')
     adjust_ids = fields.Many2many('nantian_erp.hr_adjusting','emp_to_adjust_ref', ondelete='set null', string="adjust_ids",track_visibility='onchange')
     adjust_dst = fields.Char(compute='get_adjust_dst', string="调整至", store=True,track_visibility='onchange')
-    work_experience_ids = fields.One2many('nantian_erp.work_experience','employee_id')
-    resume_id = fields.Many2one('nantian_erp.resume',string='简历')
+    work_experience_ids = fields.One2many('nantian_erp.work_experience','employee_id',string="项目经验")
+    resume_id = fields.Many2one('nantian_erp.resume',string='入职简历')
     position_id = fields.Many2one('nantian_erp.job',string= '南天招聘职位')
     education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
-    leader = fields.Many2one('hr.employee',store=True)
+    leader = fields.Many2one('hr.employee',string="上一级",store=True)
     # default=lambda self: self._get_state()
     demission_ids = fields.One2many('nantian_erp.demission','employee_id', ondelete='set null', string="离职记录之一",track_visibility='onchange')
     pers_transfer_ids = fields.One2many('nantian_erp.pers_transfer','employee_id', ondelete='set null', string="调动记录之一",track_visibility='onchange')
