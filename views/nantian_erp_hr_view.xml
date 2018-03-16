@@ -136,7 +136,7 @@
                 <xpath expr="//div[@name='button_box']" position="inside">
                     <button name="%(nantian_erp_pers_transfer_by_hr)d" type="action" string="人员调整" class="oe_stat_button" icon="fa-tasks">
                     </button>
-                    <button name="%(nantian_erp_demission_by_hr)d" type="action" string="人员离职" class="oe_stat_button"  icon="fa-user">
+                    <button name="%(nantian_erp_demission_by_hr)d" type="action" string="人员离职" attrs="{'invisible':[('states','=','离职办理中')]}" class="oe_stat_button"  icon="fa-user">
                     </button>
                 </xpath>
                 <xpath expr="//page[@string='HR Settings']" position="replace">

@@ -32,6 +32,33 @@
             <field name="view_mode">tree,form</field>
             <field name ="domain">[('user_id','=',uid)]</field>
          </record>
+         <record model="ir.ui.view" id="nantian_erp_demission_form">
+            <field name="name">demission.form</field>
+            <field name="model">nantian_erp.demission</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <heard>
+                    </heard>
+                    <group >
+                        <group >
+                            <field name="employee_id" string="离职申请人" placeholder="注意权限"/>
+                            <field name="demission_reason" string="离职原因"/>
+                            <field name="demission_date" string="离职时间"/>
+                            <field name="state" string="状态" invisible = "1"/>
+
+                        </group>
+                        <group >
+                            <field name="contract_name" string="合同名称" />
+                            <field name="contract_post" string="合同岗位"/>
+                            <field name="sro_project" string="项目组"/>
+                            <field name="is_recruit" string="是否招聘"/>
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="nantian_erp_weekly_reports_form">
             <field name="name">weekly_reports.form</field>
@@ -170,6 +197,65 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="nantian_erp_pres_sale_tree">
+            <field name="name">pres_sale.tree</field>
+            <field name="model">nantian_erp.pres_sale</field>
+            <field name="arch" type="xml">
+                <tree >
+                    <field name="project_name" string="项目名称"/>
+                    <field name="partner" string="客户名称" />
+                    <field name="process_scrib" string="本周主要进展说明"/>
+                    <field name="before_bid_amount" string="投标金额"/>
+                    <field name="bid_commpany" string="中标单位"/>
+                    <field name="pre_bid_date" string="预计投标日期"/>
+                    <field name="competitors" string="竞争对手"/>
+                    <field name="rate_of_success" string="成功率(%)"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_pres_sale_form">
+            <field name="name">pres_sale.form</field>
+            <field name="model">nantian_erp.pres_sale</field>
+            <field name="arch" type="xml">
+                <form>
+                     <sheet>
+                    <heard>
+                        <field name="state" widget="statusbar" class="oe_right"/>
+                    </heard>
+                    <button name="win_the_bid" type="object" string="中标确认"  class="oe_highlight" />
+                        <!--ques1，这个type怎么创建合同的页面-->
+                    <button name="lose_a_bid" type="object"  string="未中标" attrs="{'invisible':[('state','=','win')]}" class="oe_highlight"/>
+                    <button name="creat_new_contract" type="object" string="创建新合同"  attrs="{'invisible':[('state','!=','win')]}" class="oe_highlight" />
+                    <group>
+                        <group string="售前项目预填写">
+                            <field name="project_name" string="项目名称"/>
+                            <field name="partner" string="客户名称" />
+                            <field name="process_scrib" string="本周主要进展说明"/>
+                            <field name="before_bid_amount" string="投标金额"/>
+                            <field name="bid_commpany" string="中标单位"/>
+                            <field name="pre_bid_date" string="预计投标日期"/>
+                            <field name="competitors" string="竞争对手"/>
+                            <field name="state_w"/>
+                        </group>
+                        <group string="编写标书人员待完善">
+                            <field name="contract_name" string="合同名称"/>
+                            <field name="salesman_id" string="销售负责人"/>
+                            <field name="contract_number" string="合同编号"/>
+                            <field name="bid_write" string="标书编写"/>
+                            <field name="bid_checkman_id" string="标书复核人"/>
+                            <field name="bid_readman_id" string="讲标人"/>
+                            <field name="after_bid_amount" string="合同/中标金额"/>
+                            <field name="term" string="检索词"/>
+                            <field name="firm_platform" string="涉及厂商或平台"/>
+                            <field name="context" string="合同主要内容"/>
+                            <field name="siger" string="签字人"/>
+                            <field name="sign_date" string="签订日期"/>
+                        </group>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="nantian_erp_weekly_reports_search">
             <field name="name">nantian_erp.weekly_reports.search</field>
@@ -270,65 +356,7 @@
                 </form>
             </field>
         </record>
-        <record model="ir.ui.view" id="nantian_erp_pres_sale_form">
-            <field name="name">pres_sale.form</field>
-            <field name="model">nantian_erp.pres_sale</field>
-            <field name="arch" type="xml">
-                <form>
-                     <sheet>
-                    <heard>
-                        <field name="state" widget="statusbar" class="oe_right"/>
-                    </heard>
-                    <button name="win_the_bid" type="object" string="中标确认"  class="oe_highlight" />
-                        <!--ques1，这个type怎么创建合同的页面-->
-                    <button name="lose_a_bid" type="object"  string="未中标" attrs="{'invisible':[('state','=','win')]}" class="oe_highlight"/>
-                    <button name="creat_new_contract" type="object" string="创建新合同"  attrs="{'invisible':[('state','!=','win')]}" class="oe_highlight" />
-                    <group>
-                        <group string="售前项目预填写">
-                            <field name="project_name" string="项目名称"/>
-                            <field name="partner" string="客户名称" />
-                            <field name="process_scrib" string="本周主要进展说明"/>
-                            <field name="before_bid_amount" string="投标金额"/>
-                            <field name="bid_commpany" string="中标单位"/>
-                            <field name="pre_bid_date" string="预计投标日期"/>
-                            <field name="competitors" string="竞争对手"/>
-                            <field name="state_w"/>
-                        </group>
-                        <group string="编写标书人员待完善">
-                            <field name="contract_name" string="合同名称"/>
-                            <field name="salesman_id" string="销售负责人"/>
-                            <field name="contract_number" string="合同编号"/>
-                            <field name="bid_write" string="标书编写"/>
-                            <field name="bid_checkman_id" string="标书复核人"/>
-                            <field name="bid_readman_id" string="讲标人"/>
-                            <field name="after_bid_amount" string="合同/中标金额"/>
-                            <field name="term" string="检索词"/>
-                            <field name="firm_platform" string="涉及厂商或平台"/>
-                            <field name="context" string="合同主要内容"/>
-                            <field name="siger" string="签字人"/>
-                            <field name="sign_date" string="签订日期"/>
-                        </group>
-                    </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="nantian_erp_pres_sale_tree">
-            <field name="name">pres_sale.tree</field>
-            <field name="model">nantian_erp.pres_sale</field>
-            <field name="arch" type="xml">
-                <tree >
-                    <field name="project_name" string="项目名称"/>
-                    <field name="partner" string="客户名称" />
-                    <field name="process_scrib" string="本周主要进展说明"/>
-                    <field name="before_bid_amount" string="投标金额"/>
-                    <field name="bid_commpany" string="中标单位"/>
-                    <field name="pre_bid_date" string="预计投标日期"/>
-                    <field name="competitors" string="竞争对手"/>
-                    <field name="rate_of_success" string="成功率(%)"/>
-                </tree>
-            </field>
-        </record>
+
         <record id="nantian_erp_project_gathering_action" model="ir.actions.act_window">
             <field name="name">项目收款</field>
             <field name="res_model">nantian_erp.project_gathering</field>
@@ -411,6 +439,128 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="nantian_erp_pers_transfer_tree">
+            <field name="name">pers_transfer.tree</field>
+            <field name="model">nantian_erp.pers_transfer</field>
+            <field name="arch" type="xml">
+                <tree editable="top">
+                    <field name="employee_id" string="调动人"/>
+                            <field name="move_reason" string="调动原因"/>
+                            <field name="move_date" string="调动时间"/>
+                            <field name="res_contract_name" string="合同名称" />
+                            <field name="res_contract_job" string="合同岗位"/>
+                            <field name="sour_team" string="原项目组"/>
+                            <field name="is_recruit" string="是否招聘"/>
+                            <field name="before_leader" string="调动前负责人"/>
+                            <field name="after_leader" string="调动后负责人"/>
+                            <field name="des_team" string="新项目组"/>
+                            <field name="des_contract_name" string="合同名称"/>
+                            <field name="des_contract_job" string="合同岗位"/>
+                            <field name="dis_states" string="调整状态" readonly = "True"/>
+                    <button name="over_pers_transfer" type="object" string="调整结束" class="oe_highlight">
+                    </button>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_pers_transfer_form">
+            <field name="name">pers_transfer.form</field>
+            <field name="model">nantian_erp.pers_transfer</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                    <heard>
+                        <!--<button name="send_to_after_leader" type="object" string="转交新的负责人"  attrs="{'invisible':[('before_leader','=','uid')]}" class="oe_highlight" />-->
+                        <!--<button name="email_to_sys" type="object" string="发送邮件"  attrs="{'invisible':[()]}" class="oe_highlight" />-->
+                    </heard>
+                    <group >
+                        <group string="调动前">
+                            <field name="employee_id" string="调动人" placeholder="仅限本行业下的人员"/>
+                            <field name="res_contract_name" string="合同名称" />
+                            <field name="res_contract_job" string="合同岗位"/>
+                            <field name="sour_team" string="原项目组"/>
+                            <field name="move_reason" string="调动原因"/>
+                            <field name="move_date" string="调动时间"/>
+                            <field name="is_recruit" string="是否招聘"/>
+                            <field name="before_leader" string="调动前负责人"/>
+                        </group>
+                        <group string="调动后">
+                            <field name="after_leader" string="调动后负责人" required="1"/>
+                            <field name="des_team" string="新项目组" domain="[('category','=',u'工作组')]"/>
+                            <field name="des_contract_name" string="合同名称" domain="[('category','!=',u'维保合同'),('state','!=','off')]"/>
+                            <field name="des_contract_job" string="合同岗位" domain="[('contract_id','=',des_contract_name)]"/>
+                        </group>
+                        <group>
+                            <field name="dis_states" string="调整状态"/>
+                        </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="nantian_erp_demission_tree">
+            <field name="name">demission.tree</field>
+            <field name="model">nantian_erp.demission</field>
+            <field name="arch" type="xml">
+                <tree editable="top" >
+                    <field name="employee_id" string="离职申请人"/>
+                    <field name="demission_reason" string="离职原因"/>
+                    <field name="demission_date" string="离职时间"/>
+                    <field name="demission_goto" />
+                    <field name="contract_name" string="合同名称" />
+                    <field name="contract_post" string="合同岗位"/>
+                    <field name="sro_project" string="项目组"/>
+                    <field name="is_recruit" string="是否招聘"/>
+                    <field name="user_id" string="创建者"/>
+                    <field name="dealer" />
+                    <field name="state" string="离职申请状态"/>
+                    <button name="confirm_demission_dealer" type="object" string="离职确认" class="oe_highlight">
+                    </button>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="nantian_erp_demission_record_tree">
+            <field name="name">demission_record.tree</field>
+            <field name="model">nantian_erp.demission</field>
+            <field name="arch" type="xml">
+                <tree  >
+                    <field name="employee_id" string="离职申请人"/>
+                    <field name="demission_reason" string="离职原因"/>
+                    <field name="demission_date" string="离职时间"/>
+                    <field name="contract_post" string="合同岗位"/>
+                    <field name="sro_project" string="项目组"/>
+                    <field name="dealer" string="处理人" />
+                </tree>
+            </field>
+        </record>
+
+
+
+         <record model="ir.ui.view" id="nantian_erp_demission_record_form">
+            <field name="name">demission_record.form</field>
+            <field name="model">nantian_erp.demission</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group name="group_top">
+                            <group name="group_left">
+                                <field name="employee_id" string="离职申请人"/>
+                                <field name="demission_reason" string="离职原因"/>
+                                <field name="demission_date" string="离职时间"/>
+                            </group>
+                            <group name="group_right">
+                                <field name="contract_post" string="合同岗位"/>
+                                <field name="sro_project" string="项目组"/>
+                                <field name="dealer" string="处理人" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
         <record id="nantian_erp_pers_transfer_pending_inter_action" model="ir.actions.act_window">
             <field name="name">人员调入</field>
             <field name="res_model">nantian_erp.pers_transfer</field>
@@ -470,65 +620,7 @@
             <field name="view_id" ref="nantian_erp_pers_transfer_form" />
             <field name="act_window_id" ref="nantian_erp_pers_transfer_action" />
         </record>
-        <record model="ir.ui.view" id="nantian_erp_pers_transfer_form">
-            <field name="name">pers_transfer.form</field>
-            <field name="model">nantian_erp.pers_transfer</field>
-            <field name="arch" type="xml">
-                <form >
-                    <sheet>
-                    <heard>
-                        <!--<button name="send_to_after_leader" type="object" string="转交新的负责人"  attrs="{'invisible':[('before_leader','=','uid')]}" class="oe_highlight" />-->
-                        <!--<button name="email_to_sys" type="object" string="发送邮件"  attrs="{'invisible':[()]}" class="oe_highlight" />-->
-                    </heard>
-                    <group >
-                        <group string="调动前">
-                            <field name="employee_id" string="调动人" placeholder="仅限本行业下的人员"/>
-                            <field name="res_contract_name" string="合同名称" />
-                            <field name="res_contract_job" string="合同岗位"/>
-                            <field name="sour_team" string="原项目组"/>
-                            <field name="move_reason" string="调动原因"/>
-                            <field name="move_date" string="调动时间"/>
-                            <field name="is_recruit" string="是否招聘"/>
-                            <field name="before_leader" string="调动前负责人"/>
-                        </group>
-                        <group string="调动后">
-                            <field name="after_leader" string="调动后负责人" required="1"/>
-                            <field name="des_team" string="新项目组" domain="[('category','=',u'工作组')]"/>
-                            <field name="des_contract_name" string="合同名称" domain="[('category','!=',u'维保合同'),('state','!=','off')]"/>
-                            <field name="des_contract_job" string="合同岗位" domain="[('contract_id','=',des_contract_name)]"/>
-                        </group>
-                        <group>
-                            <field name="dis_states" string="调整状态"/>
-                        </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
 
-        <record model="ir.ui.view" id="nantian_erp_pers_transfer_tree">
-            <field name="name">pers_transfer.tree</field>
-            <field name="model">nantian_erp.pers_transfer</field>
-            <field name="arch" type="xml">
-                <tree editable="top">
-                    <field name="employee_id" string="调动人"/>
-                            <field name="move_reason" string="调动原因"/>
-                            <field name="move_date" string="调动时间"/>
-                            <field name="res_contract_name" string="合同名称" />
-                            <field name="res_contract_job" string="合同岗位"/>
-                            <field name="sour_team" string="原项目组"/>
-                            <field name="is_recruit" string="是否招聘"/>
-                            <field name="before_leader" string="调动前负责人"/>
-                            <field name="after_leader" string="调动后负责人"/>
-                            <field name="des_team" string="新项目组"/>
-                            <field name="des_contract_name" string="合同名称"/>
-                            <field name="des_contract_job" string="合同岗位"/>
-                            <field name="dis_states" string="调整状态" readonly = "True"/>
-                    <button name="over_pers_transfer" type="object" string="调整结束" class="oe_highlight">
-                    </button>
-                </tree>
-            </field>
-        </record>
 
         <record id="nantian_erp_demission_pending_action" model="ir.actions.act_window">
             <field name="name">人员离职待完成</field>
@@ -572,55 +664,81 @@
             <field name="act_window_id" ref="nantian_erp_demission_action" />
         </record>
 
-        <record model="ir.ui.view" id="nantian_erp_demission_form">
-            <field name="name">demission.form</field>
-            <field name="model">nantian_erp.demission</field>
-            <field name="arch" type="xml">
-                <form >
-                    <sheet>
-                    <heard>
-                    </heard>
-                    <group >
-                        <group >
-                            <field name="employee_id" string="离职申请人" placeholder="注意权限"/>
-                            <field name="demission_reason" string="离职原因"/>
-                            <field name="demission_date" string="离职时间"/>
-                            <field name="state" string="状态" invisible = "1"/>
 
-                        </group>
-                        <group >
-                            <field name="contract_name" string="合同名称" />
-                            <field name="contract_post" string="合同岗位"/>
-                            <field name="sro_project" string="项目组"/>
-                            <field name="is_recruit" string="是否招聘"/>
-                        </group>
-                    </group>
-                    </sheet>
-                </form>
-            </field>
+        <record id="nantian_erp_demission_record_action" model="ir.actions.act_window">
+            <field name="name">人员离职记录</field>
+            <field name="res_model">nantian_erp.demission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="" />
+            <field name ="domain">[('state', '=', 'done')]</field>
+         </record>
+        <record id="nantian_erp_demission_record_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_demission_record_tree" />
+            <field name="act_window_id" ref="nantian_erp_demission_record_action" />
+        </record>
+        <record id="nantian_erp_demission_record_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="13"/>
+            <field name="view_id" ref="nantian_erp_demission_record_form" />
+            <field name="act_window_id" ref="nantian_erp_demission_record_action" />
         </record>
 
-        <record model="ir.ui.view" id="nantian_erp_demission_tree">
-            <field name="name">demission.tree</field>
-            <field name="model">nantian_erp.demission</field>
+
+        <record model="ir.ui.view" id="nantian_erp_demission_human_tree">
+            <field name="name">demission_human.tree</field>
+            <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <tree editable="top" >
-                    <field name="employee_id" string="离职申请人"/>
-                    <field name="demission_reason" string="离职原因"/>
-                    <field name="demission_date" string="离职时间"/>
-                    <field name="demission_goto" />
-                    <field name="contract_name" string="合同名称" />
-                    <field name="contract_post" string="合同岗位"/>
-                    <field name="sro_project" string="项目组"/>
-                    <field name="is_recruit" string="是否招聘"/>
-                    <field name="user_id" string="创建者"/>
-                    <field name="dealer" />
-                    <field name="state" string="离职申请状态"/>
-                    <button name="confirm_demission_dealer" type="object" string="离职确认" class="oe_highlight">
-                    </button>
+                <tree  >
+                    <field name="name" modifiers="{'required': true}"/>
+                    <field name="department_id" modifiers="{}"/>
+                    <field name="leave_time" string="离职时间" modifiers="{}"/>
+                    <field name="working_team_id" string="工作组" modifiers="{}"/>
+                    <field name="leader" string="上级领导" modifiers="{}"/>
                 </tree>
             </field>
         </record>
+
+
+
+         <!--<record model="ir.ui.view" id="nantian_erp_demission_human_form">-->
+            <!--<field name="name">demission_human.form</field>-->
+            <!--<field name="model">hr.employee</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<form>-->
+                    <!--<sheet>-->
+
+                    <!--</sheet>-->
+                <!--</form>-->
+            <!--</field>-->
+        <!--</record>-->
+
+
+
+        <record id="nantian_erp_demission_human_action" model="ir.actions.act_window">
+            <field name="name">离职人员信息</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="" />
+            <field name ="domain">[('active', '=', 0)]</field>
+         </record>
+        <record id="nantian_erp_demission_human_tree_action" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="12"/>
+            <field name="view_id" ref="nantian_erp_demission_human_tree" />
+            <field name="act_window_id" ref="nantian_erp_demission_human_action" />
+        </record>
+        <record id="nantian_erp_demission_human_form_action" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="13"/>
+            <!--<field name="view_id" ref="nantian_erp_demission_human_form" />-->
+            <field name="act_window_id" ref="nantian_erp_demission_human_action" />
+        </record>
+
+
 
         <record id="nantian_erp_project_progress_action" model="ir.actions.act_window">
             <field name="name">项目进度</field>
@@ -795,6 +913,9 @@
         <!--<menuitem id="dimission_special_hr" parent="hr.menu_hr_main" action="nantian_erp_dimission_special" name="特殊的离职" groups="nantian_erp.group_hr_manager_assistant"/>-->
         <menuitem id="nantian_erp_pers_transfer_out_menu2" parent="nantian_erp_weekly_plan_pers_transfer_my_menu" action="nantian_erp_pers_transfer_pending_out_action" name="人员调出" sequence="100" groups="nantian_erp.group_nantian_header"/>
         <menuitem id="nantian_erp_pers_transfer_inter_menu2" parent="nantian_erp_weekly_plan_pers_transfer_my_menu" action="nantian_erp_pers_transfer_pending_inter_action" name="人员调入" sequence="99" groups="nantian_erp.group_nantian_header"/>
+        <menuitem id="nantian_erp_pers_person_demission_menu" parent="hr.menu_hr_main" name="人员离职"  groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
+        <menuitem id="nantian_erp_pers_demission_record" parent="nantian_erp_pers_person_demission_menu" name="离职记录" action="nantian_erp_demission_record_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
+        <menuitem id="nantian_erp_pers_demission_human" parent="nantian_erp_pers_person_demission_menu" name="离职人员" action="nantian_erp_demission_human_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
 
     </data>
 </openerp>

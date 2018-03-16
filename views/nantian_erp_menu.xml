@@ -12,12 +12,25 @@
         </record>
 
 
-        <record id="nantian_erp_employee_Implement_Center2" model="ir.actions.act_window">
+        <record id="nantian_erp_employee_Implement_Center1" model="ir.actions.act_window">
             <field name="name">数据中心服务部</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('department_first','=',u"数据中心服务部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center1_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center1" />
+        </record>
+         <record id="nantian_erp_employee_Implement_Center2" model="ir.actions.act_window">
+            <field name="name">集成实施中心</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"集成实施中心")]</field>
         </record>
         <record id="nantian_view_Implement_Center2_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -25,12 +38,12 @@
             <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
             <field name="act_window_id" ref="nantian_erp_employee_Implement_Center2" />
         </record>
-         <record id="nantian_erp_employee_Implement_Center3" model="ir.actions.act_window">
-            <field name="name">集成实施中心</field>
+        <record id="nantian_erp_employee_Implement_Center3" model="ir.actions.act_window">
+            <field name="name">云服务管理部</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('department_first','=',u"集成实施中心")]</field>
+            <field name="domain">[('department_first','=',u"云服务管理部")]</field>
         </record>
         <record id="nantian_view_Implement_Center3_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -38,14 +51,152 @@
             <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
             <field name="act_window_id" ref="nantian_erp_employee_Implement_Center3" />
         </record>
-
+         <record id="nantian_erp_employee_Implement_Center4" model="ir.actions.act_window">
+            <field name="name">运营管理部</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"运营管理部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center4_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center4" />
+        </record>
+        <record id="nantian_erp_employee_Implement_Center5" model="ir.actions.act_window">
+            <field name="name">企业通讯部</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"企业通讯部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center5_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center5" />
+        </record>
+        <record id="nantian_erp_employee_Implement_Center6" model="ir.actions.act_window">
+            <field name="name">渠道及业务拓展部</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"渠道及业务拓展部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center6_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center6" />
+        </record>
+        <record id="nantian_erp_employee_Implement_Center7" model="ir.actions.act_window">
+            <field name="name">本部</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"本部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center7_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center7" />
+        </record>
+        <record id="nantian_erp_employee_Implement_Center8" model="ir.actions.act_window">
+            <field name="name">售前及解决方案中心</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"售前及解决方案中心")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center8_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center8" />
+        </record>
+        <record id="nantian_erp_employee_Implement_Center9" model="ir.actions.act_window">
+            <field name="name">销售一部</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"销售一部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center9_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center9" />
+        </record>
+        <record id="nantian_erp_employee_Implement_Center10" model="ir.actions.act_window">
+            <field name="name">销售二部</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"销售二部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center10_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center10" />
+        </record>
+        <record id="nantian_erp_employee_Implement_Center11" model="ir.actions.act_window">
+            <field name="name">销售三部</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"销售三部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center11_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center11" />
+        </record>
+        <record id="nantian_erp_employee_Implement_Center12" model="ir.actions.act_window">
+            <field name="name">销售四部</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"销售四部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center12_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center12" />
+        </record>
+        <record id="nantian_erp_employee_Implement_Center13" model="ir.actions.act_window">
+            <field name="name">销售五部</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('department_first','=',u"销售五部")]</field>
+        </record>
+        <record id="nantian_view_Implement_Center13_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="nantian_view_employee_Implement_Center_tree" />
+            <field name="act_window_id" ref="nantian_erp_employee_Implement_Center13" />
+        </record>
 
         <menuitem id="nantian_erp_all_employee_menue" parent="hr.menu_hr_main"  name="员工信息"/>
         <menuitem id="nantian_erp_employee_Implement_menue1" parent="nantian_erp_all_employee_menue"  name="全体员工" action='hr.open_view_employee_list_my'/>
-        <menuitem id="nantian_erp_employee_Implement_1_menue" parent="nantian_erp_all_employee_menue"  name="集成实施中心" action='nantian_erp_employee_Implement_Center3'/>
-        <menuitem id="nantian_erp_employee_Implement_2_menue" parent="nantian_erp_all_employee_menue"  name="数据中心服务部" action='nantian_erp_employee_Implement_Center2'/>
-
-
+        <menuitem id="nantian_erp_employee_Implement_1_menue" parent="nantian_erp_all_employee_menue"  name="集成实施中心" action='nantian_erp_employee_Implement_Center2'/>
+        <menuitem id="nantian_erp_employee_Implement_2_menue" parent="nantian_erp_all_employee_menue"  name="数据中心服务部" action='nantian_erp_employee_Implement_Center1'/>
+        <menuitem id="nantian_erp_employee_Implement_3_menue" parent="nantian_erp_all_employee_menue"  name="云服务管理部"  action='nantian_erp_employee_Implement_Center3'/>
+        <menuitem id="nantian_erp_employee_Implement_4_menue" parent="nantian_erp_all_employee_menue"  name="运营管理部"  action='nantian_erp_employee_Implement_Center4'/>
+        <menuitem id="nantian_erp_employee_Implement_5_menue" parent="nantian_erp_all_employee_menue"  name="企业通讯部"  action='nantian_erp_employee_Implement_Center5'/>
+        <menuitem id="nantian_erp_employee_Implement_6_menue" parent="nantian_erp_all_employee_menue"  name="渠道及业务拓展部"  action='nantian_erp_employee_Implement_Center6'/>
+        <menuitem id="nantian_erp_employee_Implement_7_menue" parent="nantian_erp_all_employee_menue"  name="本部"  action='nantian_erp_employee_Implement_Center7'/>
+        <menuitem id="nantian_erp_employee_Implement_8_menue" parent="nantian_erp_all_employee_menue"  name="售前及解决方案中心"  action='nantian_erp_employee_Implement_Center8'/>
+        <menuitem id="nantian_erp_employee_Implement_9_menue" parent="nantian_erp_all_employee_menue"  name="销售一部"  action='nantian_erp_employee_Implement_Center9'/>
+        <menuitem id="nantian_erp_employee_Implement_10_menue" parent="nantian_erp_all_employee_menue"  name="销售二部"  action='nantian_erp_employee_Implement_Center10'/>
+        <menuitem id="nantian_erp_employee_Implement_11_menue" parent="nantian_erp_all_employee_menue"  name="销售三部"  action='nantian_erp_employee_Implement_Center11'/>
+        <menuitem id="nantian_erp_employee_Implement_12_menue" parent="nantian_erp_all_employee_menue"  name="销售四部"  action='nantian_erp_employee_Implement_Center12'/>
+        <menuitem id="nantian_erp_employee_Implement_13_menue" parent="nantian_erp_all_employee_menue"  name="销售五部"  action='nantian_erp_employee_Implement_Center13'/>
 
         <record id="nantian_erp_certificate_category" model="ir.actions.act_window">
             <field name="name">认证类型</field>
