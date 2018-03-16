@@ -878,59 +878,59 @@ class entry(models.Model):
     user_id = fields.Many2one('res.users')
     type = fields.Char(string='类别')
 
-class entry_information(models.Model):
-    _name = "nantian_erp.entry"
-    _rec_name = 'name'
-
-    offer_id = fields.Many2one('nantian_erp.offer_information')
-    name = fields.Char(related="offer_id.resume_id.name", string='姓名', store="True")
-    phone = fields.Char(string='工作电话', store="True")
-    email = fields.Char(string='工作邮箱', store="True")
-    gender = fields.Selection([('male', '男'), ('female', '女')], related="offer_id.gender", string='性别', store="True")
-    entrytime = fields.Date(related="offer_id.entrytime", string='办理入职时间', store="True")
-    identification_id = fields.Char(related="offer_id.identification_id", string='身份证号', store="True")
-    graduation_id = fields.Char(related="offer_id.graduation_id", string='毕业证编号', store="True")
-    entry_recruitment_id = fields.Many2one('nantian_erp.recruitment', string='入职岗位',
-                                           related="offer_id.entry_recruitment_id", store="True")
-    job_name = fields.Char(string='岗位名称', related="offer_id.job_name", store="True")
-    job_level = fields.Selection(
-            [(u'1', u'1'), (u'2', u'2'), (u'3', u'3'), (u'4', u'4'), (u'5', u'5'), (u'6', u'6'), (u'7', u'7'), ],
-            related="offer_id.job_level", store="True", string='岗位级别',)
-    recruitment_id = fields.Many2one('nantian_erp.recruitment', string='招聘职位',
-                                     related="offer_id.recruitment_id", store="True"
-                                     )
-    channel = fields.Selection([('1', '招聘网站发布职位'), ('2', '伯乐奖职位'), ('3', '其他渠道')] ,
-                               related="offer_id.channel", store="True", string='招聘渠道')
-    reason = fields.Selection([('1', '原有人员离职后增补人员'), ('2', '业务拓展后新增岗位'),
-                               ('3', '其他')], related="offer_id.reason", store="True",string='招聘理由')
-    first_department_id = fields.Many2one('hr.department', string='一级部门',
-                                          related="offer_id.first_department_id", store="True")
-    second_department_id = fields.Many2one('hr.department', string='二级部门',
-                                           related="offer_id.second_department_id", store="True")
-    working_team_id = fields.Many2one('nantian_erp.working_team_id', string='三级工作组',
-                                      related="offer_id.working_team_id", store="True")
-    contract_time = fields.Integer(default=3, string='合同期限',
-                                   related="offer_id.contract_time", store="True")
-    test_time = fields.Integer(default=3, string='试用期限',
-                               related="offer_id.test_time", store="True")
-    work_time = fields.Date(string="首次工作时间")
-    contract_starttime = fields.Date(string='合同开始时间')
-    contract_endtime = fields.Date(string='合同终止时间')
-    formal_time = fields.Date(string='转正时间')
-    leader = fields.Many2one('hr.employee', string="上一级", store=True)
-    category = fields.Selection(
-        [
-            (u'公司储备', u"公司储备"),
-            (u'合同在岗', u"合同在岗"),
-            (u'合同备岗', u"合同备岗"),
-            (u'合同赠送', u"合同赠送"),
-            #(u'现场储备', u'现场储备'),
-            (u'公司项目', u"公司项目"),
-            (u'借出人员', u"借出人员"),
-            (u'借入人员', u"借入人员"),
-            (u'现场备岗', u"现场备岗"),
-        ],
-    default = u'公司储备', string = "人员状态")
-    phone_money = fields.Integer(string='话费额度')
+# class entry_information(models.Model):
+#     _name = "nantian_erp.entry"
+#     _rec_name = 'name'
+#
+#     offer_id = fields.Many2one('nantian_erp.offer_information')
+#     name = fields.Char(related="offer_id.resume_id.name", string='姓名', store="True")
+#     phone = fields.Char(string='工作电话', store="True")
+#     email = fields.Char(string='工作邮箱', store="True")
+#     gender = fields.Selection([('male', '男'), ('female', '女')], related="offer_id.gender", string='性别', store="True")
+#     entrytime = fields.Date(related="offer_id.entrytime", string='办理入职时间', store="True")
+#     identification_id = fields.Char(related="offer_id.identification_id", string='身份证号', store="True")
+#     graduation_id = fields.Char(related="offer_id.graduation_id", string='毕业证编号', store="True")
+#     entry_recruitment_id = fields.Many2one('nantian_erp.recruitment', string='入职岗位',
+#                                            related="offer_id.entry_recruitment_id", store="True")
+#     job_name = fields.Char(string='岗位名称', related="offer_id.job_name", store="True")
+#     job_level = fields.Selection(
+#             [(u'1', u'1'), (u'2', u'2'), (u'3', u'3'), (u'4', u'4'), (u'5', u'5'), (u'6', u'6'), (u'7', u'7'), ],
+#             related="offer_id.job_level", store="True", string='岗位级别',)
+#     recruitment_id = fields.Many2one('nantian_erp.recruitment', string='招聘职位',
+#                                      related="offer_id.recruitment_id", store="True"
+#                                      )
+#     channel = fields.Selection([('1', '招聘网站发布职位'), ('2', '伯乐奖职位'), ('3', '其他渠道')] ,
+#                                related="offer_id.channel", store="True", string='招聘渠道')
+#     reason = fields.Selection([('1', '原有人员离职后增补人员'), ('2', '业务拓展后新增岗位'),
+#                                ('3', '其他')], related="offer_id.reason", store="True",string='招聘理由')
+#     first_department_id = fields.Many2one('hr.department', string='一级部门',
+#                                           related="offer_id.first_department_id", store="True")
+#     second_department_id = fields.Many2one('hr.department', string='二级部门',
+#                                            related="offer_id.second_department_id", store="True")
+#     working_team_id = fields.Many2one('nantian_erp.working_team_id', string='三级工作组',
+#                                       related="offer_id.working_team_id", store="True")
+#     contract_time = fields.Integer(default=3, string='合同期限',
+#                                    related="offer_id.contract_time", store="True")
+#     test_time = fields.Integer(default=3, string='试用期限',
+#                                related="offer_id.test_time", store="True")
+#     work_time = fields.Date(string="首次工作时间")
+#     contract_starttime = fields.Date(string='合同开始时间')
+#     contract_endtime = fields.Date(string='合同终止时间')
+#     formal_time = fields.Date(string='转正时间')
+#     leader = fields.Many2one('hr.employee', string="上一级", store=True)
+#     category = fields.Selection(
+#         [
+#             (u'公司储备', u"公司储备"),
+#             (u'合同在岗', u"合同在岗"),
+#             (u'合同备岗', u"合同备岗"),
+#             (u'合同赠送', u"合同赠送"),
+#             #(u'现场储备', u'现场储备'),
+#             (u'公司项目', u"公司项目"),
+#             (u'借出人员', u"借出人员"),
+#             (u'借入人员', u"借入人员"),
+#             (u'现场备岗', u"现场备岗"),
+#         ],
+#     default = u'公司储备', string = "人员状态")
+#     phone_money = fields.Integer(string='话费额度')
 
 
