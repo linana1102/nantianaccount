@@ -484,12 +484,8 @@ class demission(models.Model):#
             ids = template_model.search(cr, uid, [('id', '=', id)], limit = 1,context=None)
             object = template_model.browse(cr, uid, ids, context=None)
             if vals['state'] == 'application':
-                print object.dis_states
-                print object.states
                 object.dis_states = u'申请离职'
                 object.states = u'离职办理中'
-                print object.dis_states
-                print object.states
         return super(demission, self).create(cr, uid, vals, context=context)
 
 

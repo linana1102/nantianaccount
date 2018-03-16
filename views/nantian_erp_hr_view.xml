@@ -421,7 +421,7 @@
             <field name="inherit_id" ref="hr.view_employee_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="before">
-                    <field name="name" string="模糊搜索" filter_domain="['|','|','|','|','|','|','|','|','|','|','|','|','|','|','|','|',('name','ilike',self),('work_email','ilike',self),('gender','ilike',self),('birthday','ilike',self),('identification_id','ilike',self),('mobile_phone','ilike',self),('marital','ilike',self),('work_location','ilike',self),('calendar_id','ilike',self),('major','ilike',self),('education','ilike',self),('certificate_institutions_id','ilike',self),('certificate_direction_id','ilike',self),('certificate_category_id','ilike',self),('certificate_level_id','ilike',self),('work_experience_ids','ilike',self),('specialty','ilike',self)]"/>
+                    <field name="name" string="模糊搜索" filter_domain="['|','|','|','|','|','|','|','|','|','|','|','|','|','|','|',('name','ilike',self),('work_email','ilike',self),('gender','ilike',self),('birthday','ilike',self),('identification_id','ilike',self),('mobile_phone','ilike',self),('marital','ilike',self),('work_location','ilike',self),('major','ilike',self),('education','ilike',self),('certificate_institutions_id','ilike',self),('certificate_direction_id','ilike',self),('certificate_category_id','ilike',self),('certificate_level_id','ilike',self),('work_experience_ids','ilike',self),('specialty','ilike',self)]"/>
                 </xpath>
                 <xpath expr="//field[@name='department_id']" position="after">
                     <field name="working_team_id" string="所在工作组"/>
