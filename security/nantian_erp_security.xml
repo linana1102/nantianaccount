@@ -22,6 +22,11 @@
         <field name="implied_ids" eval="[(4, ref('base.group_user')),(4, ref('nantian_erp.group_hr_user'))]"/>
         <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
     </record>
+     <record id="nantian_erp.group_work_team_user" model="res.groups">
+        <field name="name">工作组成员</field>
+        <field name="category_id" ref="base.module_category_nantianerp"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
      <record id="nantian_erp.group_nantian_header" model="res.groups">
         <field name="name">行业负责人</field>
         <field name="implied_ids" eval="[(4, ref('nantian_erp.group_work_team_user')),(4, ref('nantian_erp.data_center_group_hr_user'))]"/>
@@ -69,11 +74,7 @@
     <!--下面是新建组-->
 
 
-     <record id="nantian_erp.group_work_team_user" model="res.groups">
-        <field name="name">工作组成员</field>
-        <field name="category_id" ref="base.module_category_nantianerp"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-    </record>
+
     <record id="nantian_erp.group_nantian_boss" model="res.groups">
         <field name="name">工作组总经理</field>
         <field name="category_id" ref="base.module_category_nantianerp"/>
