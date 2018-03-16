@@ -908,7 +908,7 @@ class entry_information(models.Model):
     second_department_id = fields.Many2one('hr.department', string='二级部门',
                                            related="offer_id.second_department_id", store="True")
     working_team_id = fields.Many2one('nantian_erp.working_team_id', string='三级工作组',
-                                      related="offer_id.phone", store="True")
+                                      related="offer_id.working_team_id", store="True")
     contract_time = fields.Integer(default=3, string='合同期限',
                                    related="offer_id.contract_time", store="True")
     test_time = fields.Integer(default=3, string='试用期限',
