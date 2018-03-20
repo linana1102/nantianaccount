@@ -2,6 +2,7 @@
 <openerp>
     <data>
         <record id="nantian_erp_employee_link_view" model="ir.actions.act_window">
+            <field name="name">对应人员</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
