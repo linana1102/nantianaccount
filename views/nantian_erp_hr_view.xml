@@ -420,9 +420,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_filter"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="before">
-                    <field name="name" string="模糊搜索" filter_domain="['|','|','|','|','|','|','|','|','|','|','|','|','|','|','|',('name','ilike',self),('work_email','ilike',self),('gender','ilike',self),('birthday','ilike',self),('identification_id','ilike',self),('mobile_phone','ilike',self),('marital','ilike',self),('work_location','ilike',self),('major','ilike',self),('education','ilike',self),('certificate_institutions_id','ilike',self),('certificate_direction_id','ilike',self),('certificate_category_id','ilike',self),('certificate_level_id','ilike',self),('work_experience_ids','ilike',self),('specialty','ilike',self)]"/>
-                </xpath>
+
                 <xpath expr="//field[@name='department_id']" position="after">
                     <field name="working_team_id" string="所在工作组"/>
                     <field name="certificate_institutions_id" string="证书颁发机构"/>
@@ -444,7 +442,6 @@
                     <filter string="离职时间" icon="terp-personal+" domain="[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]" context="{'group_by':'leave_time'}"/>
                     <filter string="入职时间" icon="terp-personal+" domain="[('entry_time','&gt;=',((context_today()-relativedelta(months=12))).strftime('%%Y/%%m/%%d'))]" context="{'group_by':'entry_time'}"/>
                     <filter string="匹配岗位" icon="terp-personal+" domain="[]" context="{'group_by':'position_id'}"/>
-
                 </xpath>
                 <xpath expr="//filter[@string='Job']" position="replace">
                 </xpath>
