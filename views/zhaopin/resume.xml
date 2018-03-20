@@ -665,7 +665,7 @@
                                 <h1><field name="resume_id" class="oe_inline" readonly="True"/></h1>
                          </div>
                          <div class="oe_right" name="buttons">
-                             <button  type='object' name="create_employee_from_resume" class="oe_stat_button" icon="fa-book" string="入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
+                             <button  name="%(nantian_erp_entry_information_action)d" type="action" class="oe_stat_button" icon="fa-book" string="入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
                              <button  type='object' name="create_entry" class="oe_stat_button" icon="fa-book" string="不入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
                          </div>
                         <group>
@@ -721,7 +721,7 @@
                                 <h1><field name="resume_id" class="oe_inline" readonly="True"/></h1>
                          </div>
                          <div class="oe_right" name="buttons">
-                             <button  type='object' name="create_employee_from_resume" class="oe_stat_button" icon="fa-book" string="入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
+                             <button  name="%(nantian_erp_entry_information_action)d" type="action" class="oe_stat_button" icon="fa-book" string="入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
                              <button  type='object' name="create_entry" class="oe_stat_button" icon="fa-book" string="不入职" groups="nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
                          </div>
                         <group>

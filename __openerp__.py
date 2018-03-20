@@ -26,6 +26,7 @@
     'data': [
         'security/nantian_erp_security.xml',
         'security/ir.model.access.csv',
+        'views/zhaopin/entry_information.xml',
         'views/nantian_erp_hr_view.xml',
         'views/nantian_erp_contract_view.xml',
         'views/nantian_erp_work_team_view.xml',

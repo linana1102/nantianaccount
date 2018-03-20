@@ -878,59 +878,168 @@ class entry(models.Model):
     user_id = fields.Many2one('res.users')
     type = fields.Char(string='类别')
 
-# class entry_information(models.Model):
-#     _name = "nantian_erp.entry"
-#     _rec_name = 'name'
-#
-#     offer_id = fields.Many2one('nantian_erp.offer_information')
-#     name = fields.Char(related="offer_id.resume_id.name", string='姓名', store="True")
-#     phone = fields.Char(string='工作电话', store="True")
-#     email = fields.Char(string='工作邮箱', store="True")
-#     gender = fields.Selection([('male', '男'), ('female', '女')], related="offer_id.gender", string='性别', store="True")
-#     entrytime = fields.Date(related="offer_id.entrytime", string='办理入职时间', store="True")
-#     identification_id = fields.Char(related="offer_id.identification_id", string='身份证号', store="True")
-#     graduation_id = fields.Char(related="offer_id.graduation_id", string='毕业证编号', store="True")
-#     entry_recruitment_id = fields.Many2one('nantian_erp.recruitment', string='入职岗位',
-#                                            related="offer_id.entry_recruitment_id", store="True")
-#     job_name = fields.Char(string='岗位名称', related="offer_id.job_name", store="True")
-#     job_level = fields.Selection(
-#             [(u'1', u'1'), (u'2', u'2'), (u'3', u'3'), (u'4', u'4'), (u'5', u'5'), (u'6', u'6'), (u'7', u'7'), ],
-#             related="offer_id.job_level", store="True", string='岗位级别',)
-#     recruitment_id = fields.Many2one('nantian_erp.recruitment', string='招聘职位',
-#                                      related="offer_id.recruitment_id", store="True"
-#                                      )
-#     channel = fields.Selection([('1', '招聘网站发布职位'), ('2', '伯乐奖职位'), ('3', '其他渠道')] ,
-#                                related="offer_id.channel", store="True", string='招聘渠道')
-#     reason = fields.Selection([('1', '原有人员离职后增补人员'), ('2', '业务拓展后新增岗位'),
-#                                ('3', '其他')], related="offer_id.reason", store="True",string='招聘理由')
-#     first_department_id = fields.Many2one('hr.department', string='一级部门',
-#                                           related="offer_id.first_department_id", store="True")
-#     second_department_id = fields.Many2one('hr.department', string='二级部门',
-#                                            related="offer_id.second_department_id", store="True")
-#     working_team_id = fields.Many2one('nantian_erp.working_team_id', string='三级工作组',
-#                                       related="offer_id.working_team_id", store="True")
-#     contract_time = fields.Integer(default=3, string='合同期限',
-#                                    related="offer_id.contract_time", store="True")
-#     test_time = fields.Integer(default=3, string='试用期限',
-#                                related="offer_id.test_time", store="True")
-#     work_time = fields.Date(string="首次工作时间")
-#     contract_starttime = fields.Date(string='合同开始时间')
-#     contract_endtime = fields.Date(string='合同终止时间')
-#     formal_time = fields.Date(string='转正时间')
-#     leader = fields.Many2one('hr.employee', string="上一级", store=True)
-#     category = fields.Selection(
-#         [
-#             (u'公司储备', u"公司储备"),
-#             (u'合同在岗', u"合同在岗"),
-#             (u'合同备岗', u"合同备岗"),
-#             (u'合同赠送', u"合同赠送"),
-#             #(u'现场储备', u'现场储备'),
-#             (u'公司项目', u"公司项目"),
-#             (u'借出人员', u"借出人员"),
-#             (u'借入人员', u"借入人员"),
-#             (u'现场备岗', u"现场备岗"),
-#         ],
-#     default = u'公司储备', string = "人员状态")
-#     phone_money = fields.Integer(string='话费额度')
 
+class EntryInformation(models.Model):
+    _name = "nantian_erp.entry_information"
+    _rec_name = 'name'
+
+    @api.multi
+    def _default_offer_id(self):
+        return self.env['nantian_erp.offer_information'].browse(self._context.get('active_id'))
+
+    offer_id = fields.Many2one('nantian_erp.offer_information',default=_default_offer_id)
+    name = fields.Char(related="offer_id.resume_id.name", string='姓名', store="True")
+    phone = fields.Char(related="offer_id.resume_id.phone", string='工作电话', store="True")
+    email = fields.Char(related="offer_id.resume_id.email",string='工作邮箱', store="True")
+    gender = fields.Selection([('male', '男'), ('female', '女')], related="offer_id.gender", string='性别', store="True")
+    entrytime = fields.Date(related="offer_id.entrytime", string='办理入职时间', store="True")
+    identification_id = fields.Char(related="offer_id.identification_id", string='身份证号', store="True")
+    graduation_id = fields.Char(related="offer_id.graduation_id", string='毕业证编号', store="True")
+    entry_recruitment_id = fields.Many2one('nantian_erp.recruitment', string='入职岗位',
+                                           related="offer_id.entry_recruitment_id", store="True")
+    job_name = fields.Char(string='岗位名称', related="offer_id.job_name", store="True")
+    job_level = fields.Selection(
+            [(u'1', u'1'), (u'2', u'2'), (u'3', u'3'), (u'4', u'4'), (u'5', u'5'), (u'6', u'6'), (u'7', u'7'), ],
+            related="offer_id.job_level", store="True", string='岗位级别',)
+    recruitment_id = fields.Many2one('nantian_erp.recruitment', string='招聘职位',
+                                     related="offer_id.recruitment_id", store="True"
+                                     )
+    first_department_id = fields.Many2one('hr.department', string='一级部门',
+                                          related="offer_id.first_department_id", store="True")
+    second_department_id = fields.Many2one('hr.department', string='二级部门',
+                                           related="offer_id.second_department_id", store="True")
+    working_team_id = fields.Many2one('nantian_erp.working_team', string='三级工作组',
+                                      related="offer_id.working_team_id", store="True")
+    contract_time = fields.Integer(default=3, string='合同期限',
+                                   related="offer_id.contract_time", store="True")
+    test_time = fields.Integer(default=3, string='试用期限',
+                               related="offer_id.test_time", store="True")
+    work_time = fields.Date(string="首次工作时间")
+    contract_starttime = fields.Date(string='合同开始时间')
+    contract_endtime = fields.Date(string='合同终止时间')
+    formal_time = fields.Date(string='转正时间')
+    leader = fields.Many2one('hr.employee', string="上一级", store=True)
+    category = fields.Selection(
+        [
+            (u'公司储备', u"公司储备"),
+            (u'合同在岗', u"合同在岗"),
+            (u'合同备岗', u"合同备岗"),
+            (u'合同赠送', u"合同赠送"),
+            #(u'现场储备', u'现场储备'),
+            (u'公司项目', u"公司项目"),
+            (u'借出人员', u"借出人员"),
+            (u'借入人员', u"借入人员"),
+            (u'现场备岗', u"现场备岗"),
+        ],
+    default = u'公司储备', string = "人员状态")
+    phone_money = fields.Integer(string='话费额度')
+    work_email = fields.Char(string='工作邮箱')
+    emp_id = fields.Many2one("hr.employee")
+
+    def subscribe(self,cr, uid, vals, context=None):
+        entry_infor = self.browse(cr, uid, vals, context=context)
+        model_data = self.pool.get('ir.model.data')
+        act_window = self.pool.get('ir.actions.act_window')
+        action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+        dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
+        if entry_infor[0].emp_id:
+            dict_act_window['res_id'] = entry_infor[0].emp_id.id
+        dict_act_window['view_mode'] = 'form,tree'
+        return dict_act_window
+
+    def create(self, cr, uid, vals, context=None):
+
+        if vals['work_email']:
+            entry_infor = super(EntryInformation, self).create(cr, uid, vals, context=context)
+            emp_id = self.create_employee_from_resume(cr, uid, [entry_infor])
+            # print entry_infor
+            # act_window = self.pool.get('ir.actions.act_window')
+            # action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+            # dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
+            # if emp_id:
+            #     dict_act_window['res_id'] = emp_id
+            # dict_act_window['view_mode'] = 'form,tree'
+            # return dict_act_window
+            return entry_infor
+
+    @api.multi
+    def create_user(self):
+        if self.work_email:
+            i = 1
+            email = self.work_email
+            # 防止系统中用户名相同
+            while(1):
+                if self.env['res.users'].search([('login','=',email)]):
+                    email = email+str(i)
+                    i=i+1
+                else:
+                    break
+            if i==1:
+                user = self.env['res.users'].sudo().create({'login':self.work_email,'password':'123456','name':self.name,'email':self.work_email,'active':1})
+            else:
+                a = self.env['res.users'].sudo().search([('login','=',self.work_email)])
+                a.sudo().update({'login':email})
+                user = self.env['res.users'].sudo().create({'login':self.work_email,'password':'123456','name':self.name,'email':self.work_email,'active':1})
+            self.emp_id.user_id = user
+        else:
+            raise exceptions.ValidationError('请填写公司邮箱')
+
+    # 入职按钮 通过建立创建员工
+    def create_employee_from_resume(self, cr, uid, ids, context=None):
+        """ Create an hr.employee from the nantian_erp.offer """
+        if context is None:
+            context = {}
+        hr_employee = self.pool.get('hr.employee')
+        nantian_entry = self.pool.get('nantian_erp.entry')
+        offer_model = self.pool.get('nantian_erp.offer')
+        model_data = self.pool.get('ir.model.data')
+        act_window = self.pool.get('ir.actions.act_window')
+        emp_id = False
+        for entry_information in self.browse(cr, uid, ids, context=context):
+            if entry_information.recruitment_id:
+                # 对应招聘需求以招聘人数加1
+                entry_information.recruitment_id.write({'hired_num': entry_information.recruitment_id.hired_num + 1})
+                # 如果以招聘人数等于招聘人数，招聘需求归档
+                if entry_information.recruitment_id.hired_num == entry_information.recruitment_id.need_people_num:
+                    entry_information.recruitment_id.write({'state': 'archived'})
+                # 建立状态改为已入职
+                entry_information.offer_id.resume_id.write({'state': u'已入职'})
+                # 创建员工
+                create_ctx = dict(context, mail_broadcast=False)
+                emp_id = hr_employee.create(cr, uid, {'name': entry_information.name,
+                                                      'position_id': entry_information.recruitment_id.job_id.id or False,
+                                                      'department_id': entry_information.second_department_id.id or False,
+                                                      'education': entry_information.offer_id.resume_id.education or False,
+                                                      'level': entry_information.job_level or False,
+                                                      'mobile_phone': entry_information.phone or False,
+                                                      'gender': entry_information.gender or False,
+                                                      'working_team_id': entry_information.recruitment_id.working_team_id.id or False,
+                                                      'identification_id': entry_information.identification_id or False,
+                                                      'graduation_id': entry_information.graduation_id,
+                                                      'contract_len': entry_information.contract_time or False,
+                                                      'test_time': entry_information.test_time or False,
+                                                      'work_time': entry_information.work_time or False,
+                                                      'contract_starttime': entry_information.contract_starttime or False,
+                                                      'contract_endtime': entry_information.contract_endtime,
+                                                      'formal_time': entry_information.formal_time or False,
+                                                      'leader': entry_information.leader or False,
+                                                      'category': entry_information.category or False,
+                                                      'phone_money': entry_information.phone_money or False,
+                                                      'work_email': entry_information.work_email or False,
+                                                      }, context=create_ctx)
+                # 创建入职记录
+                entry_id = nantian_entry.create(cr, uid, {
+                    'resume_id': entry_information.offer_id.resume_id.id,
+                    'user_id': uid,}, context=create_ctx
+                                                )
+                # 修改offer的状态为未设置邮箱
+                entry_information.emp_id = emp_id
+                entry_information.offer_id.emp_id = emp_id
+                entry_information.offer_id.entry_id = entry_id
+                entry_information.offer_id.state = u'完成'
+            else:
+                pass
+        # 跳转至员工页面
+        self.create_user(cr, uid, ids)
+        return emp_id
 

@@ -136,6 +136,9 @@ class hr_employee(models.Model):
     # default=lambda self: self._get_state()
     demission_ids = fields.One2many('nantian_erp.demission','employee_id', ondelete='set null', string="离职记录之一",track_visibility='onchange')
     pers_transfer_ids = fields.One2many('nantian_erp.pers_transfer','employee_id', ondelete='set null', string="调动记录之一",track_visibility='onchange')
+    formal_time = fields.Date(string="转正时间")
+    test_time = fields.Integer(string="试用期")
+    graduation_id = fields.Char(string="毕业证号")
 
     # @api.multi
     # def compute_leader(self):
@@ -207,9 +210,6 @@ class hr_employee(models.Model):
                 id = self.env['nantian_erp.education_experience'].create(
                     {'school': rec.graduation, 'major': rec.major, 'education': education_t, 'employee_id': rec.id})
 
-
-
-
     @api.multi
     @api.depends('department_id')
     def get_department_first(self):
@@ -232,10 +232,8 @@ class hr_employee(models.Model):
             else:
                 self.adjust_dst = ''
 
-
     @api.onchange('phone_money','level','job_id')
     def _check_phone_money(self):
-        print 'aaaaaaaaaaaaa'
         if self.phone_money:
             if self.level == '1':
                 if self.job_id.name == u'助理工程师':
@@ -369,7 +367,6 @@ class hr_employee(models.Model):
                                            'title': "话费额度问题",
                                            'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
                                        }}
-
 
     @api.multi
     def onchange_category(self,category):
