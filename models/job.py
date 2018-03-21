@@ -948,18 +948,9 @@ class EntryInformation(models.Model):
         return dict_act_window
 
     def create(self, cr, uid, vals, context=None):
-
         if vals['work_email']:
             entry_infor = super(EntryInformation, self).create(cr, uid, vals, context=context)
-            emp_id = self.create_employee_from_resume(cr, uid, [entry_infor])
-            # print entry_infor
-            # act_window = self.pool.get('ir.actions.act_window')
-            # action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
-            # dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
-            # if emp_id:
-            #     dict_act_window['res_id'] = emp_id
-            # dict_act_window['view_mode'] = 'form,tree'
-            # return dict_act_window
+            self.create_employee_from_resume(cr, uid, [entry_infor])
             return entry_infor
 
     @api.multi
@@ -981,6 +972,8 @@ class EntryInformation(models.Model):
                 a.sudo().update({'login':email})
                 user = self.env['res.users'].sudo().create({'login':self.work_email,'password':'123456','name':self.name,'email':self.work_email,'active':1})
             self.emp_id.user_id = user
+            data_center_employee_group = self.env['res.groups'].search([('name', '=', u'人力-数据中心员工')])
+            data_center_employee_group.users |= user
         else:
             raise exceptions.ValidationError('请填写公司邮箱')
 
@@ -991,9 +984,6 @@ class EntryInformation(models.Model):
             context = {}
         hr_employee = self.pool.get('hr.employee')
         nantian_entry = self.pool.get('nantian_erp.entry')
-        offer_model = self.pool.get('nantian_erp.offer')
-        model_data = self.pool.get('ir.model.data')
-        act_window = self.pool.get('ir.actions.act_window')
         emp_id = False
         for entry_information in self.browse(cr, uid, ids, context=context):
             if entry_information.recruitment_id:
@@ -1039,7 +1029,7 @@ class EntryInformation(models.Model):
                 entry_information.offer_id.state = u'完成'
             else:
                 pass
-        # 跳转至员工页面
+        # 创建用户
         self.create_user(cr, uid, ids)
         return emp_id
 

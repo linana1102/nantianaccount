@@ -469,7 +469,6 @@ class hr_employee(models.Model):
 
     @api.multi
     def add_use_to_group(self):
-        print '*'*80
         users = self.env['res.users'].search([('active','=',True)])
         data_center_employee_group = self.env['res.groups'].search([('name', '=', u'人力-数据中心员工')])
         employee_group = self.env['res.groups'].search([('name', '=', u'人力-其他部门员工')])
@@ -478,10 +477,9 @@ class hr_employee(models.Model):
         customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')])
         for i in customer_managers_obj:
             customer_managers_ids.append(i.customer_manager.id)
-        print'行业负责人',customer_managers_ids
+        # print'行业负责人',customer_managers_ids
         customer_managers = self.env['res.users'].search([('id','in',customer_managers_ids)])
         customer_manager_group.users |= customer_managers
-
         bm_managers_obj = self.env['hr.department'].search([('parent_id.parent_id.name', '=', u'集成服务事业部'),('parent_id.name', '!=', u'数据中心服务部'),('name', '!=',u'数据中心服务部')])
         bm_managers_group = self.env['res.groups'].search([('name', '=', u'人力-部门经理')])
         bm_managers_ids = []
@@ -498,15 +496,15 @@ class hr_employee(models.Model):
         for i in managers_obj:
             if i.manager_id.user_id:
                 managers_ids.append(i.manager_id.user_id.id)
-        print '总经理', managers_ids
+        # print '总经理', managers_ids
         managers = self.env['res.users'].search([('id','in',managers_ids)])
-        print managers
+        # print managers
         manager_group.users |= managers
         presidents = self.env['hr.department'].search([('name', '=', u'集成服务事业部')],limit=1)
         president_group = self.env['res.groups'].search([('name', '=', u'总裁')])
         if presidents.manager_id.user_id:
             president_group.users |= presidents.manager_id.user_id
-            print '总裁',presidents.manager_id.user_id
+            # print '总裁',presidents.manager_id.user_id
         data_center_employees_ids = []
         data_employees = self.env['hr.employee'].search(['|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')])
         #print data_employees
