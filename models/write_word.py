@@ -28,4 +28,7 @@ print dir(tpl.docx)
 
 
 
-# tpl.save('C:/Users/nantian/Desktop/resume_template.docx')
+# tpl.save('C:/Users/nantian/Desktop/
+#
+#
+# _template.docx')
