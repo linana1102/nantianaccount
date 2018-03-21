@@ -156,7 +156,10 @@
                                         <field name="job_id" string="职位" />
                                         <field name="position_id" string="匹配岗位" />
                                         <!--<field name="parent_id" string="上一级" />-->
-                                        <field name="leader" string="上一级" />
+                                        <field name="department_first" invisible="True" />
+                                        <field name="leader" string="上一级" attrs="{'invisible':[('department_first','=',u'数据中心服务部')]}" />
+                                        <field name="project_leader" string="项目负责人" attrs="{'invisible':[('department_first','!=',u'数据中心服务部')]}" />
+
                                         <field name="coach_id" invisible="True"/>
                                         <field name="level" string="级别"/>
                                         <field name="phone_money" string="话费额度" />
@@ -444,7 +447,6 @@
                     <filter string="离职时间" icon="terp-personal+" domain="[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]" context="{'group_by':'leave_time'}"/>
                     <filter string="入职时间" icon="terp-personal+" domain="[('entry_time','&gt;=',((context_today()-relativedelta(months=12))).strftime('%%Y/%%m/%%d'))]" context="{'group_by':'entry_time'}"/>
                     <filter string="匹配岗位" icon="terp-personal+" domain="[]" context="{'group_by':'position_id'}"/>
-
                 </xpath>
                 <xpath expr="//filter[@string='Job']" position="replace">
                 </xpath>

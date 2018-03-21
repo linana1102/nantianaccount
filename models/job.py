@@ -377,7 +377,8 @@ class resume(models.Model):
     offer_information_id = fields.One2many('nantian_erp.offer_information','resume_id',string='offer信息')
     job_id =fields.Many2one('nantian_erp.job',string='匹配的职位')
     interviewer_evaluation = fields.Text(string='面试评价')
-    talent_pool = fields.Boolean(string='是否人才储备')
+    talent_pool = fields.Boolean(string='是否人才储备', default=True)
+    reason_entry = fields.Char(string='原因')
 
 
 
@@ -872,11 +873,35 @@ class entry(models.Model):
     _name = 'nantian_erp.entry'
     _rec_name = 'resume_id'
 
-    resume_id = fields.Many2one('nantian_erp.resume')
+    @api.multi
+    def _default_employee_id2(self):
+        return self.env['nantian_erp.offer_information'].browse(self._context.get('active_id'))
+
+    @api.multi
+    def subscribe_2(self):
+        self.offer_id.state = u"未入职"
+        self.resume_id.state = u"发offer未入职"
+        print '**********************'
+        self.resume_id.reason_entry = self.reason
+        # print self.resume_id.reason_entry
+
+        # print self.offer_id
+        # model_data = self.pool.get('ir.model.data')
+        # act_window = self.pool.get('ir.actions.act_window')
+        # action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+        # dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
+        # if emp_id:
+        #     dict_act_window['res_id'] = emp_id
+        # dict_act_window['view_mode'] = 'form,tree'
+        # return dict_act_window
+
+    offer_id = fields.Many2one("nantian_erp.offer_information",  default=_default_employee_id2)
+    resume_id = fields.Many2one('nantian_erp.resume',related="offer_id.resume_id")
     date = fields.Date(default=fields.Date.today())
-    reason = fields.Char(string='原因')
-    user_id = fields.Many2one('res.users')
-    type = fields.Char(string='类别')
+    reason = fields.Char(string='原因', required='True')
+    user_id = fields.Many2one('res.users', default=lambda self: self.env.user)
+    type = fields.Selection([(u'入职',u'入职'),(u'不入职',u'不入职')], default="不入职",string='类别')
+
 
 
 class EntryInformation(models.Model):

@@ -133,6 +133,8 @@ class hr_employee(models.Model):
     position_id = fields.Many2one('nantian_erp.job',string= '南天招聘职位')
     education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
     leader = fields.Many2one('hr.employee',string="上一级",store=True)
+    project_leader = fields.Many2one('hr.employee',string="项目负责人",store=True)
+
     # default=lambda self: self._get_state()
     demission_ids = fields.One2many('nantian_erp.demission','employee_id', ondelete='set null', string="离职记录之一",track_visibility='onchange')
     pers_transfer_ids = fields.One2many('nantian_erp.pers_transfer','employee_id', ondelete='set null', string="调动记录之一",track_visibility='onchange')

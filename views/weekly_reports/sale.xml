@@ -203,6 +203,7 @@
             <field name="arch" type="xml">
                 <tree >
                     <field name="project_name" string="项目名称"/>
+                    <field name="project_type" string="项目类型"/>
                     <field name="partner" string="客户名称" />
                     <field name="process_scrib" string="本周主要进展说明"/>
                     <field name="before_bid_amount" string="投标金额"/>
@@ -229,6 +230,7 @@
                     <group>
                         <group string="售前项目预填写">
                             <field name="project_name" string="项目名称"/>
+                            <field name="project_type" string="项目类型" />
                             <field name="partner" string="客户名称" />
                             <field name="process_scrib" string="本周主要进展说明"/>
                             <field name="before_bid_amount" string="投标金额"/>
@@ -343,6 +345,7 @@
                     <group>
                         <group string="售前项目预填写">
                             <field name="project_name" string="项目名称"/>
+                            <field name="project_type" string="项目类型"/>
                             <field name="partner" string="客户名称" />
                             <field name="process_scrib" string="本周主要进展说明"/>
                             <field name="before_bid_amount" string="投标金额"/>
@@ -694,7 +697,7 @@
                 <tree  >
                     <field name="name" modifiers="{'required': true}"/>
                     <field name="department_id" modifiers="{}"/>
-                    <field name="leave_time" string="离职时间" modifiers="{}"/>
+                    <field name="states" string="工作状态" modifiers="{}"/>
                     <field name="working_team_id" string="工作组" modifiers="{}"/>
                     <field name="leader" string="上级领导" modifiers="{}"/>
                 </tree>
@@ -886,7 +889,29 @@
                 </form>
             </field>
         </record>
-
+        <record model="ir.ui.view" id="nantian_erp_pres_sale_search_view">
+            <field name="name">pres_sale.search</field>
+            <field name="model">nantian_erp.pres_sale</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="project_name" />
+                        <filter string="金额0-200万" name="amount1" domain="[('before_bid_amount','&lt;=','200')]"/>
+                        <filter string="金额200-500万" name="amount2" domain="[('before_bid_amount','&lt;=','500'),('before_bid_amount','&gt;=','200')]"/>
+                        <filter string="金额500-1000万" name="amount3" domain="[('before_bid_amount','&lt;','1000'),('before_bid_amount','&gt;=','500')]"/>
+                        <filter string="金额1000万以上" name="amount4" domain="[('before_bid_amount','&gt;=','1000')]"/>
+                        <filter string="南天" name="my_company" domain="[('bid_commpany','=','南天')]"/>
+                        <filter string="非南天" name="other_company" domain="[('bid_commpany','!=','南天')]"/>
+                    <separator/>
+                    <group expand="0" string="分组">
+                        <filter string="客户名称" name="partner_name" context="{'group_by':'partner'}"/>
+                        <filter string="项目类型" name="project_type" context="{'group_by':'project_type'}"/>
+                        <!--<filter string="投标时间" name="pre_date_id" context="{'group_by':'pre_bid_date'}"-->
+                            <!--domain = "[('pre_bid_date','&gt;=',time.strftime('%%Y'))]"/>-->
+                        <filter string="投标时间" name="pre_date_id" context="{'group_by':'pre_bid_date:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <menuitem id="nantian_erp_weekly_reports_menu" name="周报" sequence="4" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
         <menuitem id="nantian_erp_weekly_plan_my_menu" parent="nantian_erp_weekly_reports_menu" name="我的周报" sequence="" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_boss,nantian_erp.group_hr_manager_assistant"/>
