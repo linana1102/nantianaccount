@@ -185,6 +185,7 @@ class pres_sale(models.Model):
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports',string='周报')
     weekly_reports_1_id = fields.Many2many('nantian_erp.weekly_reports','i_weekly_reports_pres_sale_ref',string='周报')
     project_name = fields.Char(string='项目名称')
+    project_type = fields.Selection([('网络设备维保','网络设备维保'),('硬件设备维保','硬件设备维保'),('运维服务','运维服务')])
     contract_name = fields.Char(string='合同名称')
     partner = fields.Char(string='客户名称')
     process_scrib = fields.Text(string='本周主要进展说明')

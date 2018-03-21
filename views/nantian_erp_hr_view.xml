@@ -447,7 +447,6 @@
                     <filter string="离职时间" icon="terp-personal+" domain="[('leave_time','&gt;=',((context_today()-relativedelta(months=3)).strftime('%%Y/%%m/%%d')))]" context="{'group_by':'leave_time'}"/>
                     <filter string="入职时间" icon="terp-personal+" domain="[('entry_time','&gt;=',((context_today()-relativedelta(months=12))).strftime('%%Y/%%m/%%d'))]" context="{'group_by':'entry_time'}"/>
                     <filter string="匹配岗位" icon="terp-personal+" domain="[]" context="{'group_by':'position_id'}"/>
-
                 </xpath>
                 <xpath expr="//filter[@string='Job']" position="replace">
                 </xpath>
