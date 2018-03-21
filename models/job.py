@@ -380,9 +380,6 @@ class resume(models.Model):
     talent_pool = fields.Boolean(string='是否人才储备', default=True)
     reason_entry = fields.Char(string='原因')
 
-
-
-
     # 发邮件函数
     def send_email(self,cr,uid,user,context=None):
         to_list = []
@@ -570,10 +567,26 @@ class resume(models.Model):
 class interview(models.Model):
     _name = 'nantian_erp.interview'
 
-    resume_id = fields.Many2one('nantian_erp.resume',string='求职者')
+    @api.multi
+    def _default_resume_id(self):
+        return self.env['nantian_erp.resume'].browse(self._context.get('active_id'))
+
+    def subscribe(self, cr, uid, vals, context=None):
+        # entry_infor = self.browse(cr, uid, vals, context=context)
+        # model_data = self.pool.get('ir.model.data')
+        # act_window = self.pool.get('ir.actions.act_window')
+        # action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
+        # dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
+        # if entry_infor[0].emp_id:
+        #     dict_act_window['res_id'] = entry_infor[0].emp_id.id
+        # dict_act_window['view_mode'] = 'form,tree'
+        # return dict_act_window
+        return None
+
+    resume_id = fields.Many2one('nantian_erp.resume',string='求职者' , default=_default_resume_id)
     recruitment_id = fields.Many2one('nantian_erp.recruitment',string='招聘需求')
     review = fields.Text(string='面试评价')
-    result = fields.Selection([('agree',u'通过'),('disagree',u'淘汰'),('consider',u'暂存')],string= '面试结果',)
+    result = fields.Selection([('agree',u'通过'),('disagree',u'淘汰'),('consider',u'暂存'),('back',u'追回')],string= '面试结果',default="back")
     interviewer = fields.Many2one('res.users',default=lambda self: self.env.user,string='面试官')
     date = fields.Date(string='面试时间')
     next_user = fields.Many2one('res.users',string='下步处理人')
@@ -653,10 +666,16 @@ class interview(models.Model):
                                              'user_id': vals['next_user'],
                                             },
                                    context=context)
+        elif vals["result"] == "back"and resume.state != u'offer审批':
+            resume.state = "暂存"
+            resume.interviewer = uid
+            interview_model = self.pool.get('nantian_erp.interview')
+            inte_ids = interview_model.search(cr, uid, [('resume_id', '=', resume.id), ('review', '=', None)])
+            interview_model.browse(cr, uid, inte_ids, context=None).unlink()
+
         # if resume.state == u'暂存':
         #     pass
         return super(interview,self).create(cr,uid,vals,context=context)
-
 # offer 信息表
 class offer_information(models.Model):
     _name = 'nantian_erp.offer_information'

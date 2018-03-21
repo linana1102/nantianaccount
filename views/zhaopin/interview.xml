@@ -32,18 +32,26 @@
             <field name="model">nantian_erp.interview</field>
             <field name="arch" type="xml">
                 <form string="interview" >
+                    <sheet>
                     <group>
                         <group>
-                            <field name="resume_id" domain="[('state','=','简历库中')]" required="True"/>
-                            <field name="review" required="True"/>
+                            <field name="resume_id"  required="True"/>
+                            <field name="review" required="True" string="追回原因"/>
                             <field name="rec_user" invisible="True"></field>
                         </group>
                         <group>
                             <field name="result" required="True"/>
                             <field name="customer" invisible="True"></field>
-                            <field name="next_user" domain="[('groups_id.name','like','行业负责人')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'></field>
+                            <!--<field name="next_user" domain="[('groups_id.name','like','行业负责人')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'></field>-->
                         </group>
                     </group>
+                        <footer>
+                             <button name="subscribe" type="object"
+                                        string="保存" class="oe_highlight"/>
+                                or
+                            <button special="cancel" string="取消"/>
+                        </footer>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -103,5 +111,17 @@
             <field name="view_id" ref="nantian_erp_special_interview_form" />
             <field name="act_window_id" ref="nantian_erp_interview_special_action" />
         </record>
+
+         <record id="nantian_erp_back_interview_action" model="ir.actions.act_window">
+            <field name="name">追回</field>
+            <field name="res_model">nantian_erp.interview</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="nantian_erp_special_interview_form" />
+             <field name="target">new</field>
+             <field name="context">{"active_id":active_id}</field>
+        </record>
+
+
     </data>
 </openerp>

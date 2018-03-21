@@ -198,7 +198,7 @@
             <field name="arch" type="xml">
                 <form string="reusme" create="false" edit="false">
                     <header>
-                        <button name="back" type="object" states='面试中' string="追回"  class="oe_highlight"  groups="nantian_erp.group_hr_recruitment"/>
+                        <button name="%(nantian_erp_back_interview_action)d" type="action" states='面试中' string="追回"  class="oe_highlight"  groups="nantian_erp.group_hr_recruitment"/>
                         <button name="agree" type="object" states='面试中' string="通过"  class="oe_highlight"  groups="nantian_erp.group_hr_recruitment"/>
                          <button name="disagree" type="object" states='面试中' string="淘汰"  class="oe_highlight"  groups="nantian_erp.group_hr_recruitment"/>
                          <button name="consider" type="object" states='面试中' string="暂存"  class="oe_highlight"  groups="nantian_erp.group_hr_recruitment"/>
@@ -985,7 +985,6 @@
             <field name="view_id" ref="nantian_erp_set_work_email_form" />
             <field name="act_window_id" ref="nantian_erp_wait_set_email_action" />
         </record>
-        nantian_erp.group_hr_recruitment
         <menuitem id="nantian_erp_all_offer_zhaopin_menu" parent="nantian_set_offer_menu" name="已审批的offer信息" action="nantian_erp_offer_pended_information_action" sequence="6" groups="base.group_system,nantian_erp.group_hr_recruitment,nantian_erp.group_hr_manager"/>
         <menuitem id="nantian_erp_all_offer_menu" parent="nantian_set_offer_menu" name="全部的offer信息" action="nantian_erp_offer_all_information_action" sequence="7" groups="base.group_system"/>
         <menuitem id="nantian_erp_pending_offer_menu" parent="nantian_erp_resume_root_menu" name="待审批的offer信息" action="nantian_erp_offer_pending_information_action" sequence="5" groups="nantian_erp.group_hr_manager"/>
