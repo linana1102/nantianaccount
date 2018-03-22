@@ -68,4 +68,13 @@
         </button>
     </t>
 
+
+    <!--对不同颜色所对应的合同状态、类型进行注释-->
+    <t t-name="nantian_erp.contractLineColor">
+        <div class="line_color">
+            <b>提示：</b>
+            <span>这个颜色的合同表示现场人员不足！</span>
+        </div>
+    </t>
+
 </templates>
