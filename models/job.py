@@ -572,15 +572,6 @@ class interview(models.Model):
         return self.env['nantian_erp.resume'].browse(self._context.get('active_id'))
 
     def subscribe(self, cr, uid, vals, context=None):
-        # entry_infor = self.browse(cr, uid, vals, context=context)
-        # model_data = self.pool.get('ir.model.data')
-        # act_window = self.pool.get('ir.actions.act_window')
-        # action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
-        # dict_act_window = act_window.read(cr, uid, [action_id], [])[0]
-        # if entry_infor[0].emp_id:
-        #     dict_act_window['res_id'] = entry_infor[0].emp_id.id
-        # dict_act_window['view_mode'] = 'form,tree'
-        # return dict_act_window
         return None
 
     resume_id = fields.Many2one('nantian_erp.resume',string='求职者' , default=_default_resume_id)
