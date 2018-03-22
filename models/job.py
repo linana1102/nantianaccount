@@ -666,7 +666,7 @@ class interview(models.Model):
                                              'user_id': vals['next_user'],
                                             },
                                    context=context)
-        elif vals["result"] == "back"and resume.state != u'offer审批':
+        elif "result" in vals and vals["result"] == "back"and resume.state != u'offer审批':
             resume.state = "暂存"
             resume.interviewer = uid
             interview_model = self.pool.get('nantian_erp.interview')
