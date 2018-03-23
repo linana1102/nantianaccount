@@ -133,9 +133,14 @@ class hr_employee(models.Model):
     position_id = fields.Many2one('nantian_erp.job',string= '南天招聘职位')
     education_experience_ids = fields.One2many('nantian_erp.education_experience','employee_id',string='教育经历')
     leader = fields.Many2one('hr.employee',string="上一级",store=True)
+    project_leader = fields.Many2one('hr.employee',string="项目负责人",store=True)
+
     # default=lambda self: self._get_state()
     demission_ids = fields.One2many('nantian_erp.demission','employee_id', ondelete='set null', string="离职记录之一",track_visibility='onchange')
     pers_transfer_ids = fields.One2many('nantian_erp.pers_transfer','employee_id', ondelete='set null', string="调动记录之一",track_visibility='onchange')
+    formal_time = fields.Date(string="转正时间")
+    test_time = fields.Integer(string="试用期")
+    graduation_id = fields.Char(string="毕业证号")
 
     # @api.multi
     # def compute_leader(self):
@@ -207,9 +212,6 @@ class hr_employee(models.Model):
                 id = self.env['nantian_erp.education_experience'].create(
                     {'school': rec.graduation, 'major': rec.major, 'education': education_t, 'employee_id': rec.id})
 
-
-
-
     @api.multi
     @api.depends('department_id')
     def get_department_first(self):
@@ -232,10 +234,8 @@ class hr_employee(models.Model):
             else:
                 self.adjust_dst = ''
 
-
     @api.onchange('phone_money','level','job_id')
     def _check_phone_money(self):
-        print 'aaaaaaaaaaaaa'
         if self.phone_money:
             if self.level == '1':
                 if self.job_id.name == u'助理工程师':
@@ -370,7 +370,6 @@ class hr_employee(models.Model):
                                            'message': "话费额度与级别职位不匹配或者话费额度不是10的倍数",
                                        }}
 
-
     @api.multi
     def onchange_category(self,category):
         result = {'value': {}}
@@ -472,7 +471,6 @@ class hr_employee(models.Model):
 
     @api.multi
     def add_use_to_group(self):
-        print '*'*80
         users = self.env['res.users'].search([('active','=',True)])
         data_center_employee_group = self.env['res.groups'].search([('name', '=', u'人力-数据中心员工')])
         employee_group = self.env['res.groups'].search([('name', '=', u'人力-其他部门员工')])
@@ -481,10 +479,9 @@ class hr_employee(models.Model):
         customer_manager_group = self.env['res.groups'].search([('name', '=', u'行业负责人')])
         for i in customer_managers_obj:
             customer_managers_ids.append(i.customer_manager.id)
-        print'行业负责人',customer_managers_ids
+        # print'行业负责人',customer_managers_ids
         customer_managers = self.env['res.users'].search([('id','in',customer_managers_ids)])
         customer_manager_group.users |= customer_managers
-
         bm_managers_obj = self.env['hr.department'].search([('parent_id.parent_id.name', '=', u'集成服务事业部'),('parent_id.name', '!=', u'数据中心服务部'),('name', '!=',u'数据中心服务部')])
         bm_managers_group = self.env['res.groups'].search([('name', '=', u'人力-部门经理')])
         bm_managers_ids = []
@@ -501,15 +498,15 @@ class hr_employee(models.Model):
         for i in managers_obj:
             if i.manager_id.user_id:
                 managers_ids.append(i.manager_id.user_id.id)
-        print '总经理', managers_ids
+        # print '总经理', managers_ids
         managers = self.env['res.users'].search([('id','in',managers_ids)])
-        print managers
+        # print managers
         manager_group.users |= managers
         presidents = self.env['hr.department'].search([('name', '=', u'集成服务事业部')],limit=1)
         president_group = self.env['res.groups'].search([('name', '=', u'总裁')])
         if presidents.manager_id.user_id:
             president_group.users |= presidents.manager_id.user_id
-            print '总裁',presidents.manager_id.user_id
+            # print '总裁',presidents.manager_id.user_id
         data_center_employees_ids = []
         data_employees = self.env['hr.employee'].search(['|',('department_id.name','=',u'数据中心服务部'),('department_id.parent_id.name','=',u'数据中心服务部')])
         #print data_employees

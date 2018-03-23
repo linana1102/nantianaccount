@@ -722,7 +722,7 @@
                 <tree  >
                     <field name="name" modifiers="{'required': true}"/>
                     <field name="department_id" modifiers="{}"/>
-                    <field name="leave_time" string="离职时间" modifiers="{}"/>
+                    <field name="states" string="工作状态" modifiers="{}"/>
                     <field name="working_team_id" string="工作组" modifiers="{}"/>
                     <field name="leader" string="上级领导" modifiers="{}"/>
                 </tree>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--<menuitem id="to_pend_menu" parent="nantian_recruitment_root_menu" name="待处理" sequence="1"/>-->
+        <record model="ir.ui.view" id="nantian_erp_entry_information_form">
+            <field name="name">入职信息表</field>
+            <field name="model">nantian_erp.entry_information</field>
+            <field name="arch" type="xml">
+                <form string="entry information">
+                    <sheet>
+                        <group>
+                            <group >
+                                <field name="offer_id" string="offer" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                                <field name="name" string="姓名"/>
+                                <field name="phone" string="电话"/>
+                                <field name="email" string="邮箱"/>
+                                <field name="gender" string="性别"/>
+                                <field name="work_time" string="首次给工作时间"/>
+                                <field name="identification_id" string="身份证号"/>
+                                <field name="graduation_id" string="毕业证号"/>
+                                <field name="entrytime" string="办理入职时间"/>
+                                <field name="entry_recruitment_id" string="入职岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                                <field name="job_level" string="岗位级别"/>
+                                <field name="work_email" string="工作邮箱" required="True"/>
+                                <field name="recruitment_id" string="招聘岗位" domain="[('state','=','released')]" options='{"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
+                            </group>
+                            <group>
+                                <field name="first_department_id" string="一级部门" domain="[('level','=','2')]"/>
+                                <field name="second_department_id" string="二级部门" domain="[('parent_id','=',first_department_id)]"/>
+                                <field name="working_team_id" string="工作组"/>
+                                <field name="contract_starttime" string="合同开始时间"/>
+                                <field name="contract_endtime" string="合同终止时间"/>
+                                <field name="formal_time" string="转正时间"/>
+                                <field name="category" string="人员状态"/>
+                                <field name="phone_money" string="话费额度"/>
+                                 <label for="contract_time"/>
+                                <div>
+                                <field name="contract_time" string="合同期限"/><label string="年" class="oe_inline"/>
+                                </div>
+                                <label for="test_time"/>
+                                <div>
+                                    <p>
+                                <field name="test_time" string="试用期限"/><label string="月" class="oe_inline"/>
+                                    如果是离职人员又重新回公司的试用期为0</p>
+                                </div>
+                                <!--<field name="state"/>-->
+                            </group>
+                        </group>
+                        <footer>
+                        <button name="subscribe" type="object"
+                                string="保存" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="取消入职"/>
+                    </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+         <record id="nantian_erp_entry_information_action" model="ir.actions.act_window">
+            <field name="name">入职信息</field>
+            <field name="res_model">nantian_erp.entry_information</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="nantian_erp_entry_information_form" />
+             <field name="target">new</field>
+             <field name="context">{"active_id":active_id}</field>
+        </record>
+
+    </data>
+</openerp>

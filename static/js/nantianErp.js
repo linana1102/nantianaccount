@@ -364,4 +364,36 @@ openerp.nantian_erp=function(instance){
         }
     });
 
+    /**
+     * 合同模块
+     * 增加颜色说明，对不同颜色所对应的合同状态、类型进行注释
+     * */
+    instance.nantian_erp.ContractLineColor = instance.web.Widget.extend({
+        template:"nantian_erp.contractLineColor",
+        init: function(parent) {
+            console.log(parent);
+            this._super(parent);
+            this.parent = parent;
+        },
+        start: function(){
+
+        }
+    });
+    
+    instance.web.ListView.include({
+        load_list: function(data){
+            var oe_pager_length = $(".oe_pager_value").length,
+                model = this.dataset && this.dataset.model,
+                title = this.__getterSetterInternalMap.title;
+            var tipLength = $(".oe_list_pager .line_color").length;
+            if(oe_pager_length && model == "nantian_erp.contract" && title == "进行的合同"){
+                if(tipLength == 0){
+                    var contractLineColor = new instance.nantian_erp.ContractLineColor(this);
+                    contractLineColor.insertBefore($(".oe_pager_value"));
+                }
+            }
+            return this._super.apply(this, arguments);
+
+        }
+    });
 }

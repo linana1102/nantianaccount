@@ -6,6 +6,6 @@
         <menuitem id="recruitment_examineing_menu" parent="to_pend_menu" action="nantian_erp_examineing_recruitment_action" name="待处理的招聘申请" sequence="6" />
          <menuitem id="pending_offer_menu" parent="to_pend_menu" name="待审批的offer信息" action="nantian_erp_offer_pending_information_action" sequence="5" groups="nantian_erp.group_hr_manager"/>
         <menuitem id="pended_offer_menu" parent="to_pend_menu" name="待入职人员" action="nantian_erp_offer_pended_information_action" sequence="7" />
-        <menuitem id="wait_set_email_menu" parent="to_pend_menu" name="待设置邮箱人员" action="nantian_erp_wait_set_email_action" sequence="8" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager,nantian_erp.group_hr_recruitment,nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant"/>
+        <!--<menuitem id="wait_set_email_menu" parent="to_pend_menu" name="待设置邮箱人员" action="nantian_erp_wait_set_email_action" sequence="8" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager,nantian_erp.group_hr_recruitment,nantian_erp.group_hr_assistant,nantian_erp.group_hr_manager_assistant"/>-->
     </data>
 </openerp>

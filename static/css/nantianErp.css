@@ -86,3 +86,18 @@ i.uploadResume_tip {
   color: #e4393c;
   font-style: normal;
 }
+/**
+ * 合同模块
+ * 增加颜色说明，对不同颜色所对应的合同状态、类型进行注释
+ * */
+.oe_list_pager {
+  position: relative;
+}
+.oe_list_pager .line_color {
+  position: absolute;
+  width: 254px;
+  left: -260px;
+}
+.oe_list_pager .line_color span {
+  color: #FA63C1;
+}

@@ -26,6 +26,7 @@
     'data': [
         'security/nantian_erp_security.xml',
         'security/ir.model.access.csv',
+        'views/zhaopin/entry_information.xml',
         'views/nantian_erp_hr_view.xml',
         'views/nantian_erp_contract_view.xml',
         'views/nantian_erp_work_team_view.xml',
@@ -40,8 +41,8 @@
         'views/nantian_erp_ip_data_menu.xml',
         'views/weekly_reports/sale.xml',
         'views/zhaopin/job.xml',
-        'views/zhaopin/resume.xml',
         'views/zhaopin/interview.xml',
+        'views/zhaopin/resume.xml',
         'views/template.xml',
         'views/human_cost/human_cost.xml',
         'views/company_server_info.xml',
