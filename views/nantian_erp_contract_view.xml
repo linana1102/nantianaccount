@@ -28,6 +28,7 @@
                         </div>
                      <group>
                         <group>
+                            <field name="contract_num"  />
                             <field name="header_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                             <field name="other_header_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                             <field name="customer_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
@@ -163,10 +164,11 @@
                         </div>
                      <group>
                         <group>
+                            <field name="contract_num" />
                             <field name="header_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                             <field name="other_header_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}'/>
                             <field name="customer_id" options='{"limit": 20,"no_open":True,"no_create":1,"no_create_edit":1}' required="True"/>
-                            <field name="date_start"  />
+                            <field name="date_start" />
                             <field name="date_end" required="True"/>
                             <field name="category"  invisible="True"/>
                         </group>
