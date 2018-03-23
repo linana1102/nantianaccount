@@ -11,7 +11,7 @@ class weekly_reports(models.Model):
     _name = 'nantian_erp.weekly_reports'
     _rec_name = 'date'
 
-    user_id = fields.Many2one('res.users',string='创建者',required=True,default=lambda self: self.env.user)#
+    user_id = fields.Many2one('res.users',string='创建者',required=True,default=lambda self: self.env.user)
     date = fields.Date(string='创建日期',default=lambda self:fields.datetime.now(),readonly = True)
     date_from = fields.Date(string='From')
     date_to = fields.Date(string='To')
@@ -120,10 +120,11 @@ class weekly_reports(models.Model):
             if record.project_progress_ids:
                 for a in record.project_progress_ids:
                     object_a = self.env['nantian_erp.project_progress'].search([("id", "=", a.id)], limit=1)
+                    print '-----'*20
+                    print type(object_a)
                     if object_a:
-                        obt_a = self.env['nantian_erp.project_progress'].create(
-                            {"weekly_reports_id": weekly_report_object.id,
-                            "major_change": object_a.major_change_detail,
+                        detail_dict= {"weekly_reports_id": weekly_report_object.id,
+                            "major_change": object_a.major_change,
                             "major_change_detail": object_a.major_change_detail,
                             "repeat": object_a.repeat,
                             "repeat_detail": object_a.repeat_detail,
@@ -138,8 +139,24 @@ class weekly_reports(models.Model):
                             "special": object_a.special,
                             "special_detail": object_a.special_detail,
                             "possible_risk": object_a.possible_risk,
-                            "possible_risk_detail": object_a.possible_risk_detail},
-                        )
+                            "possible_risk_detail": object_a.possible_risk_detail}
+                        if detail_dict["major_change"] and not detail_dict["major_change_detail"]:
+                            raise exceptions.ValidationError("请填写详情叙述！")
+                        if detail_dict["repeat"] and not detail_dict["repeat_detail"]:
+                            raise exceptions.ValidationError("请填写详情叙述！")
+                        if detail_dict["major_fault"] and not detail_dict["major_fault_detail"]:
+                            raise exceptions.ValidationError("请填写详情叙述！")
+                        if detail_dict["maintenance"] and not detail_dict["maintenance_detail"]:
+                            raise exceptions.ValidationError("请填写详情叙述！")
+                        if detail_dict["ver_on_line"] and not detail_dict["ver_on_line_detail"]:
+                            raise exceptions.ValidationError("请填写详情叙述！")
+                        if detail_dict["equipment_implementation"] and not detail_dict["equipment_implementation_detail"]:
+                            raise exceptions.ValidationError("请填写详情叙述！")
+                        if detail_dict["special"] and not detail_dict["special_detail"]:
+                            raise exceptions.ValidationError("请填写详情叙述！")
+                        if detail_dict["possible_risk"] and detail_dict["possible_risk_detail"]==None:
+                            raise exceptions.ValidationError("请填写详情叙述！")
+                        obt_a = self.env['nantian_erp.project_progress'].create(detail_dict)
             # 复制客户动态或者人事变动
             if record.customer_adjust_ids :
                 for b in record.customer_adjust_ids :
@@ -185,7 +202,9 @@ class pres_sale(models.Model):
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports',string='周报')
     weekly_reports_1_id = fields.Many2many('nantian_erp.weekly_reports','i_weekly_reports_pres_sale_ref',string='周报')
     project_name = fields.Char(string='项目名称')
-    project_type = fields.Selection([('网络设备维保','网络设备维保'),('硬件设备维保','硬件设备维保'),('运维服务','运维服务')])
+    project_content = fields.Text(string = '项目内容')
+    project_type = fields.Selection([('网络设备维保', '网络设备维保'), ('硬件设备维保', '硬件设备维保'),
+                                     ('运维服务', '运维服务'), ('培训咨询服务', '培训咨询服务')])
     contract_name = fields.Char(string='合同名称')
     partner = fields.Char(string='客户名称')
     process_scrib = fields.Text(string='本周主要进展说明')
@@ -267,8 +286,11 @@ class pres_sale(models.Model):
 class project_gathering(models.Model):
     _name = 'nantian_erp.project_gathering'
 
-
+    date = fields.Date(string='创建日期', default=lambda self: fields.datetime.now(), readonly=True)
+    date_from = fields.Date(string='From')
+    date_to = fields.Date(string='To')
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
+    user_id = fields.Many2one('res.users', related= 'weekly_reports_id.user_id', string='创建者')
     contract_id = fields.Many2one('nantian_erp.contract', string='合同')
     gather_date = fields.Date(string='！')
     gather_progress= fields.Selection([('开始准备材料',u"开始准备材料"),
@@ -303,9 +325,10 @@ class pers_transfer(models.Model):#
     def _default_employee_id(self):
         return self.env['hr.employee'].browse(self._context.get('active_id'))
 
-
+    date = fields.Date(string='创建日期', default=lambda self: fields.datetime.now(), readonly=True)
     weekly_reports_1_id = fields.Many2many('nantian_erp.weekly_reports',"i_weekly_reports_pers_transfer_ref",string='周报1')
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports',string='周报')
+    user_id =fields.Many2one('res.users', related= 'weekly_reports_id.user_id',string='创建者')
     # employee_id_hr = fields.Many2one('hr.employee',string='调动人',ondelete='set null')#
     employee_id = fields.Many2one('hr.employee',string='调动人',required=True,default=_default_employee_id)
     res_contract_name = fields.Many2one("nantian_erp.contract",compute = "store_transfer_message",store = True,string='合同名称')
@@ -412,8 +435,11 @@ class demission(models.Model):#
     def subscribe(self):
         return {'aaaaaaaaaaaaaa'}
 
+    date = fields.Date(string='创建日期', default=lambda self: fields.datetime.now(), readonly=True)
+    date_from = fields.Date(string='From')
+    date_to = fields.Date(string='To')
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')# 项目组即工作组
-    user_id = fields.Many2one('res.users',string='创建者',required=True,default=lambda self: self.env.user)#
+    user_id = fields.Many2one('res.users', related='weekly_reports_id.user_id', string='创建者')
     employee_id = fields.Many2one('hr.employee',string='离职申请人',default=_default_employee_id)# 这个人的调动人是他项目组的负责人
     contract_name = fields.Char(compute = "store_demission_message",store = True,string='合同名称' )
     contract_post = fields.Char(compute = "store_demission_message",store = True,string='合同岗位')
@@ -494,7 +520,11 @@ class demission(models.Model):#
 class customer_adjust(models.Model):
     _name = 'nantian_erp.customer_adjust'
 
+    date = fields.Date(string='创建日期',default=lambda self: fields.datetime.now(), readonly=True)
+    date_from = fields.Date(string='From')
+    date_to = fields.Date(string='To')
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
+    user_id = fields.Many2one('res.users', related='weekly_reports_id.user_id', string='创建者')
     major_adjust = fields.Boolean(string='近一月客户是否有重大动态或人事变动')
     major_adjust_detail = fields.Char(string='详情叙述')
 
@@ -504,7 +534,12 @@ class customer_adjust(models.Model):
 class project_progress(models.Model):
     _name = 'nantian_erp.project_progress'
 
+    date = fields.Date(string='创建日期', default=lambda self: fields.datetime.now(), readonly=True)
+    date_from = fields.Date(string='From')
+    date_to = fields.Date(string='To')
     weekly_reports_id = fields.Many2one('nantian_erp.weekly_reports', string='周报')
+    user_id = fields.Many2one('res.users',related='weekly_reports_id.user_id', string='创建者')
+    partner = fields.Char(string = '客户名称')
     major_change = fields.Boolean(string='本周是否重大变更')
     major_change_detail = fields.Char(string='详情叙述')
     repeat = fields.Boolean(string='本周是否重保')
@@ -522,6 +557,25 @@ class project_progress(models.Model):
     possible_risk = fields.Boolean(string='本周预计可能风险')
     possible_risk_detail = fields.Char(string='详情叙述')
 
+    def create(self, cr, uid, vals, context=None):
+        print "*"*10
+        if vals["major_change"] and not vals["major_change_detail"]:
+            raise exceptions.ValidationError("请填写详情叙述！")
+        if vals["repeat"] and not vals["repeat_detail"]:
+            raise exceptions.ValidationError("请填写详情叙述！")
+        if vals["major_fault"] and not vals["major_fault_detail"]:
+            raise exceptions.ValidationError("请填写详情叙述！")
+        if vals["maintenance"] and not vals["maintenance_detail"]:
+            raise exceptions.ValidationError("请填写详情叙述！")
+        if vals["ver_on_line"] and not vals["ver_on_line_detail"]:
+            raise exceptions.ValidationError("请填写详情叙述！")
+        if vals["equipment_implementation"] and not vals["equipment_implementation_detail"]:
+            raise exceptions.ValidationError("请填写详情叙述！")
+        if vals["special"] and not vals["special_detail"]:
+            raise exceptions.ValidationError("请填写详情叙述！")
+        if vals["possible_risk"] and vals["possible_risk_detail"] == None:
+            raise exceptions.ValidationError("请填写详情叙述！")
+        return super(project_progress, self).create(cr, uid, vals, context=context)
 
 class recruit_gap(models.Model):
     _name = 'nantian_erp.recruit_gap'

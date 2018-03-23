@@ -1244,6 +1244,7 @@ class collection(models.Model):
 class contract(models.Model):
     _name = 'nantian_erp.contract'
     name = fields.Char(string='合同名称',required=True)
+    contract_num = fields.Char(string = '合同号',required =True)
     header_id = fields.Many2one('res.users', string="合同负责人",default=lambda self: self.env.user)
     other_header_id = fields.Many2one('res.users', string="合同共同负责人")
     customer_id = fields.Many2one('res.partner', string="客户",domain="[('category','=',u'服务客户')]")

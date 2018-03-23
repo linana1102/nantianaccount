@@ -46,7 +46,6 @@
                             <field name="demission_reason" string="离职原因"/>
                             <field name="demission_date" string="离职时间"/>
                             <field name="state" string="状态" invisible = "1"/>
-
                         </group>
                         <group >
                             <field name="contract_name" string="合同名称" />
@@ -82,12 +81,15 @@
                                     <tree string="Registered feedback" edit="true">
                                         <field name="project_name" string="项目名称"/>
                                         <field name="partner" string="客户名称" />
-                                        <field name="process_scrib" string="本周主要进展说明"/>
+                                        <field name="project_type" string="项目类型" />
+                                        <field name = "state_w" string = "标书状态"/>
+                                        <!--field name="process_scrib" string="本周主要进展说明"/-->
                                         <field name="before_bid_amount" string="投标金额"/>
+                                        <field name="salesman_id" string="销售代表"/>
                                         <field name="bid_commpany" string="中标单位"/>
-                                        <field name="pre_bid_date" string="预计投标日期"/>
-                                        <field name="competitors" string="竞争对手"/>
-                                        <field name="rate_of_success" string="成功率(%)"/>
+                                        <field name="pre_bid_date" string="投标时间"/>
+                                        <!--field name="competitors" string="竞争对手"/-->
+                                        <!--field name="rate_of_success" string="成功率(%)"/-->
                                     </tree>
                             </field>
                     </page>
@@ -144,6 +146,7 @@
                     <page string="项目进度">
                              <field name="project_progress_ids">
                                     <tree string="Registered feedback" edit="true">
+                                        <field name="partner" string="客户名称"/>
                                         <field name="major_change" string="本周是否重大变更"/>
                                         <field name="repeat" string="本周是否重保"/>
                                         <field name="major_fault" string="本周是否重大事故"/>
@@ -192,7 +195,7 @@
                     <field name="customer_adjust_ids" string="客户动态或人事变动" />
                     <field name="project_progress_ids" string="项目进度"/>
                     <field name="project_stage_count" string="项目阶段数目统计"/>
-                     <field name="user_id" string="创建者"/>
+                    <field name="user_id" string="创建者"/>
                     <field name="create_date" string = "创建日期" readonly = "True"/>
                 </tree>
             </field>
@@ -205,12 +208,14 @@
                     <field name="project_name" string="项目名称"/>
                     <field name="project_type" string="项目类型"/>
                     <field name="partner" string="客户名称" />
-                    <field name="process_scrib" string="本周主要进展说明"/>
+                    <field name="state_w" string="标书状态"/>
+                    <!--field name="process_scrib" string="本周主要进展说明"/-->
                     <field name="before_bid_amount" string="投标金额"/>
+                    <field name="salesman_id" string="销售代表" />
                     <field name="bid_commpany" string="中标单位"/>
-                    <field name="pre_bid_date" string="预计投标日期"/>
-                    <field name="competitors" string="竞争对手"/>
-                    <field name="rate_of_success" string="成功率(%)"/>
+                    <field name="pre_bid_date" string="投标时间"/>
+                    <!--field name="competitors" string="竞争对手"/-->
+                    <!--field name="rate_of_success" string="成功率(%)"/-->
                 </tree>
             </field>
         </record>
@@ -228,27 +233,32 @@
                     <button name="lose_a_bid" type="object"  string="未中标" attrs="{'invisible':[('state','=','win')]}" class="oe_highlight"/>
                     <button name="creat_new_contract" type="object" string="创建新合同"  attrs="{'invisible':[('state','!=','win')]}" class="oe_highlight" />
                     <group>
-                        <group string="售前项目预填写">
-                            <field name="project_name" string="项目名称"/>
+                        <group string="投标内容">
+                            <field name="project_name" string="项目名称" />
                             <field name="project_type" string="项目类型" />
                             <field name="partner" string="客户名称" />
-                            <field name="process_scrib" string="本周主要进展说明"/>
+                            <field name="bid_readman_id" string="讲标人" />
+                            <field name="bid_write" string="标书编写" />
+                            <field name="state_w" string="标书状态"/>
+                            <field name="salesman_id" string="销售代表"/>
+                            <!--field name="process_scrib" string="本周主要进展说明"/-->
                             <field name="before_bid_amount" string="投标金额"/>
                             <field name="bid_commpany" string="中标单位"/>
-                            <field name="pre_bid_date" string="预计投标日期"/>
-                            <field name="competitors" string="竞争对手"/>
-                            <field name="state_w"/>
+                            <field name="pre_bid_date" string="投标时间"/>
+                            <field name="project_content" string="项目内容"/>
+                            <!--field name="competitors" string="竞争对手"/-->
+
                         </group>
-                        <group string="编写标书人员待完善">
+                        <group string="合同内容">
                             <field name="contract_name" string="合同名称"/>
-                            <field name="salesman_id" string="销售负责人"/>
+                            <!--field name="salesman_id" string="销售负责人"/-->
                             <field name="contract_number" string="合同编号"/>
-                            <field name="bid_write" string="标书编写"/>
-                            <field name="bid_checkman_id" string="标书复核人"/>
-                            <field name="bid_readman_id" string="讲标人"/>
+                            <!--field name="bid_write" string="标书编写"/-->
+                            <!--field name="bid_checkman_id" string="标书复核人"/-->
+                            <!--field name="bid_readman_id" string="讲标人"/-->
                             <field name="after_bid_amount" string="合同/中标金额"/>
-                            <field name="term" string="检索词"/>
-                            <field name="firm_platform" string="涉及厂商或平台"/>
+                            <!--field name="term" string="检索词"/-->
+                            <!--field name="firm_platform" string="涉及厂商或平台"/-->
                             <field name="context" string="合同主要内容"/>
                             <field name="siger" string="签字人"/>
                             <field name="sign_date" string="签订日期"/>
@@ -269,15 +279,14 @@
                     <filter string="行业负责人" name="user_id" context="{'group_by':'user_id'}"/>
                 </group>
                 </search>
-
             </field>
         </record>
         <record id="nantian_erp_pres_sale_action" model="ir.actions.act_window">
-            <field name="name">本行业售前项目</field>
+            <field name="name">售前项目信息</field>
             <field name="res_model">nantian_erp.pres_sale</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name ="domain">[('weekly_reports_id.user_id','=',uid)]</field>
+            <field name ="domain">[]</field>
         </record>
          <record id="action_nantian_erp_pres_sale_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
@@ -291,44 +300,44 @@
             <field name="view_id" ref="nantian_erp_pres_sale_form" />
             <field name="act_window_id" ref="nantian_erp_pres_sale_action"/>
         </record>
-        <record id="nantian_erp_pres_sale1_action" model="ir.actions.act_window">
+        <!--record id="nantian_erp_pres_sale1_action" model="ir.actions.act_window">
             <field name="name">售前项目(未投标)</field>
             <field name="res_model">nantian_erp.pres_sale</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name ="domain">[('state_w','=',u'will_be')]</field>
-        </record>
-         <record id="action_nantian_erp_pres_sale1_tree" model="ir.actions.act_window.view">
+        </record-->
+         <!--record id="action_nantian_erp_pres_sale1_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
             <field name="sequence" eval="11"/>
             <field name="view_id" ref="nantian_erp_pres_sale_tree" />
             <field name="act_window_id" ref="nantian_erp_pres_sale1_action"/>
-        </record>
-        <record id="action_nantian_erp_pres_sale1_form" model="ir.actions.act_window.view">
+        </record-->
+        <!--record id="action_nantian_erp_pres_sale1_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
             <field name="sequence" eval="12"/>
             <field name="view_id" ref="nantian_erp_pres_sale_form" />
             <field name="act_window_id" ref="nantian_erp_pres_sale1_action"/>
-        </record>
-         <record id="nantian_erp_pres_sale2_action" model="ir.actions.act_window">
+        </record-->
+         <!--record id="nantian_erp_pres_sale2_action" model="ir.actions.act_window">
             <field name="name">售前项目(已投标)</field>
             <field name="res_model">nantian_erp.pres_sale</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name ="domain">[('state_w','=',u'have_be')]</field>
-        </record>
-         <record id="action_nantian_erp_pres_sale2_tree" model="ir.actions.act_window.view">
+        </record-->
+         <!--record id="action_nantian_erp_pres_sale2_tree" model="ir.actions.act_window.view">
             <field name="view_mode">tree</field>
             <field name="sequence" eval="11"/>
             <field name="view_id" ref="nantian_erp_pres_sale_tree" />
             <field name="act_window_id" ref="nantian_erp_pres_sale2_action"/>
-        </record>
-        <record id="action_nantian_erp_pres_sale2_form" model="ir.actions.act_window.view">
+        </record-->
+        <!--record id="action_nantian_erp_pres_sale2_form" model="ir.actions.act_window.view">
             <field name="view_mode">form</field>
             <field name="sequence" eval="12"/>
             <field name="view_id" ref="nantian_erp_pres_sale_form" />
             <field name="act_window_id" ref="nantian_erp_pres_sale2_action"/>
-        </record>
+        </record-->
         <record model="ir.ui.view" id="nantian_erp_pres_sale_hearder_form">
             <field name="name">pres_sale.form</field>
             <field name="model">nantian_erp.pres_sale</field>
@@ -343,16 +352,20 @@
                     <button name="lose_a_bid" type="object"  string="未中标" attrs="{'invisible':[('state','=','win')]}" class="oe_highlight"/>
                     <button name="creat_new_contract" type="object" string="创建新合同"  attrs="{'invisible':[('state','!=','win')]}" class="oe_highlight" />
                     <group>
-                        <group string="售前项目预填写">
+                        <group string=" 投标内容">
                             <field name="project_name" string="项目名称"/>
                             <field name="project_type" string="项目类型"/>
                             <field name="partner" string="客户名称" />
-                            <field name="process_scrib" string="本周主要进展说明"/>
+                            <field name="bid_readman_id" string="讲标人" />
+                            <field name="bid_write" string="标书编写" />
+                            <field name="state_w" string="标书状态"/>
+                            <field name="salesman_id" string="销售代表"/>
+                            <!--field name="process_scrib" string="本周主要进展说明"/-->
                             <field name="before_bid_amount" string="投标金额"/>
                             <field name="bid_commpany" string="中标单位"/>
-                            <field name="pre_bid_date" string="预计投标日期"/>
-                            <field name="competitors" string="竞争对手"/>
-                            <field name="state_w"/>
+                            <field name="pre_bid_date" string="投标时间"/>
+                            <field name="project_content" string="项目内容"/>
+                            <!--field name="competitors" string="竞争对手"/-->
                         </group>
                     </group>
                     </sheet>
@@ -374,7 +387,14 @@
             <field name="arch" type="xml">
                 <form >
                     <sheet>
-                    <group >
+                    <group>
+                        <group string="周报时间段">
+                            <field name="date_from" string = "From"/>
+                            <field name="date_to" string = "To"/>
+                        </group>
+                        <group>
+                            <field name="user_id" string="创建者" readonly="True"/>
+                        </group>
                         <group string="提醒如下">
                             <field name="contract_id" string="合同"/>
                             <field name="gather_count" string="预期收款金额"/>
@@ -398,6 +418,8 @@
                     <field name="contract_id" string="合同"/>
                     <field name="gather_progress" string="收款工作进度"/>
                     <field name="gather_reminder" string="特此提醒，开始准备收款!"/>
+                    <field name="user_id" string="创建者"/>
+                    <field name="date" string="创建日期"/>
                 </tree>
             </field>
         </record>
@@ -448,18 +470,20 @@
             <field name="arch" type="xml">
                 <tree editable="top">
                     <field name="employee_id" string="调动人"/>
-                            <field name="move_reason" string="调动原因"/>
-                            <field name="move_date" string="调动时间"/>
-                            <field name="res_contract_name" string="合同名称" />
-                            <field name="res_contract_job" string="合同岗位"/>
-                            <field name="sour_team" string="原项目组"/>
-                            <field name="is_recruit" string="是否招聘"/>
-                            <field name="before_leader" string="调动前负责人"/>
-                            <field name="after_leader" string="调动后负责人"/>
-                            <field name="des_team" string="新项目组"/>
-                            <field name="des_contract_name" string="合同名称"/>
-                            <field name="des_contract_job" string="合同岗位"/>
-                            <field name="dis_states" string="调整状态" readonly = "True"/>
+                    <field name="move_reason" string="调动原因"/>
+                    <field name="move_date" string="调动时间"/>
+                    <field name="res_contract_name" string="合同名称" />
+                    <field name="res_contract_job" string="合同岗位"/>
+                    <field name="sour_team" string="原项目组"/>
+                    <field name="is_recruit" string="是否招聘"/>
+                    <field name="before_leader" string="调动前负责人"/>
+                    <field name="after_leader" string="调动后负责人"/>
+                    <field name="des_team" string="新项目组"/>
+                    <field name="des_contract_name" string="合同名称"/>
+                    <field name="des_contract_job" string="合同岗位"/>
+                    <field name="dis_states" string="调整状态" readonly = "True"/>
+                    <field name="user_id" string="创建者"/>
+                    <field name="date" string="创建日期"/>
                     <button name="over_pers_transfer" type="object" string="调整结束" class="oe_highlight">
                     </button>
                 </tree>
@@ -513,9 +537,10 @@
                     <field name="contract_post" string="合同岗位"/>
                     <field name="sro_project" string="项目组"/>
                     <field name="is_recruit" string="是否招聘"/>
-                    <field name="user_id" string="创建者"/>
                     <field name="dealer" />
                     <field name="state" string="离职申请状态"/>
+                    <field name="user_id" string="创建者"/>
+                    <field name="date" string="创建日期"/>
                     <button name="confirm_demission_dealer" type="object" string="离职确认" class="oe_highlight">
                     </button>
                 </tree>
@@ -758,7 +783,15 @@
                 <form >
                     <sheet>
                     <group >
+                        <group string="周报时间段">
+                            <field name="date_from" string="From"/>
+                            <field name="date_to" string="To"/>
+                        </group>
+                        <group>
+                            <field name="user_id" string="创建者" readonly="True"/>
+                        </group>
                         <group >
+                            <field name="partner" string="客户名称"/>
                             <field name="major_change" string="本周是否重大变更"/>
                             <field name="major_change_detail" string="详情叙述" attrs="{'invisible':[('major_change','=',False)]}"  />
                             <field name="repeat" string="本周是否重保"/>
@@ -788,14 +821,17 @@
             <field name="model">nantian_erp.project_progress</field>
             <field name="arch" type="xml">
                 <tree >
-                            <field name="major_change" string="本周是否重大变更"/>
-                            <field name="repeat" string="本周是否重保"/>
-                            <field name="major_fault" string="本周是否重大事故"/>
-                            <field name="maintenance" string="本周是否主机维护"/>
-                            <field name="ver_on_line" string="本周是否版本上线"/>
-                            <field name="equipment_implementation" string="本周是否设备实施"/>
-                            <field name="special" string="本周是否有特殊事项"/>
-                            <field name="possible_risk" string="本周预计可能风险"/>
+                    <field name="partner" string="客户名称"/>
+                    <field name="major_change" string="本周是否重大变更"/>
+                    <field name="repeat" string="本周是否重保"/>
+                    <field name="major_fault" string="本周是否重大事故"/>
+                    <field name="maintenance" string="本周是否主机维护"/>
+                    <field name="ver_on_line" string="本周是否版本上线"/>
+                    <field name="equipment_implementation" string="本周是否设备实施"/>
+                    <field name="special" string="本周是否有特殊事项"/>
+                    <field name="possible_risk" string="本周预计可能风险"/>
+                    <field name="user_id" string="创建者"/>
+                    <field name="date" string="创建日期"/>
                 </tree>
             </field>
         </record>
@@ -805,7 +841,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <!--<field name ="domain">[('category','=','服务客户')]</field>-->
-         </record>
+        </record>
         <record model="ir.ui.view" id="nantian_erp_customer_adjust_form">
             <field name="name">customer_adjust.form</field>
             <field name="model">nantian_erp.customer_adjust</field>
@@ -813,6 +849,13 @@
                 <form  >
                     <sheet>
                     <group >
+                        <group string="周报时间段">
+                            <field name="date_from" string = "From"/>
+                            <field name="date_to" string = "To"/>
+                        </group>
+                        <group>
+                            <field name="user_id" string="创建者" readonly="True" />
+                        </group>
                         <group >
                             <field name="major_adjust" string="近一月客户是否有重大动态或人事变动"/>
                         </group>
@@ -830,7 +873,9 @@
             <field name="arch" type="xml">
                 <tree >
                     <field name="major_adjust" string="近一月客户是否有重大动态或人事变动"/>
-                  <field name="major_adjust_detail" string="详情叙述"/>
+                    <field name="major_adjust_detail" string="详情叙述"/>
+                    <field name="user_id" string="创建者"/>
+                    <field name="date" string="创建日期"/>
                 </tree>
             </field>
         </record>
@@ -923,9 +968,9 @@
         <menuitem id="nantian_erp_weekly_plan_all_history_for_boss" parent="nantian_erp_weekly_plan_header_menu" name="历史周报" action = "nantian_erp_weekly_boss_history_action" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_boss"/><!--只有魏总看到全部-->
         <!--#权限设置，菜单加组，-->
         <menuitem id="nantian_erp_pres_sale_menu" parent="nantian_contract_menu_5" sequence="1" name="售前项目" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before,nantian_erp.group_hr_president_assistant" />
-        <menuitem id="nantian_erp_pres_sale1" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale1_action" name="未投标" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
-        <menuitem id="nantian_erp_pres_sale2" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale2_action" name="已投标" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
-        <menuitem id="nantian_erp_pres_sale_header" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="项目" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header,nantian_erp.group_hr_president_assistant"/>
+        <menuitem id="nantian_erp_pres_sale1" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="售前项目" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/>
+        <!--menuitem id="nantian_erp_pres_sale2" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale2_action" name="已投标" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_server_sale_before"/-->
+        <!--menuitem id="nantian_erp_pres_sale_header" parent="nantian_erp_pres_sale_menu" action="nantian_erp_pres_sale_action" name="项目" groups="nantian_erp.group_hr_manager_assistant,nantian_erp.group_nantian_header,nantian_erp.group_hr_president_assistant"/-->
         <menuitem id="nantian_erp_ongoing_sale_menu" parent="nantian_erp_weekly_reports_menu" name="周报历史全纪录" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
         <menuitem id="nantian_erp_project_gathering_menu" parent="nantian_erp_ongoing_sale_menu" action="nantian_erp_project_gathering_action" name="项目收款" groups="base.group_system,nantian_erp.group_hr_manager_assistant"/>
         <menuitem id="nantian_erp_hr_transfer_menu" parent="hr.menu_hr_main" name="人员变动" sequence="100" groups="base.group_system,nantian_erp.group_hr_manager_assistant,nantian_erp.group_hr_recruitment"/>
