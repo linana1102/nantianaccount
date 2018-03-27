@@ -5,7 +5,7 @@
         <menuitem id="nantian_set_job_menu" parent="nantian_recruitment_root_menu" name="岗位" sequence="2" />
         <menuitem id="nantian_recruitment_2_level_menu" parent="nantian_recruitment_root_menu" name="招聘" sequence="3" />
         <menuitem id="nantian_set_offer_menu" parent="nantian_recruitment_root_menu" name="offer信息" sequence="4" />
-        <menuitem id="nantian_set_talent_pool_menu" parent="nantian_recruitment_root_menu" name="人才储备" sequence="5" groups = "nantian_erp.group_hr_recruitment,nantian_erp.group_hr_manager,base.group_system"/>
+        <menuitem id="nantian_set_talent_pool_menu" parent="nantian_recruitment_root_menu" name="人才储备" sequence="5" groups = "nantian_erp.group_hr_recruitment,nantian_erp.group_hr_manager,base.group_system，nantian_erp.group_hr_assistant"/>
 
 
 

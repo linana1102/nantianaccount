@@ -624,7 +624,7 @@
         </record>
         <!--<menuitem id="nantian_erp_special_interview_menu" parent="nantian_erp_resume_root_menu"  name="特殊面试" action="nantian_erp_interview_special_action" sequence="9" groups="nantian_erp.group_hr_recruitment,base.group_system"/>-->
         <menuitem id="nantian_erp_all_my_resume_menu" parent="nantian_erp_resume_root_menu" name="全部简历my" action="nantian_erp_all_my_resume_action" sequence="7" groups="base.group_system,nantian_erp.group_hr_recruitment"/>
-        <menuitem id="nantian_erp_all_resume_menu" parent="nantian_erp_resume_root_menu" name="全部简历all" action="nantian_erp_all_resume_action" sequence="8" groups="base.group_system"/>
+        <menuitem id="nantian_erp_all_resume_menu" parent="nantian_erp_resume_root_menu" name="全部简历all" action="nantian_erp_all_resume_action" sequence="8" groups="base.group_system，nantian_erp.group_hr_assistant"/>
         <menuitem id="nantian_erp_resume_menu" parent="nantian_erp_resume_root_menu" name="未处理的简历" action="nantian_erp_resume_action" sequence="1" groups="nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_interviewing_resume_menu" parent="nantian_erp_resume_root_menu" name="面试中的简历" action="nantian_erp_interviewing_resume_action" sequence="2" groups="nantian_erp.group_hr_recruitment"/>
         <menuitem id="nantian_erp_processed_resume_menu" parent="nantian_erp_resume_root_menu" name="面试过的简历" action="nantian_erp_processed_resume_action" sequence="3" groups="nantian_erp.group_nantian_header,nantian_erp.group_nantian_manager,nantian_erp.group_hr_recruitment"/>
