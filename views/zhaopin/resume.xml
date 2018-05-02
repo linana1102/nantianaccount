@@ -110,7 +110,7 @@
                             <group>
                                 <field name="email" />
                                 <field name="job" />
-                                <field name="job_id"/>
+                                <field name="job_id" domain="[('categroy_id.name','!=','原系统')]"/>
                                 <field name="talent_pool"/>
                             </group>
                                 <field name="interviewer" string="简历创建者" readonly="True"/>
