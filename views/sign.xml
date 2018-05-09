@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem id="sign"  name="签到" sequence="1"/>
+
+        <record model="ir.ui.view" id="sign_form_view">
+            <field name="name">sign_form_form</field>
+            <field name="model">nantianaccount.employee_sign</field>
+            <field name="arch" type="xml">
+                <form string="Partners">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date" string="日期"/>
+                            <field name="working_team_id" string="项目组"/>
+                            <field name="from_time" string="开始时间"/>
+                        </group>
+                        <group>
+                            <field name="employee_id" string="员工"/>
+                            <field name="len" string="时长"/>
+                            <field name="to_time" string="结束时间"/>
+                            <field name="user_id" string="用户" invisible="True"/>
+                        </group>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="sign_tree_view">
+            <field name="name">sign tree</field>
+            <field name="model">nantianaccount.employee_sign</field>
+            <field name="arch" type="xml">
+                <tree string="sign">
+                    <field name="date" string="日期"/>
+                    <field name="employee_id" string="员工"/>
+                    <field name="working_team_id" string="项目组"/>
+                    <field name="len" string="时长"/>
+                    <field name="from_time" string="开始时间"/>
+                    <field name="to_time" string="结束时间"/>
+                </tree>
+            </field>
+        </record>
+        <record id="sign_filter_view" model="ir.ui.view">
+            <field name="name">sign_search</field>
+            <field name="model">nantianaccount.employee_sign</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="employee_id" string="员工"/>
+                    <field name="date" string="签到日期"/>
+                    <field name="working_team_id" string="项目"/>
+                    <separator/>
+                    <group expand="0" string="分组">
+                        <filter string="日期" name="date" context="{'group_by':'date'}"/>
+                        <filter string="项目" name="working_team_id" context="{'group_by':'working_team_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="account_sign_action" model="ir.actions.act_window">
+            <field name="name">签到</field>
+            <field name="res_model">nantianaccount.employee_sign</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="my"  name="我" sequence="1" parent="sign"/>
+        <menuitem id="my_sign"  name="我的签到" sequence="1" parent="my" action="account_sign_action"/>
+    </data>
+</openerp>
