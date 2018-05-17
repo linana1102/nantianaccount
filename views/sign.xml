@@ -10,17 +10,27 @@
                 <form string="Partners">
                 <sheet>
                     <group>
-                        <group>
-                            <field name="date" string="日期"/>
-                            <field name="working_team_id" string="项目组"/>
-                            <field name="from_time" string="开始时间"/>
+                        <group >
+                        <field name="date" string="日期"/>
+                        <field name="user_id" string="用户" />
                         </group>
-                        <group>
-                            <field name="employee_id" string="员工"/>
-                            <field name="len" string="时长"/>
-                            <field name="to_time" string="结束时间"/>
-                            <field name="user_id" string="用户" invisible="True"/>
+                        <group >
                         </group>
+                        <group string="上午">
+                            <field name="shangwu_partner_id" string="客户" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                            <field name="shangwu_project" string="项目" domain="[('partner_id','=',shangwu_partner_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                        </group>
+                        <group string="下午">
+                            <field name="xiawu_partner_id" string="客户" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                            <field name="xiawu_project" string="项目" domain="[('partner_id','=',xiawu_partner_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                        </group>
+                        <group string="加班">
+                        <field name="jiaban" string="是否加班" class="oe_inline"/>
+                        <field name="jiaban_end_time" string="加班结束时间" attrs="{'invisible': [('jiaban','=',False)]}"/>
+                        <field name="jiaban_partner_id" string="客户" attrs="{'invisible': [('jiaban','=',False)]}" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                        <field name="jiaban_working_team_id" string="项目" attrs="{'invisible': [('jiaban','=',False)]}" domain="[('partner_id','=',jiaban_partner_id)]" options='{"no_open":True,"no_create":1,"no_create_edit":1}'/>
+                        </group>
+
                     </group>
                 </sheet>
                 </form>
@@ -32,11 +42,12 @@
             <field name="arch" type="xml">
                 <tree string="sign">
                     <field name="date" string="日期"/>
-                    <field name="employee_id" string="员工"/>
-                    <field name="working_team_id" string="项目组"/>
-                    <field name="len" string="时长"/>
-                    <field name="from_time" string="开始时间"/>
-                    <field name="to_time" string="结束时间"/>
+                        <field name="user_id" string="用户" />
+                        <field name="shangwu_project" string="上午项目"/>
+                        <field name="xiawu_project" string="下午项目"/>
+                        <field name="jiaban" string="是否加班" class="oe_inline"/>
+                        <field name="jiaban_working_team_id" string="加班项目"/>
+                        <field name="jiaban_end_time" string="加班结束时间"/>
                 </tree>
             </field>
         </record>
@@ -46,14 +57,23 @@
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="employee_id" string="员工"/>
-                    <field name="date" string="签到日期"/>
-                    <field name="working_team_id" string="项目"/>
+                    <field name="date" string="日期"/>
+                    <field name="shangwu_project" string="项目"/>
+                    <field name="xiawu_project" string="下午项目"/>
                     <separator/>
                     <group expand="0" string="分组">
                         <filter string="日期" name="date" context="{'group_by':'date'}"/>
-                        <filter string="项目" name="working_team_id" context="{'group_by':'working_team_id'}"/>
+                        <filter string="项目" name="shangwu_project" context="{'group_by':'shangwu_project'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+        <record id="sign_calendar_view" model="ir.ui.view">
+            <field name="name">签到</field>
+            <field name="model">nantianaccount.employee_sign</field>
+            <field name="arch" type="xml">
+                <calendar string="sign" date_start="date" color="user_id" event_open_popup="%(sign_form_view)s">
+                </calendar>
             </field>
         </record>
 
@@ -61,7 +81,7 @@
             <field name="name">签到</field>
             <field name="res_model">nantianaccount.employee_sign</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">calendar,tree,form,gantt</field>
         </record>
         <menuitem id="my"  name="我" sequence="1" parent="sign"/>
         <menuitem id="my_sign"  name="我的签到" sequence="1" parent="my" action="account_sign_action"/>
